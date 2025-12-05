@@ -1,0 +1,14 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cloud Shape (multiple overlapping circles) -->
+  <circle cx="70" cy="110" r="25" fill="#FFFFFF" stroke="#D3D3D3" stroke-width="2"/>
+  <circle cx="100" cy="105" r="30" fill="#FFFFFF" stroke="#D3D3D3" stroke-width="2"/>
+  <circle cx="130" cy="110" r="25" fill="#FFFFFF" stroke="#D3D3D3" stroke-width="2"/>
+  <circle cx="85" cy="120" r="20" fill="#FFFFFF" stroke="#D3D3D3" stroke-width="2"/>
+  <circle cx="115" cy="120" r="20" fill="#FFFFFF" stroke="#D3D3D3" stroke-width="2"/>
+
+  <!-- Cloud Bottom (rounded rectangle) -->
+  <rect x="55" y="110" width="90" height="30" fill="#FFFFFF" rx="15"/>
+
+  <!-- Cloud Outline to merge shapes -->
+  <ellipse cx="100" cy="115" rx="60" ry="35" fill="none" stroke="#D3D3D3" stroke-width="3"/>
+</svg>

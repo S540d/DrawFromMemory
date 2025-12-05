@@ -1,0 +1,33 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle (helles Türkis) -->
+  <circle cx="256" cy="256" r="240" fill="#60D5FA"/>
+
+  <!-- Pencil Body (helles Orange) -->
+  <rect x="180" y="150" width="60" height="220" fill="#FFB84D" stroke="#FFA524" stroke-width="4" rx="5" transform="rotate(30 256 256)"/>
+
+  <!-- Pencil Wood Part (hellbraun) -->
+  <rect x="180" y="150" width="60" height="40" fill="#DEB887" stroke="#D2691E" stroke-width="4" rx="5" transform="rotate(30 256 256)"/>
+
+  <!-- Pencil Tip/Lead (dunkelgrau) -->
+  <polygon points="210,370 240,370 225,400" fill="#4A4A4A" stroke="#2F2F2F" stroke-width="3" transform="rotate(30 256 256)"/>
+
+  <!-- Pencil Eraser (rosa) -->
+  <rect x="180" y="350" width="60" height="20" fill="#FFB6C1" stroke="#FF69B4" stroke-width="3" rx="5" transform="rotate(30 256 256)"/>
+
+  <!-- Metal Band (silber) -->
+  <rect x="180" y="345" width="60" height="5" fill="#C0C0C0" stroke="#A8A8A8" stroke-width="2" transform="rotate(30 256 256)"/>
+
+  <!-- Drawn Star (was der Stift gerade malt) -->
+  <polygon points="350,320 360,290 370,320 400,330 370,340 360,370 350,340 320,330" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Small Brain Symbol (optional, im Hintergrund) -->
+  <circle cx="140" cy="140" r="35" fill="#A8E6CF" opacity="0.6"/>
+  <path d="M 130 125 Q 140 115 150 125" stroke="#66BB6A" stroke-width="3" fill="none" opacity="0.6"/>
+  <path d="M 130 135 Q 140 125 150 135" stroke="#66BB6A" stroke-width="3" fill="none" opacity="0.6"/>
+  <path d="M 130 145 Q 140 135 150 145" stroke="#66BB6A" stroke-width="3" fill="none" opacity="0.6"/>
+
+  <!-- Sparkles (Glitzer-Effekt) -->
+  <circle cx="380" cy="280" r="4" fill="#FFFFFF"/>
+  <circle cx="340" cy="360" r="3" fill="#FFFFFF"/>
+  <circle cx="310" cy="300" r="5" fill="#FFFFFF"/>
+</svg>

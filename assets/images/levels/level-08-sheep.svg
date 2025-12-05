@@ -1,0 +1,35 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Sheep Body (fluffy wool - multiple circles) -->
+  <circle cx="90" cy="110" r="22" fill="#F5F5F5" stroke="#D3D3D3" stroke-width="2"/>
+  <circle cx="115" cy="110" r="22" fill="#F5F5F5" stroke="#D3D3D3" stroke-width="2"/>
+  <circle cx="102" cy="95" r="20" fill="#F5F5F5" stroke="#D3D3D3" stroke-width="2"/>
+  <circle cx="102" cy="125" r="20" fill="#F5F5F5" stroke="#D3D3D3" stroke-width="2"/>
+  <circle cx="125" cy="100" r="18" fill="#F5F5F5" stroke="#D3D3D3" stroke-width="2"/>
+  <circle cx="80" cy="100" r="18" fill="#F5F5F5" stroke="#D3D3D3" stroke-width="2"/>
+
+  <!-- Sheep Head (black face) -->
+  <ellipse cx="60" cy="105" rx="20" ry="22" fill="#2F4F4F" stroke="#1C1C1C" stroke-width="2"/>
+
+  <!-- Ears -->
+  <ellipse cx="52" cy="90" rx="8" ry="12" fill="#2F4F4F" stroke="#1C1C1C" stroke-width="2" transform="rotate(-15 52 90)"/>
+  <ellipse cx="68" cy="90" rx="8" ry="12" fill="#2F4F4F" stroke="#1C1C1C" stroke-width="2" transform="rotate(15 68 90)"/>
+
+  <!-- Eyes (white dots on black face) -->
+  <circle cx="56" cy="102" r="3" fill="#FFFFFF"/>
+  <circle cx="64" cy="102" r="3" fill="#FFFFFF"/>
+
+  <!-- Nose -->
+  <ellipse cx="60" cy="110" rx="4" ry="3" fill="#1C1C1C"/>
+
+  <!-- Wool on head (fluffy top) -->
+  <circle cx="60" cy="85" r="12" fill="#F5F5F5" stroke="#D3D3D3" stroke-width="2"/>
+
+  <!-- Legs (black, thin) -->
+  <rect x="85" y="135" width="6" height="25" fill="#2F4F4F" stroke="#1C1C1C" stroke-width="1" rx="2"/>
+  <rect x="105" y="135" width="6" height="25" fill="#2F4F4F" stroke="#1C1C1C" stroke-width="1" rx="2"/>
+  <rect x="95" y="135" width="6" height="25" fill="#2F4F4F" stroke="#1C1C1C" stroke-width="1" rx="2"/>
+  <rect x="115" y="135" width="6" height="25" fill="#2F4F4F" stroke="#1C1C1C" stroke-width="1" rx="2"/>
+
+  <!-- Tail (small fluffy) -->
+  <circle cx="130" cy="120" r="8" fill="#F5F5F5" stroke="#D3D3D3" stroke-width="2"/>
+</svg>
