@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.lg,
     alignItems: 'center',
     justifyContent: 'center',
+    minHeight: 56,
   },
   primaryButton: {
     backgroundColor: Colors.primary,
