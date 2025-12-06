@@ -6,7 +6,8 @@ interface Props {
   height?: number;
   strokeColor?: string;
   strokeWidth?: number;
-  onDrawingChange?: (paths: any[]) => void;
+  paths?: DrawingPath[];
+  onDrawingChange?: (paths: DrawingPath[]) => void;
 }
 
 export interface DrawingPath {
@@ -25,9 +26,9 @@ export default function DrawingCanvas({
   height = 400,
   strokeColor = '#000000',
   strokeWidth = 3,
+  paths = [],
   onDrawingChange,
 }: Props) {
-  const [paths, setPaths] = useState<DrawingPath[]>([]);
   const [currentPath, setCurrentPath] = useState<{ x: number; y: number }[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -112,7 +113,6 @@ export default function DrawingCanvas({
           strokeWidth: strokeWidth,
         },
       ];
-      setPaths(newPaths);
       setCurrentPath([]);
       setIsDrawing(false);
       onDrawingChange?.(newPaths);
