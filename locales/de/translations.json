@@ -1,0 +1,69 @@
+{
+  "app": {
+    "name": "Merke und Male"
+  },
+  "home": {
+    "title": "Merke und Male",
+    "subtitle": "Trainiere dein Gedächtnis!",
+    "startButton": "Spiel starten",
+    "continueButton": "Weiterspielen",
+    "levelsButton": "Level auswählen",
+    "settingsButton": "Einstellungen"
+  },
+  "levels": {
+    "title": "Level auswählen",
+    "level": "Level {{number}}",
+    "difficulty": "Schwierigkeit: {{diff}}",
+    "displayTime": "{{seconds}}s Anzeigezeit",
+    "stars": "{{count}} Sterne",
+    "locked": "Gesperrt",
+    "unlockHint": "Schließe Level {{prev}} ab"
+  },
+  "game": {
+    "memorize": {
+      "title": "Merke dir das Bild!",
+      "timeLeft": "{{seconds}}s"
+    },
+    "draw": {
+      "title": "Male das Bild nach!",
+      "hint": "Benutze die Farben und male was du dir gemerkt hast",
+      "undo": "Rückgängig",
+      "clear": "Alles löschen",
+      "clearConfirm": "Wirklich alles löschen?",
+      "done": "Fertig"
+    },
+    "result": {
+      "title": "Ergebnis",
+      "yourDrawing": "Deine Zeichnung",
+      "original": "Original",
+      "rating": "Deine Bewertung",
+      "retry": "Nochmal versuchen",
+      "nextLevel": "Nächstes Level",
+      "backToMenu": "Zum Menü"
+    }
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "sound": "Sound-Effekte",
+    "music": "Hintergrundmusik",
+    "resetProgress": "Fortschritt zurücksetzen",
+    "resetConfirm": "Wirklich allen Fortschritt löschen?",
+    "about": "Über die App",
+    "version": "Version"
+  },
+  "difficulty": {
+    "1": "Sehr einfach",
+    "2": "Einfach",
+    "3": "Mittel",
+    "4": "Schwierig",
+    "5": "Sehr schwierig"
+  },
+  "common": {
+    "yes": "Ja",
+    "no": "Nein",
+    "cancel": "Abbrechen",
+    "ok": "OK",
+    "close": "Schließen"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "app": {
+    "name": "Remember & Draw"
+  },
+  "home": {
+    "title": "Remember & Draw",
+    "subtitle": "Train your memory!",
+    "startButton": "Start Game",
+    "continueButton": "Continue",
+    "levelsButton": "Select Level",
+    "settingsButton": "Settings"
+  },
+  "levels": {
+    "title": "Select Level",
+    "level": "Level {{number}}",
+    "difficulty": "Difficulty: {{diff}}",
+    "displayTime": "{{seconds}}s display time",
+    "stars": "{{count}} stars",
+    "locked": "Locked",
+    "unlockHint": "Complete level {{prev}}"
+  },
+  "game": {
+    "memorize": {
+      "title": "Remember the picture!",
+      "timeLeft": "{{seconds}}s"
+    },
+    "draw": {
+      "title": "Draw the picture!",
+      "hint": "Use the colors and draw what you remember",
+      "undo": "Undo",
+      "clear": "Clear all",
+      "clearConfirm": "Really clear everything?",
+      "done": "Done"
+    },
+    "result": {
+      "title": "Result",
+      "yourDrawing": "Your Drawing",
+      "original": "Original",
+      "rating": "Your Rating",
+      "retry": "Try again",
+      "nextLevel": "Next Level",
+      "backToMenu": "Back to Menu"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "sound": "Sound Effects",
+    "music": "Background Music",
+    "resetProgress": "Reset Progress",
+    "resetConfirm": "Really delete all progress?",
+    "about": "About",
+    "version": "Version"
+  },
+  "difficulty": {
+    "1": "Very easy",
+    "2": "Easy",
+    "3": "Medium",
+    "4": "Hard",
+    "5": "Very hard"
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "cancel": "Cancel",
+    "ok": "OK",
+    "close": "Close"
+  }
+}
