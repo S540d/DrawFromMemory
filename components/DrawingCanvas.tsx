@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, Dimensions, Platform } from 'react-native';
+import { Canvas, Path, Skia } from '@shopify/react-native-skia';
 
 interface Props {
   width?: number;
@@ -150,12 +151,97 @@ export default function DrawingCanvas({
     );
   }
 
-  // Native version (Placeholder - wird später mit react-native-skia implementiert)
+  // Native version mit react-native-skia
+  const [nativePaths, setNativePaths] = useState(paths);
+  const [currentNativePath, setCurrentNativePath] = useState<{ x: number; y: number }[]>([]);
+
+  // Update native paths wenn sich paths ändern
+  useEffect(() => {
+    setNativePaths(paths);
+  }, [paths]);
+
+  const handleTouchStart = (event: any) => {
+    if (!onDrawingChange) return; // Nur interaktiv wenn onDrawingChange vorhanden
+    const { locationX, locationY } = event.nativeEvent;
+    setCurrentNativePath([{ x: locationX, y: locationY }]);
+  };
+
+  const handleTouchMove = (event: any) => {
+    if (!onDrawingChange || currentNativePath.length === 0) return;
+    const { locationX, locationY } = event.nativeEvent;
+    setCurrentNativePath([...currentNativePath, { x: locationX, y: locationY }]);
+  };
+
+  const handleTouchEnd = () => {
+    if (!onDrawingChange || currentNativePath.length === 0) return;
+    const newPaths = [
+      ...nativePaths,
+      {
+        points: currentNativePath,
+        color: strokeColor,
+        strokeWidth: strokeWidth,
+      },
+    ];
+    setNativePaths(newPaths);
+    setCurrentNativePath([]);
+    onDrawingChange(newPaths);
+  };
+
+  // Konvertiere Punkte zu Skia Path
+  const createSkiaPath = (points: { x: number; y: number }[], color: string, width: number) => {
+    if (points.length < 2) return null;
+
+    const path = Skia.Path.Make();
+    path.moveTo(points[0].x, points[0].y);
+
+    for (let i = 1; i < points.length; i++) {
+      path.lineTo(points[i].x, points[i].y);
+    }
+
+    return { path, color, width };
+  };
+
   return (
     <View style={[styles.container, { width, height }]}>
-      <View style={styles.placeholder}>
-        {/* Native drawing wird später implementiert */}
-      </View>
+      <Canvas
+        style={{ width, height }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Zeichne alle fertigen Pfade */}
+        {nativePaths.map((pathData, index) => {
+          const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth);
+          if (!skiaPath) return null;
+          return (
+            <Path
+              key={index}
+              path={skiaPath.path}
+              color={skiaPath.color}
+              style="stroke"
+              strokeWidth={skiaPath.width}
+              strokeCap="round"
+              strokeJoin="round"
+            />
+          );
+        })}
+
+        {/* Zeichne aktuellen Pfad */}
+        {currentNativePath.length > 1 && (() => {
+          const skiaPath = createSkiaPath(currentNativePath, strokeColor, strokeWidth);
+          if (!skiaPath) return null;
+          return (
+            <Path
+              path={skiaPath.path}
+              color={skiaPath.color}
+              style="stroke"
+              strokeWidth={skiaPath.width}
+              strokeCap="round"
+              strokeJoin="round"
+            />
+          );
+        })()}
+      </Canvas>
     </View>
   );
 }
@@ -164,13 +250,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
-  },
-  placeholder: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#E0E0E0',
   },
 });
 

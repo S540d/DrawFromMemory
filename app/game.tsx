@@ -219,33 +219,32 @@ export default function GameScreen() {
             </View>
           </View>
         </View>
-      </View>
 
-      {/* Buttons */}
-      <View style={styles.buttonColumn}>
-        <TouchableOpacity
-          style={styles.primaryButton}
-          onPress={() => {
-            // Reset für nächstes Level
-            setPhase('memorize');
-            setUserRating(0);
-            drawing.clearCanvas();
-            const image = getRandomImageForLevel(levelNumber);
-            const level = getLevel(levelNumber);
-            setCurrentImage(image);
-            setTimeRemaining(level.displayDuration);
-          }}
-        >
-          <Text style={styles.primaryButtonText}>Nochmal versuchen</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.secondaryButton}
-          onPress={() => router.back()}
-        >
-          <Text style={styles.secondaryButtonText}>Zum Menü</Text>
-        </TouchableOpacity>
+        {/* Buttons */}
+        <View style={styles.buttonColumn}>
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={() => {
+              // Reset für nächstes Level
+              setPhase('memorize');
+              setUserRating(0);
+              drawing.clearCanvas();
+              const image = getRandomImageForLevel(levelNumber);
+              const level = getLevel(levelNumber);
+              setCurrentImage(image);
+              setTimeRemaining(level.displayDuration);
+            }}
+          >
+            <Text style={styles.primaryButtonText}>Nochmal versuchen</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={() => router.back()}
+          >
+            <Text style={styles.secondaryButtonText}>Zum Menü</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
     );
   };
 
