@@ -24,6 +24,7 @@ export default function GameScreen() {
   const [currentImage, setCurrentImage] = useState<LevelImage | null>(null);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
+  const [userRating, setUserRating] = useState<number>(0);
 
   // Drawing Canvas Hook
   const drawing = useDrawingCanvas();
@@ -71,8 +72,6 @@ export default function GameScreen() {
           </View>
         )}
       </View>
-
-      <Text style={styles.hint}>Merke dir das Bild gut!</Text>
     </View>
   );
 
@@ -141,56 +140,83 @@ export default function GameScreen() {
     </View>
   );
 
-  // Render Star Rating
-  const renderStars = (rating: number) => {
+  // Render Star Rating (Interactive)
+  const renderStars = (rating: number, interactive: boolean = false) => {
     return (
       <View style={styles.starsRow}>
-        {[1, 2, 3, 4, 5].map((star) => (
-          <View
-            key={star}
-            style={[
-              styles.starBox,
-              star <= rating && styles.starBoxFilled,
-            ]}
-          >
-            <Text style={[
-              styles.starText,
-              star <= rating && styles.starTextFilled,
-            ]}>
-              ★
-            </Text>
-          </View>
-        ))}
+        {[1, 2, 3, 4, 5].map((star) => {
+          const StarComponent = interactive ? TouchableOpacity : View;
+          return (
+            <StarComponent
+              key={star}
+              style={[
+                styles.starBox,
+                star <= rating && styles.starBoxFilled,
+              ]}
+              onPress={interactive ? () => setUserRating(star) : undefined}
+            >
+              <Text style={[
+                styles.starText,
+                star <= rating && styles.starTextFilled,
+              ]}>
+                ★
+              </Text>
+            </StarComponent>
+          );
+        })}
       </View>
     );
   };
 
   // Render Result Phase
-  const renderResultPhase = () => (
-    <View style={styles.phaseContainer}>
-      <Text style={styles.phaseTitle}>Ergebnis</Text>
+  const renderResultPhase = () => {
+    const getFeedbackText = (rating: number) => {
+      if (rating === 5) return 'Perfekt! Du bist ein Gedächtnis-Meister!';
+      if (rating === 4) return 'Sehr gut! Fast perfekt!';
+      if (rating === 3) return 'Gut gemacht! Weiter so!';
+      if (rating >= 1) return 'Das war schon besser als vorhin, willst du es trotzdem nochmal versuchen?';
+      return 'Wie viele Sterne gibst du dir?';
+    };
 
-      {/* Sterne-Bewertung Mockup */}
-      <View style={styles.starsContainer}>
-        {renderStars(5)}
-        <Text style={styles.ratingText}>5 Sterne!</Text>
-        <Text style={styles.feedbackText}>Perfekt! Du bist ein Gedächtnis-Meister!</Text>
-      </View>
+    return (
+      <View style={styles.phaseContainer}>
+        <Text style={styles.phaseTitle}>Ergebnis</Text>
 
-      {/* Vergleich Mockup */}
-      <View style={styles.comparisonContainer}>
-        <View style={styles.comparisonBox}>
-          <Text style={styles.comparisonLabel}>Original</Text>
-          <View style={styles.comparisonImage}>
-            {currentImage && (
-              <LevelImageDisplay image={currentImage} size={120} />
-            )}
-          </View>
+        {/* Sterne-Bewertung Interaktiv */}
+        <View style={styles.starsContainer}>
+          {renderStars(userRating, true)}
+          {userRating > 0 && (
+            <>
+              <Text style={styles.ratingText}>{userRating} Stern{userRating !== 1 ? 'e' : ''}!</Text>
+              <Text style={styles.feedbackText}>{getFeedbackText(userRating)}</Text>
+            </>
+          )}
+          {userRating === 0 && (
+            <Text style={styles.feedbackText}>Tippe auf die Sterne, um dich zu bewerten!</Text>
+          )}
         </View>
-        <View style={styles.comparisonBox}>
-          <Text style={styles.comparisonLabel}>Deine Zeichnung</Text>
-          <View style={styles.comparisonImage}>
-            <Text style={styles.placeholderText}>Zeichnung</Text>
+
+        {/* Vergleich */}
+        <View style={styles.comparisonContainer}>
+          <View style={styles.comparisonBox}>
+            <Text style={styles.comparisonLabel}>Original</Text>
+            <View style={styles.comparisonImage}>
+              {currentImage && (
+                <LevelImageDisplay image={currentImage} size={120} />
+              )}
+            </View>
+          </View>
+          <View style={styles.comparisonBox}>
+            <Text style={styles.comparisonLabel}>Deine Zeichnung</Text>
+            <View style={styles.comparisonImage}>
+              <DrawingCanvas
+                width={120}
+                height={120}
+                paths={drawing.paths}
+                strokeColor="#000000"
+                strokeWidth={2}
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -202,6 +228,8 @@ export default function GameScreen() {
           onPress={() => {
             // Reset für nächstes Level
             setPhase('memorize');
+            setUserRating(0);
+            drawing.clearCanvas();
             const image = getRandomImageForLevel(levelNumber);
             const level = getLevel(levelNumber);
             setCurrentImage(image);
@@ -218,7 +246,8 @@ export default function GameScreen() {
         </TouchableOpacity>
       </View>
     </View>
-  );
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -378,12 +407,6 @@ const styles = StyleSheet.create({
   imageInfo: {
     fontSize: FontSize.sm,
     color: Colors.text.secondary,
-  },
-  hint: {
-    fontSize: FontSize.lg,
-    color: Colors.text.secondary,
-    textAlign: 'center',
-    marginTop: Spacing.lg,
   },
   canvasContainer: {
     flex: 1,
