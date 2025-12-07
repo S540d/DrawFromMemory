@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getRandomImageForLevel } from '../services/ImagePoolManager';
 import { getLevel } from '../services/LevelManager';
@@ -178,6 +178,10 @@ export default function GameScreen() {
       return 'Wie viele Sterne gibst du dir?';
     };
 
+    // Berechne responsive Bildgröße: 40% der Bildschirmbreite, min 150px, max 250px
+    const screenWidth = Dimensions.get('window').width;
+    const imageSize = Math.min(Math.max(screenWidth * 0.4, 150), 250);
+
     return (
       <View style={styles.phaseContainer}>
         <Text style={styles.phaseTitle}>Ergebnis</Text>
@@ -200,18 +204,18 @@ export default function GameScreen() {
         <View style={styles.comparisonContainer}>
           <View style={styles.comparisonBox}>
             <Text style={styles.comparisonLabel}>Original</Text>
-            <View style={styles.comparisonImage}>
+            <View style={[styles.comparisonImage, { width: imageSize, height: imageSize }]}>
               {currentImage && (
-                <LevelImageDisplay image={currentImage} size={120} />
+                <LevelImageDisplay image={currentImage} size={imageSize} />
               )}
             </View>
           </View>
           <View style={styles.comparisonBox}>
             <Text style={styles.comparisonLabel}>Deine Zeichnung</Text>
-            <View style={styles.comparisonImage}>
+            <View style={[styles.comparisonImage, { width: imageSize, height: imageSize }]}>
               <DrawingCanvas
-                width={120}
-                height={120}
+                width={imageSize}
+                height={imageSize}
                 paths={drawing.paths}
                 strokeColor="#000000"
                 strokeWidth={2}
@@ -517,9 +521,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: Spacing.md,
     marginBottom: Spacing.xxl,
+    justifyContent: 'center',
   },
   comparisonBox: {
-    flex: 1,
+    alignItems: 'center',
   },
   comparisonLabel: {
     fontSize: FontSize.sm,
@@ -530,7 +535,6 @@ const styles = StyleSheet.create({
   },
   comparisonImage: {
     backgroundColor: Colors.surface,
-    aspectRatio: 1,
     borderRadius: BorderRadius.lg,
     justifyContent: 'center',
     alignItems: 'center',
