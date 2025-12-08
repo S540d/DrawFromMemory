@@ -26,15 +26,19 @@ export const Colors = {
 
   // Zeichen-Farben (für Canvas)
   drawing: {
-    red: '#E74C3C',
-    green: '#27AE60',
-    brown: '#8B4513',
-    skin: '#FDBCB4',
-    blue: '#3498DB',
-    white: '#FFFFFF',
-    pink: '#FF69B4',
-    purple: '#9B59B6',
     black: '#000000',
+    white: '#FFFFFF',
+    red: '#E74C3C',
+    orange: '#FFA500',
+    yellow: '#FFD700',
+    green: '#27AE60',
+    blue: '#3498DB',
+    lightBlue: '#87CEEB',
+    purple: '#9B59B6',
+    pink: '#FF69B4',
+    brown: '#8B4513',
+    gray: '#808080',
+    skin: '#FDBCB4',
   },
 
   // Sternen-Bewertung
@@ -57,15 +61,19 @@ export const Colors = {
  * Zeichen-Farben mit Namen (für UI)
  */
 export const DrawingColors = [
-  { name: 'Rot', hex: Colors.drawing.red, nameEn: 'Red' },
-  { name: 'Grün', hex: Colors.drawing.green, nameEn: 'Green' },
-  { name: 'Braun', hex: Colors.drawing.brown, nameEn: 'Brown' },
-  { name: 'Hautfarbe', hex: Colors.drawing.skin, nameEn: 'Skin' },
-  { name: 'Blau', hex: Colors.drawing.blue, nameEn: 'Blue' },
-  { name: 'Weiß', hex: Colors.drawing.white, nameEn: 'White', border: '#CCCCCC' },
-  { name: 'Rosa', hex: Colors.drawing.pink, nameEn: 'Pink' },
-  { name: 'Lila', hex: Colors.drawing.purple, nameEn: 'Purple' },
   { name: 'Schwarz', hex: Colors.drawing.black, nameEn: 'Black' },
+  { name: 'Weiß', hex: Colors.drawing.white, nameEn: 'White', border: '#CCCCCC' },
+  { name: 'Rot', hex: Colors.drawing.red, nameEn: 'Red' },
+  { name: 'Orange', hex: Colors.drawing.orange, nameEn: 'Orange' },
+  { name: 'Gelb', hex: Colors.drawing.yellow, nameEn: 'Yellow' },
+  { name: 'Grün', hex: Colors.drawing.green, nameEn: 'Green' },
+  { name: 'Blau', hex: Colors.drawing.blue, nameEn: 'Blue' },
+  { name: 'Hellblau', hex: Colors.drawing.lightBlue, nameEn: 'Light Blue' },
+  { name: 'Lila', hex: Colors.drawing.purple, nameEn: 'Purple' },
+  { name: 'Rosa', hex: Colors.drawing.pink, nameEn: 'Pink' },
+  { name: 'Braun', hex: Colors.drawing.brown, nameEn: 'Brown' },
+  { name: 'Grau', hex: Colors.drawing.gray, nameEn: 'Gray' },
+  { name: 'Hautfarbe', hex: Colors.drawing.skin, nameEn: 'Skin' },
 ];
 
 export default Colors;

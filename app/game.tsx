@@ -44,6 +44,21 @@ export default function GameScreen() {
     }
   };
 
+  // Funktion zum Starten des vorherigen Levels
+  const startPreviousLevel = () => {
+    const prevLevel = levelNumber - 1;
+    if (prevLevel >= 1) {
+      setLevelNumber(prevLevel);
+      setPhase('memorize');
+      setUserRating(0);
+      drawing.clearCanvas();
+      const image = getRandomImageForLevel(prevLevel);
+      const level = getLevel(prevLevel);
+      setCurrentImage(image);
+      setTimeRemaining(level.displayDuration);
+    }
+  };
+
   // Initialisiere Level und Bild beim Start
   useEffect(() => {
     const level = getLevel(levelNumber);
@@ -119,6 +134,34 @@ export default function GameScreen() {
             onPress={() => drawing.setColor(colorItem.hex)}
           />
         ))}
+      </View>
+
+      {/* Linienstärke-Auswahl */}
+      <View style={styles.strokeWidthContainer}>
+        <Text style={styles.strokeWidthLabel}>Strichstärke:</Text>
+        <View style={styles.strokeWidthButtons}>
+          <TouchableOpacity
+            style={[styles.strokeWidthButton, drawing.strokeWidth === 2 && styles.strokeWidthButtonActive]}
+            onPress={() => drawing.setStrokeWidth(2)}
+          >
+            <View style={[styles.strokeWidthPreview, { height: 2 }]} />
+            <Text style={[styles.strokeWidthButtonText, drawing.strokeWidth === 2 && styles.strokeWidthButtonTextActive]}>Dünn</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.strokeWidthButton, drawing.strokeWidth === 3 && styles.strokeWidthButtonActive]}
+            onPress={() => drawing.setStrokeWidth(3)}
+          >
+            <View style={[styles.strokeWidthPreview, { height: 3 }]} />
+            <Text style={[styles.strokeWidthButtonText, drawing.strokeWidth === 3 && styles.strokeWidthButtonTextActive]}>Normal</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.strokeWidthButton, drawing.strokeWidth === 5 && styles.strokeWidthButtonActive]}
+            onPress={() => drawing.setStrokeWidth(5)}
+          >
+            <View style={[styles.strokeWidthPreview, { height: 5 }]} />
+            <Text style={[styles.strokeWidthButtonText, drawing.strokeWidth === 5 && styles.strokeWidthButtonTextActive]}>Dick</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Buttons */}
@@ -239,20 +282,28 @@ export default function GameScreen() {
           </View>
         </View>
 
+        {/* Level Navigation */}
+        <View style={styles.levelNavigation}>
+          <TouchableOpacity
+            style={[styles.navButton, levelNumber <= 1 && styles.navButtonDisabled]}
+            onPress={startPreviousLevel}
+            disabled={levelNumber <= 1}
+          >
+            <Text style={[styles.navButtonText, levelNumber <= 1 && styles.navButtonTextDisabled]}>← Zurück</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.navButton, levelNumber >= getTotalLevels() && styles.navButtonDisabled]}
+            onPress={startNextLevel}
+            disabled={levelNumber >= getTotalLevels()}
+          >
+            <Text style={[styles.navButtonText, levelNumber >= getTotalLevels() && styles.navButtonTextDisabled]}>Weiter →</Text>
+          </TouchableOpacity>
+        </View>
+
         {/* Buttons */}
         <View style={styles.buttonColumn}>
-          {/* Nächstes Level Button - nur wenn nicht am letzten Level */}
-          {levelNumber < getTotalLevels() && (
-            <TouchableOpacity
-              style={styles.primaryButton}
-              onPress={startNextLevel}
-            >
-              <Text style={styles.primaryButtonText}>Nächstes Level</Text>
-            </TouchableOpacity>
-          )}
-
           <TouchableOpacity
-            style={levelNumber < getTotalLevels() ? styles.secondaryButton : styles.primaryButton}
+            style={styles.primaryButton}
             onPress={() => {
               // Reset für aktuelles Level
               setPhase('memorize');
@@ -264,9 +315,7 @@ export default function GameScreen() {
               setTimeRemaining(level.displayDuration);
             }}
           >
-            <Text style={levelNumber < getTotalLevels() ? styles.secondaryButtonText : styles.primaryButtonText}>
-              Nochmal versuchen
-            </Text>
+            <Text style={styles.primaryButtonText}>Nochmal versuchen</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -668,5 +717,78 @@ const styles = StyleSheet.create({
   linkText: {
     fontSize: FontSize.md,
     color: Colors.primary,
+  },
+  levelNavigation: {
+    flexDirection: 'row',
+    gap: Spacing.md,
+    marginBottom: Spacing.lg,
+    justifyContent: 'center',
+  },
+  navButton: {
+    flex: 1,
+    backgroundColor: Colors.surface,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.lg,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    minHeight: 48,
+    justifyContent: 'center',
+  },
+  navButtonDisabled: {
+    backgroundColor: Colors.surface,
+    borderColor: Colors.text.light,
+    opacity: 0.5,
+  },
+  navButtonText: {
+    fontSize: FontSize.md,
+    fontWeight: FontWeight.semibold,
+    color: Colors.primary,
+  },
+  navButtonTextDisabled: {
+    color: Colors.text.light,
+  },
+  strokeWidthContainer: {
+    marginBottom: Spacing.lg,
+    alignItems: 'center',
+  },
+  strokeWidthLabel: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
+    color: Colors.text.secondary,
+    marginBottom: Spacing.sm,
+  },
+  strokeWidthButtons: {
+    flexDirection: 'row',
+    gap: Spacing.sm,
+  },
+  strokeWidthButton: {
+    backgroundColor: Colors.surface,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    borderRadius: BorderRadius.md,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: Colors.surface,
+    minWidth: 70,
+  },
+  strokeWidthButtonActive: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
+  },
+  strokeWidthPreview: {
+    width: 40,
+    backgroundColor: Colors.text.primary,
+    borderRadius: 2,
+    marginBottom: Spacing.xs,
+  },
+  strokeWidthButtonText: {
+    fontSize: FontSize.xs,
+    fontWeight: FontWeight.medium,
+    color: Colors.text.primary,
+  },
+  strokeWidthButtonTextActive: {
+    color: Colors.background,
   },
 });
