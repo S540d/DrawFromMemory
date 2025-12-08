@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getRandomImageForLevel } from '../services/ImagePoolManager';
-import { getLevel } from '../services/LevelManager';
+import { getLevel, getTotalLevels } from '../services/LevelManager';
 import { t } from '../services/i18n';
 import { DrawingColors } from '../constants/Colors';
 import Colors from '../constants/Colors';
@@ -20,7 +20,7 @@ import type { GamePhase, LevelImage } from '../types';
 export default function GameScreen() {
   const router = useRouter();
   const [phase, setPhase] = useState<GamePhase>('memorize');
-  const [levelNumber] = useState(1); // Start mit Level 1
+  const [levelNumber, setLevelNumber] = useState(1); // Start mit Level 1
   const [currentImage, setCurrentImage] = useState<LevelImage | null>(null);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
@@ -28,6 +28,21 @@ export default function GameScreen() {
 
   // Drawing Canvas Hook
   const drawing = useDrawingCanvas();
+
+  // Funktion zum Starten des nächsten Levels
+  const startNextLevel = () => {
+    const nextLevel = levelNumber + 1;
+    if (nextLevel <= getTotalLevels()) {
+      setLevelNumber(nextLevel);
+      setPhase('memorize');
+      setUserRating(0);
+      drawing.clearCanvas();
+      const image = getRandomImageForLevel(nextLevel);
+      const level = getLevel(nextLevel);
+      setCurrentImage(image);
+      setTimeRemaining(level.displayDuration);
+    }
+  };
 
   // Initialisiere Level und Bild beim Start
   useEffect(() => {
@@ -226,10 +241,20 @@ export default function GameScreen() {
 
         {/* Buttons */}
         <View style={styles.buttonColumn}>
+          {/* Nächstes Level Button - nur wenn nicht am letzten Level */}
+          {levelNumber < getTotalLevels() && (
+            <TouchableOpacity
+              style={styles.primaryButton}
+              onPress={startNextLevel}
+            >
+              <Text style={styles.primaryButtonText}>Nächstes Level</Text>
+            </TouchableOpacity>
+          )}
+
           <TouchableOpacity
-            style={styles.primaryButton}
+            style={levelNumber < getTotalLevels() ? styles.secondaryButton : styles.primaryButton}
             onPress={() => {
-              // Reset für nächstes Level
+              // Reset für aktuelles Level
               setPhase('memorize');
               setUserRating(0);
               drawing.clearCanvas();
@@ -239,8 +264,11 @@ export default function GameScreen() {
               setTimeRemaining(level.displayDuration);
             }}
           >
-            <Text style={styles.primaryButtonText}>Nochmal versuchen</Text>
+            <Text style={levelNumber < getTotalLevels() ? styles.secondaryButtonText : styles.primaryButtonText}>
+              Nochmal versuchen
+            </Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.secondaryButton}
             onPress={() => router.back()}
