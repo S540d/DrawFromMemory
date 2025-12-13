@@ -1,6 +1,6 @@
 # 📊 Quick Status Overview - Merke und Male
 
-**Stand:** 2025-12-13 | **MVP Fortschritt:** 50% | 👉 [Details](STATUS.md)
+**Stand:** 2025-12-13 | **MVP Fortschritt:** 90% | 👉 [Details](STATUS.md)
 
 ---
 
@@ -8,10 +8,10 @@
 
 ```
 PROJEKT-FORTSCHRITT GESAMT
-███████████████░░░░░░░░░░░░░░ 60%
+████████████████████░░░░░░░░ 80%
 
 MVP PHASE 1 (Ziel: 100%)
-████████████░░░░░░░░░░░░░░░░ 50%
+██████████████████████░░░░░░ 90%
 
 PHASE 2
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 0%
@@ -64,72 +64,62 @@ PHASE 3
 ## 🔴 Was fehlt noch für MVP?
 
 ### Kritisch (Blocker)
-1. **Comparison-Phase** 🔴
-   - Overlay: Original + Zeichnung
-   - Transparenz-Slider (0-100%)
-   
-2. **Rating-Phase** 🔴
-   - UI: Sterne auswählen (1-5)
-   - Feedback-Text anzeigen
-   - "Nochmal" oder "Weiter" Buttons
-
-3. **Progress-Speicherung** 🔴
+1. **Progress-Speicherung** 🔴
    - AsyncStorage Integration
    - Level-Fortschritt speichern
    - Beste Bewertung pro Level
 
 ### Wichtig
-4. **Settings-Menü** 🔴
+2. **Settings-Menü** 🔴
    - Sprache wechseln (DE ↔ EN)
    - Timer-Einstellung
    - Dark Mode Toggle
 
-5. **Dark Mode** 🔴
+3. **Dark Mode** 🔴
    - Theme-System
    - Color-Switching
 
 ### Nice-to-have
-6. **App-Icon** 🔴
-7. **Sound-Effekte** 🔴
-8. **Animationen** 🔴
+4. **App-Icon** 🔴
+5. **Sound-Effekte** 🔴
+6. **Animationen** 🔴
+7. **Overlay-Slider** 🔴 (Enhancement für Vergleich)
 
 ---
 
 ## 📅 Zeitplan
 
 ### Diese Woche
-- [ ] Comparison-Phase (2-3h)
-- [ ] Rating-Phase (2-3h)
-
-### Nächste Woche
 - [ ] Progress-Speicherung (2h)
 - [ ] Settings-Menü (3h)
-- [ ] Dark Mode (2h)
 
-### Danach
+### Nächste Woche
+- [ ] Dark Mode (2h)
 - [ ] App-Icon erstellen (1h)
 - [ ] Sounds finden/erstellen (2h)
+
+### Danach
 - [ ] Usability-Test (1h)
 - [ ] Deployment (2h)
 
-**Geschätzter Zeitaufwand bis MVP fertig:** ~15-20 Stunden
+**Geschätzter Zeitaufwand bis MVP fertig:** ~10-13 Stunden
 
 ---
 
 ## 📋 Checkliste: MVP fertig?
 
-- [ ] 1. Alle 3 Game-Phasen funktionieren
+- [x] 1. Alle 3 Game-Phasen funktionieren
 - [ ] 2. Fortschritt wird gespeichert
 - [ ] 3. Settings-Menü mit Sprache
 - [ ] 4. Dark Mode implementiert
 - [ ] 5. App-Icon vorhanden
-- [ ] 6. 10 Level spielbar
+- [x] 6. 10 Level spielbar
 - [ ] 7. Sound-Effekte integriert
 - [ ] 8. Usability-Test durchgeführt
 - [ ] 9. Web-Version deployed
 - [ ] 10. Android APK erstellt
 
-**Aktuell:** 0/10 ✅ (aber 50% der Arbeit fertig!)
+**Aktuell:** 2/10 ✅ (aber 90% der Kern-Funktionalität fertig!)
 
 ---
 

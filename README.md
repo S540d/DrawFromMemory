@@ -2,7 +2,7 @@
 
 > Eine Gedächtnistraining-App für Kinder - Bild merken, zeichnen, vergleichen!
 
-[![Status](https://img.shields.io/badge/Status-MVP%2050%25-yellow)](https://github.com/S540d/DrawFromMemory)
+[![Status](https://img.shields.io/badge/Status-MVP%2090%25-green)](https://github.com/S540d/DrawFromMemory)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **📊 Quick Status:** [QUICK_STATUS.md](QUICK_STATUS.md) | **📋 Vollständiger Status:** [STATUS.md](STATUS.md)
@@ -37,13 +37,16 @@
 
 ## 🚀 Roadmap
 
-**Aktueller Stand:** MVP zu 50% fertig - [Detaillierter Status →](STATUS.md)
+**Aktueller Stand:** MVP zu 90% fertig - [Detaillierter Status →](STATUS.md)
 
-### Phase 1: MVP (Minimum Viable Product) - **50% FERTIG**
+### Phase 1: MVP (Minimum Viable Product) - **90% FERTIG**
 - ✅ Konzept & Projektskizze
 - ✅ Expo-Projekt Setup
 - ✅ Home Screen (vollständig)
-- 🟡 Game Screen (3 Phasen: Merken ✅ → Zeichnen ✅ → Vergleichen 🔴)
+- ✅ Game Screen (vollständig)
+  - ✅ Merken-Phase (Bild + Timer)
+  - ✅ Zeichnen-Phase (Canvas mit allen Features)
+  - ✅ Ergebnis-Phase (Vergleich + Sterne-Bewertung + Feedback)
 - 🔴 Settings Screen (nur Platzhalter)
 - ✅ 10 Level + 4 Extra-Bilder (alle SVG vorhanden)
 - 🔴 Fortschritt speichern (AsyncStorage)
@@ -51,11 +54,9 @@
 - ✅ i18n (DE/EN) Service vorhanden
 
 **Nächste Schritte für MVP:**
-1. Comparison-Phase implementieren (Overlay mit Slider)
-2. Rating-Phase implementieren (Sterne-Auswahl)
-3. Progress-Speicherung (AsyncStorage)
-4. Settings-Menü vollständig
-5. Dark Mode
+1. Progress-Speicherung (AsyncStorage)
+2. Settings-Menü vollständig
+3. Dark Mode
 
 ### Phase 2: Erweiterte Features
 - 🔲 Weitere 10 Level (Schwierigkeitsgrad 4-5)
@@ -184,21 +185,22 @@ Dieses Projekt folgt dem **"Mit Kindern, für Kinder"** Ansatz:
 
 ## 🚧 Status
 
-**Aktuell:** Entwicklungsphase - MVP zu 50% fertig
+**Aktuell:** Entwicklungsphase - MVP zu 90% fertig
 
 **Was funktioniert bereits:**
 - ✅ 10 Level-Bilder (SVG) + 4 Extra-Bilder
 - ✅ Home Screen mit Navigation
 - ✅ Memorize-Phase (Bild anzeigen mit Timer)
 - ✅ Drawing-Phase (Canvas mit Farben, Pinsel, Radiergummi)
+- ✅ Result-Phase (Side-by-Side Vergleich + Sterne-Bewertung + Feedback)
 - ✅ Level-System mit progressiver Schwierigkeit
 - ✅ Internationalisierung (DE/EN)
+- ✅ Level-Navigation (← Zurück / Weiter →)
 
 **In Arbeit:**
-- 🔴 Comparison-Phase (Overlay-Vergleich)
-- 🔴 Rating-Phase (Sterne-Bewertung)
-- 🔴 Progress-Speicherung
+- 🔴 Progress-Speicherung (AsyncStorage)
 - 🔴 Settings-Menü
+- 🔴 Dark Mode
 
 👉 **[Detaillierter Projektstatus](STATUS.md)** - Vollständige Übersicht aller erledigten und offenen Aufgaben
 

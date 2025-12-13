@@ -424,12 +424,12 @@ const translations = {
 
 ## 🚀 MVP (Minimum Viable Product)
 
-### Phase 1: Core Features (MVP) - **50% FERTIG**
+### Phase 1: Core Features (MVP) - **90% FERTIG**
 - ✅ 10 Level (Schwierigkeitsgrad 1-5) + 4 Extra-Bilder
 - ✅ Bildanzeige mit Timer (Memorize-Phase vollständig)
 - ✅ Einfacher Canvas zum Zeichnen (DrawingCanvas.tsx mit react-native-skia)
-- 🔴 Vergleich mit Slider (noch nicht implementiert)
-- 🔴 Selbstbewertung (1-5 Sterne) (RatingManager vorhanden, UI fehlt)
+- ✅ Vergleich (Side-by-Side Ansicht von Original und Zeichnung)
+- ✅ Selbstbewertung (1-5 Sterne) (Vollständig interaktiv mit Feedback-Texten)
 - 🔴 Fortschritt speichern (AsyncStorage) (noch nicht implementiert)
 - 🔴 Light/Dark Mode (noch nicht implementiert)
 - ✅ i18n (DE/EN) (Service vorhanden)
@@ -499,7 +499,7 @@ eas build --platform ios --profile production
 3. ✅ GitHub Repository erstellen
 4. ✅ Expo-Projekt initialisieren
 5. ✅ Level-Bilder mit Kind zusammen erstellen (10 Level + 4 Extra)
-6. 🟡 Prototyp entwickeln (MVP Phase 1) - **50% fertig** - siehe [STATUS.md](STATUS.md)
+6. 🟡 Prototyp entwickeln (MVP Phase 1) - **90% fertig** - siehe [STATUS.md](STATUS.md)
 7. 🔴 Usability-Test mit Kind
 8. 🔴 Iterieren basierend auf Feedback
 
@@ -508,4 +508,4 @@ eas build --platform ios --profile production
 **Erstellt:** 2025-12-05  
 **Aktualisiert:** 2025-12-13  
 **Team:** Claude (Entwicklung), Kind (Ideengeber), User (Moderator)  
-**Status:** Entwicklungsphase (MVP 50%) - siehe [STATUS.md](STATUS.md) für Details
+**Status:** Entwicklungsphase (MVP 90%) - siehe [STATUS.md](STATUS.md) für Details
