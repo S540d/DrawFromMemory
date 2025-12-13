@@ -1,38 +1,167 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { useRouter } from 'expo-router';
 import { t } from '../services/i18n';
+import { getAllLevels } from '../services/LevelManager';
 import Colors from '../constants/Colors';
-import { Spacing, FontSize, FontWeight } from '../constants/Layout';
+import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 
 /**
  * Levels Screen - Level-Auswahl
- * TODO: Implementierung der Level-Auswahl mit Grid
+ * Zeigt alle verfügbaren Level in einem Grid
  */
 export default function LevelsScreen() {
+  const router = useRouter();
+  const levels = getAllLevels();
+
+  const renderLevelCard = ({ item }: { item: typeof levels[0] }) => {
+    const difficultyText = t(`difficulty.${item.difficulty}`);
+    
+    return (
+      <TouchableOpacity
+        style={styles.levelCard}
+        onPress={() => router.push('/game')}
+        activeOpacity={0.7}
+      >
+        {/* Level-Nummer */}
+        <View style={styles.levelHeader}>
+          <Text style={styles.levelNumber}>
+            {t('levels.level', { number: item.number })}
+          </Text>
+        </View>
+
+        {/* Schwierigkeit */}
+        <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyColor(item.difficulty) }]}>
+          <Text style={styles.difficultyText}>{difficultyText}</Text>
+        </View>
+
+        {/* Anzeigezeit */}
+        <Text style={styles.displayTime}>
+          {t('levels.displayTime', { seconds: item.displayDuration })}
+        </Text>
+
+        {/* Platzhalter für Sterne (später mit Progress-System) */}
+        <View style={styles.starsContainer}>
+          <Text style={styles.starsPlaceholder}>☆ ☆ ☆ ☆ ☆</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t('levels.title')}</Text>
-      <Text style={styles.placeholder}>Level-Auswahl wird implementiert...</Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()}>
+          <Text style={styles.backButton}>← Zurück</Text>
+        </TouchableOpacity>
+        <Text style={styles.title}>{t('levels.title')}</Text>
+      </View>
+
+      {/* Level-Grid */}
+      <FlatList
+        data={levels}
+        renderItem={renderLevelCard}
+        keyExtractor={(item) => `level-${item.number}`}
+        numColumns={2}
+        columnWrapperStyle={styles.row}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   );
 }
+
+/**
+ * Gibt die Farbe für eine Schwierigkeitsstufe zurück
+ */
+function getDifficultyColor(difficulty: number): string {
+  switch (difficulty) {
+    case 1:
+      return '#4CAF50'; // Grün
+    case 2:
+      return '#8BC34A'; // Hellgrün
+    case 3:
+      return '#FFC107'; // Gelb
+    case 4:
+      return '#FF9800'; // Orange
+    case 5:
+      return '#F44336'; // Rot
+    default:
+      return Colors.primary;
+  }
+}
+
+const screenWidth = Dimensions.get('window').width;
+const cardWidth = (screenWidth - Spacing.lg * 3) / 2; // 2 Karten pro Reihe
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
-    padding: Spacing.lg,
+  },
+  header: {
+    paddingHorizontal: Spacing.lg,
+    paddingTop: Spacing.xl,
+    paddingBottom: Spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.surface,
+  },
+  backButton: {
+    fontSize: FontSize.lg,
+    color: Colors.primary,
+    marginBottom: Spacing.sm,
   },
   title: {
     fontSize: FontSize.xxl,
     fontWeight: FontWeight.bold,
     color: Colors.text.primary,
-    marginBottom: Spacing.lg,
   },
-  placeholder: {
-    fontSize: FontSize.md,
+  listContent: {
+    padding: Spacing.lg,
+  },
+  row: {
+    justifyContent: 'space-between',
+    marginBottom: Spacing.md,
+  },
+  levelCard: {
+    width: cardWidth,
+    backgroundColor: Colors.surface,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.md,
+    borderWidth: 2,
+    borderColor: Colors.primary + '30', // 30 = opacity
+  },
+  levelHeader: {
+    marginBottom: Spacing.sm,
+  },
+  levelNumber: {
+    fontSize: FontSize.xl,
+    fontWeight: FontWeight.bold,
+    color: Colors.text.primary,
+  },
+  difficultyBadge: {
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.sm,
+    borderRadius: BorderRadius.sm,
+    alignSelf: 'flex-start',
+    marginBottom: Spacing.sm,
+  },
+  difficultyText: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.medium,
+    color: '#FFFFFF',
+  },
+  displayTime: {
+    fontSize: FontSize.sm,
     color: Colors.text.secondary,
-    textAlign: 'center',
-    marginTop: Spacing.xxl,
+    marginBottom: Spacing.sm,
+  },
+  starsContainer: {
+    marginTop: Spacing.xs,
+  },
+  starsPlaceholder: {
+    fontSize: FontSize.md,
+    color: Colors.text.light,
   },
 });
