@@ -1,9 +1,11 @@
-# Draw From Memory
+# Merke und Male
 
 > Eine Gedächtnistraining-App für Kinder - Bild merken, zeichnen, vergleichen!
 
-[![Status](https://img.shields.io/badge/Status-Konzept-yellow)](https://github.com/S540d/DrawFromMemory)
+[![Status](https://img.shields.io/badge/Status-MVP%2050%25-yellow)](https://github.com/S540d/DrawFromMemory)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+**📊 Quick Status:** [QUICK_STATUS.md](QUICK_STATUS.md) | **📋 Vollständiger Status:** [STATUS.md](STATUS.md)
 
 ---
 
