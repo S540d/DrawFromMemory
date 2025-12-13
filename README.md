@@ -5,7 +5,7 @@
 [![Status](https://img.shields.io/badge/Status-MVP%2090%25-green)](https://github.com/S540d/DrawFromMemory)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**📊 Quick Status:** [QUICK_STATUS.md](QUICK_STATUS.md) | **📋 Vollständiger Status:** [STATUS.md](STATUS.md)
+**📊 Quick Status:** [QUICK_STATUS.md](QUICK_STATUS.md) | **📋 Vollständiger Status:** [STATUS.md](STATUS.md) | **✅ Abgeschlossene Issues:** [ABGESCHLOSSENE_ISSUES.md](ABGESCHLOSSENE_ISSUES.md)
 
 ---
 
