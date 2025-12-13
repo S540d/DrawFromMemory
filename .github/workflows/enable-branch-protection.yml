@@ -1,0 +1,66 @@
+name: Enable branch protection on main
+permissions:
+  administration: write
+  contents: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      required_status_checks:
+        description: 'Comma-separated status check contexts (leave empty for none)'
+        required: false
+      required_approving_review_count:
+        description: 'Number of required approving reviews'
+        required: false
+        default: '1'
+
+jobs:
+  protect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure jq is installed
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Build protection payload
+        run: |
+          contexts_input="${{ github.event.inputs.required_status_checks }}"
+          contexts_input="${contexts_input:-}"
+          if [ -z "$contexts_input" ]; then
+            contexts_json='[]'
+          else
+            IFS=',' read -ra parts <<< "$contexts_input"
+            contexts_json=$(printf '%s\n' "${parts[@]}" | jq -R . | jq -s .)
+          fi
+          reviews_count_input="${{ github.event.inputs.required_approving_review_count }}"
+          reviews_count_input="${reviews_count_input:-1}"
+          payload=$(jq -n --argjson contexts "$contexts_json" --arg reviews_count "$reviews_count_input" '{
+            required_status_checks: { strict: true, contexts: $contexts },
+            enforce_admins: true,
+            required_pull_request_reviews: {
+              dismiss_stale_reviews: true,
+              require_code_owner_reviews: false,
+              required_approving_review_count: ($reviews_count | tonumber)
+            },
+            restrictions: null,
+            allow_force_pushes: false,
+            allow_deletions: false,
+            required_linear_history: true,
+            require_signed_commits: false
+          }')
+          echo "$payload" > /tmp/payload.json
+          cat /tmp/payload.json
+
+      - name: Apply branch protection via GitHub API
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        run: |
+          if [ -z "$GITHUB_TOKEN" ]; then
+            echo "GITHUB_TOKEN is not available. The workflow cannot update branch protection without a token with repo administration privileges."
+            exit 1
+          fi
+          curl -s -X PUT \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/S540d/DrawFromMemory/branches/main/protection" \
+            -d @/tmp/payload.json
