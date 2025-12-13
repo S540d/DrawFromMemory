@@ -424,16 +424,16 @@ const translations = {
 
 ## 🚀 MVP (Minimum Viable Product)
 
-### Phase 1: Core Features (MVP)
-- ✅ 10 Level (Schwierigkeitsgrad 1-3)
-- ✅ Bildanzeige mit Timer
-- ✅ Einfacher Canvas zum Zeichnen
-- ✅ Vergleich mit Slider
-- ✅ Selbstbewertung (1-5 Sterne)
-- ✅ Fortschritt speichern (AsyncStorage)
-- ✅ Light/Dark Mode
-- ✅ i18n (DE/EN)
-- ✅ Settings-Menü (nach UX-Vorgaben)
+### Phase 1: Core Features (MVP) - **50% FERTIG**
+- ✅ 10 Level (Schwierigkeitsgrad 1-5) + 4 Extra-Bilder
+- ✅ Bildanzeige mit Timer (Memorize-Phase vollständig)
+- ✅ Einfacher Canvas zum Zeichnen (DrawingCanvas.tsx mit react-native-skia)
+- 🔴 Vergleich mit Slider (noch nicht implementiert)
+- 🔴 Selbstbewertung (1-5 Sterne) (RatingManager vorhanden, UI fehlt)
+- 🔴 Fortschritt speichern (AsyncStorage) (noch nicht implementiert)
+- 🔴 Light/Dark Mode (noch nicht implementiert)
+- ✅ i18n (DE/EN) (Service vorhanden)
+- 🔴 Settings-Menü (nur Platzhalter)
 
 ### Phase 2: Erweiterte Features
 - 🔲 Weitere 10 Level (Schwierigkeitsgrad 4-5)
@@ -495,16 +495,17 @@ eas build --platform ios --profile production
 ## 📝 Nächste Schritte
 
 1. ✅ Projektskizze erstellen (diese Datei)
-2. 🔲 Fragenkatalog zusammenstellen (siehe FRAGEN.md)
-3. 🔲 GitHub Repository erstellen
-4. 🔲 Expo-Projekt initialisieren
-5. 🔲 Level-Bilder mit Kind zusammen erstellen
-6. 🔲 Prototyp entwickeln (MVP Phase 1)
-7. 🔲 Usability-Test mit Kind
-8. 🔲 Iterieren basierend auf Feedback
+2. ✅ Fragenkatalog zusammenstellen (siehe FRAGEN.md)
+3. ✅ GitHub Repository erstellen
+4. ✅ Expo-Projekt initialisieren
+5. ✅ Level-Bilder mit Kind zusammen erstellen (10 Level + 4 Extra)
+6. 🟡 Prototyp entwickeln (MVP Phase 1) - **50% fertig** - siehe [STATUS.md](STATUS.md)
+7. 🔴 Usability-Test mit Kind
+8. 🔴 Iterieren basierend auf Feedback
 
 ---
 
-**Erstellt:** 2025-12-05
-**Team:** Claude (Entwicklung), Kind (Ideengeber), User (Moderator)
-**Status:** Konzept-Phase
+**Erstellt:** 2025-12-05  
+**Aktualisiert:** 2025-12-13  
+**Team:** Claude (Entwicklung), Kind (Ideengeber), User (Moderator)  
+**Status:** Entwicklungsphase (MVP 50%) - siehe [STATUS.md](STATUS.md) für Details
