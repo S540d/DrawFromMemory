@@ -270,24 +270,24 @@ Alle 10 Level-Bilder wurden als SVG erstellt:
    - SVG-Entwurf mit Stift
    - Verschiedene Größen generieren
 
-7. **Sound-Effekte hinzufügen**
+5. **Sound-Effekte hinzufügen**
    - Sounds finden/erstellen
    - In Bewertung integrieren
 
-8. **Usability-Test mit Kind**
+6. **Usability-Test mit Kind**
    - Feedback sammeln
    - Anpassungen vornehmen
 
-9. **Deployment vorbereiten**
+7. **Deployment vorbereiten**
    - Expo OTA Updates konfigurieren
    - Build-Skripte erstellen
 
 ### Langfristig (Phase 2+)
 
-10. **Galerie implementieren**
-11. **Share-Funktion**
-12. **Achievements-System**
-13. **Automatische Ähnlichkeitserkennung**
+8. **Galerie implementieren**
+9. **Share-Funktion**
+10. **Achievements-System**
+11. **Automatische Ähnlichkeitserkennung**
 
 ---
 
@@ -344,10 +344,12 @@ Um Phase 1 (MVP) als abgeschlossen zu betrachten, müssen folgende Kriterien erf
 - [ ] Web-Version (PWA) deployed auf GitHub Pages
 - [ ] Android APK erstellt und getestet
 
-**Aktueller Stand:** 7/10 Kriterien erfüllt (70%)
+**Aktueller Stand:** 2/10 Kriterien erfüllt (20%)
+
+**Hinweis:** Die 90% MVP-Fertigstellung bezieht sich auf die Kern-Funktionalität (alle 3 Game-Phasen funktionieren). Die "Definition of Done" beinhaltet zusätzliche Kriterien wie Deployment, Testing und Sound-Effekte, die noch ausstehen.
 
 ---
 
 **Erstellt:** 2025-12-13  
-**Status:** Laufende Entwicklung - MVP zu 50% fertig  
-**Nächstes Review:** Nach Fertigstellung der Comparison- und Rating-Phase
+**Status:** Laufende Entwicklung - Kern-Funktionalität zu 90% fertig, Gesamtes MVP zu 70% fertig  
+**Nächstes Review:** Nach Implementierung von Progress-Speicherung und Settings
