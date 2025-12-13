@@ -150,14 +150,17 @@ Diese Fragen werden in einer zweiten Runde besprochen:
 ## 🚀 Nächste Schritte (Umsetzung)
 
 1. ✅ Farbschema dokumentiert
-2. 🔲 4 neue Level-Bilder erstellen (Gesicht, Wolke, Hund, Schaf)
-3. 🔲 App-Icon mit Stift erstellen
-4. 🔲 PROJEKTSKIZZE.md aktualisieren
-5. 🔲 README.md aktualisieren mit neuem Namen
-6. 🔲 Expo-Projekt initialisieren mit "Merke und Male"
+2. ✅ 4 neue Level-Bilder erstellen (Gesicht, Wolke, Hund, Schaf) - **Alle 10 Level + 4 Extra fertig**
+3. 🔴 App-Icon mit Stift erstellen
+4. ✅ PROJEKTSKIZZE.md aktualisieren
+5. ✅ README.md aktualisieren mit neuem Namen
+6. ✅ Expo-Projekt initialisieren mit "Merke und Male"
+
+**Implementierungsstatus:** Siehe [STATUS.md](STATUS.md) für Details
 
 ---
 
-**Erstellt:** 2025-12-05
-**Status:** Grundlegende Entscheidungen getroffen, bereit für Entwicklung
+**Erstellt:** 2025-12-05  
+**Aktualisiert:** 2025-12-13  
+**Status:** In Entwicklung (MVP 50%) - siehe [STATUS.md](STATUS.md)  
 **Team:** Kind (Ideengeber), Sven (Moderator), Claude (Umsetzung)

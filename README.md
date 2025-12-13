@@ -1,9 +1,11 @@
-# Draw From Memory
+# Merke und Male
 
 > Eine Gedächtnistraining-App für Kinder - Bild merken, zeichnen, vergleichen!
 
-[![Status](https://img.shields.io/badge/Status-Konzept-yellow)](https://github.com/S540d/DrawFromMemory)
+[![Status](https://img.shields.io/badge/Status-MVP%2090%25-green)](https://github.com/S540d/DrawFromMemory)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+**📊 Quick Status:** [QUICK_STATUS.md](QUICK_STATUS.md) | **📋 Vollständiger Status:** [STATUS.md](STATUS.md) | **✅ Abgeschlossene Issues:** [ABGESCHLOSSENE_ISSUES.md](ABGESCHLOSSENE_ISSUES.md)
 
 ---
 
@@ -35,16 +37,26 @@
 
 ## 🚀 Roadmap
 
-### Phase 1: MVP (Minimum Viable Product)
+**Aktueller Stand:** MVP zu 90% fertig - [Detaillierter Status →](STATUS.md)
+
+### Phase 1: MVP (Minimum Viable Product) - **90% FERTIG**
 - ✅ Konzept & Projektskizze
-- 🔲 Expo-Projekt Setup
-- 🔲 Home Screen
-- 🔲 Game Screen (3 Phasen: Merken → Zeichnen → Vergleichen)
-- 🔲 Settings Screen (nach UX-Vorgaben)
-- 🔲 10 Level (Schwierigkeitsgrad 1-3)
-- 🔲 Fortschritt speichern
-- 🔲 Dark Mode
-- 🔲 i18n (DE/EN)
+- ✅ Expo-Projekt Setup
+- ✅ Home Screen (vollständig)
+- ✅ Game Screen (vollständig)
+  - ✅ Merken-Phase (Bild + Timer)
+  - ✅ Zeichnen-Phase (Canvas mit allen Features)
+  - ✅ Ergebnis-Phase (Vergleich + Sterne-Bewertung + Feedback)
+- 🔴 Settings Screen (nur Platzhalter)
+- ✅ 10 Level + 4 Extra-Bilder (alle SVG vorhanden)
+- 🔴 Fortschritt speichern (AsyncStorage)
+- 🔴 Dark Mode
+- ✅ i18n (DE/EN) Service vorhanden
+
+**Nächste Schritte für MVP:**
+1. Progress-Speicherung (AsyncStorage)
+2. Settings-Menü vollständig
+3. Dark Mode
 
 ### Phase 2: Erweiterte Features
 - 🔲 Weitere 10 Level (Schwierigkeitsgrad 4-5)
@@ -173,14 +185,35 @@ Dieses Projekt folgt dem **"Mit Kindern, für Kinder"** Ansatz:
 
 ## 🚧 Status
 
-**Aktuell:** Konzept-Phase
+**Aktuell:** Entwicklungsphase - MVP zu 90% fertig
+
+**Was funktioniert bereits:**
+- ✅ 10 Level-Bilder (SVG) + 4 Extra-Bilder
+- ✅ Home Screen mit Navigation
+- ✅ Memorize-Phase (Bild anzeigen mit Timer)
+- ✅ Drawing-Phase (Canvas mit Farben, Pinsel, Radiergummi)
+- ✅ Result-Phase (Side-by-Side Vergleich + Sterne-Bewertung + Feedback)
+- ✅ Level-System mit progressiver Schwierigkeit
+- ✅ Internationalisierung (DE/EN)
+- ✅ Level-Navigation (← Zurück / Weiter →)
+
+**In Arbeit:**
+- 🔴 Progress-Speicherung (AsyncStorage)
+- 🔴 Settings-Menü
+- 🔴 Dark Mode
+
+👉 **[Detaillierter Projektstatus](STATUS.md)** - Vollständige Übersicht aller erledigten und offenen Aufgaben
 
 Nächste Schritte:
-1. Entscheidungen mit dem Kind treffen (siehe [FRAGEN.md](FRAGEN.md))
-2. Expo-Projekt initialisieren
-3. Erste 3 Level-Bilder mit Kind erstellen
-4. Prototyp entwickeln (Home + Game Screen)
-5. Usability-Test mit Kind
+1. Entscheidungen mit dem Kind treffen (siehe [OFFENE_FRAGEN.md](OFFENE_FRAGEN.md))
+2. ~~Expo-Projekt initialisieren~~ ✅
+3. ~~Erste 3 Level-Bilder mit Kind erstellen~~ ✅ (Alle 10 + 4 Extra)
+4. ~~Prototyp entwickeln (Home + Game Screen)~~ 🟡 50% fertig
+5. Comparison- und Rating-Phase fertigstellen
+6. Progress-Speicherung implementieren
+7. Usability-Test mit Kind
+
+👉 **[Vollständiger Projektstatus](STATUS.md)**
 
 ---
 
