@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const distPath = path.join(__dirname, '..', 'dist');
-const baseUrl = '/DrawFromMemory/';
+const baseUrl = '/DrawFromMemory';
 
 console.log('🔧 Starting post-build processing for expo-router + GitHub Pages...');
 
@@ -13,23 +13,24 @@ const htmlFiles = fs.readdirSync(distPath)
 
 console.log(`📄 Found ${htmlFiles.length} HTML files to process`);
 
+// Also need to update the JavaScript bundle to use correct base path
+const jsFiles = fs.readdirSync(path.join(distPath, '_expo/static/js/web'))
+  .filter(file => file.startsWith('entry-') && file.endsWith('.js'))
+  .map(file => path.join(distPath, '_expo/static/js/web', file));
+
 htmlFiles.forEach(filePath => {
   const fileName = path.basename(filePath);
   let html = fs.readFileSync(filePath, 'utf8');
 
-  // Add <base> tag to set the base URL for all relative paths
-  // This works with React hydration and doesn't modify the HTML structure
-  if (!html.includes('<base')) {
-    html = html.replace(
-      '<head>',
-      `<head><base href="${baseUrl}">`
-    );
-  }
+  // Rewrite paths for GitHub Pages subpath
+  // Match href="/..." but not href="//" (protocol-relative URLs)
+  html = html.replace(/href="\/(?!\/)/g, `href="${baseUrl}/`);
+  html = html.replace(/src="\/(?!\/)/g, `src="${baseUrl}/`);
 
   // Fix title if empty (expo-router sometimes generates empty titles)
-  if (html.includes('<title data-rh="true"></title>')) {
+  if (html.includes('<title data-rh="true"></title>') || html.includes('<title></title>')) {
     html = html.replace(
-      '<title data-rh="true"></title>',
+      /<title[^>]*><\/title>/,
       '<title>Merke und Male - Gedächtnistraining</title>'
     );
   }
@@ -38,5 +39,21 @@ htmlFiles.forEach(filePath => {
   console.log(`  ✓ Processed ${fileName}`);
 });
 
+// Update JavaScript bundle to handle basePath in router
+jsFiles.forEach(filePath => {
+  const fileName = path.basename(filePath);
+  let js = fs.readFileSync(filePath, 'utf8');
+
+  // Replace router base path configuration
+  // This ensures client-side navigation works with the subpath
+  js = js.replace(
+    /location\.pathname/g,
+    `location.pathname.replace('${baseUrl}', '')`
+  );
+
+  fs.writeFileSync(filePath, js);
+  console.log(`  ✓ Updated ${fileName} for subpath routing`);
+});
+
 console.log('✅ Post-build processing complete!');
-console.log(`   Added <base href="${baseUrl}"> to all HTML files`);
+console.log(`   Updated all paths with baseUrl: ${baseUrl}`);
