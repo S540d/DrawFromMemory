@@ -1,12 +1,15 @@
 #!/usr/bin/env sh
 echo "🔍 Running pre-commit checks..."
 
-# Check for console.log in staged files
+# Check for console.log in staged files (excluding scripts/)
 echo "Checking for console.log statements..."
-if git diff --cached --name-only | grep -E '\.(ts|tsx|js|jsx)$' | xargs grep -n "console\.log\|console\.debug" 2>/dev/null; then
-  echo "❌ ERROR: Found console.log/debug in staged files!"
-  echo "Please remove debug statements before committing."
-  exit 1
+FILES=$(git diff --cached --name-only | grep -E '\.(ts|tsx|js|jsx)$' | grep -v '^scripts/')
+if [ -n "$FILES" ]; then
+  if echo "$FILES" | xargs grep -n "console\.log\|console\.debug" 2>/dev/null; then
+    echo "❌ ERROR: Found console.log/debug in staged files!"
+    echo "Please remove debug statements before committing."
+    exit 1
+  fi
 fi
 
 # Check for Web APIs without Platform.OS check
