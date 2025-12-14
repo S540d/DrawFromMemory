@@ -12,7 +12,7 @@ Dieses Dokument bietet eine Schnellübersicht über den Status aller Issues und 
 |---------|-------------|---------|
 | **Konzeption** | 100% ✅ | Alle Planungsdokumente vollständig |
 | **Entscheidungen** | 90% ✅ | 18/20 Entscheidungen getroffen |
-| **MVP Features** | 90% 🟡 | 9/10 Kern-Features implementiert |
+| **MVP Features** | 100% ✅ | Alle Kern-Features implementiert |
 | **Level-Bilder** | 100% ✅ | Alle 10 + 4 Extra-Bilder vorhanden |
 | **Deployment** | 0% 🔴 | Noch nicht begonnen |
 
@@ -60,20 +60,27 @@ Dieses Dokument bietet eine Schnellübersicht über den Status aller Issues und 
 - ✅ i18n.ts - Internationalisierung (DE/EN)
 - ✅ RatingManager.ts - Bewertungssystem
 
-### 6. Screens (60%)
+### 6. Screens (100%)
 - ✅ Home Screen (index.tsx) - vollständig
-- ✅ Game Screen (game.tsx) - Vollständig fertig (90%)
+- ✅ Game Screen (game.tsx) - Vollständig fertig ✅
   - ✅ Phase 1: Memorize (Bild + Timer)
   - ✅ Phase 2: Draw (Canvas)
+    - ✅ Löschen-Taste funktioniert (Issue #8 geschlossen)
+    - ✅ Zurück/Undo-Taste funktioniert (Issue #9 geschlossen)
   - ✅ Phase 3: Result (Comparison + Rating)
     - Side-by-Side Vergleich
     - Interaktive Sterne-Bewertung
     - Feedback-Texte
     - Level-Navigation
-- ✅ Levels Screen (levels.tsx) - angelegt
-- 🔴 Settings Screen (settings.tsx) - nur Platzhalter
+- ✅ Levels Screen (levels.tsx) - vollständig
+- ✅ Settings Screen (settings.tsx) - vollständig
 
-### 7. Components (100% der geplanten)
+### 7. Bugfixes ✨ NEU (2025-12-14)
+- ✅ Issue #8: Löschen-Taste - Funktioniert mit Alert-Bestätigung
+- ✅ Issue #9: Zurück-Taste (Undo) - Funktioniert mit disabled State
+- ✅ Issue #10: Bildwiederholungen - Intelligent vermieden durch Last-3-Tracking
+
+### 8. Components (100% der geplanten)
 - ✅ LevelImageDisplay.tsx - Bild-Anzeige
 - ✅ DrawingCanvas.tsx - Zeichen-Canvas (vollständig)
 
@@ -184,5 +191,7 @@ Um Phase 1 (MVP) als abgeschlossen zu betrachten:
 
 ---
 
-**Erstellt:** 2025-12-13  
+**Erstellt:** 2025-12-13
+**Letzte Aktualisierung:** 2025-12-14
+**Änderungen:** +3 Issues geschlossen (#8, #9, #10) - Gameplay-Features 100% komplett
 **Für Details:** Siehe [STATUS.md](STATUS.md)

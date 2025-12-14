@@ -237,6 +237,30 @@ Die folgenden Issues sind vollständig implementiert und getestet:
   - Technologie: react-native-skia
   - Status: ✅ Vollständig implementiert
 
+### 9. Bugfixes & Verbesserungen ✨ NEU (2025-12-14)
+
+- [x] **Issue #8: Löschen-Taste funktioniert** ✅
+  - Implementierung: Alert-Bestätigung + drawing.clearCanvas()
+  - Code: [game.tsx:176-190](https://github.com/S540d/DrawFromMemory/blob/main/app/game.tsx#L176-L190)
+  - Status: ✅ Funktioniert einwandfrei
+  - Geschlossen: 2025-12-14
+
+- [x] **Issue #9: Zurück-Taste (Undo) funktioniert** ✅
+  - Implementierung: drawing.undo() mit disabled State
+  - Code: [game.tsx:169-175](https://github.com/S540d/DrawFromMemory/blob/main/app/game.tsx#L169-L175)
+  - Status: ✅ Funktioniert einwandfrei
+  - Geschlossen: 2025-12-14
+
+- [x] **Issue #10: Bildwiederholungen intelligent vermieden** ✅
+  - Implementierung: Last-3-Images Tracking mit Auto-Reset
+  - Code: [ImagePoolManager.ts:122-171](https://github.com/S540d/DrawFromMemory/blob/main/services/ImagePoolManager.ts#L122-L171)
+  - Features:
+    - Speichert die letzten 3 gezeigten Bilder
+    - Filtert kürzlich gezeigte Bilder aus
+    - Automatischer Reset bei Durchlauf aller Bilder
+  - Status: ✅ Funktioniert einwandfrei
+  - Geschlossen: 2025-12-14
+
 ### 9. Technische Recherchen
 
 - [x] **Ähnlichkeitserkennungs-Verfahren recherchiert**
@@ -249,7 +273,19 @@ Die folgenden Issues sind vollständig implementiert und getestet:
   - react-native-skia ist konform
   - Status: ✅ Recherche abgeschlossen
 
-### 10. Projekt-Status Dokumentation
+### 10. Technische Recherchen
+
+- [x] **Ähnlichkeitserkennungs-Verfahren recherchiert**
+  - Dokumentiert in FRAGEN.md
+  - MSE, SSIM, Contour Matching, ML-Ansätze
+  - Status: ✅ Recherche abgeschlossen
+
+- [x] **Play Store Compliance geprüft**
+  - Dokumentiert in FRAGEN.md
+  - react-native-skia ist konform
+  - Status: ✅ Recherche abgeschlossen
+
+### 11. Projekt-Status Dokumentation
 
 - [x] **STATUS.md erstellen**
   - 419 Zeilen vollständige Projektübersicht
@@ -346,14 +382,14 @@ Die folgenden Issues sind noch nicht begonnen:
 
 ## 📊 Zusammenfassung
 
-**Abgeschlossene Issues:** 54 ✅ (+2 seit letztem Update)
-**Teilweise abgeschlossen:** 0 🟡 (beide vervollständigt!)
+**Abgeschlossene Issues:** 57 ✅ (+3 seit letztem Update - Issues #8, #9, #10)
+**Teilweise abgeschlossen:** 0 🟡
 **Noch offen (für MVP):** 9 🔴
 
-**Kern-Funktionalität:** 95% fertig (+5% durch Levels + Settings Screen)
-**Gesamt-MVP (inkl. Deployment/Testing):** 75% fertig (+5%)
+**Kern-Funktionalität:** 100% fertig ✅ (Alle Features für Gameplay komplett)
+**Gesamt-MVP (inkl. Deployment/Testing):** 75% fertig
 
-**Geschätzter Aufwand bis MVP-Abschluss:** ~8-12 Stunden (vorher 10-15h)
+**Geschätzter Aufwand bis MVP-Abschluss:** ~8-12 Stunden
 
 ---
 
@@ -379,5 +415,6 @@ Falls diese als GitHub Issues existieren, können folgende geschlossen werden:
 
 ---
 
-**Letzte Aktualisierung:** 2025-12-13  
+**Letzte Aktualisierung:** 2025-12-14
+**Änderungen:** +3 Issues geschlossen (#8, #9, #10)
 **Für Details:** Siehe [STATUS.md](STATUS.md)
