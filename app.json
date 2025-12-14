@@ -43,7 +43,7 @@
     },
     "extra": {
       "router": {
-        "origin": "https://s540d.github.io/DrawFromMemory"
+        "origin": false
       },
       "eas": {
         "projectId": "your-project-id-here"
