@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const distPath = path.join(__dirname, '..', 'dist');
-const baseUrl = '/DrawFromMemory';
+const baseUrl = '/DrawFromMemory/';
 
 console.log('🔧 Starting post-build processing for expo-router + GitHub Pages...');
 
@@ -17,10 +17,14 @@ htmlFiles.forEach(filePath => {
   const fileName = path.basename(filePath);
   let html = fs.readFileSync(filePath, 'utf8');
 
-  // Add baseUrl prefix to all absolute paths for GitHub Pages subpath
-  // This fixes expo-router links to work on GitHub Pages
-  html = html.replace(/href="\/(?!\/)/g, `href="${baseUrl}/`);
-  html = html.replace(/src="\/(?!\/)/g, `src="${baseUrl}/`);
+  // Add <base> tag to set the base URL for all relative paths
+  // This works with React hydration and doesn't modify the HTML structure
+  if (!html.includes('<base')) {
+    html = html.replace(
+      '<head>',
+      `<head><base href="${baseUrl}">`
+    );
+  }
 
   // Fix title if empty (expo-router sometimes generates empty titles)
   if (html.includes('<title data-rh="true"></title>')) {
@@ -35,4 +39,4 @@ htmlFiles.forEach(filePath => {
 });
 
 console.log('✅ Post-build processing complete!');
-console.log(`   All links updated with baseUrl: ${baseUrl}`);
+console.log(`   Added <base href="${baseUrl}"> to all HTML files`);
