@@ -3,14 +3,20 @@ echo "🔍 Running pre-commit checks..."
 
 # Check for console.log in staged files (excluding scripts/)
 echo "Checking for console.log statements..."
-FILES=$(git diff --cached --name-only | grep -E '\.(ts|tsx|js|jsx)$' | grep -v '^scripts/')
-if [ -n "$FILES" ]; then
-  if echo "$FILES" | xargs grep -n "console\.log\|console\.debug" 2>/dev/null; then
-    echo "❌ ERROR: Found console.log/debug in staged files!"
+# Get list of staged JS/TS files (excluding scripts/ directory)
+for file in $(git diff --cached --name-only | grep -E '\.(ts|tsx|js|jsx)$'); do
+  # Skip files in scripts/ directory
+  case "$file" in
+    scripts/*) continue ;;
+  esac
+
+  # Check for console.log/debug
+  if grep -n "console\.log\|console\.debug" "$file" 2>/dev/null; then
+    echo "❌ ERROR: Found console.log/debug in $file!"
     echo "Please remove debug statements before committing."
     exit 1
   fi
-fi
+done
 
 # Check for Web APIs without Platform.OS check
 echo "Checking for unsafe Web API usage..."
