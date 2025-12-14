@@ -2,8 +2,11 @@
 
 > Eine Gedächtnistraining-App für Kinder - Bild merken, zeichnen, vergleichen!
 
-[![Status](https://img.shields.io/badge/Status-MVP%2090%25-green)](https://github.com/S540d/DrawFromMemory)
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://s540d.github.io/DrawFromMemory/)
+[![Status](https://img.shields.io/badge/Status-MVP%2095%25-green)](https://github.com/S540d/DrawFromMemory)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+**🌐 Live Demo:** [https://s540d.github.io/DrawFromMemory/](https://s540d.github.io/DrawFromMemory/)
 
 **📊 Quick Status:** [QUICK_STATUS.md](QUICK_STATUS.md) | **📋 Vollständiger Status:** [STATUS.md](STATUS.md) | **✅ Abgeschlossene Issues:** [ABGESCHLOSSENE_ISSUES.md](ABGESCHLOSSENE_ISSUES.md)
 
@@ -37,26 +40,27 @@
 
 ## 🚀 Roadmap
 
-**Aktueller Stand:** MVP zu 90% fertig - [Detaillierter Status →](STATUS.md)
+**Aktueller Stand:** MVP zu 95% fertig - [Detaillierter Status →](STATUS.md)
 
-### Phase 1: MVP (Minimum Viable Product) - **90% FERTIG**
+### Phase 1: MVP (Minimum Viable Product) - **95% FERTIG**
 - ✅ Konzept & Projektskizze
-- ✅ Expo-Projekt Setup
+- ✅ Expo-Projekt Setup mit expo-router
 - ✅ Home Screen (vollständig)
 - ✅ Game Screen (vollständig)
   - ✅ Merken-Phase (Bild + Timer)
-  - ✅ Zeichnen-Phase (Canvas mit allen Features)
-  - ✅ Ergebnis-Phase (Vergleich + Sterne-Bewertung + Feedback)
-- 🔴 Settings Screen (nur Platzhalter)
+  - ✅ Zeichnen-Phase (Canvas mit allen Features: Zeichnen, Löschen, Undo)
+  - ✅ Ergebnis-Phase (Side-by-Side Vergleich + Interaktive Sterne-Bewertung + Feedback)
 - ✅ 10 Level + 4 Extra-Bilder (alle SVG vorhanden)
-- 🔴 Fortschritt speichern (AsyncStorage)
-- 🔴 Dark Mode
+- ✅ Fortschritt speichern (AsyncStorage mit completedLevels)
+- ✅ GitHub Pages Deployment (Web-Testing auf Telefon)
 - ✅ i18n (DE/EN) Service vorhanden
+- 🔴 Settings Screen (geplant für Phase 2)
+- 🔴 Dark Mode (geplant für Phase 2)
 
-**Nächste Schritte für MVP:**
-1. Progress-Speicherung (AsyncStorage)
-2. Settings-Menü vollständig
-3. Dark Mode
+**Nächste Schritte:**
+1. Settings-Menü (Theme, Sprache, Zeichenzeit)
+2. Dark Mode Support
+3. Sound-Effekte (optional)
 
 ### Phase 2: Erweiterte Features
 - 🔲 Weitere 10 Level (Schwierigkeitsgrad 4-5)
@@ -75,12 +79,13 @@
 
 ## 🛠 Tech Stack
 
-- **Framework:** React Native (Expo)
+- **Framework:** React Native (Expo 52) mit expo-router
 - **Language:** TypeScript
-- **Zeichnen:** react-native-skia (geplant)
-- **Storage:** AsyncStorage
-- **i18n:** Custom Implementation
-- **Analytics:** Plausible (DSGVO-konform, optional)
+- **Zeichnen:** @shopify/react-native-skia
+- **Storage:** @react-native-async-storage/async-storage
+- **i18n:** Custom Implementation (DE/EN)
+- **Deployment:** GitHub Pages + GitHub Actions
+- **Cross-Platform:** Web, Android, iOS
 
 ---
 
@@ -88,51 +93,38 @@
 
 ```
 DrawFromMemory/
-├── App.tsx                      # Haupt-App-Komponente
-├── app.json                     # Expo Konfiguration
-├── package.json
-├── tsconfig.json
+├── app/                         # Expo Router (File-based Routing)
+│   ├── index.tsx                # Home Screen
+│   ├── game/[id].tsx            # Game Screen (Dynamic Route)
+│   └── _layout.tsx              # Root Layout
 │
 ├── components/
-│   ├── Canvas.tsx               # Zeichen-Canvas
-│   ├── ImageDisplay.tsx         # Bild-Anzeige mit Timer
-│   ├── ComparisonView.tsx       # Overlay-Vergleich
-│   ├── ToolBar.tsx              # Zeichen-Werkzeuge
-│   ├── LevelCard.tsx            # Level-Auswahl Card
-│   └── SettingsMenu.tsx         # Einstellungen
-│
-├── screens/
-│   ├── HomeScreen.tsx
-│   ├── LevelSelectionScreen.tsx
-│   ├── GameScreen.tsx
-│   ├── GalleryScreen.tsx
-│   └── SettingsScreen.tsx
+│   ├── DrawingCanvas.tsx        # Skia Canvas Component
+│   └── StarRating.tsx           # Interaktive Sterne-Bewertung
 │
 ├── assets/
-│   ├── images/                  # Level-Bilder (SVG/PNG)
-│   ├── icons/
-│   └── fonts/
+│   ├── images/                  # Level-Bilder (SVG)
+│   │   └── level-*.svg          # 10 Level + 4 Extra-Bilder
+│   ├── icons/                   # App Icons
+│   └── splash.png               # Splash Screen
 │
-├── utils/
-│   ├── storage.ts               # AsyncStorage Helper
-│   ├── levelData.ts             # Level-Definitionen
-│   ├── translations.ts          # i18n
-│   └── constants.ts             # Farben, Spacing, etc.
+├── services/
+│   ├── i18n.ts                  # Internationalisierung (DE/EN)
+│   └── storage.ts               # AsyncStorage Helper
+│
+├── constants/
+│   └── levels.ts                # Level-Definitionen & Konfiguration
 │
 ├── types/
 │   └── index.ts                 # TypeScript Typen
 │
-├── public/                      # Web-Assets (PWA)
-│   ├── index.html
-│   ├── manifest.json
-│   └── .well-known/
-│       └── assetlinks.json      # Android App Links
+├── .github/
+│   └── workflows/
+│       ├── ci-cd.yml            # Quality Checks
+│       └── deploy.yml           # GitHub Pages Deployment
 │
-└── docs/
-    ├── PROJEKTSKIZZE.md         # Detaillierte Konzeption
-    ├── FRAGEN.md                # Offene Fragen & Entscheidungen
-    ├── ARCHITECTURE.md          # Technische Architektur
-    └── PRIVACY_POLICY.md        # Datenschutzerklärung
+└── scripts/
+    └── update-cache-version.js  # Cache-Busting für Deployment
 ```
 
 ---
@@ -185,35 +177,28 @@ Dieses Projekt folgt dem **"Mit Kindern, für Kinder"** Ansatz:
 
 ## 🚧 Status
 
-**Aktuell:** Entwicklungsphase - MVP zu 90% fertig
+**Aktuell:** MVP-Phase - 95% fertig, bereit für Testing
 
 **Was funktioniert bereits:**
 - ✅ 10 Level-Bilder (SVG) + 4 Extra-Bilder
-- ✅ Home Screen mit Navigation
-- ✅ Memorize-Phase (Bild anzeigen mit Timer)
-- ✅ Drawing-Phase (Canvas mit Farben, Pinsel, Radiergummi)
-- ✅ Result-Phase (Side-by-Side Vergleich + Sterne-Bewertung + Feedback)
+- ✅ Home Screen mit Level-Auswahl
+- ✅ Memorize-Phase (Bild anzeigen mit 5-Sekunden-Timer)
+- ✅ Drawing-Phase (Skia Canvas mit Zeichnen, Löschen, Undo)
+- ✅ Result-Phase (Side-by-Side Vergleich + Interaktive Sterne-Bewertung + Dynamisches Feedback)
 - ✅ Level-System mit progressiver Schwierigkeit
+- ✅ Progress-Speicherung (AsyncStorage - abgeschlossene Level)
 - ✅ Internationalisierung (DE/EN)
 - ✅ Level-Navigation (← Zurück / Weiter →)
+- ✅ GitHub Pages Deployment (testbar auf Telefon)
+- ✅ CI/CD Pipeline mit automatischen Quality Checks
 
-**In Arbeit:**
-- 🔴 Progress-Speicherung (AsyncStorage)
-- 🔴 Settings-Menü
-- 🔴 Dark Mode
+**Geplant für Phase 2:**
+- 🔲 Settings-Menü (Theme, Sprache, Zeichenzeit)
+- 🔲 Dark Mode
+- 🔲 Sound-Effekte
+- 🔲 Weitere Level (perspektivische Bilder)
 
-👉 **[Detaillierter Projektstatus](STATUS.md)** - Vollständige Übersicht aller erledigten und offenen Aufgaben
-
-Nächste Schritte:
-1. Entscheidungen mit dem Kind treffen (siehe [OFFENE_FRAGEN.md](OFFENE_FRAGEN.md))
-2. ~~Expo-Projekt initialisieren~~ ✅
-3. ~~Erste 3 Level-Bilder mit Kind erstellen~~ ✅ (Alle 10 + 4 Extra)
-4. ~~Prototyp entwickeln (Home + Game Screen)~~ 🟡 50% fertig
-5. Comparison- und Rating-Phase fertigstellen
-6. Progress-Speicherung implementieren
-7. Usability-Test mit Kind
-
-👉 **[Vollständiger Projektstatus](STATUS.md)**
+👉 **[Live Demo testen](https://s540d.github.io/DrawFromMemory/)** | **[Detaillierter Status](STATUS.md)**
 
 ---
 
@@ -227,10 +212,36 @@ MIT License - siehe [LICENSE](LICENSE)
 
 ## 📞 Kontakt
 
-- **Feedback:** [feedback@example.com](mailto:feedback@example.com)
+- **Feedback:** [devsven@posteo.de](mailto:devsven@posteo.de)
 - **GitHub Issues:** [Issues](https://github.com/S540d/DrawFromMemory/issues)
-- **Support the Project:** [Ko-fi](https://ko-fi.com/devsven)
+- **Live Demo:** [https://s540d.github.io/DrawFromMemory/](https://s540d.github.io/DrawFromMemory/)
+
+## 🚀 Installation & Development
+
+```bash
+# Repository klonen
+git clone https://github.com/S540d/DrawFromMemory.git
+cd DrawFromMemory
+
+# Dependencies installieren
+npm install
+
+# Development Server starten
+npm start
+
+# Web (im Browser)
+npm run web
+
+# Android (mit Expo Go)
+npm run android
+
+# iOS (mit Expo Go, nur macOS)
+npm run ios
+
+# Web Build für Produktion
+npm run build:web
+```
 
 ---
 
-**Hinweis:** Diese App befindet sich in der Konzept-Phase. Alle Features und Designs können sich noch ändern.
+**Hinweis:** Diese App befindet sich in der MVP-Phase. Features und Design können sich noch ändern.

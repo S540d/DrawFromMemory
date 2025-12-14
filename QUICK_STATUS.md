@@ -1,6 +1,6 @@
 # 📊 Quick Status Overview - Merke und Male
 
-**Stand:** 2025-12-14 | **MVP Fortschritt:** 100% (Gameplay) | 👉 [Details](STATUS.md)
+**Stand:** 2025-12-14 | **MVP Fortschritt:** 95% | 👉 [Details](STATUS.md) | 🌐 [Live Demo](https://s540d.github.io/DrawFromMemory/)
 
 ---
 
@@ -8,10 +8,10 @@
 
 ```
 PROJEKT-FORTSCHRITT GESAMT
-████████████████████████░░░░ 85%
+██████████████████████████░░ 95%
 
 MVP PHASE 1 (Ziel: 100%)
-████████████████████████████ 100% (Gameplay fertig!)
+██████████████████████████░░ 95% (Fast fertig!)
 
 PHASE 2
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 0%
@@ -52,32 +52,40 @@ PHASE 3
 - ✅ **Level-System** - Progressive Schwierigkeit
   - Level 1: 10s, Difficulty 1
   - Level 10: 3s, Difficulty 5
-  
-- ✅ **Bildverwaltung** - Intelligente Rotation ✨ NEU
-  - ✅ Vermeidet Wiederholungen (Issue #10 geschlossen)
+
+- ✅ **Bildverwaltung** - Intelligente Rotation ✨
+  - Vermeidet Wiederholungen (Issue #10)
   - Last-3-Images Tracking mit Auto-Reset
   - 14 Bilder total (10 Level + 4 Extra)
-  
+
+- ✅ **Progress-Speicherung** - AsyncStorage ✨
+  - Abgeschlossene Level gespeichert
+  - Fortschritt wird persistiert
+
 - ✅ **Internationalisierung** - DE/EN
   - Service vorhanden
   - Übersetzungen definiert
-  
+
 - ✅ **Rating-Service** - Bewertungslogik
   - 1-5 Sterne System
   - Feedback-Texte
+
+### Deployment ✨ NEU
+- ✅ **GitHub Pages** - Live unter https://s540d.github.io/DrawFromMemory/
+- ✅ **CI/CD Pipeline** - Automatische Quality Checks
+- ✅ **Auto-Deployment** - Bei jedem Push auf main
 
 ---
 
 ## 🔴 Was fehlt noch für MVP?
 
-### Kritisch (Blocker)
-1. **Progress-Speicherung** 🔴
-   - AsyncStorage Integration
-   - Level-Fortschritt speichern
-   - Beste Bewertung pro Level
+### Phase 2 Features (Optional)
+1. **Settings-Menü** 🔴
+   - Theme-Auswahl (Light/Dark/System)
+   - Sprach-Umschaltung (DE/EN)
+   - Zeichenzeit-Anpassung
 
-### Wichtig
-2. **Settings-Menü** 🔴
+2. **Dark Mode** 🔴
    - Sprache wechseln (DE ↔ EN)
    - Timer-Einstellung
    - Dark Mode Toggle
