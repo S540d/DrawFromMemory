@@ -22,7 +22,7 @@ export default function HomeScreen() {
       <View style={styles.buttonContainer}>
         <Link href="/game" asChild>
           <TouchableOpacity style={[styles.button, styles.primaryButton]}>
-            <Text style={styles.buttonText}>{t('home.startButton')}</Text>
+            <Text style={[styles.buttonText, styles.primaryButtonText]}>{t('home.startButton')}</Text>
           </TouchableOpacity>
         </Link>
 
@@ -100,7 +100,10 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: FontSize.xl,
     fontWeight: FontWeight.bold,
-    color: Colors.background,
+    color: '#FFFFFF',  // Weiß für Primary Button
+  },
+  primaryButtonText: {
+    color: Colors.text.primary,  // Dunkel für besseren Kontrast auf hellblauem Hintergrund
   },
   secondaryButtonText: {
     color: Colors.primary,
