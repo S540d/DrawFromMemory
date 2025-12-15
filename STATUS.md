@@ -1,6 +1,6 @@
 # Projektstatus - Merke und Male
 
-**Letzte Aktualisierung:** 2025-12-13
+**Letzte Aktualisierung:** 2025-12-15
 
 Dieses Dokument zeigt den aktuellen Fortschritt des Projekts und welche Issues/Aufgaben bereits erledigt sind.
 
@@ -11,13 +11,13 @@ Dieses Dokument zeigt den aktuellen Fortschritt des Projekts und welche Issues/A
 | Kategorie | Fortschritt | Status |
 |-----------|-------------|--------|
 | **Konzeption** | 100% | ✅ Abgeschlossen |
-| **Entscheidungen** | 90% | ✅ Großteils fertig |
+| **Entscheidungen** | 100% | ✅ Abgeschlossen |
 | **Projektstruktur** | 100% | ✅ Abgeschlossen |
-| **Core Features (MVP)** | 90% | 🟡 Fast fertig |
+| **Core Features (MVP)** | 100% | ✅ Abgeschlossen |
 | **Level-Bilder** | 100% | ✅ Abgeschlossen |
-| **Deployment** | 0% | 🔴 Noch nicht begonnen |
+| **Deployment** | 100% | ✅ Abgeschlossen |
 
-**Gesamtfortschritt:** ~80%
+**Gesamtfortschritt:** ~95% (MVP fertig, Settings für Phase 2)
 
 ---
 
@@ -145,6 +145,26 @@ Alle 10 Level-Bilder wurden als SVG erstellt:
   - react-native-skia ist Play Store konform
   - Keine zusätzlichen Permissions erforderlich
   - Erwartete APK-Größe: 15-25MB
+
+### 10. Deployment & GitHub Pages (100%) ✅ Issue #17
+
+- ✅ **GitHub Pages konfiguriert**
+  - `app.json`: Web-spezifische Konfiguration (`baseUrl: /DrawFromMemory/`)
+  - `package.json`: Homepage und Repository URLs gesetzt
+  - Post-Build Script für Subpath-Routing
+- ✅ **CI/CD Pipeline erstellt**
+  - `.github/workflows/deploy.yml`: Automatisches Deployment bei Push auf main
+  - `.github/workflows/ci-cd.yml`: Quality Checks (Pre-commit Hooks)
+  - Deployment-Zeit: ~55 Sekunden
+- ✅ **expo-router Subpath-Routing gelöst**
+  - Post-Build Script patcht HTML und JavaScript für GitHub Pages Subpath
+  - Client-seitige Navigation funktioniert korrekt
+  - Live Demo: https://s540d.github.io/DrawFromMemory/
+- ✅ **Button-Kontrast optimiert**
+  - Primary Button Text: Dunkelgrau statt Weiß (bessere Lesbarkeit)
+- ✅ **Cache-Busting implementiert**
+  - `scripts/update-cache-version.js`: Automatische Versionierung
+  - `.nojekyll` File für korrekte Asset-Behandlung
 
 ---
 

@@ -1,6 +1,6 @@
 # 📊 Quick Status Overview - Merke und Male
 
-**Stand:** 2025-12-14 | **MVP Fortschritt:** 95% | 👉 [Details](STATUS.md) | 🌐 [Live Demo](https://s540d.github.io/DrawFromMemory/)
+**Stand:** 2025-12-15 | **MVP Fortschritt:** 95% | 👉 [Details](STATUS.md) | 🌐 [Live Demo](https://s540d.github.io/DrawFromMemory/)
 
 ---
 
@@ -131,10 +131,10 @@ PHASE 3
 - [x] 6. 10 Level spielbar ✅
 - [x] 7. Zeichenfunktionen (Löschen, Undo) ✅
 - [x] 8. Bildwiederholungen vermieden ✅
-- [ ] 9. Web-Version deployed
+- [x] 9. Web-Version deployed ✅
 - [ ] 10. Android APK erstellt
 
-**Aktuell:** 4/10 ✅ (100% der Kern-Funktionalität fertig!)
+**Aktuell:** 5/10 ✅ (100% der Kern-Funktionalität + Deployment fertig!)
 
 ---
 
@@ -187,7 +187,7 @@ PHASE 3
 
 ---
 
-**Letzte Aktualisierung:** 2025-12-14
-**Änderungen:** +3 Issues geschlossen (#8, #9, #10) - Gameplay 100% komplett! ✨
-**Nächstes Review:** Nach AsyncStorage Integration
+**Letzte Aktualisierung:** 2025-12-15
+**Änderungen:** +Issue #17 geschlossen - GitHub Pages Deployment erfolgreich! ✨
+**Nächstes Review:** Nach Settings-Menü Implementation
 **Kontakt:** Siehe [README.md](README.md)
