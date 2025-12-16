@@ -176,15 +176,23 @@ export default function GameScreen() {
         <TouchableOpacity
           style={styles.secondaryButton}
           onPress={() => {
+            if (drawing.paths.length === 0) return;
             Alert.alert(
               'Alles löschen?',
               'Möchtest du wirklich die gesamte Zeichnung löschen?',
               [
                 { text: 'Abbrechen', style: 'cancel' },
-                { text: 'Löschen', style: 'destructive', onPress: () => drawing.clearCanvas() },
+                {
+                  text: 'Löschen',
+                  style: 'destructive',
+                  onPress: () => {
+                    drawing.setPaths([]);
+                  }
+                },
               ]
             );
           }}
+          disabled={drawing.paths.length === 0}
         >
           <Text style={styles.secondaryButtonText}>Löschen</Text>
         </TouchableOpacity>
