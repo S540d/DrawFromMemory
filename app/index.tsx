@@ -90,8 +90,8 @@ const styles = StyleSheet.create({
     minHeight: 56,
   },
   primaryButton: {
-    backgroundColor: Colors.primary,
     ...Colors.shadow.large, // Soft & Modern: Prominenter Schatten für Primary Button
+    backgroundColor: Colors.primary, // Nach dem Shadow-Spread, damit es nicht überschrieben wird
   },
   secondaryButton: {
     backgroundColor: Colors.surface,
