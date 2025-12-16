@@ -88,10 +88,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 56,
-    ...Colors.shadow.medium, // Soft & Modern: Weiche, mehrschichtige Schatten
   },
   primaryButton: {
     backgroundColor: Colors.primary,
+    ...Colors.shadow.large, // Soft & Modern: Prominenter Schatten für Primary Button
   },
   secondaryButton: {
     backgroundColor: Colors.surface,

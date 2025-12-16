@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, Dimensions, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getRandomImageForLevel } from '../services/ImagePoolManager';
 import { getLevel, getTotalLevels } from '../services/LevelManager';
@@ -174,23 +174,31 @@ export default function GameScreen() {
           <Text style={styles.secondaryButtonText}>Rückgängig</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.secondaryButton}
+          style={[styles.secondaryButton, drawing.paths.length === 0 && styles.buttonDisabled]}
           onPress={() => {
-            if (drawing.paths.length === 0) return;
-            Alert.alert(
-              'Alles löschen?',
-              'Möchtest du wirklich die gesamte Zeichnung löschen?',
-              [
-                { text: 'Abbrechen', style: 'cancel' },
-                {
-                  text: 'Löschen',
-                  style: 'destructive',
-                  onPress: () => {
-                    drawing.setPaths([]);
-                  }
-                },
-              ]
-            );
+            if (Platform.OS === 'web') {
+              // Auf Web: Direktes Löschen ohne Alert (Alert funktioniert nicht zuverlässig)
+              if (drawing.paths.length > 0 && window.confirm('Möchtest du wirklich die gesamte Zeichnung löschen?')) { // platform-safe
+                drawing.setPaths([]);
+              }
+            } else {
+              // Native: Alert Dialog
+              if (drawing.paths.length === 0) return;
+              Alert.alert(
+                'Alles löschen?',
+                'Möchtest du wirklich die gesamte Zeichnung löschen?',
+                [
+                  { text: 'Abbrechen', style: 'cancel' },
+                  {
+                    text: 'Löschen',
+                    style: 'destructive',
+                    onPress: () => {
+                      drawing.setPaths([]);
+                    }
+                  },
+                ]
+              );
+            }
           }}
           disabled={drawing.paths.length === 0}
         >
@@ -344,7 +352,9 @@ export default function GameScreen() {
         <TouchableOpacity onPress={() => router.back()}>
           <Text style={styles.backButton}>← Zurück</Text>
         </TouchableOpacity>
-        <Text style={styles.levelBadge}>Level {levelNumber}</Text>
+        <View style={styles.headerCenter}>
+          <Text style={styles.levelBadge}>Level {levelNumber}</Text>
+        </View>
         <TouchableOpacity
           onPress={() => setShowSettings(true)}
           style={styles.settingsButton}
@@ -429,12 +439,17 @@ const styles = StyleSheet.create({
     padding: Spacing.lg,
     borderBottomWidth: 1,
     borderBottomColor: Colors.surface,
-    position: 'relative',
+  },
+  headerCenter: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: Spacing.sm,
   },
   backButton: {
     fontSize: FontSize.md,
     color: Colors.primary,
     fontWeight: FontWeight.semibold,
+    minWidth: 80,
   },
   levelBadge: {
     fontSize: FontSize.md,
@@ -562,6 +577,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     ...Colors.shadow.small, // Soft & Modern: Subtile Schatten für sekundäre Buttons
   },
+  buttonDisabled: {
+    opacity: 0.4,
+    borderColor: Colors.text.light,
+  },
   secondaryButtonText: {
     fontSize: FontSize.lg,
     fontWeight: FontWeight.semibold,
@@ -643,8 +662,7 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'absolute',
-    right: Spacing.lg,
+    minWidth: 44,
   },
   settingsIcon: {
     fontSize: 24,
