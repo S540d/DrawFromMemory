@@ -1,21 +1,57 @@
 /**
  * Design Tokens - Merke und Male
- * Helles, freundliches Farbschema für Kinder
+ * "Soft & Modern" Design-System (Option 1)
+ * Warme, sanfte Ästhetik mit subtiler Tiefe und Eleganz
  */
 
 export const Colors = {
-  // Primärfarben
-  primary: '#60D5FA',      // Helles Cyan - Hauptfarbe
-  secondary: '#FFB84D',    // Helles Orange - Akzentfarbe
+  // Primärfarben - Gradient-ready
+  primary: '#667eea',      // Lila/Blau - Kreativität & Spielfreude
+  primaryLight: '#8599f3', // Hellere Variante
+  primaryDark: '#4c63d2',  // Dunklere Variante
+  secondary: '#f093fb',    // Rosa - Spielerisch & Warm
   accent: '#A8E6CF',       // Mint - Zusätzlicher Akzent
 
-  // UI Farben
-  background: '#FFFFFF',   // Weiß - Hintergrund
+  // Gradient-Kombinationen (für LinearGradient)
+  gradient: {
+    primary: ['#667eea', '#764ba2'],     // Lila-Gradient
+    secondary: ['#f093fb', '#f5576c'],   // Rosa-Gradient
+    warm: ['#FFB84D', '#FF6B6B'],        // Warm-Gradient
+  },
+
+  // UI Farben - "Soft & Modern"
+  background: '#FAFAFA',   // Cremeweiß (nicht pures Weiß)
   surface: '#F5F5F5',      // Hellgrau - Karten/Container
+  surfaceElevated: '#EFEFEF', // Dunklerer Surface für mehr Tiefe
   text: {
     primary: '#2C3E50',    // Dunkelgrau - Haupttext
     secondary: '#7F8C8D',  // Mittelgrau - Sekundärtext
     light: '#95A5A6',      // Hellgrau - Platzhalter
+  },
+
+  // Shadow-System (Soft & Modern)
+  shadow: {
+    small: {
+      shadowColor: '#000',
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 2 },
+      elevation: 2,
+    },
+    medium: {
+      shadowColor: '#000',
+      shadowOpacity: 0.12,
+      shadowRadius: 16,
+      shadowOffset: { width: 0, height: 4 },
+      elevation: 4,
+    },
+    large: {
+      shadowColor: '#000',
+      shadowOpacity: 0.18,
+      shadowRadius: 24,
+      shadowOffset: { width: 0, height: 8 },
+      elevation: 8,
+    },
   },
 
   // Feedback Farben

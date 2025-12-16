@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 56,
+    ...Colors.shadow.medium, // Soft & Modern: Weiche, mehrschichtige Schatten
   },
   primaryButton: {
     backgroundColor: Colors.primary,
@@ -96,14 +97,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
     borderWidth: 2,
     borderColor: Colors.primary,
+    ...Colors.shadow.small, // Sekundäre Buttons: Subtiler Schatten
   },
   buttonText: {
     fontSize: FontSize.xl,
     fontWeight: FontWeight.bold,
-    color: '#FFFFFF',  // Weiß für Primary Button
   },
   primaryButtonText: {
-    color: Colors.text.primary,  // Dunkel für besseren Kontrast auf hellblauem Hintergrund
+    color: '#FFFFFF',  // Weiß für besseren Kontrast auf Lila-Hintergrund
   },
   secondaryButtonText: {
     color: Colors.primary,

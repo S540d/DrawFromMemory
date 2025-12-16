@@ -240,10 +240,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'transparent',
     alignItems: 'center',
+    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten
   },
   optionButtonActive: {
     backgroundColor: Colors.primary + '20',
     borderColor: Colors.primary,
+    ...Colors.shadow.medium, // Aktive Option mit stärkerem Schatten
   },
   optionText: {
     fontSize: FontSize.md,
@@ -264,10 +266,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.error + '10',
     borderWidth: 2,
     borderColor: Colors.error,
-    borderRadius: BorderRadius.md,
+    borderRadius: BorderRadius.lg, // md → lg (weicher)
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.lg,
     alignItems: 'center',
+    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten
   },
   dangerButtonText: {
     fontSize: FontSize.md,
@@ -276,8 +279,9 @@ const styles = StyleSheet.create({
   },
   infoBox: {
     backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.md,
+    borderRadius: BorderRadius.xl, // md → xl (16px → 20px für Cards)
     padding: Spacing.lg,
+    ...Colors.shadow.medium, // Soft & Modern: Weiche Schatten für Info-Box
   },
   infoText: {
     fontSize: FontSize.md,

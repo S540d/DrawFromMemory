@@ -436,6 +436,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.lg,
+    ...Colors.shadow.small, // Soft & Modern: Subtiler Schatten für Badge
   },
   phaseContainer: {
     flex: 1,
@@ -458,6 +459,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: Spacing.xl,
+    ...Colors.shadow.large, // Soft & Modern: Timer mit prominentem Schatten
   },
   timerText: {
     fontSize: FontSize.huge,
@@ -472,11 +474,12 @@ const styles = StyleSheet.create({
   imagePlaceholder: {
     backgroundColor: Colors.surface,
     padding: Spacing.xxl,
-    borderRadius: BorderRadius.xl,
+    borderRadius: BorderRadius.xxl, // xl → xxl (20px → 24px für große Cards)
     alignItems: 'center',
     minWidth: 300,
     minHeight: 300,
     justifyContent: 'center',
+    ...Colors.shadow.large, // Soft & Modern: Cards mit prominentem Schatten
   },
   imageName: {
     fontSize: FontSize.xl,
@@ -507,11 +510,13 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
     borderWidth: 2,
     borderColor: '#DDD',
+    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten für Farb-Boxen
   },
   colorBoxSelected: {
     borderWidth: 4,
     borderColor: Colors.primary,
     transform: [{ scale: 1.1 }],
+    ...Colors.shadow.medium, // Ausgewählte Farbe mit stärkerem Schatten
   },
   buttonRow: {
     flexDirection: 'row',
@@ -529,6 +534,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     minHeight: 48,
     justifyContent: 'center',
+    ...Colors.shadow.medium, // Soft & Modern: Weiche Schatten
   },
   primaryButtonText: {
     fontSize: FontSize.lg,
@@ -546,6 +552,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
     minHeight: 48,
     justifyContent: 'center',
+    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten für sekundäre Buttons
   },
   secondaryButtonText: {
     fontSize: FontSize.lg,
@@ -570,10 +577,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 2,
     borderColor: Colors.stars.empty,
+    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten für Sterne
   },
   starBoxFilled: {
     backgroundColor: Colors.stars.filled,
     borderColor: Colors.stars.filled,
+    ...Colors.shadow.medium, // Gefüllte Sterne mit stärkerem Schatten
   },
   starText: {
     fontSize: 28,
@@ -612,9 +621,10 @@ const styles = StyleSheet.create({
   },
   comparisonImage: {
     backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.lg,
+    borderRadius: BorderRadius.xl, // lg → xl (16px → 20px für Cards)
     justifyContent: 'center',
     alignItems: 'center',
+    ...Colors.shadow.medium, // Soft & Modern: Weiche Schatten für Vergleichs-Container
   },
   placeholderText: {
     fontSize: FontSize.md,
@@ -641,10 +651,11 @@ const styles = StyleSheet.create({
   },
   settingsModal: {
     backgroundColor: Colors.background,
-    borderRadius: BorderRadius.xl,
+    borderRadius: BorderRadius.xxl, // xl → xxl (20px → 24px für große Modals)
     width: '100%',
     maxWidth: 400,
     padding: Spacing.lg,
+    ...Colors.shadow.large, // Soft & Modern: Prominenter Schatten für Modals
   },
   settingsHeader: {
     flexDirection: 'row',
@@ -698,10 +709,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: Colors.surface,
+    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten
   },
   toggleButtonActive: {
     backgroundColor: Colors.primary,
     borderColor: Colors.primary,
+    ...Colors.shadow.medium, // Aktiver Toggle mit stärkerem Schatten
   },
   toggleText: {
     fontSize: FontSize.sm,
@@ -735,6 +748,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
     minHeight: 48,
     justifyContent: 'center',
+    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten für Navigation
   },
   navButtonDisabled: {
     backgroundColor: Colors.surface,

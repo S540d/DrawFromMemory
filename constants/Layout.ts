@@ -12,10 +12,11 @@ export const Spacing = {
 };
 
 export const BorderRadius = {
-  sm: 4,
-  md: 8,
-  lg: 12,
-  xl: 16,
+  sm: 8,     // 4 → 8 (weicher)
+  md: 10,    // 8 → 10 (weicher)
+  lg: 16,    // 12 → 16 (Soft & Modern Standard für Buttons)
+  xl: 20,    // 16 → 20 (Soft & Modern Standard für Cards)
+  xxl: 24,   // NEU - für große Cards/Containers
   round: 999, // Vollständig abgerundet
 };
 

@@ -127,10 +127,11 @@ const styles = StyleSheet.create({
   levelCard: {
     width: cardWidth,
     backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.lg,
+    borderRadius: BorderRadius.xl, // lg → xl (16px → 20px für Cards)
     padding: Spacing.md,
     borderWidth: 2,
     borderColor: Colors.primary + '30', // 30 = opacity
+    ...Colors.shadow.medium, // Soft & Modern: Weiche Schatten für Level-Cards
   },
   levelHeader: {
     marginBottom: Spacing.sm,
@@ -143,9 +144,10 @@ const styles = StyleSheet.create({
   difficultyBadge: {
     paddingVertical: Spacing.xs,
     paddingHorizontal: Spacing.sm,
-    borderRadius: BorderRadius.sm,
+    borderRadius: BorderRadius.md, // sm → md (weicher)
     alignSelf: 'flex-start',
     marginBottom: Spacing.sm,
+    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten für Badges
   },
   difficultyText: {
     fontSize: FontSize.sm,
