@@ -181,7 +181,7 @@ export default function GameScreen() {
               'Möchtest du wirklich die gesamte Zeichnung löschen?',
               [
                 { text: 'Abbrechen', style: 'cancel' },
-                { text: 'Löschen', style: 'destructive', onPress: drawing.clearCanvas },
+                { text: 'Löschen', style: 'destructive', onPress: () => drawing.clearCanvas() },
               ]
             );
           }}
