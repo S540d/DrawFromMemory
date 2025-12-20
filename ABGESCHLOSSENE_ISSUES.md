@@ -415,6 +415,49 @@ Falls diese als GitHub Issues existieren, können folgende geschlossen werden:
 
 ---
 
-**Letzte Aktualisierung:** 2025-12-14
-**Änderungen:** +3 Issues geschlossen (#8, #9, #10)
+### 12. Design-System Update & UX-Verbesserungen ✨ NEU (2025-12-16)
+
+- [x] **"Soft & Modern" Design-System implementiert** ✅
+  - Neue Farbpalette: Primary #667eea (Lila/Blau), Secondary #f093fb (Rosa)
+  - Aktualisiertes Shadow-System (small, medium, large)
+  - Erhöhte Border-Radius Werte für weichere Optik
+  - Cremeweiße Background (#FAFAFA) statt reines Weiß
+  - Implementiert in: Colors.ts, Layout.ts
+  - Angewendet auf: Alle Screens (index.tsx, game.tsx, settings.tsx, levels.tsx)
+  - Commits: a9d4d53, 2d5e7f3, 95a3a4f
+  - Status: ✅ Vollständig implementiert
+
+- [x] **Issue #18: "Löschen" Taste funktioniert** ✅
+  - Problem: Delete-Button ohne Funktion
+  - Lösung: Platform-spezifische Implementierung
+    - Web: window.confirm() Dialog
+    - Native: Alert.alert() Dialog
+  - Features: Button disabled State, Bestätigungs-Dialog
+  - Code: [game.tsx](https://github.com/S540d/DrawFromMemory/blob/main/app/game.tsx)
+  - Commits: d2735eb, 4468710, 2d5e7f3
+  - Status: ✅ Funktioniert einwandfrei
+  - Geschlossen: 2025-12-16
+
+- [x] **Primary Button Visibility Fix** ✅
+  - Problem: "Spiel Starten" Button schwer sichtbar (gleiche Farbe wie Hintergrund)
+  - Lösung: Prominenter Shadow (shadow.large) hinzugefügt
+  - Zusätzlich: Style-Order korrigiert (backgroundColor nach Shadow-Spread)
+  - Code: [app/index.tsx:92-95](https://github.com/S540d/DrawFromMemory/blob/main/app/index.tsx#L92-L95)
+  - Commits: 2d5e7f3, 95a3a4f
+  - Status: ✅ Behoben
+  - Geschlossen: 2025-12-16
+
+- [x] **Header Layout Overlap Fix** ✅
+  - Problem: "Level X" Badge überlagert von Einstellungs-Menü (drei Punkte)
+  - Lösung: Flex-basiertes Layout mit zentriertem Badge
+  - Details: Removed absolute positioning, added flex-centered header
+  - Code: [game.tsx - Header Styles](https://github.com/S540d/DrawFromMemory/blob/main/app/game.tsx)
+  - Commit: 2d5e7f3
+  - Status: ✅ Behoben
+  - Geschlossen: 2025-12-16
+
+---
+
+**Letzte Aktualisierung:** 2025-12-16
+**Änderungen:** +Design-System Update, +Issue #18 geschlossen, +UX-Fixes (Primary Button, Header Layout)
 **Für Details:** Siehe [STATUS.md](STATUS.md)

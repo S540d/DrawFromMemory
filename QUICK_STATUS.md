@@ -1,6 +1,6 @@
 # 📊 Quick Status Overview - Merke und Male
 
-**Stand:** 2025-12-15 | **MVP Fortschritt:** 95% | 👉 [Details](STATUS.md) | 🌐 [Live Demo](https://s540d.github.io/DrawFromMemory/)
+**Stand:** 2025-12-16 | **MVP Fortschritt:** 95% | 👉 [Details](STATUS.md) | 🌐 [Live Demo](https://s540d.github.io/DrawFromMemory/)
 
 ---
 
@@ -70,10 +70,16 @@ PHASE 3
   - 1-5 Sterne System
   - Feedback-Texte
 
-### Deployment ✨ NEU
+### Deployment & Design ✨ NEU
 - ✅ **GitHub Pages** - Live unter https://s540d.github.io/DrawFromMemory/
 - ✅ **CI/CD Pipeline** - Automatische Quality Checks
 - ✅ **Auto-Deployment** - Bei jedem Push auf main
+- ✅ **"Soft & Modern" Design-System** - Warme, kinderfreundliche Ästhetik
+  - Neue Farbpalette (#667eea Primary, #f093fb Secondary)
+  - Shadow-System für subtile Tiefe
+  - Weiche Border-Radius Werte
+- ✅ **Issue #18 behoben** - Delete-Button funktioniert (platform-spezifisch)
+- ✅ **UX-Verbesserungen** - Button Visibility, Header Layout
 
 ---
 
@@ -187,7 +193,7 @@ PHASE 3
 
 ---
 
-**Letzte Aktualisierung:** 2025-12-15
-**Änderungen:** +Issue #17 geschlossen - GitHub Pages Deployment erfolgreich! ✨
+**Letzte Aktualisierung:** 2025-12-16
+**Änderungen:** +"Soft & Modern" Design-System implementiert, +Issue #18 geschlossen, +UX-Fixes (Primary Button, Header Layout) ✨
 **Nächstes Review:** Nach Settings-Menü Implementation
 **Kontakt:** Siehe [README.md](README.md)

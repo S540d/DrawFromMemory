@@ -129,22 +129,44 @@ DrawFromMemory/
 
 ---
 
-## 🎨 Design-System
+## 🎨 Design-System: "Soft & Modern"
+
+**Design-Philosophie:** Warme, sanfte Ästhetik mit subtiler Tiefe und Eleganz - speziell für Kinder optimiert.
 
 ### Farbpalette
 
 ```css
-/* Primary Color */
---color-primary: #667eea;        /* Lila/Blau - Kreativität */
+/* Primary Colors - Gradient-ready */
+--color-primary: #667eea;        /* Lila/Blau - Kreativität & Spielfreude */
 --color-primary-light: #8599f3;
 --color-primary-dark: #4c63d2;
+--color-secondary: #f093fb;      /* Rosa - Spielerisch & Warm */
+--color-accent: #A8E6CF;         /* Mint - Zusätzlicher Akzent */
 
-/* Secondary Color */
---color-secondary: #f093fb;      /* Rosa - Spielerisch */
+/* UI Colors */
+--color-background: #FAFAFA;     /* Cremeweiß (nicht pures Weiß) */
+--color-surface: #F5F5F5;        /* Hellgrau - Karten/Container */
+--color-text-primary: #2C3E50;   /* Dunkelgrau - Haupttext */
+--color-text-secondary: #7F8C8D; /* Mittelgrau - Sekundärtext */
+```
 
-/* Neutral */
---color-bg-primary: #ffffff;
---color-text-primary: #111827;
+### Shadow System
+
+```css
+/* Soft & Modern Shadows */
+--shadow-small: 0 2px 8px rgba(0,0,0,0.08);
+--shadow-medium: 0 4px 16px rgba(0,0,0,0.12);
+--shadow-large: 0 8px 24px rgba(0,0,0,0.18);
+```
+
+### Border Radius
+
+```css
+--radius-sm: 8px;   /* Weiche Ecken */
+--radius-md: 10px;
+--radius-lg: 16px;  /* Buttons */
+--radius-xl: 20px;  /* Cards */
+--radius-xxl: 24px; /* Große Container */
 ```
 
 ### Typography
