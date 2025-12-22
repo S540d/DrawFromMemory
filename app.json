@@ -28,7 +28,7 @@
       "permissions": []
     },
     "web": {
-      "favicon": "./assets/icons/favicon.png",
+      "favicon": "./assets/icons/ChatGPT Image 6. Dez. 2025, 09_34_39.png",
       "bundler": "metro",
       "output": "static",
       "baseUrl": "/DrawFromMemory/"
