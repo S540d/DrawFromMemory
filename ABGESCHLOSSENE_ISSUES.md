@@ -458,6 +458,44 @@ Falls diese als GitHub Issues existieren, können folgende geschlossen werden:
 
 ---
 
-**Letzte Aktualisierung:** 2025-12-16
-**Änderungen:** +Design-System Update, +Issue #18 geschlossen, +UX-Fixes (Primary Button, Header Layout)
+### 13. AsyncStorage & Dark Mode Implementation ✨ NEU (2025-12-22)
+
+- [x] **Issue #20: AsyncStorage Integration** ✅
+  - Implementiert: services/StorageManager.ts
+  - Features:
+    - Level-Fortschritt speichern (Bewertungen, Datum)
+    - User-Einstellungen speichern (Theme, Sprache, Sound)
+    - Auto-Berechnung von Durchschnittsbewertung
+    - Progress Reset mit Bestätigung
+  - Integration: game.tsx speichert Bewertung automatisch
+  - Status: ✅ Vollständig implementiert
+  - Commits: db3b715
+
+- [x] **Issue #21: Dark Mode System** ✅
+  - Implementiert: services/ThemeContext.ts
+  - Features:
+    - Light/Dark/System Theme-Optionen
+    - Vollständige Farbpalette für Dark Mode (optimiert für OLED)
+    - Theme-Persistierung via AsyncStorage
+    - Respektiert System-Einstellungen
+    - Dynamische StatusBar Anpassung (light/dark)
+  - UI Updates:
+    - Settings Screen: Theme-Toggle implementiert
+    - Alle Screens: useTheme hook integriert
+    - Dynamic Colors für Button, Text, Backgrounds
+  - Status: ✅ Vollständig implementiert
+  - Commits: db3b715
+
+- [x] **Screen Theme Integration** ✅
+  - app/_layout.tsx: ThemeProvider wrapper hinzugefügt
+  - app/index.tsx: Dynamic colors für alle Elemente
+  - app/settings.tsx: Theme-Toggle + Progress Reset
+  - app/levels.tsx: Theme-aware UI
+  - app/game.tsx: Progress-Speicherung auf Rating
+  - Status: ✅ Vollständig
+
+---
+
+**Letzte Aktualisierung:** 2025-12-22
+**Änderungen:** +Issue #20 (AsyncStorage), +Issue #21 (Dark Mode), +Screen Updates
 **Für Details:** Siehe [STATUS.md](STATUS.md)
