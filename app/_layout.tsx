@@ -1,17 +1,20 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { ThemeProvider, useTheme } from '../services/ThemeContext';
 
 /**
- * Root Layout für Expo Router
+ * Root Layout Content - wrapped with theme context
  */
-export default function RootLayout() {
+function RootLayoutContent() {
+  const { theme, colors } = useTheme();
+
   return (
     <>
-      <StatusBar style="dark" />
+      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
       <Stack
         screenOptions={{
           headerShown: false,
-          contentStyle: { backgroundColor: '#FFFFFF' },
+          contentStyle: { backgroundColor: colors.background },
         }}
       >
         <Stack.Screen name="index" />
@@ -20,5 +23,16 @@ export default function RootLayout() {
         <Stack.Screen name="settings" />
       </Stack>
     </>
+  );
+}
+
+/**
+ * Root Layout für Expo Router - wrapped with ThemeProvider
+ */
+export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <RootLayoutContent />
+    </ThemeProvider>
   );
 }

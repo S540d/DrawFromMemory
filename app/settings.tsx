@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
 import { t, getLanguage, setLanguage } from '../services/i18n';
+import { useTheme } from '../services/ThemeContext';
+import storageManager from '../services/StorageManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 
@@ -11,7 +13,9 @@ import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout
  */
 export default function SettingsScreen() {
   const router = useRouter();
+  const { theme, themeSetting, setTheme, colors } = useTheme();
   const [currentLang, setCurrentLang] = useState(getLanguage());
+  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>(themeSetting);
 
   const handleLanguageChange = (lang: 'de' | 'en') => {
     setLanguage(lang);
@@ -26,6 +30,11 @@ export default function SettingsScreen() {
     );
   };
 
+  const handleThemeChange = async (newTheme: 'light' | 'dark' | 'system') => {
+    setCurrentTheme(newTheme);
+    await setTheme(newTheme);
+  };
+
   const handleResetProgress = () => {
     Alert.alert(
       t('settings.resetProgress'),
@@ -35,13 +44,13 @@ export default function SettingsScreen() {
         {
           text: t('common.yes'),
           style: 'destructive',
-          onPress: () => {
-            // TODO: Implement when AsyncStorage is integrated
+          onPress: async () => {
+            await storageManager.resetProgress();
             Alert.alert(
-              currentLang === 'de' ? 'Noch nicht verfügbar' : 'Not yet available',
+              currentLang === 'de' ? 'Fortschritt gelöscht' : 'Progress reset',
               currentLang === 'de'
-                ? 'Diese Funktion wird implementiert, sobald die Fortschritts-Speicherung aktiv ist.'
-                : 'This feature will be implemented once progress storage is active.'
+                ? 'Dein Spielfortschritt wurde erfolgreich zurückgesetzt.'
+                : 'Your game progress has been successfully reset.'
             );
           },
         },
@@ -54,34 +63,107 @@ export default function SettingsScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: colors.surface }]}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.backButton}>← {t('common.close')}</Text>
+          <Text style={[styles.backButton, { color: colors.primary }]}>← {t('common.close')}</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>{t('settings.title')}</Text>
+        <Text style={[styles.title, { color: colors.text.primary }]}>{t('settings.title')}</Text>
       </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView style={[styles.content, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
         {/* Sprache / Language */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('settings.language')}</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>{t('settings.language')}</Text>
           <View style={styles.optionsRow}>
             <TouchableOpacity
-              style={[styles.optionButton, currentLang === 'de' && styles.optionButtonActive]}
+              style={[
+                styles.optionButton,
+                { backgroundColor: colors.surface, borderColor: 'transparent' },
+                currentLang === 'de' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
+              ]}
               onPress={() => handleLanguageChange('de')}
             >
-              <Text style={[styles.optionText, currentLang === 'de' && styles.optionTextActive]}>
+              <Text style={[
+                styles.optionText,
+                { color: colors.text.secondary },
+                currentLang === 'de' && [styles.optionTextActive, { color: colors.primary }]
+              ]}>
                 🇩🇪 Deutsch
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.optionButton, currentLang === 'en' && styles.optionButtonActive]}
+              style={[
+                styles.optionButton,
+                { backgroundColor: colors.surface, borderColor: 'transparent' },
+                currentLang === 'en' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
+              ]}
               onPress={() => handleLanguageChange('en')}
             >
-              <Text style={[styles.optionText, currentLang === 'en' && styles.optionTextActive]}>
+              <Text style={[
+                styles.optionText,
+                { color: colors.text.secondary },
+                currentLang === 'en' && [styles.optionTextActive, { color: colors.primary }]
+              ]}>
                 🇬🇧 English
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Theme / Erscheinungsbild */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>
+            {currentLang === 'de' ? 'Erscheinungsbild' : 'Theme'}
+          </Text>
+          <View style={styles.optionsRow}>
+            <TouchableOpacity
+              style={[
+                styles.optionButton,
+                { backgroundColor: colors.surface, borderColor: 'transparent' },
+                currentTheme === 'light' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
+              ]}
+              onPress={() => handleThemeChange('light')}
+            >
+              <Text style={[
+                styles.optionText,
+                { color: colors.text.secondary },
+                currentTheme === 'light' && [styles.optionTextActive, { color: colors.primary }]
+              ]}>
+                ☀️ {currentLang === 'de' ? 'Hell' : 'Light'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.optionButton,
+                { backgroundColor: colors.surface, borderColor: 'transparent' },
+                currentTheme === 'dark' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
+              ]}
+              onPress={() => handleThemeChange('dark')}
+            >
+              <Text style={[
+                styles.optionText,
+                { color: colors.text.secondary },
+                currentTheme === 'dark' && [styles.optionTextActive, { color: colors.primary }]
+              ]}>
+                🌙 {currentLang === 'de' ? 'Dunkel' : 'Dark'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.optionButton,
+                { backgroundColor: colors.surface, borderColor: 'transparent' },
+                currentTheme === 'system' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
+              ]}
+              onPress={() => handleThemeChange('system')}
+            >
+              <Text style={[
+                styles.optionText,
+                { color: colors.text.secondary },
+                currentTheme === 'system' && [styles.optionTextActive, { color: colors.primary }]
+              ]}>
+                🖥️ {currentLang === 'de' ? 'System' : 'System'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -89,10 +171,14 @@ export default function SettingsScreen() {
 
         {/* Sound-Effekte (Platzhalter) */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('settings.sound')}</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>{t('settings.sound')}</Text>
           <View style={styles.optionsRow}>
             <TouchableOpacity
-              style={[styles.optionButton, styles.optionButtonActive]}
+              style={[
+                styles.optionButton,
+                styles.optionButtonActive,
+                { backgroundColor: colors.primary + '20', borderColor: colors.primary }
+              ]}
               onPress={() => Alert.alert(
                 currentLang === 'de' ? 'Noch nicht verfügbar' : 'Not yet available',
                 currentLang === 'de'
@@ -100,38 +186,42 @@ export default function SettingsScreen() {
                   : 'Sound effects will be added in a future version.'
               )}
             >
-              <Text style={[styles.optionText, styles.optionTextActive]}>
+              <Text style={[styles.optionText, styles.optionTextActive, { color: colors.primary }]}>
                 {currentLang === 'de' ? 'Ein' : 'On'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.optionButton}
+              style={[styles.optionButton, { backgroundColor: colors.surface }]}
               disabled
             >
-              <Text style={styles.optionText}>
+              <Text style={[styles.optionText, { color: colors.text.secondary }]}>
                 {currentLang === 'de' ? 'Aus' : 'Off'}
               </Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.comingSoon}>
+          <Text style={[styles.comingSoon, { color: colors.text.light }]}>
             {currentLang === 'de' ? '(Demnächst verfügbar)' : '(Coming soon)'}
           </Text>
         </View>
 
         {/* Hintergrundmusik (Platzhalter) */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('settings.music')}</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>{t('settings.music')}</Text>
           <View style={styles.optionsRow}>
             <TouchableOpacity
-              style={styles.optionButton}
+              style={[styles.optionButton, { backgroundColor: colors.surface }]}
               disabled
             >
-              <Text style={styles.optionText}>
+              <Text style={[styles.optionText, { color: colors.text.secondary }]}>
                 {currentLang === 'de' ? 'Ein' : 'On'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.optionButton, styles.optionButtonActive]}
+              style={[
+                styles.optionButton,
+                styles.optionButtonActive,
+                { backgroundColor: colors.primary + '20', borderColor: colors.primary }
+              ]}
               onPress={() => Alert.alert(
                 currentLang === 'de' ? 'Noch nicht verfügbar' : 'Not yet available',
                 currentLang === 'de'
@@ -139,12 +229,12 @@ export default function SettingsScreen() {
                   : 'Background music will be added in a future version.'
               )}
             >
-              <Text style={[styles.optionText, styles.optionTextActive]}>
+              <Text style={[styles.optionText, styles.optionTextActive, { color: colors.primary }]}>
                 {currentLang === 'de' ? 'Aus' : 'Off'}
               </Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.comingSoon}>
+          <Text style={[styles.comingSoon, { color: colors.text.light }]}>
             {currentLang === 'de' ? '(Demnächst verfügbar)' : '(Coming soon)'}
           </Text>
         </View>
@@ -152,19 +242,19 @@ export default function SettingsScreen() {
         {/* Fortschritt zurücksetzen */}
         <View style={styles.section}>
           <TouchableOpacity
-            style={styles.dangerButton}
+            style={[styles.dangerButton, { backgroundColor: colors.error + '10', borderColor: colors.error }]}
             onPress={handleResetProgress}
           >
-            <Text style={styles.dangerButtonText}>{t('settings.resetProgress')}</Text>
+            <Text style={[styles.dangerButtonText, { color: colors.error }]}>{t('settings.resetProgress')}</Text>
           </TouchableOpacity>
         </View>
 
         {/* Über die App */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('settings.about')}</Text>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoText}>
-              <Text style={styles.infoBold}>
+          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>{t('settings.about')}</Text>
+          <View style={[styles.infoBox, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.infoText, { color: colors.text.secondary }]}>
+              <Text style={[styles.infoBold, { color: colors.text.primary }]}>
                 {currentLang === 'de' ? 'Merke und Male' : 'Remember & Draw'}
               </Text>
               {'\n'}
@@ -178,7 +268,7 @@ export default function SettingsScreen() {
             </Text>
             
             <TouchableOpacity style={styles.linkButton} onPress={openGitHub}>
-              <Text style={styles.linkText}>
+              <Text style={[styles.linkText, { color: colors.primary }]}>
                 GitHub Repository ↗
               </Text>
             </TouchableOpacity>

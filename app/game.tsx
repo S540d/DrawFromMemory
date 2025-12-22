@@ -4,6 +4,8 @@ import { useRouter } from 'expo-router';
 import { getRandomImageForLevel } from '../services/ImagePoolManager';
 import { getLevel, getTotalLevels } from '../services/LevelManager';
 import { t } from '../services/i18n';
+import { useTheme } from '../services/ThemeContext';
+import storageManager from '../services/StorageManager';
 import { DrawingColors } from '../constants/Colors';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
@@ -19,6 +21,7 @@ import type { GamePhase, LevelImage } from '../types';
  */
 export default function GameScreen() {
   const router = useRouter();
+  const { colors } = useTheme();
   const [phase, setPhase] = useState<GamePhase>('memorize');
   const [levelNumber, setLevelNumber] = useState(1); // Start mit Level 1
   const [currentImage, setCurrentImage] = useState<LevelImage | null>(null);
@@ -28,6 +31,12 @@ export default function GameScreen() {
 
   // Drawing Canvas Hook
   const drawing = useDrawingCanvas();
+
+  // Speichere Fortschritt wenn Bewertung abgegeben wird
+  const handleRatingSubmit = async (rating: number) => {
+    setUserRating(rating);
+    await storageManager.saveLevelProgress(levelNumber, rating);
+  };
 
   // Funktion zum Starten des nächsten Levels
   const startNextLevel = () => {
@@ -227,7 +236,7 @@ export default function GameScreen() {
                 styles.starBox,
                 star <= rating && styles.starBoxFilled,
               ]}
-              onPress={interactive ? () => setUserRating(star) : undefined}
+              onPress={interactive ? () => handleRatingSubmit(star) : undefined}
             >
               <Text style={[
                 styles.starText,

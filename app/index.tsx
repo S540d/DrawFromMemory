@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router';
 import { t } from '../services/i18n';
+import { useTheme } from '../services/ThemeContext';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 
@@ -9,34 +10,35 @@ import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout
  * Home Screen - Startseite der App
  */
 export default function HomeScreen() {
+  const { colors } = useTheme();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>{t('home.title')}</Text>
-        <Text style={styles.subtitle}>{t('home.subtitle')}</Text>
+        <Text style={[styles.title, { color: colors.primary }]}>{t('home.title')}</Text>
+        <Text style={[styles.subtitle, { color: colors.text.secondary }]}>{t('home.subtitle')}</Text>
       </View>
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
         <Link href="/game" asChild>
-          <TouchableOpacity style={[styles.button, styles.primaryButton]}>
+          <TouchableOpacity style={[styles.button, styles.primaryButton, { backgroundColor: colors.primary, ...Colors.shadow.large }]}>
             <Text style={[styles.buttonText, styles.primaryButtonText]}>{t('home.startButton')}</Text>
           </TouchableOpacity>
         </Link>
 
         <Link href="/levels" asChild>
-          <TouchableOpacity style={[styles.button, styles.secondaryButton]}>
-            <Text style={[styles.buttonText, styles.secondaryButtonText]}>
+          <TouchableOpacity style={[styles.button, styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary, ...Colors.shadow.small }]}>
+            <Text style={[styles.buttonText, styles.secondaryButtonText, { color: colors.primary }]}>
               {t('home.levelsButton')}
             </Text>
           </TouchableOpacity>
         </Link>
 
         <Link href="/settings" asChild>
-          <TouchableOpacity style={[styles.button, styles.secondaryButton]}>
-            <Text style={[styles.buttonText, styles.secondaryButtonText]}>
+          <TouchableOpacity style={[styles.button, styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary, ...Colors.shadow.small }]}>
+            <Text style={[styles.buttonText, styles.secondaryButtonText, { color: colors.primary }]}>
               {t('home.settingsButton')}
             </Text>
           </TouchableOpacity>
@@ -45,7 +47,7 @@ export default function HomeScreen() {
 
       {/* Footer */}
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Version 1.0.0</Text>
+        <Text style={[styles.footerText, { color: colors.text.light }]}>Version 1.0.0</Text>
       </View>
     </View>
   );

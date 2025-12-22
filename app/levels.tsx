@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { t } from '../services/i18n';
+import { useTheme } from '../services/ThemeContext';
 import { getAllLevels } from '../services/LevelManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
@@ -12,6 +13,7 @@ import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout
  */
 export default function LevelsScreen() {
   const router = useRouter();
+  const { colors } = useTheme();
   const levels = getAllLevels();
 
   const renderLevelCard = ({ item }: { item: typeof levels[0] }) => {
@@ -19,13 +21,13 @@ export default function LevelsScreen() {
     
     return (
       <TouchableOpacity
-        style={styles.levelCard}
+        style={[styles.levelCard, { backgroundColor: colors.surface, borderColor: colors.primary + '30' }]}
         onPress={() => router.push('/game')}
         activeOpacity={0.7}
       >
         {/* Level-Nummer */}
         <View style={styles.levelHeader}>
-          <Text style={styles.levelNumber}>
+          <Text style={[styles.levelNumber, { color: colors.text.primary }]}>
             {t('levels.level', { number: item.number })}
           </Text>
         </View>
@@ -36,26 +38,26 @@ export default function LevelsScreen() {
         </View>
 
         {/* Anzeigezeit */}
-        <Text style={styles.displayTime}>
+        <Text style={[styles.displayTime, { color: colors.text.secondary }]}>
           {t('levels.displayTime', { seconds: item.displayDuration })}
         </Text>
 
         {/* Platzhalter für Sterne (später mit Progress-System) */}
         <View style={styles.starsContainer}>
-          <Text style={styles.starsPlaceholder}>☆ ☆ ☆ ☆ ☆</Text>
+          <Text style={[styles.starsPlaceholder, { color: colors.text.light }]}>☆ ☆ ☆ ☆ ☆</Text>
         </View>
       </TouchableOpacity>
     );
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: colors.surface }]}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.backButton}>← Zurück</Text>
+          <Text style={[styles.backButton, { color: colors.primary }]}>← Zurück</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>{t('levels.title')}</Text>
+        <Text style={[styles.title, { color: colors.text.primary }]}>{t('levels.title')}</Text>
       </View>
 
       {/* Level-Grid */}
