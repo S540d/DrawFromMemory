@@ -258,7 +258,7 @@ export default function SettingsScreen() {
                 {currentLang === 'de' ? 'Merke und Male' : 'Remember & Draw'}
               </Text>
               {'\n'}
-              {t('settings.version')}: 1.0.0
+              {t('settings.version')}: 1.1.0
               {'\n\n'}
               {currentLang === 'de' 
                 ? 'Eine Gedächtnistraining-App für Kinder.' 

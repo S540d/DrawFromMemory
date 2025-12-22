@@ -23,7 +23,7 @@ export default function HomeScreen() {
       {/* Buttons */}
       <View style={styles.buttonContainer}>
         <Link href="/game" asChild>
-          <TouchableOpacity style={[styles.button, styles.primaryButton, { backgroundColor: colors.primary, ...Colors.shadow.large }]}>
+          <TouchableOpacity style={[styles.button, styles.primaryButton, { backgroundColor: colors.primaryDark }]}>
             <Text style={[styles.buttonText, styles.primaryButtonText]}>{t('home.startButton')}</Text>
           </TouchableOpacity>
         </Link>
@@ -47,7 +47,7 @@ export default function HomeScreen() {
 
       {/* Footer */}
       <View style={styles.footer}>
-        <Text style={[styles.footerText, { color: colors.text.light }]}>Version 1.0.0</Text>
+        <Text style={[styles.footerText, { color: colors.text.light }]}>Version 1.1.0</Text>
       </View>
     </View>
   );
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     ...Colors.shadow.large, // Soft & Modern: Prominenter Schatten für Primary Button
-    backgroundColor: Colors.primary, // Nach dem Shadow-Spread, damit es nicht überschrieben wird
+    // backgroundColor wird dynamisch in JSX gesetzt
   },
   secondaryButton: {
     backgroundColor: Colors.surface,
