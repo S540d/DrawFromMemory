@@ -64,6 +64,8 @@
 
 ### Phase 2: Erweiterte Features
 - 🔲 Weitere 10 Level (Schwierigkeitsgrad 4-5)
+- 🔲 Icon-Erweiterung: +28 neue Icons (siehe [Icon-Plan](ICON_GENERATION_PLAN.md))
+- 🔲 Perspektivische Zeichnungen (Level 11+)
 - 🔲 Galerie zum Speichern von Zeichnungen
 - 🔲 Share-Funktion
 - 🔲 Sound-Effekte
@@ -117,6 +119,10 @@ DrawFromMemory/
 │
 ├── types/
 │   └── index.ts                 # TypeScript Typen
+│
+├── docs/                        # Dokumentation
+│   ├── ICON_GENERATION_PLAN.md  # Icon-Erweiterungsplan (Issue #5)
+│   └── PROMPT_TEMPLATES.md      # AI-Prompts für Icon-Generierung
 │
 ├── .github/
 │   └── workflows/

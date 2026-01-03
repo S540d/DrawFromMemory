@@ -75,6 +75,16 @@ level-03-house.svg         → Level 3: Haus
 - ~30 Striche
 - Farbe: Bunt (Mehrfarbig)
 
+### Perspektivisch (Level 11+) - **GEPLANT**
+
+**Level 11+: Perspektivische Zeichnungen**
+- 3D-Objekte (Würfel, Treppe, Tür)
+- Szenen in Perspektive (Haus, Straße, Stadtszene)
+- ~40+ Striche
+- Mit Tiefenwirkung und Schatten
+
+> **📝 Erweiterung geplant:** Siehe [ICON_GENERATION_PLAN.md](../../../ICON_GENERATION_PLAN.md) für Details zu neuen Icons und perspektivischen Zeichnungen (Issue #5).
+
 ---
 
 ## Bildquellen (Frei verfügbar, kommerzielle Nutzung erlaubt)
@@ -231,20 +241,34 @@ Vor dem Hinzufügen eines Bildes:
 
 ## Status
 
-**Aktuell:** 0/10 Bilder vorhanden
+**Aktuell:** 14/28+ Bilder vorhanden (siehe [BILDERPOOL.md](BILDERPOOL.md))
 
-- [ ] Level 1: Sonne
-- [ ] Level 2: Strichmännchen
-- [ ] Level 3: Haus
-- [ ] Level 4: Baum
-- [ ] Level 5: Auto
-- [ ] Level 6: Katze
-- [ ] Level 7: Blume
-- [ ] Level 8: Vogel
-- [ ] Level 9: Fisch
-- [ ] Level 10: Schmetterling
+### MVP Level (1-10) - VOLLSTÄNDIG
+- [x] Level 1: Sonne
+- [x] Level 2: Gesicht  
+- [x] Level 3: Wolke
+- [x] Level 4: Haus
+- [x] Level 5: Baum
+- [x] Level 6: Hund
+- [x] Level 7: Katze
+- [x] Level 8: Schaf
+- [x] Level 9: Fisch
+- [x] Level 10: Schmetterling
+
+### Extra Icons (für Abwechslung) - VOLLSTÄNDIG
+- [x] Extra 1: Strichmännchen
+- [x] Extra 2: Auto
+- [x] Extra 3: Blume
+- [x] Extra 4: Vogel
+
+### Geplante Erweiterungen (Issue #5)
+- [ ] Phase 1: +19 Icons für Difficulty 1-5
+- [ ] Phase 2: +9 Icons für Difficulty 6+ (perspektivische Zeichnungen)
+
+> **Detaillierter Plan:** [ICON_GENERATION_PLAN.md](../../../ICON_GENERATION_PLAN.md)
 
 ---
 
-**Erstellt:** 2025-12-05
+**Erstellt:** 2025-12-05  
+**Zuletzt aktualisiert:** 2026-01-02  
 **Lizenz:** Alle Bilder müssen kommerziell nutzbar sein (CC0, MIT, Unsplash, Pixabay)
