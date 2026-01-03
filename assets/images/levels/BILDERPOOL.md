@@ -4,6 +4,8 @@
 
 Die App wählt **zufällig** aus einem Pool von Bildern basierend auf dem Schwierigkeitsgrad. So bleibt das Spiel abwechslungsreich und Kinder können nicht einfach auswendig lernen, welches Bild in welchem Level kommt.
 
+> **📝 Hinweis:** Einen detaillierten Plan zur Erweiterung des Bilderpools finden Sie in [ICON_GENERATION_PLAN.md](../../../ICON_GENERATION_PLAN.md) (Issue #5).
+
 ---
 
 ## 📊 Bilderpool nach Schwierigkeitsgrad
@@ -58,6 +60,26 @@ Die App wählt **zufällig** aus einem Pool von Bildern basierend auf dem Schwie
 | level-10-butterfly.svg | 🦋 Schmetterling | ~35 | ✅ |
 
 **Pool-Größe:** 2 Bilder
+
+---
+
+### 🟣 Perspektivisch (Schwierigkeit 6+) - **GEPLANT**
+
+**Anzahl Striche:** 40+
+**Display Zeit:** 3 Sekunden
+**Verwendung:** Level 11+
+
+**Geplante Icons:**
+- Würfel in 3D
+- Haus in Perspektive
+- Straße mit Fluchtpunkt
+- Treppe
+- Stadtszene
+- Tunnel
+
+**Pool-Größe:** 0 Bilder (geplant: 9+)
+
+> Details siehe [ICON_GENERATION_PLAN.md](../../../ICON_GENERATION_PLAN.md)
 
 ---
 
@@ -209,5 +231,23 @@ function getRandomImageForLevelNoDuplicates(levelNumber: number): LevelImage {
 
 ---
 
-**Erstellt:** 2025-12-05
-**Status:** 14 Bilder im Pool, bereit für Zufalls-Auswahl
+## 📊 Aktuelle Pool-Statistik
+
+- **Gesamt:** 14 Bilder (Ziel: 28+ Bilder)
+- **Einfach (1-2):** 4 Bilder (Ziel: 10+ Bilder)
+- **Mittel (3-4):** 8 Bilder (Ziel: 12+ Bilder)
+- **Schwierig (5):** 2 Bilder (Ziel: 10+ Bilder)
+- **Perspektivisch (6+):** 0 Bilder (Ziel: 9+ Bilder)
+
+### 🎯 Erweiterungsplan (Issue #5)
+
+Detaillierte Informationen zur Erweiterung des Bilderpools finden Sie in:
+- **[ICON_GENERATION_PLAN.md](../../../ICON_GENERATION_PLAN.md)** - Vollständiger Plan mit Prompts und Workflow
+- **Phase 1:** +19 Icons für Difficulty 1-5
+- **Phase 2:** +9 Icons für Difficulty 6+ (perspektivische Zeichnungen)
+
+---
+
+**Erstellt:** 2025-12-05  
+**Zuletzt aktualisiert:** 2026-01-02  
+**Status:** 14 Bilder im Pool, Erweiterung geplant (siehe ICON_GENERATION_PLAN.md)
