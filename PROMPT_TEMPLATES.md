@@ -1,6 +1,6 @@
 # AI Prompt Templates - Icon Generation
 
-Dieser Dokument enthält schnell zugängliche Prompt-Templates für die Icon-Generierung.  
+Dieses Dokument enthält schnell zugängliche Prompt-Templates für die Icon-Generierung.  
 Vollständige Details siehe [ICON_GENERATION_PLAN.md](ICON_GENERATION_PLAN.md).
 
 ---
