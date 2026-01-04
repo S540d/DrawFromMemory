@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
 import { t } from '../services/i18n';
 import { useTheme } from '../services/ThemeContext';
 import Colors from '../constants/Colors';
@@ -11,6 +11,7 @@ import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout
  */
 export default function HomeScreen() {
   const { colors } = useTheme();
+  const router = useRouter();
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -22,27 +23,30 @@ export default function HomeScreen() {
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
-        <Link href="/game" asChild>
-          <TouchableOpacity style={[styles.button, styles.primaryButton, { backgroundColor: colors.primaryDark }]}>
-            <Text style={[styles.buttonText, styles.primaryButtonText]}>{t('home.startButton')}</Text>
-          </TouchableOpacity>
-        </Link>
+        <Pressable
+          style={[styles.button, styles.primaryButton, { backgroundColor: colors.primaryDark }]}
+          onPress={() => router.push('/game')}
+        >
+          <Text style={[styles.buttonText, styles.primaryButtonText]}>{t('home.startButton')}</Text>
+        </Pressable>
 
-        <Link href="/levels" asChild>
-          <TouchableOpacity style={[styles.button, styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary, ...Colors.shadow.small }]}>
-            <Text style={[styles.buttonText, styles.secondaryButtonText, { color: colors.primary }]}>
-              {t('home.levelsButton')}
-            </Text>
-          </TouchableOpacity>
-        </Link>
+        <Pressable
+          style={[styles.button, styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary, ...Colors.shadow.small }]}
+          onPress={() => router.push('/levels')}
+        >
+          <Text style={[styles.buttonText, styles.secondaryButtonText, { color: colors.primary }]}>
+            {t('home.levelsButton')}
+          </Text>
+        </Pressable>
 
-        <Link href="/settings" asChild>
-          <TouchableOpacity style={[styles.button, styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary, ...Colors.shadow.small }]}>
-            <Text style={[styles.buttonText, styles.secondaryButtonText, { color: colors.primary }]}>
-              {t('home.settingsButton')}
-            </Text>
-          </TouchableOpacity>
-        </Link>
+        <Pressable
+          style={[styles.button, styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary, ...Colors.shadow.small }]}
+          onPress={() => router.push('/settings')}
+        >
+          <Text style={[styles.buttonText, styles.secondaryButtonText, { color: colors.primary }]}>
+            {t('home.settingsButton')}
+          </Text>
+        </Pressable>
       </View>
 
       {/* Footer */}

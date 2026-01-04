@@ -1,6 +1,7 @@
 /**
- * StorageManager - AsyncStorage Handler
+ * StorageManager - AsyncStorage Handler with Web Fallback
  * Speichert und lädt Spielfortschritt, Einstellungen und Zeichnungen
+ * Fallback auf In-Memory Storage für Web/GitHub Pages
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,6 +14,60 @@ const KEYS = {
   SOUND_ENABLED: '@merke_male:sound_enabled',
   MUSIC_ENABLED: '@merke_male:music_enabled',
   EXTRA_TIME_MODE: '@merke_male:extra_time_mode',
+};
+
+// In-memory fallback for Web when localStorage is unavailable
+const MEMORY_STORE: Record<string, string> = {};
+
+// Safe storage operations with Web fallback
+const safeStorageOps = {
+  async getItem(key: string): Promise<string | null> {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      if (value !== null) {
+        MEMORY_STORE[key] = value;
+      }
+      return value;
+    } catch (error) {
+      // Fallback to in-memory store
+      return MEMORY_STORE[key] ?? null;
+    }
+  },
+
+  async setItem(key: string, value: string): Promise<void> {
+    // Always update in-memory store
+    MEMORY_STORE[key] = value;
+
+    try {
+      await AsyncStorage.setItem(key, value);
+    } catch (error) {
+      // AsyncStorage failed, but in-memory store was updated
+      // This is acceptable for Web sessions
+      console.warn(`AsyncStorage setItem failed for ${key}, using in-memory store`, error);
+    }
+  },
+
+  async removeItem(key: string): Promise<void> {
+    delete MEMORY_STORE[key];
+
+    try {
+      await AsyncStorage.removeItem(key);
+    } catch (error) {
+      console.warn(`AsyncStorage removeItem failed for ${key}`, error);
+    }
+  },
+
+  async multiRemove(keys: string[]): Promise<void> {
+    keys.forEach(key => {
+      delete MEMORY_STORE[key];
+    });
+
+    try {
+      await AsyncStorage.multiRemove(keys);
+    } catch (error) {
+      console.warn(`AsyncStorage multiRemove failed`, error);
+    }
+  },
 };
 
 export interface LevelProgress {
@@ -73,7 +128,7 @@ class StorageManager {
       progress.averageRating =
         ratings.reduce((a, b) => a + b, 0) / ratings.length;
 
-      await AsyncStorage.setItem(KEYS.PROGRESS, JSON.stringify(progress));
+      await safeStorageOps.setItem(KEYS.PROGRESS, JSON.stringify(progress));
     } catch (error) {
       console.error('Error saving level progress:', error);
     }
@@ -84,7 +139,7 @@ class StorageManager {
    */
   async getProgress(): Promise<AppProgress> {
     try {
-      const data = await AsyncStorage.getItem(KEYS.PROGRESS);
+      const data = await safeStorageOps.getItem(KEYS.PROGRESS);
       if (data) {
         return JSON.parse(data);
       }
@@ -119,7 +174,7 @@ class StorageManager {
    */
   async resetProgress(): Promise<void> {
     try {
-      await AsyncStorage.removeItem(KEYS.PROGRESS);
+      await safeStorageOps.removeItem(KEYS.PROGRESS);
     } catch (error) {
       console.error('Error resetting progress:', error);
     }
@@ -134,17 +189,17 @@ class StorageManager {
     try {
       const current = await this.getSettings();
       const updated = { ...current, ...settings };
-      await AsyncStorage.setItem(KEYS.THEME, updated.theme);
-      await AsyncStorage.setItem(KEYS.LANGUAGE, updated.language);
-      await AsyncStorage.setItem(
+      await safeStorageOps.setItem(KEYS.THEME, updated.theme);
+      await safeStorageOps.setItem(KEYS.LANGUAGE, updated.language);
+      await safeStorageOps.setItem(
         KEYS.SOUND_ENABLED,
         JSON.stringify(updated.soundEnabled)
       );
-      await AsyncStorage.setItem(
+      await safeStorageOps.setItem(
         KEYS.MUSIC_ENABLED,
         JSON.stringify(updated.musicEnabled)
       );
-      await AsyncStorage.setItem(
+      await safeStorageOps.setItem(
         KEYS.EXTRA_TIME_MODE,
         JSON.stringify(updated.extraTimeMode)
       );
@@ -159,11 +214,11 @@ class StorageManager {
   async getSettings(): Promise<AppSettings> {
     try {
       const [theme, language, sound, music, extraTime] = await Promise.all([
-        AsyncStorage.getItem(KEYS.THEME),
-        AsyncStorage.getItem(KEYS.LANGUAGE),
-        AsyncStorage.getItem(KEYS.SOUND_ENABLED),
-        AsyncStorage.getItem(KEYS.MUSIC_ENABLED),
-        AsyncStorage.getItem(KEYS.EXTRA_TIME_MODE),
+        safeStorageOps.getItem(KEYS.THEME),
+        safeStorageOps.getItem(KEYS.LANGUAGE),
+        safeStorageOps.getItem(KEYS.SOUND_ENABLED),
+        safeStorageOps.getItem(KEYS.MUSIC_ENABLED),
+        safeStorageOps.getItem(KEYS.EXTRA_TIME_MODE),
       ]);
 
       return {
@@ -214,7 +269,7 @@ class StorageManager {
    */
   async clearAllData(): Promise<void> {
     try {
-      await AsyncStorage.multiRemove(Object.values(KEYS));
+      await safeStorageOps.multiRemove(Object.values(KEYS));
     } catch (error) {
       console.error('Error clearing data:', error);
     }

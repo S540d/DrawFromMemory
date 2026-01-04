@@ -2,7 +2,7 @@
   "name": "merke-und-male",
   "version": "1.1.0",
   "main": "expo-router/entry",
-  "homepage": "https://s540d.github.io/DrawFromMemory",
+  "homepage": "https://s540d.github.io/DrawFromMemory/",
   "repository": {
     "type": "git",
     "url": "https://github.com/S540d/DrawFromMemory.git"

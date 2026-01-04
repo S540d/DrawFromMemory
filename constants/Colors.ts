@@ -32,24 +32,15 @@ export const Colors = {
   // Shadow-System (Soft & Modern)
   shadow: {
     small: {
-      shadowColor: '#000',
-      shadowOpacity: 0.08,
-      shadowRadius: 8,
-      shadowOffset: { width: 0, height: 2 },
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
       elevation: 2,
     },
     medium: {
-      shadowColor: '#000',
-      shadowOpacity: 0.12,
-      shadowRadius: 16,
-      shadowOffset: { width: 0, height: 4 },
+      boxShadow: '0 4px 16px rgba(0, 0, 0, 0.12)',
       elevation: 4,
     },
     large: {
-      shadowColor: '#000',
-      shadowOpacity: 0.18,
-      shadowRadius: 24,
-      shadowOffset: { width: 0, height: 8 },
+      boxShadow: '0 8px 24px rgba(0, 0, 0, 0.18)',
       elevation: 8,
     },
   },
