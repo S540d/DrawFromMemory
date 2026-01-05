@@ -129,20 +129,28 @@ export default function GameScreen() {
         />
       </View>
 
-      {/* Farb-Palette (funktional) */}
+      {/* Farb-Palette (gefiltert basierend auf Bilderfarben) */}
       <View style={styles.colorPalette}>
-        {DrawingColors.map((colorItem) => (
-          <TouchableOpacity
-            key={colorItem.hex}
-            style={[
-              styles.colorBox,
-              { backgroundColor: colorItem.hex },
-              colorItem.border && { borderColor: colorItem.border },
-              drawing.color === colorItem.hex && styles.colorBoxSelected,
-            ]}
-            onPress={() => drawing.setColor(colorItem.hex)}
-          />
-        ))}
+        {(() => {
+          // Farben für dieses Bild bestimmen
+          const availableColors = currentImage?.colors || DrawingColors.map(c => c.hex);
+          // DrawingColors auf verfügbare Farben filtern
+          const filteredColors = DrawingColors.filter(colorItem =>
+            availableColors.includes(colorItem.hex)
+          );
+          return filteredColors.map((colorItem) => (
+            <TouchableOpacity
+              key={colorItem.hex}
+              style={[
+                styles.colorBox,
+                { backgroundColor: colorItem.hex },
+                colorItem.border && { borderColor: colorItem.border },
+                drawing.color === colorItem.hex && styles.colorBoxSelected,
+              ]}
+              onPress={() => drawing.setColor(colorItem.hex)}
+            />
+          ));
+        })()}
       </View>
 
       {/* Linienstärke-Auswahl */}

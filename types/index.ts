@@ -16,6 +16,7 @@ export interface LevelImage {
   displayName: string;
   displayNameEn: string;
   strokeCount: number;
+  colors: string[]; // Array von Hex-Farben für dieses Bild
 }
 
 /**

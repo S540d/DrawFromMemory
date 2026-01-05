@@ -15,21 +15,24 @@ const imagePool: LevelImage[] = [
     difficulty: 1,
     displayName: 'Sonne',
     displayNameEn: 'Sun',
-    strokeCount: 12
+    strokeCount: 12,
+    colors: ['#000000', '#FFD700', '#FFA500']
   },
   {
     filename: 'level-02-face.svg',
     difficulty: 1,
     displayName: 'Gesicht',
     displayNameEn: 'Face',
-    strokeCount: 10
+    strokeCount: 10,
+    colors: ['#000000', '#FDBCB4']
   },
   {
     filename: 'extra-01-stick-figure.svg',
     difficulty: 1,
     displayName: 'Strichmännchen',
     displayNameEn: 'Stick Figure',
-    strokeCount: 6
+    strokeCount: 6,
+    colors: ['#000000']
   },
 
   // Einfach-Mittel (Schwierigkeit 2)
@@ -38,7 +41,8 @@ const imagePool: LevelImage[] = [
     difficulty: 2,
     displayName: 'Wolke',
     displayNameEn: 'Cloud',
-    strokeCount: 8
+    strokeCount: 8,
+    colors: ['#FFFFFF']
   },
 
   // Mittel (Schwierigkeit 3)
@@ -47,21 +51,24 @@ const imagePool: LevelImage[] = [
     difficulty: 3,
     displayName: 'Haus',
     displayNameEn: 'House',
-    strokeCount: 15
+    strokeCount: 15,
+    colors: ['#000000', '#E74C3C', '#8B4513', '#87CEEB']
   },
   {
     filename: 'level-05-tree.svg',
     difficulty: 3,
     displayName: 'Baum',
     displayNameEn: 'Tree',
-    strokeCount: 12
+    strokeCount: 12,
+    colors: ['#000000', '#8B4513', '#27AE60']
   },
   {
     filename: 'extra-02-car.svg',
     difficulty: 3,
     displayName: 'Auto',
     displayNameEn: 'Car',
-    strokeCount: 18
+    strokeCount: 18,
+    colors: ['#000000', '#E74C3C', '#87CEEB', '#FFD700']
   },
 
   // Mittel-Schwer (Schwierigkeit 4)
@@ -70,35 +77,40 @@ const imagePool: LevelImage[] = [
     difficulty: 4,
     displayName: 'Hund',
     displayNameEn: 'Dog',
-    strokeCount: 22
+    strokeCount: 22,
+    colors: ['#000000', '#8B4513', '#FFFFFF', '#E74C3C', '#FFD700']
   },
   {
     filename: 'level-07-cat.svg',
     difficulty: 4,
     displayName: 'Katze',
     displayNameEn: 'Cat',
-    strokeCount: 20
+    strokeCount: 20,
+    colors: ['#000000', '#FFA500']
   },
   {
     filename: 'level-08-sheep.svg',
     difficulty: 4,
     displayName: 'Schaf',
     displayNameEn: 'Sheep',
-    strokeCount: 18
+    strokeCount: 18,
+    colors: ['#FFFFFF', '#000000']
   },
   {
     filename: 'extra-03-flower.svg',
     difficulty: 4,
     displayName: 'Blume',
     displayNameEn: 'Flower',
-    strokeCount: 20
+    strokeCount: 20,
+    colors: ['#000000', '#27AE60', '#FF69B4', '#FFD700']
   },
   {
     filename: 'extra-04-bird.svg',
     difficulty: 4,
     displayName: 'Vogel',
     displayNameEn: 'Bird',
-    strokeCount: 18
+    strokeCount: 18,
+    colors: ['#000000', '#3498DB', '#FFD700', '#FFA500']
   },
 
   // Schwierig (Schwierigkeit 5)
@@ -107,14 +119,16 @@ const imagePool: LevelImage[] = [
     difficulty: 5,
     displayName: 'Fisch',
     displayNameEn: 'Fish',
-    strokeCount: 25
+    strokeCount: 25,
+    colors: ['#000000', '#FFA500', '#E74C3C', '#FFFFFF']
   },
   {
     filename: 'level-10-butterfly.svg',
     difficulty: 5,
     displayName: 'Schmetterling',
     displayNameEn: 'Butterfly',
-    strokeCount: 35
+    strokeCount: 35,
+    colors: ['#000000', '#9B59B6', '#FF69B4', '#FFD700', '#FFFFFF']
   },
 ];
 
