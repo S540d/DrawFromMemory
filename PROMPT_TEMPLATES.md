@@ -1,10 +1,11 @@
 # AI Prompt Templates - Icon & Clipart Generation
 
 Dieses Dokument enthält schnell zugängliche Prompt-Templates für:
-- 🎨 **Cliparts für Spielbilder** (Issue #26) - Bilder die Kinder nachzeichnen
+- 🎨 **Cliparts für Spielbilder** (Issue #26) - Bilder die Kinder nachzeichnen (Difficulty 1-5)
+- 🎯 **Perspektivische Zeichnungen** - Fortgeschrittene Zeichnungen mit 3D-Effekten (Difficulty 6+)
 - 🎯 **Icons für UI** (Issue #8) - Schaltflächen, Menü-Icons
 
-Vollständige Details siehe [ICON_GENERATION_PLAN.md](ICON_GENERATION_PLAN.md).
+Verwandter Plan: [ICON_GENERATION_PLAN.md](ICON_GENERATION_PLAN.md) (Workflow und Progress Tracking)
 
 ---
 
@@ -333,6 +334,106 @@ Create a road with vanishing point in perspective in clipart style. SVG format, 
 
 ---
 
+## 📐 PERSPEKTIVISCHE ZEICHNUNGEN (Difficulty 6+)
+
+**Verweck:** Generiere fortgeschrittene Zeichnungen mit perspektivischen Effekten und 3D-Darstellung für ältere Kinder (8+ Jahre).
+
+### ⚠️ KRITISCHE ANFORDERUNGEN FÜR PERSPEKTIVE
+
+```
+DO NOT USE:
+❌ Photorealistischer Stil
+❌ Komplexe Schatten/Gradients
+❌ Zu viele Details/Texturen
+
+DO USE:
+✅ Isometrische oder 2-Punkt Perspektive
+✅ Einfache Linienzeichnung für Tiefe
+✅ Minimale Schattenlinien (NOT shaded)
+✅ Klare Vanishing Point
+✅ Flat Design mit Perspektive
+```
+
+### DIFFICULTY 6 - EINFACHE PERSPEKTIVE (Level 11-12, 40+ Striche)
+
+```
+Subject: Perspective drawing with simple 3D effect
+
+Requirements:
+- Simple isometric or 2-point perspective
+- 40-50 strokes total
+- Shows clear 3D form and depth
+- 2-4 colors maximum
+- Minimal shading (line-based depth, NOT gradients)
+- Clear perspective lines
+- Suitable for 8-year-olds learning perspective
+
+Examples:
+1. 3D Cube (12 strokes, isometric view)
+2. Staircase (20-25 strokes, side view)
+3. Open Door (25-30 strokes with depth)
+
+Prompt Template:
+"Create a simple 3D [SUBJECT] in perspective drawing style. SVG format, 512x512px, transparent background.
+Isometric or 2-point perspective, 40-50 strokes total. Show three visible faces/sides clearly.
+Add simple depth lines to enhance 3D effect (NOT shaded). 2-4 colors, clear outlines.
+Child-friendly design suitable for 8-year-olds learning perspective drawing."
+```
+
+### DIFFICULTY 7 - MITTLERE PERSPEKTIVE (Level 13-14, 35-40 Striche)
+
+```
+Subject: Scene or object in 2-point perspective
+
+Requirements:
+- Two-point perspective showing multiple elements
+- 35-40 strokes total
+- Multiple recognizable elements
+- 3-5 colors maximum
+- Vanishing point-based composition
+- Clear perspective consistency
+- Suitable for 8-9 year-olds
+
+Examples:
+1. House in Perspective (35-40 strokes, two walls visible)
+2. Street with Vanishing Point (30-35 strokes)
+3. Chair in Perspective (28-32 strokes, 3D view)
+
+Prompt Template:
+"Create a [SUBJECT] in two-point perspective. SVG format, 512x512px, transparent background.
+Show two visible sides/surfaces in perspective. 35-40 strokes total with clear vanishing point.
+Include simple depth shading on one side. 3-5 colors, recognizable elements and fine details.
+Child-friendly design with consistent perspective lines."
+```
+
+### DIFFICULTY 8 - KOMPLEXE PERSPEKTIVE (Level 15+, 50+ Striche)
+
+```
+Subject: Complex scene or interior with perspective
+
+Requirements:
+- Complex multi-element composition
+- 50+ strokes total
+- Interior or detailed scene
+- Multiple vanishing points possible
+- Fine perspective details
+- 4-6 colors maximum
+- Suitable for 9+ year-olds
+
+Examples:
+1. City Scene (50+ strokes, multiple buildings)
+2. Room Interior (55+ strokes, furniture and depth)
+3. Tunnel/Corridor (40-45 strokes, strong depth effect)
+
+Prompt Template:
+"Create a detailed [SUBJECT] in perspective. SVG format, 512x512px, transparent background.
+Complex scene with 50+ strokes, multiple recognizable elements in correct perspective.
+Show depth through overlapping elements and perspective lines. 4-6 colors with fine details.
+Clear vanishing point(s) and consistent spatial relationships. Suitable for 9+ year-olds."
+```
+
+---
+
 ## 🔧 Anpassungs-Tipps
 
 ### Wenn Icon zu komplex ist:
@@ -403,18 +504,20 @@ Create a road with vanishing point in perspective in clipart style. SVG format, 
 ## 📍 Verwandte Issues & Dokumentation
 
 ### Für Cliparts (Spielbilder zum Nachzeichnen)
-- **[Issue #26](https://github.com/S540d/DrawFromMemory/issues/26)** - AI-generated Clipart für alle Schwierigkeitslevel
-- **[Issue #5](https://github.com/S540d/DrawFromMemory/issues/5)** - Schwierigkeitslevel Struktur
+- **[Issue #26](https://github.com/S540d/DrawFromMemory/issues/26)** - AI-generated Clipart für alle Schwierigkeitslevel (Difficulty 1-5)
+- **[Issue #5](https://github.com/S540d/DrawFromMemory/issues/5)** - Schwierigkeitslevel Struktur (Difficulty 1-5 Definition)
 - **[Issue #20](https://github.com/S540d/DrawFromMemory/issues/20)** - Color Picker Filtering (nutzt colors property)
 
-### Für UI-Icons
+### Für UI-Icons und Perspektive
 - **[Issue #8](https://github.com/S540d/DrawFromMemory/issues/8)** - Icon-System für UI-Elemente
-- [ICON_GENERATION_PLAN.md](ICON_GENERATION_PLAN.md) - Vollständiger Icon-Plan
-- [BILDERPOOL.md](assets/images/levels/BILDERPOOL.md) - Aktueller Bilderpool
+- [BILDERPOOL.md](assets/images/levels/BILDERPOOL.md) - Aktueller Bilderpool Status
+
+### Referenzdokumente
+- [ICON_GENERATION_PLAN.md](ICON_GENERATION_PLAN.md) - Workflow, Checklisten, Progress Tracking für Icon-Generierung
 
 ### Implementierungsleitfaden
-1. **Cliparts erzeugen** → Issue #26 Prompts verwenden
-2. **SVG optimieren** → Farbverläufe entfernen, Outlines prüfen
-3. **In assets ablegen** → `assets/images/levels/` mit Level-Nummer
+1. **Cliparts erzeugen** → Verwende PROMPT_TEMPLATES.md für alle Difficulty 1-8
+2. **SVG optimieren** → Farbverläufe entfernen, Outlines prüfen, nur Solid Colors
+3. **In assets ablegen** → `assets/images/levels/` mit entsprechender Level-Nummer
 4. **ImagePoolManager aktualisieren** → `colors` Property hinzufügen
-5. **Testen** → Alle 14+ Bilder sollte ein Kind nachzeichnen können
+5. **Testen** → Bild sollte von Kindern der Zielgruppe nachzeichenbar sein

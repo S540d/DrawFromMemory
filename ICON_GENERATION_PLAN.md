@@ -1,12 +1,16 @@
-# Icon-Generierungs-Plan - Issue #5
+# Icon-Generierungs-Plan - Workflow & Progress Tracking
+
+**📌 WICHTIG:** Alle Prompt-Templates sind jetzt in [PROMPT_TEMPLATES.md](PROMPT_TEMPLATES.md) konsolidiert.
+Dieses Dokument enthält **Workflow, Checklisten und Progress Tracking** für Icon-Generierung.
 
 ## 🎯 Ziel
 
-Erstellung eines konsistenten Plans zur Generierung von Icons für alle Schwierigkeitsstufen der "Merke und Male" App. Die Icons sollen:
-- Von einfachen Strichmännchen (Level 1-2) bis zu perspektivischen Zeichnungen (Level 10+) reichen
-- 2-3 Icons pro Schwierigkeitslevel bereitstellen
-- Mit einem wiederverwendbaren Prompt generierbar sein
-- Im Clipart-Stil gestaltet sein
+Erstellung eines konsistenten Plans zur Generierung von Icons für alle Schwierigkeitsstufen (Difficulty 1-8) der "DrawFromMemory" App:
+- **Difficulty 1-5:** Einfache bis komplexe Cliparts (5-40 Striche)
+- **Difficulty 6-8:** Perspektivische Zeichnungen mit 3D-Effekten (40-50+ Striche)
+- Von einfachen Strichmännchen bis zu komplexen Szenen in Perspektive
+- Mit wiederverwendbaren Prompts generierbar (siehe PROMPT_TEMPLATES.md)
+- Im Clipart-Stil gestaltet mit Flat Design
 
 ---
 
@@ -124,176 +128,39 @@ Erstellung eines konsistenten Plans zur Generierung von Icons für alle Schwieri
 
 ---
 
-## 🎨 AI-Prompt Template für Icon-Generierung
+## 🎨 AI-Prompt Templates
 
-### Basis-Prompt (für alle Icons verwendbar)
+**➡️ ALLE PROMPT-TEMPLATES sind jetzt in [PROMPT_TEMPLATES.md](PROMPT_TEMPLATES.md) konsolidiert!**
 
-```
-Create a simple, child-friendly clipart-style icon in SVG format with the following specifications:
+Siehe dort für:
+- **Difficulty 1-5:** Clipart Prompts mit Beispielen
+- **Difficulty 6-8:** Perspektivische Zeichnungs-Prompts
+- **Anpassungs-Tipps:** Wie man Prompts modifiziert
+- **AI-Tool Integrations-Guide:** Verwendung mit DALL-E, Midjourney, Stable Diffusion, etc.
 
-**Subject:** [ICON_NAME, z.B. "stick figure", "bicycle", "house in perspective"]
-
-**Style Requirements:**
-- Clipart style: clean, simple lines
-- Child-friendly: friendly, not photorealistic
-- Minimalistic: focus on essential features
-- Clear outlines: 2-3px stroke width
-- Flat design with minimal shading (for levels 1-10)
-- [For Level 10+: Add perspective and depth with simple shading]
-
-**Technical Specifications:**
-- Format: SVG (vector graphic)
-- Canvas size: 512x512px
-- File size: Max 50KB
-- Background: Transparent
-- Color palette: 2-4 colors maximum
-- Colors: Use bright, saturated colors suitable for children
-  - Primary colors preferred (red, blue, yellow, green)
-  - Avoid muddy or desaturated colors
-
-**Complexity Level:** [DIFFICULTY_LEVEL]
-- Difficulty 1: 5-12 strokes, basic geometric shapes, no details
-- Difficulty 2: 8-15 strokes, simple objects, minimal details
-- Difficulty 3: 12-20 strokes, combined shapes, first details
-- Difficulty 4: 18-28 strokes, multiple details, textures
-- Difficulty 5: 25-40 strokes, complex details, patterns, initial spatial depth
-- Difficulty 6+: 40+ strokes, perspective drawing, 3D effects, shadows
-
-**Number of Strokes/Elements:** [TARGET_STROKE_COUNT]
-
-**Additional Notes:**
-- The icon should be memorable and easy to redraw from memory
-- Ensure high contrast between elements for clarity
-- Use rounded corners for a friendlier appearance
-- For animals: emphasize characteristic features (e.g., long ears for rabbit)
-- For objects: use recognizable, iconic representations
-```
+Dieses Dokument fokussiert auf **Workflow, Checklisten und Progress Tracking**.
 
 ---
 
-### Beispiel-Prompts für spezifische Icons
-
-#### Beispiel 1: Strichmännchen (Level 1-2)
-```
-Create a simple, child-friendly clipart-style icon in SVG format with the following specifications:
-
-Subject: Stick figure person
-
-Style Requirements:
-- Clipart style: clean, simple lines
-- Child-friendly: friendly, not photorealistic
-- Minimalistic: circle head, straight lines for body, arms, and legs
-- Clear outlines: 3px stroke width
-- Flat design with no shading
-
-Technical Specifications:
-- Format: SVG
-- Canvas size: 512x512px
-- File size: Max 50KB
-- Background: Transparent
-- Color: Black only
-
-Complexity Level: Difficulty 1
-- 6-8 strokes total
-- Circle for head
-- 1 line for body
-- 2 lines for arms
-- 2 lines for legs
-
-Additional Notes:
-- Simple and iconic representation
-- Arms can be slightly angled for a friendly pose
-- Legs straight or slightly apart for balance
-```
-
-#### Beispiel 2: Fahrrad (Level 9)
-```
-Create a simple, child-friendly clipart-style icon in SVG format with the following specifications:
-
-Subject: Bicycle (side view)
-
-Style Requirements:
-- Clipart style: clean, simple lines
-- Child-friendly: bright colors, clear shapes
-- Minimalistic but detailed: show essential bike features
-- Clear outlines: 2-3px stroke width
-- Flat design with minimal shading
-
-Technical Specifications:
-- Format: SVG
-- Canvas size: 512x512px
-- File size: Max 50KB
-- Background: Transparent
-- Color palette: 2-3 colors (e.g., red frame, black wheels and details, silver highlights)
-
-Complexity Level: Difficulty 5
-- 30-35 strokes total
-- 2 wheels with spokes (simplified: 6-8 spokes per wheel)
-- Frame (triangle shape)
-- Handlebars
-- Seat
-- Pedals
-- Chain (simplified)
-
-Additional Notes:
-- Side view for clarity
-- Wheels should be perfect circles
-- Spokes can be simplified (6-8 per wheel instead of realistic count)
-- Frame should be clearly visible
-- Emphasize recognizable bicycle silhouette
-```
-
-#### Beispiel 3: Haus in Perspektive (Level 13)
-```
-Create a simple, child-friendly clipart-style icon in SVG format with the following specifications:
-
-Subject: House in perspective (two-point perspective)
-
-Style Requirements:
-- Clipart style: clean lines with perspective
-- Child-friendly: bright colors, welcoming appearance
-- Perspective drawing: show two visible sides of the house
-- Clear outlines: 2-3px stroke width
-- Add simple shading on one side to enhance 3D effect
-
-Technical Specifications:
-- Format: SVG
-- Canvas size: 512x512px
-- File size: Max 50KB
-- Background: Transparent
-- Color palette: 3-4 colors (e.g., yellow walls, red roof, blue windows, brown door)
-
-Complexity Level: Difficulty 6
-- 35-40 strokes total
-- Two visible walls in perspective
-- Roof with ridge visible
-- 2-3 windows per side
-- One door (front side)
-- Simple shading on one wall
-- Ground line for context
-
-Additional Notes:
-- Use simple two-point perspective
-- Ensure vanishing point is consistent
-- One side should be slightly darker to show depth
-- Keep perspective gentle (not too dramatic)
-- Windows and door should follow perspective lines
-- Roof should clearly show 3D form
-```
+**Beispiel-Prompts:** Siehe [PROMPT_TEMPLATES.md](PROMPT_TEMPLATES.md) für detaillierte Beispiele:
+- Strichmännchen (Difficulty 1)
+- Fahrrad (Difficulty 5)
+- Haus in Perspektive (Difficulty 6+)
+- Würfel 3D, Straße mit Fluchtpunkt, und mehr
 
 ---
 
 ## 🔄 Workflow zur Icon-Generierung
 
 ### Schritt 1: Prompt vorbereiten
-1. Wähle Icon aus der Liste
-2. Bestimme Schwierigkeitsstufe
-3. Kopiere Basis-Prompt
-4. Fülle Platzhalter aus:
-   - `[ICON_NAME]`
-   - `[DIFFICULTY_LEVEL]`
-   - `[TARGET_STROKE_COUNT]`
-5. Füge spezifische Details hinzu
+1. Wähle Icon aus der "Neue Icon-Vorschläge" Liste oben
+2. Bestimme Schwierigkeitsstufe (1-8)
+3. Öffne [PROMPT_TEMPLATES.md](PROMPT_TEMPLATES.md) und finde den entsprechenden Prompt für deine Difficulty
+4. Kopiere den Prompt Template
+5. Fülle Platzhalter aus:
+   - `[SUBJECT]` → dein Icon Name
+   - `[ICON_NAME]` → dein Icon Name
+6. Passe spezifische Details an (z.B. Farben, Anzahl Elemente)
 
 ### Schritt 2: Icon generieren
 1. Verwende AI-Tool (z.B. DALL-E, Midjourney, Stable Diffusion)
@@ -319,17 +186,18 @@ Additional Notes:
 ### Schritt 5: Integration
 1. Datei benennen: `level-XX-name.svg` oder `extra-XX-name.svg`
 2. In `assets/images/levels/` speichern
-3. In `services/ImagePoolManager.ts` eintragen:
+3. In `services/ImagePoolManager.ts` eintragen (mit `colors` Property von Issue #20):
 ```typescript
 {
   filename: 'level-XX-name.svg',
   difficulty: X,
   displayName: 'Name (DE)',
   displayNameEn: 'Name (EN)',
-  strokeCount: XX
+  strokeCount: XX,
+  colors: ['#000000', '#FF0000', '#0000FF'] // Hex Farben aus dem SVG
 }
 ```
-4. Testen: Icon in App anzeigen lassen
+4. Testen: Icon in App anzeigen lassen und Color Picker prüfen
 
 ---
 
