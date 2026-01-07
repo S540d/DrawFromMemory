@@ -44,6 +44,38 @@ const imagePool: LevelImage[] = [
     strokeCount: 8,
     colors: ['#FFFFFF']
   },
+  {
+    filename: 'level-02-01-house.svg',
+    difficulty: 2,
+    displayName: 'Haus',
+    displayNameEn: 'House',
+    strokeCount: 15,
+    colors: ['#000000', '#E74C3C', '#8B4513', '#87CEEB']
+  },
+  {
+    filename: 'level-02-02-apple.svg',
+    difficulty: 2,
+    displayName: 'Apfel',
+    displayNameEn: 'Apple',
+    strokeCount: 12,
+    colors: ['#E74C3C', '#27AE60', '#8B4513', '#FFFFFF']
+  },
+  {
+    filename: 'level-02-03-rocket.svg',
+    difficulty: 2,
+    displayName: 'Rakete',
+    displayNameEn: 'Rocket',
+    strokeCount: 18,
+    colors: ['#FF6B6B', '#FFD700', '#3498DB']
+  },
+  {
+    filename: 'level-02-04-balloon.svg',
+    difficulty: 2,
+    displayName: 'Luftballon',
+    displayNameEn: 'Balloon',
+    strokeCount: 14,
+    colors: ['#FF1493', '#000000', '#CD853F']
+  },
 
   // Mittel (Schwierigkeit 3)
   {
@@ -129,6 +161,30 @@ const imagePool: LevelImage[] = [
     displayNameEn: 'Butterfly',
     strokeCount: 35,
     colors: ['#000000', '#9B59B6', '#FF69B4', '#FFD700', '#FFFFFF']
+  },
+  {
+    filename: 'level-05-01-lion.svg',
+    difficulty: 5,
+    displayName: 'Löwe',
+    displayNameEn: 'Lion',
+    strokeCount: 40,
+    colors: ['#FFA500', '#CD853F', '#000000', '#8B6914', '#F4A460']
+  },
+  {
+    filename: 'level-05-02-landscape.svg',
+    difficulty: 5,
+    displayName: 'Landschaft',
+    displayNameEn: 'Landscape',
+    strokeCount: 50,
+    colors: ['#87CEEB', '#90EE90', '#8B7355', '#A0826D', '#FFD700', '#FFA500', '#27AE60', '#FFFFFF', '#3498DB']
+  },
+  {
+    filename: 'level-05-03-castle.svg',
+    difficulty: 5,
+    displayName: 'Burg',
+    displayNameEn: 'Castle',
+    strokeCount: 45,
+    colors: ['#D3D3D3', '#A9A9A9', '#8B4513', '#654321', '#87CEEB', '#FFD700', '#FF1493']
   },
 ];
 
