@@ -1,0 +1,42 @@
+<svg width="300" height="200" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Sky -->
+  <rect width="300" height="100" fill="#87CEEB" stroke="none"/>
+
+  <!-- Ground -->
+  <rect y="100" width="300" height="100" fill="#90EE90" stroke="none"/>
+
+  <!-- Mountains (back) -->
+  <polygon points="0,100 80,40 160,100" fill="#8B7355" stroke="#000000" stroke-width="2"/>
+  <polygon points="140,100 200,50 260,100" fill="#A0826D" stroke="#000000" stroke-width="2"/>
+
+  <!-- Sun -->
+  <circle cx="270" cy="30" r="25" fill="#FFD700" stroke="#FFA500" stroke-width="2"/>
+
+  <!-- Tree 1 (left) -->
+  <rect x="30" y="130" width="12" height="30" fill="#8B4513" stroke="#000000" stroke-width="1.5"/>
+  <circle cx="36" cy="115" r="20" fill="#27AE60" stroke="#000000" stroke-width="2"/>
+  <circle cx="20" cy="125" r="18" fill="#27AE60" stroke="#000000" stroke-width="2"/>
+  <circle cx="52" cy="125" r="18" fill="#27AE60" stroke="#000000" stroke-width="2"/>
+
+  <!-- Tree 2 (right) -->
+  <rect x="240" y="120" width="14" height="40" fill="#8B4513" stroke="#000000" stroke-width="1.5"/>
+  <circle cx="247" cy="100" r="25" fill="#27AE60" stroke="#000000" stroke-width="2"/>
+  <circle cx="225" cy="115" r="22" fill="#27AE60" stroke="#000000" stroke-width="2"/>
+  <circle cx="269" cy="115" r="22" fill="#27AE60" stroke="#000000" stroke-width="2"/>
+
+  <!-- Cloud 1 -->
+  <circle cx="50" cy="35" r="15" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+  <circle cx="70" cy="35" r="18" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+  <circle cx="30" cy="40" r="12" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+
+  <!-- Cloud 2 -->
+  <circle cx="200" cy="50" r="12" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+  <circle cx="215" cy="50" r="14" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+
+  <!-- Water/River -->
+  <path d="M 150 160 Q 170 170 190 160 Q 200 155 220 165" stroke="#3498DB" stroke-width="8" fill="none" stroke-linecap="round"/>
+
+  <!-- Water waves/details -->
+  <path d="M 155 158 Q 165 162 175 158" stroke="#000000" stroke-width="1" fill="none"/>
+  <path d="M 185 158 Q 200 165 215 160" stroke="#000000" stroke-width="1" fill="none"/>
+</svg>

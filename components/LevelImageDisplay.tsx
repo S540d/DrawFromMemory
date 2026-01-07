@@ -82,6 +82,168 @@ export default function LevelImageDisplay({ image, size = 300 }: Props) {
           </Svg>
         );
 
+      case 'level-02-01-house.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 200 240">
+            {/* House body */}
+            <Rect x="40" y="100" width="120" height="100" fill="#E74C3C" stroke="#000000" strokeWidth="2" />
+            {/* Roof */}
+            <Polygon points="40,100 100,30 160,100" fill="#8B4513" stroke="#000000" strokeWidth="2" />
+            {/* Door */}
+            <Rect x="85" y="150" width="30" height="50" fill="#8B4513" stroke="#000000" strokeWidth="2" />
+            {/* Door handle */}
+            <Circle cx="112" cy="175" r="3" fill="#FFD700" />
+            {/* Left window */}
+            <Rect x="55" y="115" width="25" height="25" fill="#87CEEB" stroke="#000000" strokeWidth="2" />
+            {/* Right window */}
+            <Rect x="120" y="115" width="25" height="25" fill="#87CEEB" stroke="#000000" strokeWidth="2" />
+          </Svg>
+        );
+
+      case 'level-02-02-apple.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 200 200">
+            {/* Apple body */}
+            <Circle cx="100" cy="110" r="50" fill="#E74C3C" stroke="#000000" strokeWidth="2" />
+            {/* Apple top indent */}
+            <Ellipse cx="100" cy="65" rx="15" ry="10" fill="#E74C3C" stroke="#000000" strokeWidth="2" />
+            {/* Stem */}
+            <Rect x="96" y="50" width="8" height="20" fill="#8B4513" stroke="#000000" strokeWidth="1.5" />
+            {/* Leaf */}
+            <Ellipse cx="85" cy="55" rx="20" ry="12" fill="#27AE60" stroke="#000000" strokeWidth="1.5" />
+            {/* Highlight */}
+            <Ellipse cx="80" cy="100" rx="15" ry="20" fill="#FFFFFF" opacity="0.4" />
+          </Svg>
+        );
+
+      case 'level-02-03-rocket.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 200 280">
+            {/* Rocket body */}
+            <Rect x="70" y="40" width="60" height="140" fill="#FF6B6B" stroke="#000000" strokeWidth="2" />
+            {/* Rocket nose */}
+            <Polygon points="100,20 85,40 115,40" fill="#FFD700" stroke="#000000" strokeWidth="2" />
+            {/* Window */}
+            <Circle cx="100" cy="70" r="12" fill="#3498DB" stroke="#000000" strokeWidth="1.5" />
+            {/* Left fin */}
+            <Polygon points="70,160 45,200 65,165" fill="#3498DB" stroke="#000000" strokeWidth="2" />
+            {/* Right fin */}
+            <Polygon points="130,160 155,200 135,165" fill="#3498DB" stroke="#000000" strokeWidth="2" />
+            {/* Flame 1 */}
+            <Polygon points="80,180 75,240 85,200" fill="#FF8C00" stroke="#000000" strokeWidth="1.5" />
+            {/* Flame 2 */}
+            <Polygon points="100,180 100,250 105,200" fill="#FFD700" stroke="#000000" strokeWidth="1.5" />
+            {/* Flame 3 */}
+            <Polygon points="120,180 125,240 115,200" fill="#FF8C00" stroke="#000000" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'level-02-04-balloon.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 200 260">
+            {/* Balloon */}
+            <Circle cx="100" cy="70" r="40" fill="#FF1493" stroke="#000000" strokeWidth="2" />
+            {/* String line */}
+            <Line x1="100" y1="110" x2="100" y2="220" stroke="#000000" strokeWidth="2" />
+            {/* Basket */}
+            <Rect x="75" y="220" width="50" height="35" fill="#CD853F" stroke="#000000" strokeWidth="2" />
+            {/* Basket weave pattern */}
+            <Line x1="85" y1="220" x2="85" y2="255" stroke="#000000" strokeWidth="1" />
+            <Line x1="95" y1="220" x2="95" y2="255" stroke="#000000" strokeWidth="1" />
+            <Line x1="105" y1="220" x2="105" y2="255" stroke="#000000" strokeWidth="1" />
+            <Line x1="115" y1="220" x2="115" y2="255" stroke="#000000" strokeWidth="1" />
+            {/* Highlight on balloon */}
+            <Ellipse cx="85" cy="50" rx="12" ry="15" fill="#FFFFFF" opacity="0.3" />
+          </Svg>
+        );
+
+      case 'level-05-01-lion.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 240 220">
+            {/* Mane outer */}
+            <Circle cx="120" cy="90" r="50" fill="#FFA500" stroke="#000000" strokeWidth="2" />
+            {/* Mane details */}
+            <Circle cx="85" cy="70" r="22" fill="#FFA500" stroke="#000000" strokeWidth="1.5" />
+            <Circle cx="155" cy="70" r="22" fill="#FFA500" stroke="#000000" strokeWidth="1.5" />
+            {/* Head */}
+            <Circle cx="120" cy="100" r="35" fill="#CD853F" stroke="#000000" strokeWidth="2" />
+            {/* Ears */}
+            <Polygon points="95,70 85,40 100,65" fill="#CD853F" stroke="#000000" strokeWidth="1.5" />
+            <Polygon points="145,70 155,40 140,65" fill="#CD853F" stroke="#000000" strokeWidth="1.5" />
+            {/* Eyes */}
+            <Circle cx="110" cy="90" r="4" fill="#000000" />
+            <Circle cx="130" cy="90" r="4" fill="#000000" />
+            {/* Nose */}
+            <Polygon points="120,105 115,115 125,115" fill="#000000" />
+            {/* Snout */}
+            <Ellipse cx="120" cy="108" rx="12" ry="10" fill="#F4A460" />
+            {/* Body */}
+            <Ellipse cx="120" cy="160" rx="30" ry="40" fill="#CD853F" stroke="#000000" strokeWidth="2" />
+            {/* Front left leg */}
+            <Rect x="105" y="185" width="10" height="30" fill="#8B6914" stroke="#000000" strokeWidth="2" />
+            {/* Front right leg */}
+            <Rect x="125" y="185" width="10" height="30" fill="#8B6914" stroke="#000000" strokeWidth="2" />
+            {/* Tail */}
+            <Path d="M 85 165 Q 40 160 45 110" stroke="#CD853F" strokeWidth="12" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <Path d="M 45 110 Q 35 100 30 105" stroke="#FFA500" strokeWidth="8" fill="none" strokeLinecap="round" />
+          </Svg>
+        );
+
+      case 'level-05-02-landscape.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 300 200">
+            {/* Sky */}
+            <Rect width="300" height="100" fill="#87CEEB" />
+            {/* Ground */}
+            <Rect y="100" width="300" height="100" fill="#90EE90" />
+            {/* Mountains */}
+            <Polygon points="0,100 80,40 160,100" fill="#8B7355" stroke="#000000" strokeWidth="2" />
+            <Polygon points="140,100 200,50 260,100" fill="#A0826D" stroke="#000000" strokeWidth="2" />
+            {/* Sun */}
+            <Circle cx="270" cy="30" r="25" fill="#FFD700" stroke="#FFA500" strokeWidth="2" />
+            {/* Tree 1 */}
+            <Rect x="30" y="130" width="12" height="30" fill="#8B4513" stroke="#000000" strokeWidth="1.5" />
+            <Circle cx="36" cy="115" r="20" fill="#27AE60" stroke="#000000" strokeWidth="2" />
+            {/* Cloud */}
+            <Circle cx="50" cy="35" r="15" fill="#FFFFFF" stroke="#000000" strokeWidth="1.5" />
+            <Circle cx="70" cy="35" r="18" fill="#FFFFFF" stroke="#000000" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'level-05-03-castle.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 280 260">
+            {/* Central tower body */}
+            <Rect x="100" y="100" width="80" height="120" fill="#D3D3D3" stroke="#000000" strokeWidth="2" />
+            {/* Left tower */}
+            <Rect x="30" y="130" width="40" height="90" fill="#A9A9A9" stroke="#000000" strokeWidth="2" />
+            {/* Right tower */}
+            <Rect x="210" y="130" width="40" height="90" fill="#A9A9A9" stroke="#000000" strokeWidth="2" />
+            {/* Central tower roof */}
+            <Polygon points="100,100 140,40 180,100" fill="#8B4513" stroke="#000000" strokeWidth="2" />
+            {/* Left tower roof */}
+            <Polygon points="30,130 50,80 70,130" fill="#8B4513" stroke="#000000" strokeWidth="2" />
+            {/* Right tower roof */}
+            <Polygon points="210,130 230,80 250,130" fill="#8B4513" stroke="#000000" strokeWidth="2" />
+            {/* Central tower door */}
+            <Rect x="125" y="160" width="30" height="50" fill="#654321" stroke="#000000" strokeWidth="2" />
+            {/* Door handle */}
+            <Circle cx="150" cy="185" r="3" fill="#FFD700" />
+            {/* Left tower window */}
+            <Rect x="40" y="150" width="20" height="20" fill="#87CEEB" stroke="#000000" strokeWidth="2" />
+            {/* Right tower window */}
+            <Rect x="220" y="150" width="20" height="20" fill="#87CEEB" stroke="#000000" strokeWidth="2" />
+            {/* Central tower windows */}
+            <Rect x="115" y="130" width="18" height="18" fill="#87CEEB" stroke="#000000" strokeWidth="1.5" />
+            <Rect x="147" y="130" width="18" height="18" fill="#87CEEB" stroke="#000000" strokeWidth="1.5" />
+            {/* Flag */}
+            <Rect x="138" y="35" width="4" height="15" fill="#FFD700" stroke="#000000" strokeWidth="1" />
+            <Polygon points="142,40 142,50 158,45" fill="#FF1493" stroke="#000000" strokeWidth="1.5" />
+            {/* Ground */}
+            <Line x1="20" y1="220" x2="260" y2="220" stroke="#000000" strokeWidth="3" />
+          </Svg>
+        );
+
       default:
         // Fallback für noch nicht implementierte Bilder
         return (
