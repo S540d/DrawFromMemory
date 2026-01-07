@@ -50,7 +50,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Haus',
     displayNameEn: 'House',
     strokeCount: 15,
-    colors: ['#000000', '#E74C3C', '#8B4513', '#87CEEB']
+    colors: ['#000000', '#E74C3C', '#8B4513', '#87CEEB', '#FFD700']
   },
   {
     filename: 'level-02-02-apple.svg',
@@ -66,7 +66,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Rakete',
     displayNameEn: 'Rocket',
     strokeCount: 18,
-    colors: ['#FF6B6B', '#FFD700', '#3498DB']
+    colors: ['#000000', '#FF8C00', '#FF6B6B', '#FFD700', '#3498DB']
   },
   {
     filename: 'level-02-04-balloon.svg',
@@ -74,7 +74,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Luftballon',
     displayNameEn: 'Balloon',
     strokeCount: 14,
-    colors: ['#FF1493', '#000000', '#CD853F']
+    colors: ['#FF1493', '#000000', '#CD853F', '#FFFFFF']
   },
 
   // Mittel (Schwierigkeit 3)
@@ -176,7 +176,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Landschaft',
     displayNameEn: 'Landscape',
     strokeCount: 50,
-    colors: ['#87CEEB', '#90EE90', '#8B7355', '#A0826D', '#FFD700', '#FFA500', '#27AE60', '#FFFFFF', '#3498DB']
+    colors: ['#000000', '#87CEEB', '#90EE90', '#8B7355', '#8B4513', '#A0826D', '#FFD700', '#FFA500', '#27AE60', '#FFFFFF', '#3498DB']
   },
   {
     filename: 'level-05-03-castle.svg',
@@ -184,7 +184,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Burg',
     displayNameEn: 'Castle',
     strokeCount: 45,
-    colors: ['#D3D3D3', '#A9A9A9', '#8B4513', '#654321', '#87CEEB', '#FFD700', '#FF1493']
+    colors: ['#000000', '#D3D3D3', '#A9A9A9', '#8B4513', '#654321', '#87CEEB', '#FFD700', '#FF1493']
   },
 ];
 
