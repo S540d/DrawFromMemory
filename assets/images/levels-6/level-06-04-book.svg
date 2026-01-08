@@ -1,0 +1,20 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Front cover -->
+  <rect x="50" y="60" width="70" height="90" fill="#E74C3C" stroke="#000000" stroke-width="2"/>
+
+  <!-- Spine (side edge) -->
+  <polygon points="50,60 60,55 60,145 50,150" fill="#C0392B" stroke="#000000" stroke-width="2"/>
+
+  <!-- Top edge -->
+  <polygon points="50,60 60,55 130,55 120,60" fill="#FFD700" stroke="#000000" stroke-width="2"/>
+
+  <!-- Page lines on cover -->
+  <line x1="60" y1="80" x2="110" y2="80" stroke="#000000" stroke-width="1.5"/>
+  <line x1="60" y1="95" x2="110" y2="95" stroke="#000000" stroke-width="1.5"/>
+  <line x1="60" y1="110" x2="110" y2="110" stroke="#000000" stroke-width="1.5"/>
+  <line x1="60" y1="125" x2="110" y2="125" stroke="#000000" stroke-width="1.5"/>
+
+  <!-- Connecting line from cover to spine -->
+  <line x1="50" y1="60" x2="60" y2="55" stroke="#000000" stroke-width="1.5"/>
+  <line x1="50" y1="150" x2="60" y2="145" stroke="#000000" stroke-width="1.5"/>
+</svg>

@@ -44,7 +44,7 @@ export function getLevel(levelNumber: number): Level {
  * Gibt die Gesamtanzahl der Level zurück
  */
 export function getTotalLevels(): number {
-  return 10;
+  return 12;
 }
 
 /**

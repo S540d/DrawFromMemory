@@ -244,6 +244,166 @@ export default function LevelImageDisplay({ image, size = 300 }: Props) {
           </Svg>
         );
 
+      case 'level-06-01-cube.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 200 200">
+            {/* Front face */}
+            <Rect x="50" y="80" width="60" height="60" fill="#E74C3C" stroke="#000000" strokeWidth="2" />
+            {/* Top face */}
+            <Polygon points="50,80 70,60 130,60 110,80" fill="#FFD700" stroke="#000000" strokeWidth="2" />
+            {/* Right face */}
+            <Polygon points="110,80 130,60 130,120 110,140" fill="#8B4513" stroke="#000000" strokeWidth="2" />
+            {/* Edge lines */}
+            <Line x1="110" y1="80" x2="130" y2="60" stroke="#000000" strokeWidth="1.5" />
+            <Line x1="110" y1="140" x2="130" y2="120" stroke="#000000" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'level-06-02-box.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 200 220">
+            {/* Front face */}
+            <Rect x="40" y="90" width="80" height="80" fill="#9B59B6" stroke="#000000" strokeWidth="2" />
+            {/* Top face */}
+            <Polygon points="40,90 60,70 140,70 120,90" fill="#E74C3C" stroke="#000000" strokeWidth="2" />
+            {/* Right side face */}
+            <Polygon points="120,90 140,70 140,150 120,170" fill="#CD853F" stroke="#000000" strokeWidth="2" />
+            {/* Lid edge */}
+            <Polygon points="60,70 80,50 140,50 140,70" fill="#FFD700" stroke="#000000" strokeWidth="1.5" />
+            {/* Connecting lines */}
+            <Line x1="120" y1="90" x2="140" y2="70" stroke="#000000" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'level-06-03-pyramid.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 200 220">
+            {/* Base line */}
+            <Line x1="50" y1="160" x2="150" y2="160" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
+            {/* Left to apex */}
+            <Line x1="50" y1="160" x2="100" y2="50" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
+            {/* Right to apex */}
+            <Line x1="150" y1="160" x2="100" y2="50" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
+            {/* Left face */}
+            <Polygon points="50,160 100,50 75,160" fill="#3498DB" stroke="#000000" strokeWidth="2" />
+            {/* Right face */}
+            <Polygon points="100,50 150,160 125,160" fill="#87CEEB" stroke="#000000" strokeWidth="2" />
+            {/* Hidden edge */}
+            <Line x1="75" y1="160" x2="125" y2="160" stroke="#000000" strokeWidth="1" strokeDasharray="2,2" />
+          </Svg>
+        );
+
+      case 'level-06-04-book.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 200 200">
+            {/* Front cover */}
+            <Rect x="50" y="60" width="70" height="90" fill="#E74C3C" stroke="#000000" strokeWidth="2" />
+            {/* Spine */}
+            <Polygon points="50,60 60,55 60,145 50,150" fill="#C0392B" stroke="#000000" strokeWidth="2" />
+            {/* Top edge */}
+            <Polygon points="50,60 60,55 130,55 120,60" fill="#FFD700" stroke="#000000" strokeWidth="2" />
+            {/* Page lines */}
+            <Line x1="60" y1="80" x2="110" y2="80" stroke="#000000" strokeWidth="1.5" />
+            <Line x1="60" y1="95" x2="110" y2="95" stroke="#000000" strokeWidth="1.5" />
+            <Line x1="60" y1="110" x2="110" y2="110" stroke="#000000" strokeWidth="1.5" />
+            <Line x1="60" y1="125" x2="110" y2="125" stroke="#000000" strokeWidth="1.5" />
+            {/* Connecting lines */}
+            <Line x1="50" y1="60" x2="60" y2="55" stroke="#000000" strokeWidth="1.5" />
+            <Line x1="50" y1="150" x2="60" y2="145" stroke="#000000" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'level-07-01-cylinder.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 200 240">
+            {/* Top ellipse */}
+            <Ellipse cx="100" cy="40" rx="45" ry="20" fill="#FFD700" stroke="#000000" strokeWidth="2" />
+            {/* Left line */}
+            <Line x1="55" y1="40" x2="50" y2="180" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
+            {/* Right line */}
+            <Line x1="145" y1="40" x2="150" y2="180" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
+            {/* Bottom ellipse */}
+            <Ellipse cx="100" cy="180" rx="50" ry="25" fill="#3498DB" stroke="#000000" strokeWidth="2" />
+            {/* Hidden part */}
+            <Path d="M 55 180 A 50 25 0 0 0 145 180" stroke="#000000" strokeWidth="1" strokeDasharray="3,2" fill="none" />
+            {/* Side shading */}
+            <Polygon points="55,40 145,40 150,180 50,180" fill="#87CEEB" opacity="0.2" stroke="none" />
+            {/* Highlight */}
+            <Ellipse cx="80" cy="35" rx="15" ry="8" fill="#FFFFFF" opacity="0.5" />
+          </Svg>
+        );
+
+      case 'level-07-02-ramp.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 240 200">
+            {/* Left support */}
+            <Line x1="40" y1="150" x2="40" y2="180" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
+            {/* Right support */}
+            <Line x1="200" y1="80" x2="200" y2="180" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
+            {/* Ground */}
+            <Line x1="40" y1="180" x2="200" y2="180" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
+            {/* Main ramp */}
+            <Polygon points="40,150 200,80 210,100 50,170" fill="#8B4513" stroke="#000000" strokeWidth="2" />
+            {/* Top surface */}
+            <Polygon points="40,150 200,80 200,80 40,150" fill="#CD853F" stroke="#000000" strokeWidth="2" />
+            {/* Front face */}
+            <Polygon points="40,150 50,170 200,80 200,100" fill="#A0826D" stroke="#000000" strokeWidth="2" />
+            {/* Edge lines */}
+            <Line x1="40" y1="150" x2="50" y2="170" stroke="#000000" strokeWidth="1.5" />
+            <Line x1="200" y1="80" x2="210" y2="100" stroke="#000000" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'level-07-03-cone.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 200 240">
+            {/* Apex */}
+            <Circle cx="100" cy="30" r="2" fill="#000000" />
+            {/* Left line */}
+            <Line x1="100" y1="30" x2="50" y2="180" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
+            {/* Right line */}
+            <Line x1="100" y1="30" x2="150" y2="180" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
+            {/* Base ellipse */}
+            <Ellipse cx="100" cy="180" rx="55" ry="25" fill="#FF6B6B" stroke="#000000" strokeWidth="2" />
+            {/* Hidden part */}
+            <Path d="M 50 180 A 55 25 0 0 0 150 180" stroke="#000000" strokeWidth="1" strokeDasharray="3,2" fill="none" />
+            {/* Front face */}
+            <Polygon points="100,30 50,180 150,180" fill="#FF8C8C" stroke="#000000" strokeWidth="2" />
+            {/* Highlight */}
+            <Path d="M 100 50 Q 90 100 85 160" stroke="#FFFFFF" strokeWidth="3" fill="none" opacity="0.4" strokeLinecap="round" />
+            {/* Center line */}
+            <Line x1="50" y1="180" x2="150" y2="180" stroke="#000000" strokeWidth="1" opacity="0.5" />
+          </Svg>
+        );
+
+      case 'level-07-04-house3d.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 240 240">
+            {/* Front wall */}
+            <Rect x="50" y="90" width="90" height="100" fill="#E74C3C" stroke="#000000" strokeWidth="2" />
+            {/* Left side wall */}
+            <Polygon points="50,90 70,70 70,170 50,190" fill="#C0392B" stroke="#000000" strokeWidth="2" />
+            {/* Roof front */}
+            <Polygon points="50,90 100,40 140,90" fill="#8B4513" stroke="#000000" strokeWidth="2" />
+            {/* Roof side */}
+            <Polygon points="100,40 115,55 130,60 140,90" fill="#654321" stroke="#000000" strokeWidth="2" />
+            {/* Door */}
+            <Rect x="75" y="130" width="30" height="50" fill="#654321" stroke="#000000" strokeWidth="2" />
+            {/* Window front */}
+            <Rect x="60" y="105" width="20" height="20" fill="#87CEEB" stroke="#000000" strokeWidth="1.5" />
+            {/* Window side */}
+            <Rect x="65" y="100" width="15" height="18" fill="#87CEEB" stroke="#000000" strokeWidth="1.5" />
+            {/* Door handle */}
+            <Circle cx="103" cy="155" r="2" fill="#FFD700" />
+            {/* Perspective lines */}
+            <Line x1="100" y1="40" x2="70" y2="70" stroke="#000000" strokeWidth="1" />
+            <Line x1="140" y1="90" x2="70" y2="170" stroke="#000000" strokeWidth="1" />
+            <Line x1="115" y1="55" x2="100" y2="40" stroke="#000000" strokeWidth="1.5" />
+            {/* Ground line */}
+            <Line x1="50" y1="190" x2="160" y2="190" stroke="#000000" strokeWidth="2" />
+          </Svg>
+        );
+
       default:
         // Fallback für noch nicht implementierte Bilder
         return (

@@ -1,0 +1,26 @@
+<svg width="240" height="200" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Left support -->
+  <line x1="40" y1="150" x2="40" y2="180" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Right support (taller) -->
+  <line x1="200" y1="80" x2="200" y2="180" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Ground base line -->
+  <line x1="40" y1="180" x2="200" y2="180" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Main ramp surface (left side) -->
+  <polygon points="40,150 200,80 210,100 50,170" fill="#8B4513" stroke="#000000" stroke-width="2"/>
+
+  <!-- Top surface of ramp -->
+  <polygon points="40,150 200,80 200,80 40,150" fill="#CD853F" stroke="#000000" stroke-width="2"/>
+
+  <!-- Front face of ramp -->
+  <polygon points="40,150 50,170 200,80 200,100" fill="#A0826D" stroke="#000000" stroke-width="2"/>
+
+  <!-- Perspective edge lines -->
+  <line x1="40" y1="150" x2="50" y2="170" stroke="#000000" stroke-width="1.5"/>
+  <line x1="200" y1="80" x2="210" y2="100" stroke="#000000" stroke-width="1.5"/>
+
+  <!-- Mid-ramp line suggestion -->
+  <line x1="100" y1="125" x2="110" y2="145" stroke="#000000" stroke-width="1" opacity="0.6"/>
+</svg>

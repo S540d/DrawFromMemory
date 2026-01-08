@@ -186,6 +186,74 @@ const imagePool: LevelImage[] = [
     strokeCount: 45,
     colors: ['#D3D3D3', '#A9A9A9', '#8B4513', '#654321', '#87CEEB', '#FFD700', '#FF1493']
   },
+
+  // Perspektive - Schwierigkeit 4
+  {
+    filename: 'level-06-01-cube.svg',
+    difficulty: 4,
+    displayName: 'Würfel',
+    displayNameEn: 'Cube',
+    strokeCount: 24,
+    colors: ['#E74C3C', '#FFD700', '#8B4513', '#000000']
+  },
+  {
+    filename: 'level-06-02-box.svg',
+    difficulty: 4,
+    displayName: 'Box',
+    displayNameEn: 'Box',
+    strokeCount: 26,
+    colors: ['#9B59B6', '#E74C3C', '#CD853F', '#FFD700', '#000000']
+  },
+  {
+    filename: 'level-06-03-pyramid.svg',
+    difficulty: 4,
+    displayName: 'Pyramide',
+    displayNameEn: 'Pyramid',
+    strokeCount: 22,
+    colors: ['#3498DB', '#87CEEB', '#FFFFFF', '#000000']
+  },
+  {
+    filename: 'level-06-04-book.svg',
+    difficulty: 4,
+    displayName: 'Buch',
+    displayNameEn: 'Book',
+    strokeCount: 20,
+    colors: ['#E74C3C', '#C0392B', '#FFD700', '#000000']
+  },
+
+  // Perspektive - Schwierigkeit 5
+  {
+    filename: 'level-07-01-cylinder.svg',
+    difficulty: 5,
+    displayName: 'Zylinder',
+    displayNameEn: 'Cylinder',
+    strokeCount: 32,
+    colors: ['#FFD700', '#3498DB', '#87CEEB', '#FFFFFF', '#000000']
+  },
+  {
+    filename: 'level-07-02-ramp.svg',
+    difficulty: 5,
+    displayName: 'Rampe',
+    displayNameEn: 'Ramp',
+    strokeCount: 35,
+    colors: ['#8B4513', '#CD853F', '#A0826D', '#000000']
+  },
+  {
+    filename: 'level-07-03-cone.svg',
+    difficulty: 5,
+    displayName: 'Kegel',
+    displayNameEn: 'Cone',
+    strokeCount: 30,
+    colors: ['#FF6B6B', '#FF8C8C', '#FFFFFF', '#000000']
+  },
+  {
+    filename: 'level-07-04-house3d.svg',
+    difficulty: 5,
+    displayName: 'Haus 3D',
+    displayNameEn: 'House 3D',
+    strokeCount: 38,
+    colors: ['#E74C3C', '#C0392B', '#8B4513', '#654321', '#87CEEB', '#FFD700', '#000000']
+  },
 ];
 
 /**

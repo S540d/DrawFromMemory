@@ -1,0 +1,22 @@
+<svg width="200" height="220" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+  <!-- Front base line -->
+  <line x1="50" y1="160" x2="150" y2="160" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Left base to apex -->
+  <line x1="50" y1="160" x2="100" y2="50" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Right base to apex -->
+  <line x1="150" y1="160" x2="100" y2="50" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Left face (triangle) -->
+  <polygon points="50,160 100,50 75,160" fill="#3498DB" stroke="#000000" stroke-width="2"/>
+
+  <!-- Right face (triangle) -->
+  <polygon points="100,50 150,160 125,160" fill="#87CEEB" stroke="#000000" stroke-width="2"/>
+
+  <!-- Bottom face -->
+  <polygon points="50,160 150,160 125,160 75,160" fill="#FFFFFF" opacity="0.3" stroke="#000000" stroke-width="1.5"/>
+
+  <!-- Hidden edge suggestion -->
+  <line x1="75" y1="160" x2="125" y2="160" stroke="#000000" stroke-width="1" stroke-dasharray="2,2"/>
+</svg>
