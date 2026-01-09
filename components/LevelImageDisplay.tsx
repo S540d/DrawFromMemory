@@ -110,7 +110,7 @@ export default function LevelImageDisplay({ image, size = 300 }: Props) {
             {/* Stem */}
             <Rect x="96" y="50" width="8" height="20" fill="#8B4513" stroke="#000000" strokeWidth="1.5" />
             {/* Leaf */}
-            <Ellipse cx="85" cy="55" rx="20" ry="12" fill="#27AE60" stroke="#000000" strokeWidth="1.5" />
+            <Ellipse cx="85" cy="55" rx="20" ry="12" fill="#27AE60" stroke="#000000" strokeWidth="1.5" transform="rotate(-35 85 55)" />
             {/* Highlight */}
             <Ellipse cx="80" cy="100" rx="15" ry="20" fill="#FFFFFF" opacity="0.4" />
           </Svg>
@@ -165,6 +165,10 @@ export default function LevelImageDisplay({ image, size = 300 }: Props) {
             {/* Mane details */}
             <Circle cx="85" cy="70" r="22" fill="#FFA500" stroke="#000000" strokeWidth="1.5" />
             <Circle cx="155" cy="70" r="22" fill="#FFA500" stroke="#000000" strokeWidth="1.5" />
+            <Circle cx="75" cy="100" r="20" fill="#FFA500" stroke="#000000" strokeWidth="1.5" />
+            <Circle cx="165" cy="100" r="20" fill="#FFA500" stroke="#000000" strokeWidth="1.5" />
+            <Circle cx="85" cy="130" r="18" fill="#FFA500" stroke="#000000" strokeWidth="1.5" />
+            <Circle cx="155" cy="130" r="18" fill="#FFA500" stroke="#000000" strokeWidth="1.5" />
             {/* Head */}
             <Circle cx="120" cy="100" r="35" fill="#CD853F" stroke="#000000" strokeWidth="2" />
             {/* Ears */}
@@ -175,6 +179,21 @@ export default function LevelImageDisplay({ image, size = 300 }: Props) {
             <Circle cx="130" cy="90" r="4" fill="#000000" />
             {/* Nose */}
             <Polygon points="120,105 115,115 125,115" fill="#000000" />
+            {/* Mouth */}
+            <Path
+              d="M 120 115 Q 110 125 105 120"
+              stroke="#000000"
+              strokeWidth="2"
+              fill="none"
+              strokeLinecap="round"
+            />
+            <Path
+              d="M 120 115 Q 130 125 135 120"
+              stroke="#000000"
+              strokeWidth="2"
+              fill="none"
+              strokeLinecap="round"
+            />
             {/* Snout */}
             <Ellipse cx="120" cy="108" rx="12" ry="10" fill="#F4A460" />
             {/* Body */}
@@ -204,9 +223,41 @@ export default function LevelImageDisplay({ image, size = 300 }: Props) {
             {/* Tree 1 */}
             <Rect x="30" y="130" width="12" height="30" fill="#8B4513" stroke="#000000" strokeWidth="1.5" />
             <Circle cx="36" cy="115" r="20" fill="#27AE60" stroke="#000000" strokeWidth="2" />
-            {/* Cloud */}
+            <Circle cx="20" cy="125" r="18" fill="#27AE60" stroke="#000000" strokeWidth="2" />
+            <Circle cx="52" cy="125" r="18" fill="#27AE60" stroke="#000000" strokeWidth="2" />
+            {/* Tree 2 */}
+            <Rect x="240" y="120" width="14" height="40" fill="#8B4513" stroke="#000000" strokeWidth="1.5" />
+            <Circle cx="247" cy="100" r="25" fill="#27AE60" stroke="#000000" strokeWidth="2" />
+            <Circle cx="225" cy="115" r="22" fill="#27AE60" stroke="#000000" strokeWidth="2" />
+            <Circle cx="269" cy="115" r="22" fill="#27AE60" stroke="#000000" strokeWidth="2" />
+            {/* Cloud 1 */}
             <Circle cx="50" cy="35" r="15" fill="#FFFFFF" stroke="#000000" strokeWidth="1.5" />
             <Circle cx="70" cy="35" r="18" fill="#FFFFFF" stroke="#000000" strokeWidth="1.5" />
+            <Circle cx="30" cy="40" r="12" fill="#FFFFFF" stroke="#000000" strokeWidth="1.5" />
+            {/* Cloud 2 */}
+            <Circle cx="200" cy="50" r="12" fill="#FFFFFF" stroke="#000000" strokeWidth="1.5" />
+            <Circle cx="215" cy="50" r="14" fill="#FFFFFF" stroke="#000000" strokeWidth="1.5" />
+            {/* Water/River */}
+            <Path
+              d="M 150 160 Q 170 170 190 160 Q 200 155 220 165"
+              stroke="#3498DB"
+              strokeWidth="8"
+              fill="none"
+              strokeLinecap="round"
+            />
+            {/* Water waves/details */}
+            <Path
+              d="M 155 158 Q 165 162 175 158"
+              stroke="#000000"
+              strokeWidth="1"
+              fill="none"
+            />
+            <Path
+              d="M 185 158 Q 200 165 215 160"
+              stroke="#000000"
+              strokeWidth="1"
+              fill="none"
+            />
           </Svg>
         );
 
@@ -225,6 +276,16 @@ export default function LevelImageDisplay({ image, size = 300 }: Props) {
             <Polygon points="30,130 50,80 70,130" fill="#8B4513" stroke="#000000" strokeWidth="2" />
             {/* Right tower roof */}
             <Polygon points="210,130 230,80 250,130" fill="#8B4513" stroke="#000000" strokeWidth="2" />
+            {/* Central tower crenellations */}
+            <Rect x="105" y="90" width="10" height="15" fill="#D3D3D3" stroke="#000000" strokeWidth="1.5" />
+            <Rect x="130" y="90" width="10" height="15" fill="#D3D3D3" stroke="#000000" strokeWidth="1.5" />
+            <Rect x="155" y="90" width="10" height="15" fill="#D3D3D3" stroke="#000000" strokeWidth="1.5" />
+            {/* Left tower crenellations */}
+            <Rect x="35" y="120" width="8" height="12" fill="#A9A9A9" stroke="#000000" strokeWidth="1.5" />
+            <Rect x="55" y="120" width="8" height="12" fill="#A9A9A9" stroke="#000000" strokeWidth="1.5" />
+            {/* Right tower crenellations */}
+            <Rect x="215" y="120" width="8" height="12" fill="#A9A9A9" stroke="#000000" strokeWidth="1.5" />
+            <Rect x="235" y="120" width="8" height="12" fill="#A9A9A9" stroke="#000000" strokeWidth="1.5" />
             {/* Central tower door */}
             <Rect x="125" y="160" width="30" height="50" fill="#654321" stroke="#000000" strokeWidth="2" />
             {/* Door handle */}
@@ -241,6 +302,13 @@ export default function LevelImageDisplay({ image, size = 300 }: Props) {
             <Polygon points="142,40 142,50 158,45" fill="#FF1493" stroke="#000000" strokeWidth="1.5" />
             {/* Ground */}
             <Line x1="20" y1="220" x2="260" y2="220" stroke="#000000" strokeWidth="3" />
+            {/* Gateway arch */}
+            <Path
+              d="M 130 220 Q 140 200 150 220"
+              stroke="#000000"
+              strokeWidth="3"
+              fill="none"
+            />
           </Svg>
         );
 
