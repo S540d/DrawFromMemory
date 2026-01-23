@@ -27,6 +27,13 @@
     "draw": {
       "title": "Draw the picture!",
       "hint": "Use the colors and draw what you remember",
+      "tool": "Tool",
+      "toolBrush": "Brush",
+      "toolFill": "Fill",
+      "strokeWidth": "Stroke Width",
+      "strokeWidthThin": "Thin",
+      "strokeWidthNormal": "Normal",
+      "strokeWidthThick": "Thick",
       "undo": "Undo",
       "clear": "Clear all",
       "clearConfirm": "Really clear everything?",
