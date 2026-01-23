@@ -294,18 +294,18 @@ constants/
 - ✅ Web accessibility constants (WebAccessibility.ts)
 - ✅ Prettier & ESLint configuration files
 
-### Untracked Files (Not Committed Yet)
-- `.prettierignore`, `.prettierrc.json`
-- `eslint.config.mjs`
-- `constants/WebAccessibility.ts`
-- `eas.json` (Expo Application Services config)
-- `docs/` directory
+### Recent Updates (2026-01-23)
+- ✅ All config files committed (.prettierrc.json, eslint.config.mjs, etc.)
+- ✅ Jest testing framework setup complete
+- ✅ Platform utility tests (17 passing tests)
+- ✅ Level 4+ image bug fixed (PR #36)
+- ✅ Fill tool implemented (PR #35)
 
 ### Open Issues & Priorities
 1. **Issue #29 (Bugfixes):**
-   - ✅ Level 5+ placeholder images → FIXED
+   - ✅ Level 4+ placeholder images → FIXED (PR #36)
+   - ✅ Fill tool → IMPLEMENTED (PR #35)
    - ⏳ Level selection doesn't work (game.tsx needs URL param reading)
-   - ⏳ Fill tool missing (complex feature)
 
 2. **Issue #32:** Color selection popup
 3. **Issue #31:** Background music
@@ -313,9 +313,9 @@ constants/
 5. **Issue #30:** Production readiness roadmap
 
 ### Next Steps
-- Commit untracked config files (.prettierrc.json, eslint.config.mjs, etc.)
 - Fix level selection bug in [app/game.tsx](../app/game.tsx)
 - Add npm scripts for format/lint/type-check
+- Expand test coverage (components, services, hooks)
 
 ## Questions?
 Refer to the documentation in root directory or check related GitHub issues:

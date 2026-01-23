@@ -21,6 +21,8 @@ export interface ThemeColors {
   background: string;
   surface: string;
   surfaceElevated: string;
+  border: string;
+  modalOverlay: string;
 
   // Text
   text: {
@@ -72,6 +74,8 @@ const LIGHT_COLORS: ThemeColors = {
   background: '#FAFAFA',
   surface: '#F5F5F5',
   surfaceElevated: '#EFEFEF',
+  border: '#DDDDDD',
+  modalOverlay: 'rgba(0, 0, 0, 0.5)',
 
   text: {
     primary: '#2C3E50',
@@ -125,6 +129,8 @@ const DARK_COLORS: ThemeColors = {
   background: '#0F1419',
   surface: '#1A1F2E',
   surfaceElevated: '#242B3E',
+  border: '#3A4556',
+  modalOverlay: 'rgba(0, 0, 0, 0.7)',
 
   text: {
     primary: '#E8EFF5',
