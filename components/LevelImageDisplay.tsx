@@ -244,6 +244,161 @@ export default function LevelImageDisplay({ image, size = 300 }: Props) {
           </Svg>
         );
 
+      case 'level-06-dog.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Dog Body */}
+            <Ellipse cx="110" cy="120" rx="45" ry="30" fill="#D2691E" stroke="#8B4513" strokeWidth="3" />
+            {/* Dog Head */}
+            <Circle cx="65" cy="100" r="28" fill="#D2691E" stroke="#8B4513" strokeWidth="3" />
+            {/* Ear (floppy) */}
+            <Ellipse cx="55" cy="85" rx="12" ry="25" fill="#A0522D" stroke="#8B4513" strokeWidth="2" rotation="-20" origin="55, 85" />
+            {/* Snout */}
+            <Ellipse cx="45" cy="105" rx="15" ry="12" fill="#CD853F" stroke="#8B4513" strokeWidth="2" />
+            {/* Nose */}
+            <Circle cx="42" cy="105" r="5" fill="#000000" />
+            {/* Eye */}
+            <Circle cx="68" cy="95" r="4" fill="#000000" />
+            <Circle cx="70" cy="93" r="2" fill="#FFFFFF" />
+            {/* Mouth */}
+            <Line x1="42" y1="110" x2="42" y2="115" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
+            <Path d="M 42 115 Q 38 117 35 115" stroke="#000000" strokeWidth="2" fill="none" />
+            <Path d="M 42 115 Q 46 117 49 115" stroke="#000000" strokeWidth="2" fill="none" />
+            {/* Front Legs */}
+            <Rect x="90" y="140" width="10" height="30" fill="#D2691E" stroke="#8B4513" strokeWidth="2" rx="3" />
+            <Rect x="115" y="140" width="10" height="30" fill="#D2691E" stroke="#8B4513" strokeWidth="2" rx="3" />
+            {/* Back Legs (shorter) */}
+            <Rect x="140" y="145" width="10" height="25" fill="#D2691E" stroke="#8B4513" strokeWidth="2" rx="3" />
+            {/* Tail (curved) */}
+            <Path d="M 155 115 Q 175 105 170 85" stroke="#8B4513" strokeWidth="8" fill="none" strokeLinecap="round" />
+            {/* Paws (white spots) */}
+            <Ellipse cx="95" cy="167" rx="6" ry="4" fill="#FFFFFF" />
+            <Ellipse cx="120" cy="167" rx="6" ry="4" fill="#FFFFFF" />
+            <Ellipse cx="145" cy="167" rx="6" ry="4" fill="#FFFFFF" />
+            {/* Collar */}
+            <Ellipse cx="80" cy="115" rx="18" ry="8" fill="none" stroke="#FF0000" strokeWidth="3" />
+            <Circle cx="85" cy="115" r="3" fill="#FFD700" />
+          </Svg>
+        );
+
+      case 'level-07-cat.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Cat Body */}
+            <Ellipse cx="100" cy="120" rx="40" ry="30" fill="#FFA500" stroke="#FF8C00" strokeWidth="3" />
+            {/* Cat Head */}
+            <Circle cx="100" cy="70" r="30" fill="#FFA500" stroke="#FF8C00" strokeWidth="3" />
+            {/* Ears Left */}
+            <Polygon points="75,45 70,20 85,50" fill="#FFA500" stroke="#FF8C00" strokeWidth="3" />
+            {/* Ears Right */}
+            <Polygon points="125,45 130,20 115,50" fill="#FFA500" stroke="#FF8C00" strokeWidth="3" />
+            {/* Eyes */}
+            <Circle cx="90" cy="65" r="5" fill="#000000" />
+            <Circle cx="110" cy="65" r="5" fill="#000000" />
+            {/* Nose */}
+            <Polygon points="100,75 95,82 105,82" fill="#FFB6C1" />
+            {/* Mouth */}
+            <Path d="M 95 82 Q 100 85 105 82" stroke="#000000" strokeWidth="2" fill="none" />
+            {/* Whiskers Left */}
+            <Line x1="60" y1="70" x2="85" y2="68" stroke="#000000" strokeWidth="1" />
+            <Line x1="60" y1="75" x2="85" y2="75" stroke="#000000" strokeWidth="1" />
+            {/* Whiskers Right */}
+            <Line x1="140" y1="70" x2="115" y2="68" stroke="#000000" strokeWidth="1" />
+            <Line x1="140" y1="75" x2="115" y2="75" stroke="#000000" strokeWidth="1" />
+            {/* Tail */}
+            <Path d="M 130 130 Q 160 120 170 150" stroke="#FFA500" strokeWidth="8" fill="none" strokeLinecap="round" />
+            {/* Legs */}
+            <Rect x="75" y="140" width="10" height="25" fill="#FFA500" stroke="#FF8C00" strokeWidth="2" rx="3" />
+            <Rect x="115" y="140" width="10" height="25" fill="#FFA500" stroke="#FF8C00" strokeWidth="2" rx="3" />
+          </Svg>
+        );
+
+      case 'level-08-sheep.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Sheep Body (fluffy wool - multiple circles) */}
+            <Circle cx="90" cy="110" r="22" fill="#F5F5F5" stroke="#D3D3D3" strokeWidth="2" />
+            <Circle cx="115" cy="110" r="22" fill="#F5F5F5" stroke="#D3D3D3" strokeWidth="2" />
+            <Circle cx="102" cy="95" r="20" fill="#F5F5F5" stroke="#D3D3D3" strokeWidth="2" />
+            <Circle cx="102" cy="125" r="20" fill="#F5F5F5" stroke="#D3D3D3" strokeWidth="2" />
+            <Circle cx="125" cy="100" r="18" fill="#F5F5F5" stroke="#D3D3D3" strokeWidth="2" />
+            <Circle cx="80" cy="100" r="18" fill="#F5F5F5" stroke="#D3D3D3" strokeWidth="2" />
+            {/* Sheep Head (black face) */}
+            <Ellipse cx="60" cy="105" rx="20" ry="22" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="2" />
+            {/* Ears */}
+            <Ellipse cx="52" cy="90" rx="8" ry="12" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="2" rotation="-15" origin="52, 90" />
+            <Ellipse cx="68" cy="90" rx="8" ry="12" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="2" rotation="15" origin="68, 90" />
+            {/* Eyes (white dots on black face) */}
+            <Circle cx="56" cy="102" r="3" fill="#FFFFFF" />
+            <Circle cx="64" cy="102" r="3" fill="#FFFFFF" />
+            {/* Nose */}
+            <Ellipse cx="60" cy="110" rx="4" ry="3" fill="#1C1C1C" />
+            {/* Wool on head (fluffy top) */}
+            <Circle cx="60" cy="85" r="12" fill="#F5F5F5" stroke="#D3D3D3" strokeWidth="2" />
+            {/* Legs (black, thin) */}
+            <Rect x="85" y="135" width="6" height="25" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="1" rx="2" />
+            <Rect x="105" y="135" width="6" height="25" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="1" rx="2" />
+            <Rect x="95" y="135" width="6" height="25" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="1" rx="2" />
+            <Rect x="115" y="135" width="6" height="25" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="1" rx="2" />
+            {/* Tail (small fluffy) */}
+            <Circle cx="130" cy="120" r="8" fill="#F5F5F5" stroke="#D3D3D3" strokeWidth="2" />
+          </Svg>
+        );
+
+      case 'extra-03-flower.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Stem */}
+            <Line x1="100" y1="180" x2="100" y2="80" stroke="#228B22" strokeWidth="4" strokeLinecap="round" />
+            {/* Leaves */}
+            <Ellipse cx="85" cy="130" rx="15" ry="25" fill="#32CD32" stroke="#228B22" strokeWidth="2" rotation="-30" origin="85, 130" />
+            <Ellipse cx="115" cy="150" rx="15" ry="25" fill="#32CD32" stroke="#228B22" strokeWidth="2" rotation="30" origin="115, 150" />
+            {/* Flower Center */}
+            <Circle cx="100" cy="60" r="15" fill="#FFD700" stroke="#FFA500" strokeWidth="2" />
+            {/* Petals */}
+            <Ellipse cx="100" cy="30" rx="12" ry="20" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" />
+            <Ellipse cx="130" cy="60" rx="20" ry="12" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" />
+            <Ellipse cx="100" cy="90" rx="12" ry="20" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" />
+            <Ellipse cx="70" cy="60" rx="20" ry="12" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" />
+            {/* Diagonal Petals */}
+            <Ellipse cx="120" cy="40" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" rotation="45" origin="120, 40" />
+            <Ellipse cx="120" cy="80" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" rotation="-45" origin="120, 80" />
+            <Ellipse cx="80" cy="40" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" rotation="-45" origin="80, 40" />
+            <Ellipse cx="80" cy="80" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" rotation="45" origin="80, 80" />
+          </Svg>
+        );
+
+      case 'extra-04-bird.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Bird Body */}
+            <Ellipse cx="100" cy="100" rx="35" ry="25" fill="#1E90FF" stroke="#0000CD" strokeWidth="3" />
+            {/* Bird Head */}
+            <Circle cx="130" cy="85" r="20" fill="#1E90FF" stroke="#0000CD" strokeWidth="3" />
+            {/* Eye */}
+            <Circle cx="135" cy="82" r="4" fill="#000000" />
+            <Circle cx="137" cy="80" r="2" fill="#FFFFFF" />
+            {/* Beak */}
+            <Polygon points="150,85 165,82 150,90" fill="#FFD700" stroke="#FFA500" strokeWidth="2" />
+            {/* Wing */}
+            <Ellipse cx="90" cy="100" rx="30" ry="20" fill="#4169E1" stroke="#0000CD" strokeWidth="3" rotation="-20" origin="90, 100" />
+            {/* Wing Detail Lines */}
+            <Line x1="70" y1="95" x2="85" y2="105" stroke="#0000CD" strokeWidth="2" />
+            <Line x1="75" y1="90" x2="90" y2="100" stroke="#0000CD" strokeWidth="2" />
+            {/* Tail Feathers */}
+            <Ellipse cx="60" cy="105" rx="20" ry="12" fill="#4169E1" stroke="#0000CD" strokeWidth="2" rotation="-30" origin="60, 105" />
+            <Ellipse cx="65" cy="110" rx="18" ry="10" fill="#4169E1" stroke="#0000CD" strokeWidth="2" rotation="-20" origin="65, 110" />
+            {/* Legs */}
+            <Line x1="100" y1="120" x2="95" y2="135" stroke="#FFA500" strokeWidth="3" strokeLinecap="round" />
+            <Line x1="110" y1="120" x2="115" y2="135" stroke="#FFA500" strokeWidth="3" strokeLinecap="round" />
+            {/* Feet */}
+            <Line x1="90" y1="135" x2="95" y2="135" stroke="#FFA500" strokeWidth="2" />
+            <Line x1="95" y1="135" x2="100" y2="135" stroke="#FFA500" strokeWidth="2" />
+            <Line x1="110" y1="135" x2="115" y2="135" stroke="#FFA500" strokeWidth="2" />
+            <Line x1="115" y1="135" x2="120" y2="135" stroke="#FFA500" strokeWidth="2" />
+          </Svg>
+        );
+
       default:
         // Fallback für noch nicht implementierte Bilder
         return (
