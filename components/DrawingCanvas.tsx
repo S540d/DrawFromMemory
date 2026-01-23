@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, Dimensions, Platform } from 'react-native';
-import { Canvas, Path, Skia } from '@shopify/react-native-skia';
+import { Canvas, Path, Skia, Circle } from '@shopify/react-native-skia';
 
 interface Props {
   width?: number;
   height?: number;
   strokeColor?: string;
   strokeWidth?: number;
+  tool?: 'brush' | 'fill'; // Current tool selection
   paths?: DrawingPath[];
   onDrawingChange?: (paths: DrawingPath[]) => void;
 }
@@ -15,6 +16,7 @@ export interface DrawingPath {
   points: { x: number; y: number }[];
   color: string;
   strokeWidth: number;
+  type?: 'stroke' | 'fill'; // Optional: default = 'stroke'
 }
 
 /**
@@ -27,12 +29,87 @@ export default function DrawingCanvas({
   height = 400,
   strokeColor = '#000000',
   strokeWidth = 3,
+  tool = 'brush',
   paths = [],
   onDrawingChange,
 }: Props) {
   const [currentPath, setCurrentPath] = useState<{ x: number; y: number }[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Flood-Fill Algorithmus für Web
+  const floodFill = (startX: number, startY: number, fillColor: string) => {
+    if (Platform.OS !== 'web' || !canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    if (!ctx) return;
+
+    const imageData = ctx.getImageData(0, 0, width, height);
+    const pixels = imageData.data;
+
+    // Konvertiere Hex-Farbe zu RGBA
+    const hexToRgb = (hex: string) => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+        a: 255
+      } : { r: 0, g: 0, b: 0, a: 255 };
+    };
+
+    const targetColor = hexToRgb(fillColor);
+    const startPos = (Math.floor(startY) * width + Math.floor(startX)) * 4;
+    const startR = pixels[startPos];
+    const startG = pixels[startPos + 1];
+    const startB = pixels[startPos + 2];
+    const startA = pixels[startPos + 3];
+
+    // Prüfe ob Zielfarbe bereits die Startfarbe ist
+    if (startR === targetColor.r && startG === targetColor.g &&
+        startB === targetColor.b && startA === targetColor.a) {
+      return;
+    }
+
+    // Stack-basierter Flood-Fill (effizienter als Rekursion)
+    const stack: { x: number; y: number }[] = [{ x: Math.floor(startX), y: Math.floor(startY) }];
+    const visited = new Set<number>();
+
+    while (stack.length > 0) {
+      const { x, y } = stack.pop()!;
+
+      if (x < 0 || x >= width || y < 0 || y >= height) continue;
+
+      const pos = (y * width + x) * 4;
+      if (visited.has(pos)) continue;
+
+      const r = pixels[pos];
+      const g = pixels[pos + 1];
+      const b = pixels[pos + 2];
+      const a = pixels[pos + 3];
+
+      // Farbtoleranz für besseres Ergebnis (±2 RGB-Werte)
+      if (Math.abs(r - startR) > 2 || Math.abs(g - startG) > 2 ||
+          Math.abs(b - startB) > 2 || Math.abs(a - startA) > 2) {
+        continue;
+      }
+
+      visited.add(pos);
+      pixels[pos] = targetColor.r;
+      pixels[pos + 1] = targetColor.g;
+      pixels[pos + 2] = targetColor.b;
+      pixels[pos + 3] = targetColor.a;
+
+      // Füge Nachbarn hinzu (4-Richtungen)
+      stack.push({ x: x + 1, y });
+      stack.push({ x: x - 1, y });
+      stack.push({ x, y: y + 1 });
+      stack.push({ x, y: y - 1 });
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+  };
 
   // Zeichne alle Pfade auf dem Canvas
   useEffect(() => {
@@ -43,6 +120,8 @@ export default function DrawingCanvas({
 
       // Clear canvas
       ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, width, height);
 
       // Berechne Skalierung (nur wenn nicht im Zeichenmodus)
       let scale = 1, offsetX = 0, offsetY = 0;
@@ -50,6 +129,7 @@ export default function DrawingCanvas({
         // Finde min/max Koordinaten
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
         paths.forEach(path => {
+          if (path.type === 'fill') return; // Skip fill paths für Bounding Box
           path.points.forEach(point => {
             minX = Math.min(minX, point.x);
             minY = Math.min(minY, point.y);
@@ -73,33 +153,108 @@ export default function DrawingCanvas({
 
       // Zeichne alle fertigen Pfade
       paths.forEach((path) => {
-        if (path.points.length < 2) return;
-
-        ctx.strokeStyle = path.color;
-        ctx.lineWidth = path.strokeWidth * scale;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-
-        ctx.beginPath();
-        const firstPoint = {
-          x: path.points[0].x * scale + offsetX,
-          y: path.points[0].y * scale + offsetY
-        };
-        ctx.moveTo(firstPoint.x, firstPoint.y);
-
-        for (let i = 1; i < path.points.length; i++) {
+        if (path.type === 'fill' && path.points.length > 0) {
+          // Fill-Pfad: Nutze Flood-Fill am gespeicherten Punkt
           const point = {
-            x: path.points[i].x * scale + offsetX,
-            y: path.points[i].y * scale + offsetY
+            x: path.points[0].x * scale + offsetX,
+            y: path.points[0].y * scale + offsetY
           };
-          ctx.lineTo(point.x, point.y);
-        }
 
-        ctx.stroke();
+          // Temporär den Canvas-Kontext wiederherstellen für Flood-Fill
+          const tempCanvas = document.createElement('canvas'); // platform-safe: web-only code block
+          tempCanvas.width = width;
+          tempCanvas.height = height;
+          const tempCtx = tempCanvas.getContext('2d');
+          if (tempCtx) {
+            tempCtx.drawImage(canvas, 0, 0);
+            // Flood-Fill direkt ausführen
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const pixels = imageData.data;
+
+            const hexToRgb = (hex: string) => {
+              const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+              return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16),
+                a: 255
+              } : { r: 0, g: 0, b: 0, a: 255 };
+            };
+
+            const targetColor = hexToRgb(path.color);
+            const startX = Math.floor(point.x);
+            const startY = Math.floor(point.y);
+            const startPos = (startY * width + startX) * 4;
+            const startR = pixels[startPos];
+            const startG = pixels[startPos + 1];
+            const startB = pixels[startPos + 2];
+            const startA = pixels[startPos + 3];
+
+            if (!(startR === targetColor.r && startG === targetColor.g &&
+                  startB === targetColor.b && startA === targetColor.a)) {
+              const stack: { x: number; y: number }[] = [{ x: startX, y: startY }];
+              const visited = new Set<number>();
+
+              while (stack.length > 0) {
+                const { x, y } = stack.pop()!;
+                if (x < 0 || x >= width || y < 0 || y >= height) continue;
+
+                const pos = (y * width + x) * 4;
+                if (visited.has(pos)) continue;
+
+                const r = pixels[pos];
+                const g = pixels[pos + 1];
+                const b = pixels[pos + 2];
+                const a = pixels[pos + 3];
+
+                if (Math.abs(r - startR) > 2 || Math.abs(g - startG) > 2 ||
+                    Math.abs(b - startB) > 2 || Math.abs(a - startA) > 2) {
+                  continue;
+                }
+
+                visited.add(pos);
+                pixels[pos] = targetColor.r;
+                pixels[pos + 1] = targetColor.g;
+                pixels[pos + 2] = targetColor.b;
+                pixels[pos + 3] = targetColor.a;
+
+                stack.push({ x: x + 1, y });
+                stack.push({ x: x - 1, y });
+                stack.push({ x, y: y + 1 });
+                stack.push({ x, y: y - 1 });
+              }
+
+              ctx.putImageData(imageData, 0, 0);
+            }
+          }
+        } else if (path.points.length >= 2) {
+          // Stroke-Pfad
+          ctx.strokeStyle = path.color;
+          ctx.lineWidth = path.strokeWidth * scale;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+
+          ctx.beginPath();
+          const firstPoint = {
+            x: path.points[0].x * scale + offsetX,
+            y: path.points[0].y * scale + offsetY
+          };
+          ctx.moveTo(firstPoint.x, firstPoint.y);
+
+          for (let i = 1; i < path.points.length; i++) {
+            const point = {
+              x: path.points[i].x * scale + offsetX,
+              y: path.points[i].y * scale + offsetY
+            };
+            ctx.lineTo(point.x, point.y);
+          }
+
+          ctx.stroke();
+        }
       });
 
       // Zeichne aktuellen Pfad (nur im Zeichenmodus, keine Skalierung)
-      if (onDrawingChange && currentPath.length > 1) {
+      if (onDrawingChange && currentPath.length > 1 && tool === 'brush') {
         ctx.strokeStyle = strokeColor;
         ctx.lineWidth = strokeWidth;
         ctx.lineCap = 'round';
@@ -115,7 +270,7 @@ export default function DrawingCanvas({
         ctx.stroke();
       }
     }
-  }, [paths, currentPath, strokeColor, strokeWidth, width, height, onDrawingChange]);
+  }, [paths, currentPath, strokeColor, strokeWidth, width, height, onDrawingChange, tool]);
 
   const getPosition = (event: any) => {
     if (Platform.OS === 'web' && canvasRef.current) {
@@ -129,17 +284,38 @@ export default function DrawingCanvas({
 
   const handleStart = (event: any) => {
     const pos = getPosition(event);
-    setCurrentPath([pos]);
-    setIsDrawing(true);
+
+    if (tool === 'fill') {
+      // Fill-Tool: Sofort Flood-Fill ausführen
+      floodFill(pos.x, pos.y, strokeColor);
+
+      // Füge Fill-Pfad zu Paths hinzu (für Undo/Redo)
+      const newPaths = [
+        ...paths,
+        {
+          points: [pos],
+          color: strokeColor,
+          strokeWidth: 0,
+          type: 'fill' as const,
+        },
+      ];
+      onDrawingChange?.(newPaths);
+    } else {
+      // Brush-Tool: Starte Zeichnung
+      setCurrentPath([pos]);
+      setIsDrawing(true);
+    }
   };
 
   const handleMove = (event: any) => {
-    if (!isDrawing) return;
+    if (!isDrawing || tool === 'fill') return;
     const pos = getPosition(event);
     setCurrentPath([...currentPath, pos]);
   };
 
   const handleEnd = () => {
+    if (tool === 'fill') return;
+
     if (isDrawing && currentPath.length > 0) {
       const newPaths = [
         ...paths,
@@ -147,6 +323,7 @@ export default function DrawingCanvas({
           points: currentPath,
           color: strokeColor,
           strokeWidth: strokeWidth,
+          type: 'stroke' as const,
         },
       ];
       setCurrentPath([]);
@@ -198,23 +375,42 @@ export default function DrawingCanvas({
   const handleTouchStart = (event: any) => {
     if (!onDrawingChange) return; // Nur interaktiv wenn onDrawingChange vorhanden
     const { locationX, locationY } = event.nativeEvent;
-    setCurrentNativePath([{ x: locationX, y: locationY }]);
+
+    if (tool === 'fill') {
+      // Fill-Tool: Speichere Fill-Aktion
+      // Für Native wird Fill anders umgesetzt (siehe Rendering-Code)
+      const newPaths = [
+        ...nativePaths,
+        {
+          points: [{ x: locationX, y: locationY }],
+          color: strokeColor,
+          strokeWidth: 0,
+          type: 'fill' as const,
+        },
+      ];
+      setNativePaths(newPaths);
+      onDrawingChange(newPaths);
+    } else {
+      // Brush-Tool: Starte Zeichnung
+      setCurrentNativePath([{ x: locationX, y: locationY }]);
+    }
   };
 
   const handleTouchMove = (event: any) => {
-    if (!onDrawingChange || currentNativePath.length === 0) return;
+    if (!onDrawingChange || currentNativePath.length === 0 || tool === 'fill') return;
     const { locationX, locationY } = event.nativeEvent;
     setCurrentNativePath([...currentNativePath, { x: locationX, y: locationY }]);
   };
 
   const handleTouchEnd = () => {
-    if (!onDrawingChange || currentNativePath.length === 0) return;
+    if (!onDrawingChange || currentNativePath.length === 0 || tool === 'fill') return;
     const newPaths = [
       ...nativePaths,
       {
         points: currentNativePath,
         color: strokeColor,
         strokeWidth: strokeWidth,
+        type: 'stroke' as const,
       },
     ];
     setNativePaths(newPaths);
@@ -299,6 +495,24 @@ export default function DrawingCanvas({
       >
         {/* Zeichne alle fertigen Pfade */}
         {nativePaths.map((pathData, index) => {
+          // Fill-Pfade als gefüllte Kreise rendern (vereinfachte Native-Implementierung)
+          if (pathData.type === 'fill' && pathData.points.length > 0) {
+            const point = {
+              x: pathData.points[0].x * scale + offsetX,
+              y: pathData.points[0].y * scale + offsetY
+            };
+            return (
+              <Circle
+                key={index}
+                cx={point.x}
+                cy={point.y}
+                r={30} // Fester Radius für Fill-Kreise
+                color={pathData.color}
+              />
+            );
+          }
+
+          // Stroke-Pfade normal rendern
           const skiaPath = createSkiaPath(
             pathData.points,
             pathData.color,
@@ -354,6 +568,7 @@ const styles = StyleSheet.create({
 export function useDrawingCanvas() {
   const [color, setColor] = useState('#000000');
   const [strokeWidth, setStrokeWidth] = useState(3);
+  const [tool, setTool] = useState<'brush' | 'fill'>('brush');
   const [paths, setPaths] = useState<DrawingPath[]>([]);
 
   const clearCanvas = () => {
@@ -371,6 +586,8 @@ export function useDrawingCanvas() {
     setColor,
     strokeWidth,
     setStrokeWidth,
+    tool,
+    setTool,
     paths,
     setPaths,
     clearCanvas,

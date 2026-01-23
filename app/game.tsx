@@ -124,6 +124,7 @@ export default function GameScreen() {
         <DrawingCanvas
           strokeColor={drawing.color}
           strokeWidth={drawing.strokeWidth}
+          tool={drawing.tool}
           paths={drawing.paths}
           onDrawingChange={drawing.setPaths}
         />
@@ -153,33 +154,54 @@ export default function GameScreen() {
         })()}
       </View>
 
-      {/* Linienstärke-Auswahl */}
-      <View style={styles.strokeWidthContainer}>
-        <Text style={styles.strokeWidthLabel}>Strichstärke:</Text>
-        <View style={styles.strokeWidthButtons}>
+      {/* Tool-Auswahl: Pinsel / Füllen */}
+      <View style={styles.toolContainer}>
+        <Text style={styles.toolLabel}>{t('game.draw.tool')}:</Text>
+        <View style={styles.toolButtons}>
           <TouchableOpacity
-            style={[styles.strokeWidthButton, drawing.strokeWidth === 2 && styles.strokeWidthButtonActive]}
-            onPress={() => drawing.setStrokeWidth(2)}
+            style={[styles.toolButton, drawing.tool === 'brush' && styles.toolButtonActive]}
+            onPress={() => drawing.setTool('brush')}
           >
-            <View style={[styles.strokeWidthPreview, { height: 2 }]} />
-            <Text style={[styles.strokeWidthButtonText, drawing.strokeWidth === 2 && styles.strokeWidthButtonTextActive]}>Dünn</Text>
+            <Text style={[styles.toolButtonText, drawing.tool === 'brush' && styles.toolButtonTextActive]}>{t('game.draw.toolBrush')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.strokeWidthButton, drawing.strokeWidth === 3 && styles.strokeWidthButtonActive]}
-            onPress={() => drawing.setStrokeWidth(3)}
+            style={[styles.toolButton, drawing.tool === 'fill' && styles.toolButtonActive]}
+            onPress={() => drawing.setTool('fill')}
           >
-            <View style={[styles.strokeWidthPreview, { height: 3 }]} />
-            <Text style={[styles.strokeWidthButtonText, drawing.strokeWidth === 3 && styles.strokeWidthButtonTextActive]}>Normal</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.strokeWidthButton, drawing.strokeWidth === 5 && styles.strokeWidthButtonActive]}
-            onPress={() => drawing.setStrokeWidth(5)}
-          >
-            <View style={[styles.strokeWidthPreview, { height: 5 }]} />
-            <Text style={[styles.strokeWidthButtonText, drawing.strokeWidth === 5 && styles.strokeWidthButtonTextActive]}>Dick</Text>
+            <Text style={[styles.toolButtonText, drawing.tool === 'fill' && styles.toolButtonTextActive]}>{t('game.draw.toolFill')}</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Linienstärke-Auswahl (nur bei Pinsel-Werkzeug) */}
+      {drawing.tool === 'brush' && (
+        <View style={styles.strokeWidthContainer}>
+          <Text style={styles.strokeWidthLabel}>{t('game.draw.strokeWidth')}:</Text>
+          <View style={styles.strokeWidthButtons}>
+            <TouchableOpacity
+              style={[styles.strokeWidthButton, drawing.strokeWidth === 2 && styles.strokeWidthButtonActive]}
+              onPress={() => drawing.setStrokeWidth(2)}
+            >
+              <View style={[styles.strokeWidthPreview, { height: 2 }]} />
+              <Text style={[styles.strokeWidthButtonText, drawing.strokeWidth === 2 && styles.strokeWidthButtonTextActive]}>{t('game.draw.strokeWidthThin')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.strokeWidthButton, drawing.strokeWidth === 3 && styles.strokeWidthButtonActive]}
+              onPress={() => drawing.setStrokeWidth(3)}
+            >
+              <View style={[styles.strokeWidthPreview, { height: 3 }]} />
+              <Text style={[styles.strokeWidthButtonText, drawing.strokeWidth === 3 && styles.strokeWidthButtonTextActive]}>{t('game.draw.strokeWidthNormal')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.strokeWidthButton, drawing.strokeWidth === 5 && styles.strokeWidthButtonActive]}
+              onPress={() => drawing.setStrokeWidth(5)}
+            >
+              <View style={[styles.strokeWidthPreview, { height: 5 }]} />
+              <Text style={[styles.strokeWidthButtonText, drawing.strokeWidth === 5 && styles.strokeWidthButtonTextActive]}>{t('game.draw.strokeWidthThick')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
 
       {/* Buttons */}
       <View style={styles.buttonRow}>
@@ -805,6 +827,42 @@ const styles = StyleSheet.create({
   },
   navButtonTextDisabled: {
     color: Colors.text.light,
+  },
+  toolContainer: {
+    marginBottom: Spacing.md,
+    alignItems: 'center',
+  },
+  toolLabel: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
+    color: Colors.text.secondary,
+    marginBottom: Spacing.sm,
+  },
+  toolButtons: {
+    flexDirection: 'row',
+    gap: Spacing.sm,
+  },
+  toolButton: {
+    backgroundColor: Colors.surface,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.md,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: Colors.surface,
+    minWidth: 80,
+  },
+  toolButtonActive: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
+  },
+  toolButtonText: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
+    color: Colors.text.primary,
+  },
+  toolButtonTextActive: {
+    color: Colors.background,
   },
   strokeWidthContainer: {
     marginBottom: Spacing.lg,

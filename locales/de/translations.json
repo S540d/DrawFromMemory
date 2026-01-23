@@ -27,6 +27,13 @@
     "draw": {
       "title": "Male das Bild nach!",
       "hint": "Benutze die Farben und male was du dir gemerkt hast",
+      "tool": "Werkzeug",
+      "toolBrush": "Pinsel",
+      "toolFill": "Füllen",
+      "strokeWidth": "Strichstärke",
+      "strokeWidthThin": "Dünn",
+      "strokeWidthNormal": "Normal",
+      "strokeWidthThick": "Dick",
       "undo": "Rückgängig",
       "clear": "Alles löschen",
       "clearConfirm": "Wirklich alles löschen?",
