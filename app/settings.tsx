@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, Linking, Modal, Share } from 'react-native';
 import { useRouter } from 'expo-router';
-import { t, getLanguage, setLanguage } from '../services/i18n';
+import { t, getLanguage, setLanguage, initLanguage } from '../services/i18n';
 import { useTheme } from '../services/ThemeContext';
 import storageManager from '../services/StorageManager';
 import Colors from '../constants/Colors';
@@ -18,8 +18,8 @@ export default function SettingsScreen() {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>(themeSetting);
   const [showAboutModal, setShowAboutModal] = useState(false);
 
-  const handleLanguageChange = (lang: 'de' | 'en') => {
-    setLanguage(lang);
+  const handleLanguageChange = async (lang: 'de' | 'en') => {
+    await setLanguage(lang);
     setCurrentLang(lang);
     Alert.alert(
       lang === 'de' ? 'Sprache geändert' : 'Language changed',
@@ -59,18 +59,60 @@ export default function SettingsScreen() {
     );
   };
 
-  const handleSendFeedback = () => {
+  const handleSendFeedback = async () => {
     const subject = encodeURIComponent('Feedback: Merke und Male');
     const body = encodeURIComponent(
       currentLang === 'de'
         ? 'Hallo,\n\nIch habe Feedback zu Merke und Male:\n\n'
         : 'Hello,\n\nI have feedback about Remember & Draw:\n\n'
     );
-    Linking.openURL(`mailto:devsven@posteo.de?subject=${subject}&body=${body}`);
+    const url = `mailto:devsven@posteo.de?subject=${subject}&body=${body}`;
+    
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert(
+          currentLang === 'de' ? 'Fehler' : 'Error',
+          currentLang === 'de'
+            ? 'E-Mail-Client konnte nicht geöffnet werden. Bitte sende dein Feedback an: devsven@posteo.de'
+            : 'Could not open email client. Please send your feedback to: devsven@posteo.de'
+        );
+      }
+    } catch (error) {
+      Alert.alert(
+        currentLang === 'de' ? 'Fehler' : 'Error',
+        currentLang === 'de'
+          ? 'E-Mail-Client konnte nicht geöffnet werden. Bitte sende dein Feedback an: devsven@posteo.de'
+          : 'Could not open email client. Please send your feedback to: devsven@posteo.de'
+      );
+    }
   };
 
-  const handleSupport = () => {
-    Linking.openURL('https://ko-fi.com/s540d');
+  const handleSupport = async () => {
+    const url = 'https://ko-fi.com/s540d';
+    
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert(
+          currentLang === 'de' ? 'Fehler' : 'Error',
+          currentLang === 'de'
+            ? 'Browser konnte nicht geöffnet werden. Bitte besuche: https://ko-fi.com/s540d'
+            : 'Could not open browser. Please visit: https://ko-fi.com/s540d'
+        );
+      }
+    } catch (error) {
+      Alert.alert(
+        currentLang === 'de' ? 'Fehler' : 'Error',
+        currentLang === 'de'
+          ? 'Browser konnte nicht geöffnet werden. Bitte besuche: https://ko-fi.com/s540d'
+          : 'Could not open browser. Please visit: https://ko-fi.com/s540d'
+      );
+    }
   };
 
   const handleShareApp = async () => {
