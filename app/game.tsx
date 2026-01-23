@@ -330,7 +330,7 @@ export default function GameScreen() {
                 width={imageSize}
                 height={imageSize}
                 paths={drawing.paths}
-                strokeColor="#000000"
+                strokeColor={Colors.drawing.black}
                 strokeWidth={2}
               />
             </View>
@@ -571,7 +571,7 @@ const styles = StyleSheet.create({
     height: 44,
     borderRadius: BorderRadius.md,
     borderWidth: 2,
-    borderColor: '#DDD',
+    borderColor: Colors.border,
     ...Colors.shadow.small, // Soft & Modern: Subtile Schatten für Farb-Boxen
   },
   colorBoxSelected: {
@@ -655,7 +655,7 @@ const styles = StyleSheet.create({
     color: Colors.stars.empty,
   },
   starTextFilled: {
-    color: '#FFF',
+    color: Colors.drawing.white,
   },
   ratingText: {
     fontSize: FontSize.xxl,
@@ -709,7 +709,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: Colors.modalOverlay,
     justifyContent: 'center',
     alignItems: 'center',
     padding: Spacing.lg,

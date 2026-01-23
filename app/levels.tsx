@@ -80,15 +80,15 @@ export default function LevelsScreen() {
 function getDifficultyColor(difficulty: number): string {
   switch (difficulty) {
     case 1:
-      return '#4CAF50'; // Grün
+      return Colors.difficulty[1];
     case 2:
-      return '#8BC34A'; // Hellgrün
+      return Colors.difficulty[2];
     case 3:
-      return '#FFC107'; // Gelb
+      return Colors.difficulty[3];
     case 4:
-      return '#FF9800'; // Orange
+      return Colors.difficulty[4];
     case 5:
-      return '#F44336'; // Rot
+      return Colors.difficulty[5];
     default:
       return Colors.primary;
   }
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   difficultyText: {
     fontSize: FontSize.sm,
     fontWeight: FontWeight.medium,
-    color: '#FFFFFF',
+    color: Colors.drawing.white,
   },
   displayTime: {
     fontSize: FontSize.sm,

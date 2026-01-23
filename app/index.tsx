@@ -38,15 +38,6 @@ export default function HomeScreen() {
             {t('home.levelsButton')}
           </Text>
         </Pressable>
-
-        <Pressable
-          style={[styles.button, styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary, ...Colors.shadow.small }]}
-          onPress={() => router.push('/settings')}
-        >
-          <Text style={[styles.buttonText, styles.secondaryButtonText, { color: colors.primary }]}>
-            {t('home.settingsButton')}
-          </Text>
-        </Pressable>
       </View>
 
       {/* Footer */}
@@ -110,7 +101,7 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.bold,
   },
   primaryButtonText: {
-    color: '#FFFFFF',  // Weiß für besseren Kontrast auf Lila-Hintergrund
+    color: Colors.drawing.white,  // Weiß für besseren Kontrast auf Lila-Hintergrund
   },
   secondaryButtonText: {
     color: Colors.primary,

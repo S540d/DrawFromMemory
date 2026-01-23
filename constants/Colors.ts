@@ -23,6 +23,8 @@ export const Colors = {
   background: '#FAFAFA',   // Cremeweiß (nicht pures Weiß)
   surface: '#F5F5F5',      // Hellgrau - Karten/Container
   surfaceElevated: '#EFEFEF', // Dunklerer Surface für mehr Tiefe
+  border: '#DDDDDD',       // Standardrahmen
+  modalOverlay: 'rgba(0, 0, 0, 0.5)', // Halbtransparenter Overlay
   text: {
     primary: '#2C3E50',    // Dunkelgrau - Haupttext
     secondary: '#7F8C8D',  // Mittelgrau - Sekundärtext
