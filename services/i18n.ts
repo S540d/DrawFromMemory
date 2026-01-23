@@ -22,10 +22,14 @@ export async function initLanguage(): Promise<void> {
   
   try {
     const savedLanguage = await storageManager.getSetting('language');
-    currentLanguage = savedLanguage;
+    // Only update if we got a valid language value
+    if (savedLanguage === 'de' || savedLanguage === 'en') {
+      currentLanguage = savedLanguage;
+    }
     isInitialized = true;
   } catch (error) {
     console.warn('Failed to load language from storage:', error);
+    isInitialized = true; // Mark as initialized even on error to avoid repeated attempts
   }
 }
 

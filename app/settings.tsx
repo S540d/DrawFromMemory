@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, Linking, Modal, Share } from 'react-native';
 import { useRouter } from 'expo-router';
 import { t, getLanguage, setLanguage, initLanguage } from '../services/i18n';
@@ -17,6 +17,15 @@ export default function SettingsScreen() {
   const [currentLang, setCurrentLang] = useState(getLanguage());
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>(themeSetting);
   const [showAboutModal, setShowAboutModal] = useState(false);
+
+  // Sync language state on mount (in case it was loaded async)
+  useEffect(() => {
+    const syncLanguage = async () => {
+      await initLanguage();
+      setCurrentLang(getLanguage());
+    };
+    syncLanguage();
+  }, []);
 
   const handleLanguageChange = async (lang: 'de' | 'en') => {
     await setLanguage(lang);
