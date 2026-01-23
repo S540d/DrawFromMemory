@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, Linking } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, Linking, Modal, Share } from 'react-native';
 import { useRouter } from 'expo-router';
 import { t, getLanguage, setLanguage } from '../services/i18n';
 import { useTheme } from '../services/ThemeContext';
@@ -9,22 +9,21 @@ import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout
 
 /**
  * Settings Screen - Einstellungen
- * Sprache, Sound, Fortschritt zurücksetzen, etc.
+ * Strukturiert nach UX-Vorgaben Phase 2.1
  */
 export default function SettingsScreen() {
   const router = useRouter();
-  const { theme, themeSetting, setTheme, colors } = useTheme();
+  const { themeSetting, setTheme, colors } = useTheme();
   const [currentLang, setCurrentLang] = useState(getLanguage());
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>(themeSetting);
+  const [showAboutModal, setShowAboutModal] = useState(false);
 
   const handleLanguageChange = (lang: 'de' | 'en') => {
     setLanguage(lang);
     setCurrentLang(lang);
-    // In einer echten App würde hier ein Re-Render aller Komponenten getriggert
-    // Für jetzt zeigen wir einfach einen Alert
     Alert.alert(
       lang === 'de' ? 'Sprache geändert' : 'Language changed',
-      lang === 'de' 
+      lang === 'de'
         ? 'Die Sprache wurde auf Deutsch geändert. Bitte starte die App neu, damit die Änderungen überall wirksam werden.'
         : 'Language has been changed to English. Please restart the app for changes to take effect everywhere.'
     );
@@ -38,7 +37,9 @@ export default function SettingsScreen() {
   const handleResetProgress = () => {
     Alert.alert(
       t('settings.resetProgress'),
-      t('settings.resetConfirm'),
+      currentLang === 'de'
+        ? 'Möchtest du deinen Fortschritt wirklich zurücksetzen? Diese Aktion kann nicht rückgängig gemacht werden.'
+        : 'Do you really want to reset your progress? This action cannot be undone.',
       [
         { text: t('common.cancel'), style: 'cancel' },
         {
@@ -58,8 +59,30 @@ export default function SettingsScreen() {
     );
   };
 
-  const openGitHub = () => {
-    Linking.openURL('https://github.com/S540d/DrawFromMemory');
+  const handleSendFeedback = () => {
+    const subject = encodeURIComponent('Feedback: Merke und Male');
+    const body = encodeURIComponent(
+      currentLang === 'de'
+        ? 'Hallo,\n\nIch habe Feedback zu Merke und Male:\n\n'
+        : 'Hello,\n\nI have feedback about Remember & Draw:\n\n'
+    );
+    Linking.openURL(`mailto:devsven@posteo.de?subject=${subject}&body=${body}`);
+  };
+
+  const handleSupport = () => {
+    Linking.openURL('https://ko-fi.com/s540d');
+  };
+
+  const handleShareApp = async () => {
+    try {
+      await Share.share({
+        message: currentLang === 'de'
+          ? 'Schau dir diese coole Gedächtnistraining-App an: Merke und Male! https://github.com/S540d/DrawFromMemory'
+          : 'Check out this cool memory training app: Remember & Draw! https://github.com/S540d/DrawFromMemory',
+      });
+    } catch (error) {
+      // User cancelled share
+    }
   };
 
   return (
@@ -73,55 +96,20 @@ export default function SettingsScreen() {
       </View>
 
       <ScrollView style={[styles.content, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
-        {/* Sprache / Language */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>{t('settings.language')}</Text>
-          <View style={styles.optionsRow}>
-            <TouchableOpacity
-              style={[
-                styles.optionButton,
-                { backgroundColor: colors.surface, borderColor: 'transparent' },
-                currentLang === 'de' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
-              ]}
-              onPress={() => handleLanguageChange('de')}
-            >
-              <Text style={[
-                styles.optionText,
-                { color: colors.text.secondary },
-                currentLang === 'de' && [styles.optionTextActive, { color: colors.primary }]
-              ]}>
-                🇩🇪 Deutsch
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.optionButton,
-                { backgroundColor: colors.surface, borderColor: 'transparent' },
-                currentLang === 'en' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
-              ]}
-              onPress={() => handleLanguageChange('en')}
-            >
-              <Text style={[
-                styles.optionText,
-                { color: colors.text.secondary },
-                currentLang === 'en' && [styles.optionTextActive, { color: colors.primary }]
-              ]}>
-                🇬🇧 English
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        {/* APPEARANCE Section */}
+        <Text style={[styles.sectionHeader, { color: colors.text.light }]}>
+          {currentLang === 'de' ? '⚙️ ERSCHEINUNGSBILD' : '⚙️ APPEARANCE'}
+        </Text>
 
-        {/* Theme / Erscheinungsbild */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>
-            {currentLang === 'de' ? 'Erscheinungsbild' : 'Theme'}
+            {currentLang === 'de' ? 'Design' : 'Theme'}
           </Text>
           <View style={styles.optionsRow}>
             <TouchableOpacity
               style={[
                 styles.optionButton,
-                { backgroundColor: colors.surface, borderColor: 'transparent' },
+                { backgroundColor: colors.surface, borderColor: colors.border },
                 currentTheme === 'light' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
               ]}
               onPress={() => handleThemeChange('light')}
@@ -131,13 +119,13 @@ export default function SettingsScreen() {
                 { color: colors.text.secondary },
                 currentTheme === 'light' && [styles.optionTextActive, { color: colors.primary }]
               ]}>
-                ☀️ {currentLang === 'de' ? 'Hell' : 'Light'}
+                {currentLang === 'de' ? 'Hell' : 'Light'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.optionButton,
-                { backgroundColor: colors.surface, borderColor: 'transparent' },
+                { backgroundColor: colors.surface, borderColor: colors.border },
                 currentTheme === 'dark' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
               ]}
               onPress={() => handleThemeChange('dark')}
@@ -147,13 +135,13 @@ export default function SettingsScreen() {
                 { color: colors.text.secondary },
                 currentTheme === 'dark' && [styles.optionTextActive, { color: colors.primary }]
               ]}>
-                🌙 {currentLang === 'de' ? 'Dunkel' : 'Dark'}
+                {currentLang === 'de' ? 'Dunkel' : 'Dark'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.optionButton,
-                { backgroundColor: colors.surface, borderColor: 'transparent' },
+                { backgroundColor: colors.surface, borderColor: colors.border },
                 currentTheme === 'system' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
               ]}
               onPress={() => handleThemeChange('system')}
@@ -163,113 +151,101 @@ export default function SettingsScreen() {
                 { color: colors.text.secondary },
                 currentTheme === 'system' && [styles.optionTextActive, { color: colors.primary }]
               ]}>
-                🖥️ {currentLang === 'de' ? 'System' : 'System'}
+                System
               </Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Sound-Effekte (Platzhalter) */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>{t('settings.sound')}</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>
+            {currentLang === 'de' ? 'Sprache' : 'Language'}
+          </Text>
           <View style={styles.optionsRow}>
             <TouchableOpacity
               style={[
                 styles.optionButton,
-                styles.optionButtonActive,
-                { backgroundColor: colors.primary + '20', borderColor: colors.primary }
+                { backgroundColor: colors.surface, borderColor: colors.border },
+                currentLang === 'de' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
               ]}
-              onPress={() => Alert.alert(
-                currentLang === 'de' ? 'Noch nicht verfügbar' : 'Not yet available',
-                currentLang === 'de'
-                  ? 'Sound-Effekte werden in einer zukünftigen Version hinzugefügt.'
-                  : 'Sound effects will be added in a future version.'
-              )}
+              onPress={() => handleLanguageChange('de')}
             >
-              <Text style={[styles.optionText, styles.optionTextActive, { color: colors.primary }]}>
-                {currentLang === 'de' ? 'Ein' : 'On'}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.optionButton, { backgroundColor: colors.surface }]}
-              disabled
-            >
-              <Text style={[styles.optionText, { color: colors.text.secondary }]}>
-                {currentLang === 'de' ? 'Aus' : 'Off'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <Text style={[styles.comingSoon, { color: colors.text.light }]}>
-            {currentLang === 'de' ? '(Demnächst verfügbar)' : '(Coming soon)'}
-          </Text>
-        </View>
-
-        {/* Hintergrundmusik (Platzhalter) */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>{t('settings.music')}</Text>
-          <View style={styles.optionsRow}>
-            <TouchableOpacity
-              style={[styles.optionButton, { backgroundColor: colors.surface }]}
-              disabled
-            >
-              <Text style={[styles.optionText, { color: colors.text.secondary }]}>
-                {currentLang === 'de' ? 'Ein' : 'On'}
+              <Text style={[
+                styles.optionText,
+                { color: colors.text.secondary },
+                currentLang === 'de' && [styles.optionTextActive, { color: colors.primary }]
+              ]}>
+                Deutsch
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.optionButton,
-                styles.optionButtonActive,
-                { backgroundColor: colors.primary + '20', borderColor: colors.primary }
+                { backgroundColor: colors.surface, borderColor: colors.border },
+                currentLang === 'en' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
               ]}
-              onPress={() => Alert.alert(
-                currentLang === 'de' ? 'Noch nicht verfügbar' : 'Not yet available',
-                currentLang === 'de'
-                  ? 'Hintergrundmusik wird in einer zukünftigen Version hinzugefügt.'
-                  : 'Background music will be added in a future version.'
-              )}
+              onPress={() => handleLanguageChange('en')}
             >
-              <Text style={[styles.optionText, styles.optionTextActive, { color: colors.primary }]}>
-                {currentLang === 'de' ? 'Aus' : 'Off'}
+              <Text style={[
+                styles.optionText,
+                { color: colors.text.secondary },
+                currentLang === 'en' && [styles.optionTextActive, { color: colors.primary }]
+              ]}>
+                English
               </Text>
             </TouchableOpacity>
           </View>
-          <Text style={[styles.comingSoon, { color: colors.text.light }]}>
-            {currentLang === 'de' ? '(Demnächst verfügbar)' : '(Coming soon)'}
-          </Text>
         </View>
 
-        {/* Fortschritt zurücksetzen */}
+        {/* Separator */}
+        <View style={[styles.separator, { backgroundColor: colors.border }]} />
+
+        {/* DATA Section */}
+        <Text style={[styles.sectionHeader, { color: colors.text.light }]}>
+          {currentLang === 'de' ? '📊 DATEN' : '📊 DATA'}
+        </Text>
+
         <View style={styles.section}>
           <TouchableOpacity
-            style={[styles.dangerButton, { backgroundColor: colors.error + '10', borderColor: colors.error }]}
+            style={[styles.dangerButton, { backgroundColor: colors.error + '15', borderColor: colors.error }]}
             onPress={handleResetProgress}
           >
             <Text style={[styles.dangerButtonText, { color: colors.error }]}>{t('settings.resetProgress')}</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Über die App */}
+        {/* Separator */}
+        <View style={[styles.separator, { backgroundColor: colors.border }]} />
+
+        {/* ABOUT & SUPPORT Section - Single Row */}
+        <Text style={[styles.sectionHeader, { color: colors.text.light }]}>
+          {currentLang === 'de' ? 'ℹ️ ÜBER & SUPPORT' : 'ℹ️ ABOUT & SUPPORT'}
+        </Text>
+
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>{t('settings.about')}</Text>
-          <View style={[styles.infoBox, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.infoText, { color: colors.text.secondary }]}>
-              <Text style={[styles.infoBold, { color: colors.text.primary }]}>
-                {currentLang === 'de' ? 'Merke und Male' : 'Remember & Draw'}
+          <View style={styles.aboutRow}>
+            <TouchableOpacity
+              style={[styles.outlinedButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
+              onPress={handleSendFeedback}
+            >
+              <Text style={[styles.outlinedButtonText, { color: colors.primary }]}>
+                {currentLang === 'de' ? 'Feedback' : 'Feedback'}
               </Text>
-              {'\n'}
-              {t('settings.version')}: 1.1.0
-              {'\n\n'}
-              {currentLang === 'de' 
-                ? 'Eine Gedächtnistraining-App für Kinder.' 
-                : 'A memory training app for children.'}
-              {'\n\n'}
-              {currentLang === 'de' ? 'Entwickelt mit ❤️' : 'Made with ❤️'}
-            </Text>
-            
-            <TouchableOpacity style={styles.linkButton} onPress={openGitHub}>
-              <Text style={[styles.linkText, { color: colors.primary }]}>
-                GitHub Repository ↗
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.outlinedButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
+              onPress={handleSupport}
+            >
+              <Text style={[styles.outlinedButtonText, { color: colors.primary }]}>
+                Support
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.outlinedButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
+              onPress={() => setShowAboutModal(true)}
+            >
+              <Text style={[styles.outlinedButtonText, { color: colors.primary }]}>
+                {currentLang === 'de' ? 'Über' : 'About'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -278,6 +254,60 @@ export default function SettingsScreen() {
         {/* Spacer am Ende */}
         <View style={{ height: Spacing.xxl }} />
       </ScrollView>
+
+      {/* About Modal */}
+      <Modal
+        visible={showAboutModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowAboutModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.modalTitle, { color: colors.text.primary }]}>
+              {currentLang === 'de' ? 'Über Merke und Male' : 'About Remember & Draw'}
+            </Text>
+
+            <View style={styles.modalBody}>
+              <Text style={[styles.modalLabel, { color: colors.text.light }]}>
+                {currentLang === 'de' ? 'Version' : 'Version'}
+              </Text>
+              <Text style={[styles.modalValue, { color: colors.text.primary }]}>1.1.0</Text>
+
+              <Text style={[styles.modalLabel, { color: colors.text.light, marginTop: Spacing.md }]}>
+                {currentLang === 'de' ? 'Lizenz' : 'License'}
+              </Text>
+              <Text style={[styles.modalValue, { color: colors.text.primary }]}>Open Source • MIT</Text>
+
+              <Text style={[styles.modalLabel, { color: colors.text.light, marginTop: Spacing.md }]}>
+                GitHub
+              </Text>
+              <TouchableOpacity onPress={() => Linking.openURL('https://github.com/S540d/DrawFromMemory')}>
+                <Text style={[styles.modalLink, { color: colors.primary }]}>
+                  S540d/DrawFromMemory ↗
+                </Text>
+              </TouchableOpacity>
+
+              <View style={[styles.featureTeaser, { backgroundColor: colors.primary + '15', borderColor: colors.primary }]}>
+                <Text style={[styles.teaserText, { color: colors.text.primary }]}>
+                  {currentLang === 'de'
+                    ? '🎨 Demnächst: Eigene Zeichnungen fotografieren und teilen!'
+                    : '🎨 Coming soon: Take photos of your drawings and share them!'}
+                </Text>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={[styles.modalCloseButton, { backgroundColor: colors.primary }]}
+              onPress={() => setShowAboutModal(false)}
+            >
+              <Text style={styles.modalCloseButtonText}>
+                {currentLang === 'de' ? 'Schließen' : 'Close'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -285,111 +315,152 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
   },
   header: {
     paddingHorizontal: Spacing.lg,
     paddingTop: Spacing.xl,
     paddingBottom: Spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.surface,
   },
   backButton: {
     fontSize: FontSize.lg,
-    color: Colors.primary,
     marginBottom: Spacing.sm,
   },
   title: {
     fontSize: FontSize.xxl,
     fontWeight: FontWeight.bold,
-    color: Colors.text.primary,
   },
   content: {
     flex: 1,
     paddingHorizontal: Spacing.lg,
   },
-  section: {
+  sectionHeader: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 1,
     marginTop: Spacing.xl,
+    marginBottom: Spacing.md,
+  },
+  section: {
+    marginBottom: Spacing.lg,
   },
   sectionTitle: {
-    fontSize: FontSize.lg,
+    fontSize: FontSize.md,
     fontWeight: FontWeight.semibold,
-    color: Colors.text.primary,
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.sm,
   },
   optionsRow: {
     flexDirection: 'row',
-    gap: Spacing.md,
+    gap: Spacing.sm,
   },
   optionButton: {
     flex: 1,
     paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.lg,
-    borderRadius: BorderRadius.md,
-    backgroundColor: Colors.surface,
+    paddingHorizontal: Spacing.sm,
+    borderRadius: BorderRadius.xl,
     borderWidth: 2,
-    borderColor: 'transparent',
     alignItems: 'center',
-    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten
+    ...Colors.shadow.small,
   },
   optionButtonActive: {
-    backgroundColor: Colors.primary + '20',
-    borderColor: Colors.primary,
-    ...Colors.shadow.medium, // Aktive Option mit stärkerem Schatten
+    ...Colors.shadow.medium,
   },
   optionText: {
-    fontSize: FontSize.md,
+    fontSize: FontSize.sm,
     fontWeight: FontWeight.medium,
-    color: Colors.text.secondary,
   },
   optionTextActive: {
-    color: Colors.primary,
     fontWeight: FontWeight.bold,
   },
-  comingSoon: {
-    fontSize: FontSize.sm,
-    color: Colors.text.light,
-    marginTop: Spacing.sm,
-    fontStyle: 'italic',
+  separator: {
+    height: 1,
+    marginVertical: Spacing.lg,
   },
   dangerButton: {
-    backgroundColor: Colors.error + '10',
     borderWidth: 2,
-    borderColor: Colors.error,
-    borderRadius: BorderRadius.lg, // md → lg (weicher)
+    borderRadius: BorderRadius.xl,
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.lg,
     alignItems: 'center',
-    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten
+    ...Colors.shadow.small,
   },
   dangerButtonText: {
     fontSize: FontSize.md,
     fontWeight: FontWeight.bold,
-    color: Colors.error,
   },
-  infoBox: {
-    backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.xl, // md → xl (16px → 20px für Cards)
-    padding: Spacing.lg,
-    ...Colors.shadow.medium, // Soft & Modern: Weiche Schatten für Info-Box
+  aboutRow: {
+    flexDirection: 'row',
+    gap: Spacing.sm,
   },
-  infoText: {
-    fontSize: FontSize.md,
-    color: Colors.text.secondary,
-    lineHeight: 24,
+  outlinedButton: {
+    flex: 1,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.sm,
+    borderRadius: BorderRadius.xl,
+    borderWidth: 2,
+    alignItems: 'center',
+    ...Colors.shadow.small,
   },
-  infoBold: {
+  outlinedButtonText: {
+    fontSize: FontSize.sm,
     fontWeight: FontWeight.bold,
-    color: Colors.text.primary,
-    fontSize: FontSize.lg,
   },
-  linkButton: {
-    marginTop: Spacing.md,
-    paddingVertical: Spacing.sm,
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: Spacing.lg,
   },
-  linkText: {
-    fontSize: FontSize.md,
-    color: Colors.primary,
+  modalContent: {
+    width: '100%',
+    maxWidth: 400,
+    borderRadius: BorderRadius.xl,
+    padding: Spacing.xl,
+    ...Colors.shadow.large,
+  },
+  modalTitle: {
+    fontSize: FontSize.xl,
+    fontWeight: FontWeight.bold,
+    marginBottom: Spacing.lg,
+    textAlign: 'center',
+  },
+  modalBody: {
+    marginBottom: Spacing.lg,
+  },
+  modalLabel: {
+    fontSize: FontSize.sm,
     fontWeight: FontWeight.medium,
+    marginBottom: Spacing.xs,
+  },
+  modalValue: {
+    fontSize: FontSize.md,
+    fontWeight: FontWeight.semibold,
+  },
+  modalLink: {
+    fontSize: FontSize.md,
+    fontWeight: FontWeight.medium,
+    textDecorationLine: 'underline',
+  },
+  featureTeaser: {
+    marginTop: Spacing.lg,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+  },
+  teaserText: {
+    fontSize: FontSize.sm,
+    textAlign: 'center',
+  },
+  modalCloseButton: {
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.xl,
+    alignItems: 'center',
+  },
+  modalCloseButtonText: {
+    color: '#FFFFFF',
+    fontSize: FontSize.md,
+    fontWeight: FontWeight.bold,
   },
 });

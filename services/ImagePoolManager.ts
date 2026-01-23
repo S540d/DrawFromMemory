@@ -196,17 +196,17 @@ let lastShownImages: string[] = [];
 
 /**
  * Ermittelt die Schwierigkeit basierend auf der Level-Nummer
- * Level 1: Difficulty 1
- * Level 2-3: Difficulty 2
- * Level 4-5: Difficulty 3
- * Level 6-7: Difficulty 4
- * Level 8-10: Difficulty 5
+ * Level 1-2: Difficulty 1 (levels-1 folder)
+ * Level 3-4: Difficulty 2 (levels-2 folder)
+ * Level 5-6: Difficulty 3 (levels-3 folder)
+ * Level 7-8: Difficulty 4 (levels-4 folder)
+ * Level 9-10: Difficulty 5 (levels-5 folder)
  */
 function getDifficultyForLevel(levelNumber: number): Difficulty {
-  if (levelNumber === 1) return 1;
-  if (levelNumber <= 3) return 2;
-  if (levelNumber <= 5) return 3;
-  if (levelNumber <= 7) return 4;
+  if (levelNumber <= 2) return 1;
+  if (levelNumber <= 4) return 2;
+  if (levelNumber <= 6) return 3;
+  if (levelNumber <= 8) return 4;
   return 5;
 }
 
