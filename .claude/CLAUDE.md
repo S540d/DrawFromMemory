@@ -82,7 +82,34 @@ Critical validation rules enforced by Husky:
 - **Production:** `main` branch → https://s540d.github.io/DrawFromMemory/
 - **Staging:** `testing` branch (for integration testing)
 - **Local Dev:** `expo start --web` for quick testing
+- **Unit Tests:** `npm test` (Jest + React Native Testing Library)
 - Test both mobile (Expo Go) and web builds
+
+#### Testing Framework
+**Setup:** Jest + @testing-library/react-native + babel-jest
+
+**Test Scripts:**
+```bash
+npm test                 # Run all tests once
+npm run test:watch       # Run tests in watch mode
+npm run test:coverage    # Generate coverage report
+npm run test:ci          # Run tests in CI mode
+```
+
+**Writing Tests:**
+- Place tests next to source: `*.test.ts` or `*.test.tsx`
+- Follow examples from `utils/platform.test.ts`
+- Mock `react-native` Platform for platform-specific code
+- Use `// platform-safe` comments when using window APIs in tests
+- AsyncStorage mock auto-configured in `jest.setup.js`
+- Skia components mocked in `__mocks__/@shopify/react-native-skia.js`
+
+**Test Coverage Priority:**
+1. `utils/platform.ts` - Platform detection (✅ Complete)
+2. `services/StorageManager.ts` - Data persistence (⏳ TODO)
+3. `services/LevelManager.ts` - Game logic (⏳ TODO)
+4. `hooks/useDrawingCanvas` - Canvas hook (⏳ TODO)
+5. `components/DrawingCanvas.tsx` - Core component (⏳ TODO)
 
 ### Critical Areas
 1. **Platform Utilities (utils/platform.ts):**

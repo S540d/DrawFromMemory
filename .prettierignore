@@ -1,0 +1,13 @@
+# Ignore build outputs
+dist/
+node_modules/
+.expo/
+.expo-shared/
+
+# Ignore auto-generated files
+*.log
+.DS_Store
+
+# Ignore specific config files
+package-lock.json
+yarn.lock
