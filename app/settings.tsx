@@ -242,6 +242,14 @@ export default function SettingsScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.outlinedButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
+              onPress={handleShareApp}
+            >
+              <Text style={[styles.outlinedButtonText, { color: colors.primary }]}>
+                {currentLang === 'de' ? 'Teilen' : 'Share'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.outlinedButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
               onPress={() => setShowAboutModal(true)}
             >
               <Text style={[styles.outlinedButtonText, { color: colors.primary }]}>
@@ -407,7 +415,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: Colors.modalOverlay,
     justifyContent: 'center',
     alignItems: 'center',
     padding: Spacing.lg,
@@ -459,7 +467,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalCloseButtonText: {
-    color: '#FFFFFF',
+    color: Colors.drawing.white,
     fontSize: FontSize.md,
     fontWeight: FontWeight.bold,
   },
