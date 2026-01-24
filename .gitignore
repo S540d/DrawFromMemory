@@ -28,6 +28,9 @@ yarn-error.log*
 *.swo
 *~
 
+# Claude Code (private instructions)
+.claude/
+
 # Build
 build/
 *.apk
