@@ -18,11 +18,11 @@ export default function LevelsScreen() {
 
   const renderLevelCard = ({ item }: { item: typeof levels[0] }) => {
     const difficultyText = t(`difficulty.${item.difficulty}`);
-    
+
     return (
       <TouchableOpacity
         style={[styles.levelCard, { backgroundColor: colors.surface, borderColor: colors.primary + '30' }]}
-        onPress={() => router.push('/game')}
+        onPress={() => router.push(`/game?level=${item.number}`)}
         activeOpacity={0.7}
       >
         {/* Level-Nummer */}
@@ -36,11 +36,6 @@ export default function LevelsScreen() {
         <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyColor(item.difficulty) }]}>
           <Text style={styles.difficultyText}>{difficultyText}</Text>
         </View>
-
-        {/* Anzeigezeit */}
-        <Text style={[styles.displayTime, { color: colors.text.secondary }]}>
-          {t('levels.displayTime', { seconds: item.displayDuration })}
-        </Text>
 
         {/* Platzhalter für Sterne (später mit Progress-System) */}
         <View style={styles.starsContainer}>
@@ -155,11 +150,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.sm,
     fontWeight: FontWeight.medium,
     color: Colors.drawing.white,
-  },
-  displayTime: {
-    fontSize: FontSize.sm,
-    color: Colors.text.secondary,
-    marginBottom: Spacing.sm,
   },
   starsContainer: {
     marginTop: Spacing.xs,
