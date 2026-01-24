@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, Dimensions, Platform } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getRandomImageForLevel } from '../services/ImagePoolManager';
 import { getLevel, getTotalLevels } from '../services/LevelManager';
 import { t } from '../services/i18n';
@@ -21,9 +21,17 @@ import type { GamePhase, LevelImage } from '../types';
  */
 export default function GameScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams();
   const { colors } = useTheme();
   const [phase, setPhase] = useState<GamePhase>('memorize');
-  const [levelNumber, setLevelNumber] = useState(1); // Start mit Level 1
+  // Level aus URL-Parameter auslesen, falls vorhanden, und validieren
+  const parsedLevel = params.level ? parseInt(params.level as string, 10) : 1;
+  const totalLevels = getTotalLevels();
+  const initialLevel =
+    !isNaN(parsedLevel) && parsedLevel >= 1 && parsedLevel <= totalLevels
+      ? parsedLevel
+      : 1;
+  const [levelNumber, setLevelNumber] = useState(initialLevel);
   const [currentImage, setCurrentImage] = useState<LevelImage | null>(null);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [showSettings, setShowSettings] = useState(false);

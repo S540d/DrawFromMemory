@@ -15,6 +15,17 @@ export default function HomeScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* Settings Button */}
+      <View style={styles.settingsButtonContainer}>
+        <Pressable
+          onPress={() => router.push('/settings')}
+          style={styles.settingsButton}
+          aria-label="Settings"
+        >
+          <Text style={[styles.settingsIcon, { color: colors.text.primary }]}>⋮</Text>
+        </Pressable>
+      </View>
+
       {/* Header */}
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.primary }]}>{t('home.title')}</Text>
@@ -54,6 +65,19 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
     padding: Spacing.lg,
     justifyContent: 'space-between',
+  },
+  settingsButtonContainer: {
+    alignItems: 'flex-end',
+  },
+  settingsButton: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  settingsIcon: {
+    fontSize: 24,
+    color: Colors.text.primary,
   },
   header: {
     flex: 1,

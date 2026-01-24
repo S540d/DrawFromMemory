@@ -7,10 +7,10 @@ import { Level, Difficulty } from '../types';
 
 /**
  * Berechnet die Anzeigedauer für ein Level
- * Level 1: 10s, Level 2: 9s, ..., Level 9: 4s, Level 10: 3s
+ * Alle Level: 3s
  */
 export function getDisplayDuration(levelNumber: number): number {
-  return Math.max(3, 11 - levelNumber);
+  return 3;
 }
 
 /**
