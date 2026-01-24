@@ -20,6 +20,7 @@ export default function HomeScreen() {
         <Pressable
           onPress={() => router.push('/settings')}
           style={styles.settingsButton}
+          aria-label="Settings"
         >
           <Text style={[styles.settingsIcon, { color: colors.text.primary }]}>⋮</Text>
         </Pressable>

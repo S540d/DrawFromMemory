@@ -24,8 +24,13 @@ export default function GameScreen() {
   const params = useLocalSearchParams();
   const { colors } = useTheme();
   const [phase, setPhase] = useState<GamePhase>('memorize');
-  // Level aus URL-Parameter auslesen, falls vorhanden
-  const initialLevel = params.level ? parseInt(params.level as string, 10) : 1;
+  // Level aus URL-Parameter auslesen, falls vorhanden, und validieren
+  const parsedLevel = params.level ? parseInt(params.level as string, 10) : 1;
+  const totalLevels = getTotalLevels();
+  const initialLevel =
+    !isNaN(parsedLevel) && parsedLevel >= 1 && parsedLevel <= totalLevels
+      ? parsedLevel
+      : 1;
   const [levelNumber, setLevelNumber] = useState(initialLevel);
   const [currentImage, setCurrentImage] = useState<LevelImage | null>(null);
   const [timeRemaining, setTimeRemaining] = useState(0);
