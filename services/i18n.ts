@@ -5,18 +5,44 @@
 
 import de from '../locales/de/translations.json';
 import en from '../locales/en/translations.json';
+import storageManager from './StorageManager';
 
 type Language = 'de' | 'en';
 type TranslationKey = string;
 
 const translations = { de, en };
 let currentLanguage: Language = 'de';
+let isInitialized = false;
 
 /**
- * Setzt die aktuelle Sprache
+ * Initialize language from storage
  */
-export function setLanguage(lang: Language): void {
+export async function initLanguage(): Promise<void> {
+  if (isInitialized) return;
+  
+  try {
+    const savedLanguage = await storageManager.getSetting('language');
+    // Only update if we got a valid language value
+    if (savedLanguage === 'de' || savedLanguage === 'en') {
+      currentLanguage = savedLanguage;
+    }
+    isInitialized = true;
+  } catch (error) {
+    console.warn('Failed to load language from storage:', error);
+    isInitialized = true; // Mark as initialized even on error to avoid repeated attempts
+  }
+}
+
+/**
+ * Setzt die aktuelle Sprache und speichert sie
+ */
+export async function setLanguage(lang: Language): Promise<void> {
   currentLanguage = lang;
+  try {
+    await storageManager.setSetting('language', lang);
+  } catch (error) {
+    console.error('Failed to save language to storage:', error);
+  }
 }
 
 /**
@@ -68,4 +94,4 @@ export function useTranslation() {
   };
 }
 
-export default { t, setLanguage, getLanguage, useTranslation };
+export default { t, setLanguage, getLanguage, useTranslation, initLanguage };

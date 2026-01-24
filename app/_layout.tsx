@@ -1,12 +1,19 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider, useTheme } from '../services/ThemeContext';
+import { useEffect } from 'react';
+import { initLanguage } from '../services/i18n';
 
 /**
  * Root Layout Content - wrapped with theme context
  */
 function RootLayoutContent() {
   const { theme, colors } = useTheme();
+
+  // Initialize language from storage
+  useEffect(() => {
+    initLanguage();
+  }, []);
 
   return (
     <>
