@@ -590,8 +590,8 @@ export function useDrawingCanvas() {
       if (tool === 'fill' && updatedPaths.length > prevPaths.length) {
         const lastPath = updatedPaths[updatedPaths.length - 1];
         if (lastPath?.type === 'fill') {
-          // Auto-switch to brush after fill is used
-          setTimeout(() => setTool('brush'), 100);
+          // Auto-switch to brush after fill is used (synchronously, to avoid timer race conditions)
+          setTool('brush');
         }
       }
 

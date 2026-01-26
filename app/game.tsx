@@ -686,10 +686,10 @@ const styles = StyleSheet.create({
   colorBoxCheckmark: {
     fontSize: 32,
     fontWeight: FontWeight.bold,
-    color: Colors.background,
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+    color: Colors.text.primary,
+    textShadowColor: Colors.background,
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 3,
   },
   buttonRow: {
     flexDirection: 'row',
