@@ -581,6 +581,24 @@ export function useDrawingCanvas() {
     }
   };
 
+  // Custom setPaths that auto-switches from fill to brush after fill is used
+  const setPathsWithAutoSwitch = (newPaths: DrawingPath[] | ((prev: DrawingPath[]) => DrawingPath[])) => {
+    setPaths((prevPaths) => {
+      const updatedPaths = typeof newPaths === 'function' ? newPaths(prevPaths) : newPaths;
+
+      // Check if a new fill path was just added (Issue #45)
+      if (tool === 'fill' && updatedPaths.length > prevPaths.length) {
+        const lastPath = updatedPaths[updatedPaths.length - 1];
+        if (lastPath?.type === 'fill') {
+          // Auto-switch to brush after fill is used (synchronously, to avoid timer race conditions)
+          setTool('brush');
+        }
+      }
+
+      return updatedPaths;
+    });
+  };
+
   return {
     color,
     setColor,
@@ -589,7 +607,7 @@ export function useDrawingCanvas() {
     tool,
     setTool,
     paths,
-    setPaths,
+    setPaths: setPathsWithAutoSwitch,
     clearCanvas,
     undo,
   };

@@ -35,6 +35,7 @@ export default function GameScreen() {
   const [currentImage, setCurrentImage] = useState<LevelImage | null>(null);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const [userRating, setUserRating] = useState<number>(0);
 
   // Drawing Canvas Hook
@@ -138,28 +139,16 @@ export default function GameScreen() {
         />
       </View>
 
-      {/* Farb-Palette (gefiltert basierend auf Bilderfarben) */}
-      <View style={styles.colorPalette}>
-        {(() => {
-          // Farben für dieses Bild bestimmen
-          const availableColors = currentImage?.colors || DrawingColors.map(c => c.hex);
-          // DrawingColors auf verfügbare Farben filtern
-          const filteredColors = DrawingColors.filter(colorItem =>
-            availableColors.includes(colorItem.hex)
-          );
-          return filteredColors.map((colorItem) => (
-            <TouchableOpacity
-              key={colorItem.hex}
-              style={[
-                styles.colorBox,
-                { backgroundColor: colorItem.hex },
-                colorItem.border && { borderColor: colorItem.border },
-                drawing.color === colorItem.hex && styles.colorBoxSelected,
-              ]}
-              onPress={() => drawing.setColor(colorItem.hex)}
-            />
-          ));
-        })()}
+      {/* Farb-Auswahl Button */}
+      <View style={styles.colorPickerContainer}>
+        <Text style={styles.colorPickerLabel}>{t('game.draw.color')}:</Text>
+        <TouchableOpacity
+          style={styles.colorPickerButton}
+          onPress={() => setShowColorPicker(true)}
+        >
+          <View style={[styles.selectedColorPreview, { backgroundColor: drawing.color }]} />
+          <Text style={styles.colorPickerButtonText}>{t('game.draw.selectColor')}</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Tool-Auswahl: Pinsel / Füllen */}
@@ -466,6 +455,57 @@ export default function GameScreen() {
         </View>
       </Modal>
 
+      {/* Color Picker Modal */}
+      <Modal
+        visible={showColorPicker}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowColorPicker(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.colorPickerModal}>
+            {/* Header */}
+            <View style={styles.colorPickerHeader}>
+              <Text style={styles.colorPickerTitle}>{t('game.draw.selectColor')}</Text>
+              <TouchableOpacity onPress={() => setShowColorPicker(false)} style={styles.closeButton}>
+                <Text style={styles.closeText}>✕</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Color Grid */}
+            <View style={styles.colorGrid}>
+              {(() => {
+                // Farben für dieses Bild bestimmen
+                const availableColors = currentImage?.colors || DrawingColors.map(c => c.hex);
+                // DrawingColors auf verfügbare Farben filtern
+                const filteredColors = DrawingColors.filter(colorItem =>
+                  availableColors.includes(colorItem.hex)
+                );
+                return filteredColors.map((colorItem) => (
+                  <TouchableOpacity
+                    key={colorItem.hex}
+                    style={[
+                      styles.colorBoxLarge,
+                      { backgroundColor: colorItem.hex },
+                      colorItem.border && { borderColor: colorItem.border },
+                      drawing.color === colorItem.hex && styles.colorBoxLargeSelected,
+                    ]}
+                    onPress={() => {
+                      drawing.setColor(colorItem.hex);
+                      setShowColorPicker(false);
+                    }}
+                  >
+                    {drawing.color === colorItem.hex && (
+                      <Text style={styles.colorBoxCheckmark}>✓</Text>
+                    )}
+                  </TouchableOpacity>
+                ));
+              })()}
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       {/* Phase Content */}
       {phase === 'memorize' && renderMemorizePhase()}
       {phase === 'draw' && renderDrawPhase()}
@@ -567,26 +607,89 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: Spacing.lg,
   },
-  colorPalette: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: Spacing.sm,
-    marginBottom: Spacing.lg,
-    flexWrap: 'wrap',
+  colorPickerContainer: {
+    marginBottom: Spacing.md,
+    alignItems: 'center',
   },
-  colorBox: {
-    width: 44,
-    height: 44,
+  colorPickerLabel: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
+    color: Colors.text.secondary,
+    marginBottom: Spacing.sm,
+  },
+  colorPickerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.surface,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.lg,
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    gap: Spacing.md,
+    minWidth: 200,
+    ...Colors.shadow.small,
+  },
+  selectedColorPreview: {
+    width: 32,
+    height: 32,
     borderRadius: BorderRadius.md,
     borderWidth: 2,
     borderColor: Colors.border,
-    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten für Farb-Boxen
   },
-  colorBoxSelected: {
+  colorPickerButtonText: {
+    fontSize: FontSize.md,
+    fontWeight: FontWeight.semibold,
+    color: Colors.primary,
+  },
+  colorPickerModal: {
+    backgroundColor: Colors.background,
+    borderRadius: BorderRadius.xxl,
+    width: '100%',
+    maxWidth: 400,
+    padding: Spacing.lg,
+    ...Colors.shadow.large,
+  },
+  colorPickerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Spacing.lg,
+  },
+  colorPickerTitle: {
+    fontSize: FontSize.lg,
+    fontWeight: FontWeight.semibold,
+    color: Colors.text.primary,
+  },
+  colorGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: Spacing.md,
+    justifyContent: 'center',
+  },
+  colorBoxLarge: {
+    width: 64,
+    height: 64,
+    borderRadius: BorderRadius.lg,
+    borderWidth: 2,
+    borderColor: Colors.border,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...Colors.shadow.small,
+  },
+  colorBoxLargeSelected: {
     borderWidth: 4,
     borderColor: Colors.primary,
-    transform: [{ scale: 1.1 }],
-    ...Colors.shadow.medium, // Ausgewählte Farbe mit stärkerem Schatten
+    transform: [{ scale: 1.05 }],
+    ...Colors.shadow.medium,
+  },
+  colorBoxCheckmark: {
+    fontSize: 32,
+    fontWeight: FontWeight.bold,
+    color: Colors.text.primary,
+    textShadowColor: Colors.background,
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 3,
   },
   buttonRow: {
     flexDirection: 'row',
