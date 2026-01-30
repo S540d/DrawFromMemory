@@ -15,9 +15,10 @@ export const isMobile = isIOS || isAndroid;
 
 /**
  * Prüft ob window.matchMedia verfügbar ist (nur Web)
+ * platform-safe: Only called on web platform
  */
 export function supportsMatchMedia(): boolean {
-  return isWeb && typeof window !== 'undefined' && typeof window.matchMedia === 'function';
+  return isWeb && typeof window !== 'undefined' && typeof window.matchMedia === 'function'; // platform-safe
 }
 
 /**
@@ -33,9 +34,11 @@ export function getSystemDarkModePreference(): boolean {
   }
 
   try {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches; // platform-safe
   } catch (error) {
-    console.warn('Failed to get system dark mode preference:', error);
+    if (__DEV__) {
+      console.warn('Failed to get system dark mode preference:', error);
+    }
     return false;
   }
 }
@@ -54,14 +57,16 @@ export function addSystemThemeChangeListener(
   }
 
   try {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)'); // platform-safe
     const handler = (e: MediaQueryListEvent) => callback(e.matches);
 
     mediaQuery.addEventListener('change', handler);
 
     return () => mediaQuery.removeEventListener('change', handler);
   } catch (error) {
-    console.warn('Failed to add system theme change listener:', error);
+    if (__DEV__) {
+      console.warn('Failed to add system theme change listener:', error);
+    }
     return () => {};
   }
 }

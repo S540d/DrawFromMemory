@@ -43,7 +43,9 @@ const safeStorageOps = {
     } catch (error) {
       // AsyncStorage failed, but in-memory store was updated
       // This is acceptable for Web sessions
-      console.warn(`AsyncStorage setItem failed for ${key}, using in-memory store`, error);
+      if (__DEV__) {
+        console.warn(`AsyncStorage setItem failed for ${key}, using in-memory store`, error);
+      }
     }
   },
 
@@ -53,7 +55,9 @@ const safeStorageOps = {
     try {
       await AsyncStorage.removeItem(key);
     } catch (error) {
-      console.warn(`AsyncStorage removeItem failed for ${key}`, error);
+      if (__DEV__) {
+        console.warn(`AsyncStorage removeItem failed for ${key}`, error);
+      }
     }
   },
 
@@ -65,7 +69,9 @@ const safeStorageOps = {
     try {
       await AsyncStorage.multiRemove(keys);
     } catch (error) {
-      console.warn(`AsyncStorage multiRemove failed`, error);
+      if (__DEV__) {
+        console.warn(`AsyncStorage multiRemove failed`, error);
+      }
     }
   },
 };
@@ -141,7 +147,13 @@ class StorageManager {
     try {
       const data = await safeStorageOps.getItem(KEYS.PROGRESS);
       if (data) {
-        return JSON.parse(data);
+        try {
+          return JSON.parse(data);
+        } catch (parseError) {
+          // Invalid JSON, return default and clear corrupt data
+          console.error('Failed to parse progress data, resetting:', parseError);
+          await safeStorageOps.removeItem(KEYS.PROGRESS);
+        }
       }
     } catch (error) {
       console.error('Error loading progress:', error);
@@ -221,12 +233,22 @@ class StorageManager {
         safeStorageOps.getItem(KEYS.EXTRA_TIME_MODE),
       ]);
 
+      // Safe JSON parsing with fallback
+      const parseSafely = (value: string | null, defaultValue: boolean): boolean => {
+        if (!value) return defaultValue;
+        try {
+          return JSON.parse(value);
+        } catch {
+          return defaultValue;
+        }
+      };
+
       return {
         theme: (theme as 'light' | 'dark' | 'system') || 'system',
         language: (language as 'de' | 'en') || 'de',
-        soundEnabled: sound ? JSON.parse(sound) : true,
-        musicEnabled: music ? JSON.parse(music) : false,
-        extraTimeMode: extraTime ? JSON.parse(extraTime) : false,
+        soundEnabled: parseSafely(sound, true),
+        musicEnabled: parseSafely(music, false),
+        extraTimeMode: parseSafely(extraTime, false),
       };
     } catch (error) {
       console.error('Error loading settings:', error);

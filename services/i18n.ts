@@ -28,7 +28,9 @@ export async function initLanguage(): Promise<void> {
     }
     isInitialized = true;
   } catch (error) {
-    console.warn('Failed to load language from storage:', error);
+    if (__DEV__) {
+      console.warn('Failed to load language from storage:', error);
+    }
     isInitialized = true; // Mark as initialized even on error to avoid repeated attempts
   }
 }
@@ -65,7 +67,9 @@ export function t(key: TranslationKey, params?: Record<string, string | number>)
   for (const k of keys) {
     value = value?.[k];
     if (value === undefined) {
-      console.warn(`Translation missing for key: ${key} (language: ${currentLanguage})`);
+      if (__DEV__) {
+        console.warn(`Translation missing for key: ${key} (language: ${currentLanguage})`);
+      }
       return key;
     }
   }

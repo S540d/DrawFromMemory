@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider, useTheme } from '../services/ThemeContext';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 import { useEffect } from 'react';
 import { initLanguage } from '../services/i18n';
 
@@ -34,12 +35,14 @@ function RootLayoutContent() {
 }
 
 /**
- * Root Layout für Expo Router - wrapped with ThemeProvider
+ * Root Layout für Expo Router - wrapped with ErrorBoundary and ThemeProvider
  */
 export default function RootLayout() {
   return (
-    <ThemeProvider>
-      <RootLayoutContent />
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <RootLayoutContent />
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
