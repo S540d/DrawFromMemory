@@ -10,9 +10,22 @@ module.exports = {
     'services/**/*.{ts,tsx}',
     'utils/**/*.{ts,tsx}',
     'hooks/**/*.{ts,tsx}',
+    'app/**/*.{ts,tsx}',
+    '!app/**/_layout.tsx',
     '!**/*.d.ts',
     '!**/node_modules/**',
+    '!**/__tests__/**',
+    '!**/__mocks__/**',
   ],
+  coverageThreshold: {
+    global: {
+      branches: 70,
+      functions: 75,
+      lines: 80,
+      statements: 80,
+    },
+  },
+  coverageReporters: ['text', 'text-summary', 'lcov', 'html'],
   moduleNameMapper: {
     '^react-native$': 'react-native-web',
     '^@shopify/react-native-skia$': '<rootDir>/__mocks__/@shopify/react-native-skia.js',
@@ -24,4 +37,6 @@ module.exports = {
   globals: {
     __DEV__: true,
   },
+  testTimeout: 10000,
+  verbose: true,
 };
