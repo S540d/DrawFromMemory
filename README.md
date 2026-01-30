@@ -3,8 +3,9 @@
 > Eine Gedächtnistraining-App für Kinder - Bild merken, zeichnen, vergleichen!
 
 [![Live Demo](https://img.shields.io/badge/demo-live-success)](https://s540d.github.io/DrawFromMemory/)
-[![Status](https://img.shields.io/badge/Status-MVP%2095%25-green)](https://github.com/S540d/DrawFromMemory)
+[![Status](https://img.shields.io/badge/Status-Play%20Store%20Ready-blue)](https://github.com/S540d/DrawFromMemory)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Android%20%7C%20iOS-lightgrey)](https://github.com/S540d/DrawFromMemory)
 
 **🌐 Live Demo:** [https://s540d.github.io/DrawFromMemory/](https://s540d.github.io/DrawFromMemory/)
 
@@ -38,9 +39,9 @@
 
 ---
 
-## 🚀 Roadmap
+## 🚀 Roadmap & Release Status
 
-**Aktueller Stand:** MVP zu 95% fertig - [Detaillierter Status →](STATUS.md)
+**Aktueller Stand:** App Store Vorbereitung läuft - [Detaillierter Status →](STATUS.md) | [Play Store Issue #48 →](https://github.com/S540d/DrawFromMemory/issues/48)
 
 ### Phase 1: MVP (Minimum Viable Product) - **95% FERTIG**
 - ✅ Konzept & Projektskizze
@@ -121,6 +122,9 @@ DrawFromMemory/
 │   └── index.ts                 # TypeScript Typen
 │
 ├── docs/                        # Dokumentation
+│   ├── DEPLOYMENT_GUIDE.md      # App Store Deployment Guide
+│   ├── PLAY_STORE_METADATA.md   # Store Listing Texte
+│   ├── STORE_ASSETS_TODO.md     # Asset Status Tracking
 │   ├── ICON_GENERATION_PLAN.md  # Icon-Erweiterungsplan (Issue #5)
 │   └── PROMPT_TEMPLATES.md      # AI-Prompts für Icon-Generierung
 │
@@ -130,6 +134,8 @@ DrawFromMemory/
 │       └── deploy.yml           # GitHub Pages Deployment
 │
 └── scripts/
+    ├── prepare-release.sh       # Play Store Release Validation
+    ├── validate-release.sh      # Pre-deployment Checks
     └── update-cache-version.js  # Cache-Busting für Deployment
 ```
 
@@ -205,7 +211,7 @@ Dieses Projekt folgt dem **"Mit Kindern, für Kinder"** Ansatz:
 
 ## 🚧 Status
 
-**Aktuell:** MVP-Phase - 95% fertig, bereit für Testing
+**Aktuell:** Play Store Vorbereitung - [Issue #48](https://github.com/S540d/DrawFromMemory/issues/48)
 
 **Was funktioniert bereits:**
 - ✅ 10 Level-Bilder (SVG) + 4 Extra-Bilder
@@ -220,11 +226,16 @@ Dieses Projekt folgt dem **"Mit Kindern, für Kinder"** Ansatz:
 - ✅ GitHub Pages Deployment (testbar auf Telefon)
 - ✅ CI/CD Pipeline mit automatischen Quality Checks
 
-**Geplant für Phase 2:**
-- 🔲 Settings-Menü (Theme, Sprache, Zeichenzeit)
-- 🔲 Dark Mode
+**In Arbeit (Play Store Release):**
+- 🔨 App Icons generieren (1024x1024)
+- 🔨 Screenshots erstellen
+- 🔨 Privacy Policy hosten
+- 🔨 EAS Build Setup
+
+**Geplant für zukünftige Updates:**
 - 🔲 Sound-Effekte
 - 🔲 Weitere Level (perspektivische Bilder)
+- 🔲 Achievements System
 
 👉 **[Live Demo testen](https://s540d.github.io/DrawFromMemory/)** | **[Detaillierter Status](STATUS.md)**
 
