@@ -9,7 +9,11 @@
 
 **🌐 Live Demo:** [https://s540d.github.io/DrawFromMemory/](https://s540d.github.io/DrawFromMemory/)
 
-**📊 Quick Status:** [QUICK_STATUS.md](QUICK_STATUS.md) | **📋 Vollständiger Status:** [STATUS.md](STATUS.md) | **✅ Abgeschlossene Issues:** [ABGESCHLOSSENE_ISSUES.md](ABGESCHLOSSENE_ISSUES.md)
+**📚 Dokumentation:**
+- 🚀 [Play Store Deployment](docs/DEPLOYMENT_GUIDE.md) - Komplette Veröffentlichungs-Anleitung
+- 🧪 [Testing Guide](docs/TESTING_README.md) - Entwickler Testing-Guide
+- 📝 [Store Metadata](docs/PLAY_STORE_METADATA.md) - App Store Texte
+- 🔒 [Privacy Policy](PRIVACY_POLICY.md) - Datenschutzerklärung
 
 ---
 
@@ -237,7 +241,7 @@ Dieses Projekt folgt dem **"Mit Kindern, für Kinder"** Ansatz:
 - 🔲 Weitere Level (perspektivische Bilder)
 - 🔲 Achievements System
 
-👉 **[Live Demo testen](https://s540d.github.io/DrawFromMemory/)** | **[Detaillierter Status](STATUS.md)**
+👉 **[Live Demo testen](https://s540d.github.io/DrawFromMemory/)** | **[Play Store Issue #48](https://github.com/S540d/DrawFromMemory/issues/48)** | **[Nächste Schritte #51](https://github.com/S540d/DrawFromMemory/issues/51)**
 
 ---
 
