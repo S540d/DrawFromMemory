@@ -7,6 +7,9 @@
     "icon": "./assets/icons/app-icon.png",
     "userInterfaceStyle": "light",
     "scheme": "merkeundmale",
+    "primaryColor": "#60D5FA",
+    "description": "Gedächtnistraining für Kinder: Merken, Malen, Lernen! Eine pädagogisch wertvolle App für spielerisches Lernen.",
+    "privacy": "public",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -17,7 +20,12 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.s540d.merkeundmale"
+      "bundleIdentifier": "com.s540d.merkeundmale",
+      "buildNumber": "1",
+      "appStoreUrl": "https://apps.apple.com/app/merke-und-male/id[TBD]",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -25,7 +33,10 @@
         "backgroundColor": "#60D5FA"
       },
       "package": "com.s540d.merkeundmale",
-      "permissions": []
+      "permissions": [],
+      "versionCode": 1,
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.s540d.merkeundmale",
+      "privacyPolicy": "https://s540d.github.io/DrawFromMemory/PRIVACY_POLICY.html"
     },
     "web": {
       "favicon": "./assets/icons/ChatGPT Image 6. Dez. 2025, 09_34_39.png",
