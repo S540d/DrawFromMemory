@@ -11,6 +11,7 @@ import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 import LevelImageDisplay from '../components/LevelImageDisplay';
 import DrawingCanvas, { useDrawingCanvas } from '../components/DrawingCanvas';
+import SettingsModal from '../components/SettingsModal';
 import type { GamePhase, LevelImage } from '../types';
 
 /**
@@ -401,59 +402,7 @@ export default function GameScreen() {
       </View>
 
       {/* Settings Modal */}
-      <Modal
-        visible={showSettings}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowSettings(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.settingsModal}>
-            {/* Header */}
-            <View style={styles.settingsHeader}>
-              <Text style={styles.settingsTitle}>Settings</Text>
-              <TouchableOpacity onPress={() => setShowSettings(false)} style={styles.closeButton}>
-                <Text style={styles.closeText}>✕</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Appearance Section */}
-            <View style={styles.settingsSection}>
-              <Text style={styles.sectionTitle}>APPEARANCE</Text>
-
-              {/* Theme Toggle */}
-              <Text style={styles.settingLabel}>Theme</Text>
-              <View style={styles.toggleRow}>
-                <TouchableOpacity style={[styles.toggleButton, styles.toggleButtonActive]}>
-                  <Text style={[styles.toggleText, styles.toggleTextActive]}>Light</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.toggleButton}>
-                  <Text style={styles.toggleText}>Dark</Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* Language Toggle */}
-              <Text style={styles.settingLabel}>Language</Text>
-              <View style={styles.toggleRow}>
-                <TouchableOpacity style={[styles.toggleButton, styles.toggleButtonActive]}>
-                  <Text style={[styles.toggleText, styles.toggleTextActive]}>Deutsch</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.toggleButton}>
-                  <Text style={styles.toggleText}>English</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {/* Support Section */}
-            <View style={styles.settingsSection}>
-              <Text style={styles.sectionTitle}>SUPPORT</Text>
-              <TouchableOpacity style={styles.linkButton}>
-                <Text style={styles.linkText}>Fehler melden / Send Feedback</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
 
       {/* Color Picker Modal */}
       <Modal
@@ -825,88 +774,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: Spacing.lg,
   },
-  settingsModal: {
-    backgroundColor: Colors.background,
-    borderRadius: BorderRadius.xxl, // xl → xxl (20px → 24px für große Modals)
-    width: '100%',
-    maxWidth: 400,
-    padding: Spacing.lg,
-    ...Colors.shadow.large, // Soft & Modern: Prominenter Schatten für Modals
-  },
-  settingsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: Spacing.lg,
-  },
-  settingsTitle: {
-    fontSize: FontSize.lg,
-    fontWeight: FontWeight.semibold,
-    color: Colors.text.primary,
-  },
-  closeButton: {
-    width: 44,
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  closeText: {
-    fontSize: 24,
-    color: Colors.text.secondary,
-  },
-  settingsSection: {
-    marginBottom: Spacing.lg,
-  },
-  sectionTitle: {
-    fontSize: FontSize.xs,
-    fontWeight: FontWeight.semibold,
-    color: Colors.text.secondary,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: Spacing.md,
-  },
-  settingLabel: {
-    fontSize: FontSize.sm,
-    fontWeight: FontWeight.medium,
-    color: Colors.text.primary,
-    marginBottom: Spacing.sm,
-  },
-  toggleRow: {
-    flexDirection: 'row',
-    gap: Spacing.sm,
-    marginBottom: Spacing.md,
-  },
-  toggleButton: {
-    flex: 1,
-    height: 40,
-    backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.md,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: Colors.surface,
-    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten
-  },
-  toggleButtonActive: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
-    ...Colors.shadow.medium, // Aktiver Toggle mit stärkerem Schatten
-  },
-  toggleText: {
-    fontSize: FontSize.sm,
-    fontWeight: FontWeight.medium,
-    color: Colors.text.secondary,
-  },
-  toggleTextActive: {
-    color: Colors.background,
-  },
-  linkButton: {
-    paddingVertical: Spacing.md,
-  },
-  linkText: {
-    fontSize: FontSize.md,
-    color: Colors.primary,
-  },
   levelNavigation: {
     flexDirection: 'row',
     gap: Spacing.md,
@@ -1016,5 +883,15 @@ const styles = StyleSheet.create({
   },
   strokeWidthButtonTextActive: {
     color: Colors.background,
+  },
+  closeButton: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  closeText: {
+    fontSize: 24,
+    color: Colors.text.secondary,
   },
 });

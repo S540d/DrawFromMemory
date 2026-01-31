@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { t } from '../services/i18n';
 import { useTheme } from '../services/ThemeContext';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
+import SettingsModal from '../components/SettingsModal';
 
 /**
  * Home Screen - Startseite der App
@@ -12,13 +13,14 @@ import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout
 export default function HomeScreen() {
   const { colors } = useTheme();
   const router = useRouter();
+  const [showSettings, setShowSettings] = useState(false);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Settings Button */}
       <View style={styles.settingsButtonContainer}>
         <Pressable
-          onPress={() => router.push('/settings')}
+          onPress={() => setShowSettings(true)}
           style={styles.settingsButton}
           aria-label="Settings"
         >
@@ -55,6 +57,9 @@ export default function HomeScreen() {
       <View style={styles.footer}>
         <Text style={[styles.footerText, { color: colors.text.light }]}>Version 1.1.0</Text>
       </View>
+
+      {/* Settings Modal */}
+      <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
     </View>
   );
 }
