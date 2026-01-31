@@ -280,7 +280,7 @@ export default function SettingsScreen() {
               onPress={handleSendFeedback}
             >
               <Text style={[styles.gridButtonText, { color: colors.primary }]}>
-                {currentLang === 'de' ? 'Feedback' : 'Feedback'}
+                Feedback
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

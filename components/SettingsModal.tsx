@@ -295,7 +295,7 @@ export default function SettingsModal({ visible, onClose }: SettingsModalProps) 
                     onPress={handleSendFeedback}
                   >
                     <Text style={[styles.gridButtonText, { color: colors.primary }]}>
-                      {currentLang === 'de' ? 'Feedback' : 'Feedback'}
+                      Feedback
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
