@@ -1,0 +1,54 @@
+# Security: Files to exclude from GitHub Pages deployment
+# This prevents sensitive data from being published
+
+# Node.js
+node_modules/
+package.json
+package-lock.json
+yarn.lock
+npm-debug.log*
+
+# Environment & Config
+.env*
+.config/
+*.config.js
+*.config.ts
+app.json
+eas.json
+
+# Source code (only deploy built files)
+*.ts
+*.tsx
+*.js.map
+tsconfig.json
+
+# Development
+.expo/
+.expo-shared/
+.git/
+.github/
+.husky/
+.vscode/
+.idea/
+.claude/
+
+# Build artifacts to exclude
+coverage/
+.jest/
+*.tsbuildinfo
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Documentation (optional, you may want to keep some)
+README.md
+docs/
+*.md
+
+# Keys and secrets
+*.keystore
+*.jks
+*.pem
+google-services.json
+GoogleService-Info.plist

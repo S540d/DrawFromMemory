@@ -25,6 +25,7 @@
     "test:ci": "jest --ci --coverage --maxWorkers=2",
     "validate": "./scripts/validate-release.sh",
     "prepare-release": "./scripts/prepare-release.sh",
+    "deploy:ghpages": "./scripts/deploy-ghpages.sh",
     "prepare": "husky install"
   },
   "dependencies": {
