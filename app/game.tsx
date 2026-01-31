@@ -11,6 +11,7 @@ import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 import LevelImageDisplay from '../components/LevelImageDisplay';
 import DrawingCanvas, { useDrawingCanvas } from '../components/DrawingCanvas';
+import SettingsModal from '../components/SettingsModal';
 import type { GamePhase, LevelImage } from '../types';
 
 /**
@@ -401,59 +402,7 @@ export default function GameScreen() {
       </View>
 
       {/* Settings Modal */}
-      <Modal
-        visible={showSettings}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowSettings(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.settingsModal}>
-            {/* Header */}
-            <View style={styles.settingsHeader}>
-              <Text style={styles.settingsTitle}>Settings</Text>
-              <TouchableOpacity onPress={() => setShowSettings(false)} style={styles.closeButton}>
-                <Text style={styles.closeText}>✕</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Appearance Section */}
-            <View style={styles.settingsSection}>
-              <Text style={styles.sectionTitle}>APPEARANCE</Text>
-
-              {/* Theme Toggle */}
-              <Text style={styles.settingLabel}>Theme</Text>
-              <View style={styles.toggleRow}>
-                <TouchableOpacity style={[styles.toggleButton, styles.toggleButtonActive]}>
-                  <Text style={[styles.toggleText, styles.toggleTextActive]}>Light</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.toggleButton}>
-                  <Text style={styles.toggleText}>Dark</Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* Language Toggle */}
-              <Text style={styles.settingLabel}>Language</Text>
-              <View style={styles.toggleRow}>
-                <TouchableOpacity style={[styles.toggleButton, styles.toggleButtonActive]}>
-                  <Text style={[styles.toggleText, styles.toggleTextActive]}>Deutsch</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.toggleButton}>
-                  <Text style={styles.toggleText}>English</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {/* Support Section */}
-            <View style={styles.settingsSection}>
-              <Text style={styles.sectionTitle}>SUPPORT</Text>
-              <TouchableOpacity style={styles.linkButton}>
-                <Text style={styles.linkText}>Fehler melden / Send Feedback</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
 
       {/* Color Picker Modal */}
       <Modal

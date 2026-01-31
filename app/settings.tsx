@@ -268,42 +268,42 @@ export default function SettingsScreen() {
         {/* Separator */}
         <View style={[styles.separator, { backgroundColor: colors.border }]} />
 
-        {/* ABOUT & SUPPORT Section - Single Row */}
+        {/* ABOUT & SUPPORT Section - 2x2 Grid */}
         <Text style={[styles.sectionHeader, { color: colors.text.light }]}>
           {currentLang === 'de' ? 'ℹ️ ÜBER & SUPPORT' : 'ℹ️ ABOUT & SUPPORT'}
         </Text>
 
         <View style={styles.section}>
-          <View style={styles.aboutRow}>
+          <View style={styles.gridContainer}>
             <TouchableOpacity
-              style={[styles.outlinedButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
+              style={[styles.gridButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
               onPress={handleSendFeedback}
             >
-              <Text style={[styles.outlinedButtonText, { color: colors.primary }]}>
+              <Text style={[styles.gridButtonText, { color: colors.primary }]}>
                 {currentLang === 'de' ? 'Feedback' : 'Feedback'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.outlinedButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
+              style={[styles.gridButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
               onPress={handleSupport}
             >
-              <Text style={[styles.outlinedButtonText, { color: colors.primary }]}>
+              <Text style={[styles.gridButtonText, { color: colors.primary }]}>
                 Support
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.outlinedButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
+              style={[styles.gridButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
               onPress={handleShareApp}
             >
-              <Text style={[styles.outlinedButtonText, { color: colors.primary }]}>
+              <Text style={[styles.gridButtonText, { color: colors.primary }]}>
                 {currentLang === 'de' ? 'Teilen' : 'Share'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.outlinedButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
+              style={[styles.gridButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
               onPress={() => setShowAboutModal(true)}
             >
-              <Text style={[styles.outlinedButtonText, { color: colors.primary }]}>
+              <Text style={[styles.gridButtonText, { color: colors.primary }]}>
                 {currentLang === 'de' ? 'Über' : 'About'}
               </Text>
             </TouchableOpacity>
@@ -447,12 +447,13 @@ const styles = StyleSheet.create({
     fontSize: FontSize.md,
     fontWeight: FontWeight.bold,
   },
-  aboutRow: {
+  gridContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: Spacing.sm,
   },
-  outlinedButton: {
-    flex: 1,
+  gridButton: {
+    width: '48%', // 2 columns with gap
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.sm,
     borderRadius: BorderRadius.xl,
@@ -460,7 +461,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     ...Colors.shadow.small,
   },
-  outlinedButtonText: {
+  gridButtonText: {
     fontSize: FontSize.sm,
     fontWeight: FontWeight.bold,
   },
