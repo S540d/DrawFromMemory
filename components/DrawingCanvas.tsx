@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, Platform } from 'react-native';
+import { View, StyleSheet, useWindowDimensions, Platform } from 'react-native';
 import { Canvas, Path, Skia, Circle } from '@shopify/react-native-skia';
+
+// Default width for SSR (will be overridden by actual window dimensions on client)
+const DEFAULT_CANVAS_WIDTH = 300;
 
 interface Props {
   width?: number;
@@ -25,7 +28,7 @@ export interface DrawingPath {
  * Native: react-native-skia (später)
  */
 export default function DrawingCanvas({
-  width = Dimensions.get('window').width - 48,
+  width: propWidth,
   height = 400,
   strokeColor = '#000000',
   strokeWidth = 3,
@@ -33,6 +36,10 @@ export default function DrawingCanvas({
   paths = [],
   onDrawingChange,
 }: Props) {
+  // Use hook for responsive dimensions (SSR-safe)
+  const { width: windowWidth } = useWindowDimensions();
+  const width = propWidth ?? (windowWidth > 0 ? windowWidth - 48 : DEFAULT_CANVAS_WIDTH);
+
   const [currentPath, setCurrentPath] = useState<{ x: number; y: number }[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);

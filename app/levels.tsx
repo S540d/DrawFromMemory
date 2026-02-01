@@ -1,11 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { t } from '../services/i18n';
 import { useTheme } from '../services/ThemeContext';
 import { getAllLevels } from '../services/LevelManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
+
+// Default card width for SSR (will be recalculated on client)
+const DEFAULT_CARD_WIDTH = 150;
 
 /**
  * Levels Screen - Level-Auswahl
@@ -15,13 +18,16 @@ export default function LevelsScreen() {
   const router = useRouter();
   const { colors } = useTheme();
   const levels = getAllLevels();
+  // Use hook for responsive dimensions (SSR-safe)
+  const { width: screenWidth } = useWindowDimensions();
+  const cardWidth = screenWidth > 0 ? (screenWidth - Spacing.lg * 3) / 2 : DEFAULT_CARD_WIDTH;
 
   const renderLevelCard = ({ item }: { item: typeof levels[0] }) => {
     const difficultyText = t(`difficulty.${item.difficulty}`);
 
     return (
       <TouchableOpacity
-        style={[styles.levelCard, { backgroundColor: colors.surface, borderColor: colors.primary + '30' }]}
+        style={[styles.levelCard, { width: cardWidth, backgroundColor: colors.surface, borderColor: colors.primary + '30' }]}
         onPress={() => router.push(`/game?level=${item.number}`)}
         activeOpacity={0.7}
       >
@@ -89,9 +95,6 @@ function getDifficultyColor(difficulty: number): string {
   }
 }
 
-const screenWidth = Dimensions.get('window').width;
-const cardWidth = (screenWidth - Spacing.lg * 3) / 2; // 2 Karten pro Reihe
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -122,7 +125,6 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
   },
   levelCard: {
-    width: cardWidth,
     backgroundColor: Colors.surface,
     borderRadius: BorderRadius.xl, // lg → xl (16px → 20px für Cards)
     padding: Spacing.md,
