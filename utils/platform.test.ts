@@ -193,8 +193,8 @@ describe('platform.ts - Theme Change Listener', () => {
   });
 
   it('should call callback when theme changes', () => {
-    let changeHandler: ((e: MediaQueryListEvent) => void) | null = null;
-    const mockAddEventListener = jest.fn((event: string, handler: any) => {
+    let changeHandler: ((e: MediaQueryListEvent) => void) | undefined;
+    const mockAddEventListener = jest.fn((event: string, handler: (e: MediaQueryListEvent) => void) => {
       if (event === 'change') {
         changeHandler = handler;
       }
@@ -217,7 +217,7 @@ describe('platform.ts - Theme Change Listener', () => {
     addSystemThemeChangeListener(callback);
 
     // Simulate theme change
-    if (changeHandler) {
+    if (changeHandler !== undefined) {
       changeHandler({ matches: true } as MediaQueryListEvent);
       expect(callback).toHaveBeenCalledWith(true);
     }
