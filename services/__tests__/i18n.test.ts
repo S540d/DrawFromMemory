@@ -52,16 +52,16 @@ describe('i18n Service', () => {
       expect(getDeviceLanguage()).toBe('en');
     });
 
-    it('should fallback to German for unsupported locales', () => {
+    it('should fallback to English for unsupported locales', () => {
       Localization.getLocales.mockReturnValue([{ languageCode: 'fr' }]);
-      expect(getDeviceLanguage()).toBe('de');
+      expect(getDeviceLanguage()).toBe('en');
     });
 
-    it('should fallback to German on error', () => {
+    it('should fallback to English on error', () => {
       Localization.getLocales.mockImplementation(() => {
         throw new Error('Localization error');
       });
-      expect(getDeviceLanguage()).toBe('de');
+      expect(getDeviceLanguage()).toBe('en');
     });
   });
 

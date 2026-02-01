@@ -12,20 +12,20 @@ type Language = 'de' | 'en';
 type TranslationKey = string;
 
 const translations = { de, en };
-let currentLanguage: Language = 'de';
+let currentLanguage: Language = 'en';
 let isInitialized = false;
 
 /**
  * Detects the device's locale and returns a supported language
- * Falls back to 'de' if the device locale is not supported
- * 
+ * Falls back to 'en' if the device locale is not supported
+ *
  * @returns {Language} The detected language code ('de' or 'en')
  * @example
- * // Device set to English
- * getDeviceLanguage() // returns 'en'
- * 
+ * // Device set to German
+ * getDeviceLanguage() // returns 'de'
+ *
  * // Device set to French (unsupported)
- * getDeviceLanguage() // returns 'de' (fallback)
+ * getDeviceLanguage() // returns 'en' (fallback)
  */
 export function getDeviceLanguage(): Language {
   try {
@@ -38,14 +38,14 @@ export function getDeviceLanguage(): Language {
       return languageCode as Language;
     }
     
-    // Default to German if language is not supported
-    return 'de';
+    // Default to English if language is not supported
+    return 'en';
   } catch (error) {
     if (__DEV__) {
       console.warn('Failed to detect device language:', error);
     }
-    // Default to German on error
-    return 'de';
+    // Default to English on error
+    return 'en';
   }
 }
 
