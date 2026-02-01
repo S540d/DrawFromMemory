@@ -2,6 +2,11 @@
  * i18n Service Tests
  */
 
+// Mock expo-localization
+jest.mock('expo-localization', () => ({
+  getLocales: jest.fn().mockReturnValue([{ languageCode: 'de' }]),
+}));
+
 // Mock storageManager before importing i18n
 jest.mock('../StorageManager', () => ({
   __esModule: true,
@@ -15,7 +20,9 @@ describe('i18n Service', () => {
   let setLanguage: any;
   let getLanguage: any;
   let initLanguage: any;
+  let getDeviceLanguage: any;
   let storageManager: any;
+  let Localization: any;
 
   beforeEach(() => {
     // Reset the module to clear isInitialized flag
@@ -23,13 +30,39 @@ describe('i18n Service', () => {
     
     // Re-import modules
     storageManager = require('../StorageManager').default;
+    Localization = require('expo-localization');
     const i18n = require('../i18n');
     setLanguage = i18n.setLanguage;
     getLanguage = i18n.getLanguage;
     initLanguage = i18n.initLanguage;
+    getDeviceLanguage = i18n.getDeviceLanguage;
     
     // Clear mock history
     jest.clearAllMocks();
+  });
+
+  describe('getDeviceLanguage', () => {
+    it('should detect German locale', () => {
+      Localization.getLocales.mockReturnValue([{ languageCode: 'de' }]);
+      expect(getDeviceLanguage()).toBe('de');
+    });
+
+    it('should detect English locale', () => {
+      Localization.getLocales.mockReturnValue([{ languageCode: 'en' }]);
+      expect(getDeviceLanguage()).toBe('en');
+    });
+
+    it('should fallback to English for unsupported locales', () => {
+      Localization.getLocales.mockReturnValue([{ languageCode: 'fr' }]);
+      expect(getDeviceLanguage()).toBe('en');
+    });
+
+    it('should fallback to English on error', () => {
+      Localization.getLocales.mockImplementation(() => {
+        throw new Error('Localization error');
+      });
+      expect(getDeviceLanguage()).toBe('en');
+    });
   });
 
   describe('setLanguage', () => {
@@ -52,13 +85,33 @@ describe('i18n Service', () => {
   });
 
   describe('initLanguage', () => {
-    it('should load language from storage', async () => {
+    it('should load language from storage when available', async () => {
       storageManager.getSetting.mockResolvedValueOnce('en');
       
       await initLanguage();
       
       expect(storageManager.getSetting).toHaveBeenCalledWith('language');
       expect(getLanguage()).toBe('en');
+    });
+
+    it('should use device language when no saved language exists', async () => {
+      storageManager.getSetting.mockResolvedValueOnce(null);
+      Localization.getLocales.mockReturnValue([{ languageCode: 'en' }]);
+      
+      await initLanguage();
+      
+      expect(getLanguage()).toBe('en');
+      expect(storageManager.setSetting).toHaveBeenCalledWith('language', 'en');
+    });
+
+    it('should use device language when saved language is invalid', async () => {
+      storageManager.getSetting.mockResolvedValueOnce('invalid');
+      Localization.getLocales.mockReturnValue([{ languageCode: 'en' }]);
+      
+      await initLanguage();
+      
+      expect(getLanguage()).toBe('en');
+      expect(storageManager.setSetting).toHaveBeenCalledWith('language', 'en');
     });
 
     it('should only initialize once', async () => {
@@ -71,13 +124,15 @@ describe('i18n Service', () => {
       expect(storageManager.getSetting).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle storage errors gracefully', async () => {
+    it('should fallback to device language on storage error', async () => {
       const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
       storageManager.getSetting.mockRejectedValueOnce(new Error('Storage error'));
+      Localization.getLocales.mockReturnValue([{ languageCode: 'en' }]);
       
       await initLanguage();
       
       expect(consoleWarnSpy).toHaveBeenCalledWith('Failed to load language from storage:', expect.any(Error));
+      expect(getLanguage()).toBe('en');
       consoleWarnSpy.mockRestore();
     });
   });

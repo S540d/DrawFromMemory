@@ -6,16 +6,52 @@
 import de from '../locales/de/translations.json';
 import en from '../locales/en/translations.json';
 import storageManager from './StorageManager';
+import * as Localization from 'expo-localization';
 
 type Language = 'de' | 'en';
 type TranslationKey = string;
 
 const translations = { de, en };
-let currentLanguage: Language = 'de';
+let currentLanguage: Language = 'en';
 let isInitialized = false;
 
 /**
- * Initialize language from storage
+ * Detects the device's locale and returns a supported language
+ * Falls back to 'en' if the device locale is not supported
+ *
+ * @returns {Language} The detected language code ('de' or 'en')
+ * @example
+ * // Device set to German
+ * getDeviceLanguage() // returns 'de'
+ *
+ * // Device set to French (unsupported)
+ * getDeviceLanguage() // returns 'en' (fallback)
+ */
+export function getDeviceLanguage(): Language {
+  try {
+    // Get the device locale (e.g., "en-US", "de-DE", "fr-FR")
+    const deviceLocale = Localization.getLocales()[0];
+    const languageCode = deviceLocale?.languageCode;
+    
+    // Check if the language code is supported
+    if (languageCode === 'de' || languageCode === 'en') {
+      return languageCode as Language;
+    }
+    
+    // Default to English if language is not supported
+    return 'en';
+  } catch (error) {
+    if (__DEV__) {
+      console.warn('Failed to detect device language:', error);
+    }
+    // Default to English on error
+    return 'en';
+  }
+}
+
+/**
+ * Initialize language from storage or device locale
+ * If no language is saved, detects and uses the device's locale
  */
 export async function initLanguage(): Promise<void> {
   if (isInitialized) return;
@@ -25,11 +61,26 @@ export async function initLanguage(): Promise<void> {
     // Only update if we got a valid language value
     if (savedLanguage === 'de' || savedLanguage === 'en') {
       currentLanguage = savedLanguage;
+    } else {
+      // No saved language found, detect device language
+      currentLanguage = getDeviceLanguage();
+      // Save the detected language for future launches
+      await storageManager.setSetting('language', currentLanguage);
     }
     isInitialized = true;
   } catch (error) {
     if (__DEV__) {
       console.warn('Failed to load language from storage:', error);
+    }
+    // Fallback to device language
+    currentLanguage = getDeviceLanguage();
+    // Attempt to save detected language even on error for consistency
+    try {
+      await storageManager.setSetting('language', currentLanguage);
+    } catch (saveError) {
+      if (__DEV__) {
+        console.warn('Failed to save detected language:', saveError);
+      }
     }
     isInitialized = true; // Mark as initialized even on error to avoid repeated attempts
   }
@@ -98,4 +149,4 @@ export function useTranslation() {
   };
 }
 
-export default { t, setLanguage, getLanguage, useTranslation, initLanguage };
+export default { t, setLanguage, getLanguage, useTranslation, initLanguage, getDeviceLanguage };
