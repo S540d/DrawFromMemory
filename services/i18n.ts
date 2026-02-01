@@ -18,6 +18,14 @@ let isInitialized = false;
 /**
  * Detects the device's locale and returns a supported language
  * Falls back to 'de' if the device locale is not supported
+ * 
+ * @returns {Language} The detected language code ('de' or 'en')
+ * @example
+ * // Device set to English
+ * getDeviceLanguage() // returns 'en'
+ * 
+ * // Device set to French (unsupported)
+ * getDeviceLanguage() // returns 'de' (fallback)
  */
 export function getDeviceLanguage(): Language {
   try {
@@ -66,6 +74,14 @@ export async function initLanguage(): Promise<void> {
     }
     // Fallback to device language
     currentLanguage = getDeviceLanguage();
+    // Attempt to save detected language even on error for consistency
+    try {
+      await storageManager.setSetting('language', currentLanguage);
+    } catch (saveError) {
+      if (__DEV__) {
+        console.warn('Failed to save detected language:', saveError);
+      }
+    }
     isInitialized = true; // Mark as initialized even on error to avoid repeated attempts
   }
 }
