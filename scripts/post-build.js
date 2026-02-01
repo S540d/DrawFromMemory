@@ -55,5 +55,13 @@ jsFiles.forEach(filePath => {
   console.log(`  ✓ Updated ${fileName} for subpath routing`);
 });
 
+// For SPA mode: Create 404.html that mirrors index.html for GitHub Pages routing
+const indexPath = path.join(distPath, 'index.html');
+const notFoundPath = path.join(distPath, '404.html');
+if (fs.existsSync(indexPath) && !fs.existsSync(notFoundPath)) {
+  fs.copyFileSync(indexPath, notFoundPath);
+  console.log('  ✓ Created 404.html for SPA routing');
+}
+
 console.log('✅ Post-build processing complete!');
 console.log(`   Updated all paths with baseUrl: ${baseUrl}`);
