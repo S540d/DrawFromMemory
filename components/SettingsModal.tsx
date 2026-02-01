@@ -17,17 +17,15 @@ interface SettingsModalProps {
  * Can be used as a modal popup on home/game screens or embedded in a full settings screen
  */
 export default function SettingsModal({ visible, onClose, embedded = false }: SettingsModalProps) {
-  const { colors } = useTheme();
+  const { colors, themeSetting, setTheme } = useTheme();
   const [currentLang, setCurrentLang] = useState(getLanguage());
-  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>(useTheme().themeSetting);
+  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>(themeSetting);
   const [showAboutModal, setShowAboutModal] = useState(false);
 
   useEffect(() => {
     setCurrentLang(getLanguage());
-    setCurrentTheme(useTheme().themeSetting);
-  }, [visible]);
-
-  const { setTheme } = useTheme();
+    setCurrentTheme(themeSetting);
+  }, [visible, themeSetting]);
 
   const handleLanguageChange = async (lang: 'de' | 'en') => {
     await setLanguage(lang);
