@@ -179,12 +179,14 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [themeSetting, setThemeSetting] = useState<Theme>('system');
-  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(
-    Appearance.getColorScheme() || 'light'
-  );
+  // Always start with 'light' to ensure consistent SSR/client hydration
+  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>('light');
 
-  // Initialize theme from storage
+  // Initialize theme from storage and system
   useEffect(() => {
+    // Set initial system theme after mount (client-side only)
+    setSystemTheme(Appearance.getColorScheme() || 'light');
+
     const initTheme = async () => {
       const theme = await storageManager.getSetting('theme');
       setThemeSetting(theme);

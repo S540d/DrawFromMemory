@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, Dimensions, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, useWindowDimensions, Platform } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getRandomImageForLevel } from '../services/ImagePoolManager';
 import { getLevel, getTotalLevels } from '../services/LevelManager';
@@ -24,6 +24,8 @@ export default function GameScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const { colors } = useTheme();
+  // Use hook for responsive dimensions (SSR-safe)
+  const { width: screenWidth } = useWindowDimensions();
   const [phase, setPhase] = useState<GamePhase>('memorize');
   // Level aus URL-Parameter auslesen, falls vorhanden, und validieren
   const parsedLevel = params.level ? parseInt(params.level as string, 10) : 1;
@@ -290,7 +292,6 @@ export default function GameScreen() {
     };
 
     // Berechne responsive Bildgröße: 40% der Bildschirmbreite, min 150px, max 250px
-    const screenWidth = Dimensions.get('window').width;
     const imageSize = Math.min(Math.max(screenWidth * 0.4, 150), 250);
 
     return (
