@@ -1,0 +1,117 @@
+<svg width="1024" height="500" viewBox="0 0 1024 500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1024" height="500" fill="#60D5FA"/>
+
+  <!-- Decorative circles in background -->
+  <circle cx="100" cy="400" r="80" fill="#7DE0FF" opacity="0.5"/>
+  <circle cx="924" cy="100" r="100" fill="#7DE0FF" opacity="0.5"/>
+  <circle cx="800" cy="420" r="60" fill="#7DE0FF" opacity="0.4"/>
+  <circle cx="200" cy="80" r="50" fill="#7DE0FF" opacity="0.4"/>
+
+  <!-- Stars decoration -->
+  <polygon points="150,120 158,145 185,145 163,162 172,188 150,172 128,188 137,162 115,145 142,145" fill="#FFD700" stroke="#FFA500" stroke-width="2"/>
+  <polygon points="880,350 886,368 905,368 890,380 896,398 880,387 864,398 870,380 855,368 874,368" fill="#FFD700" stroke="#FFA500" stroke-width="2"/>
+  <polygon points="950,200 954,212 967,212 957,220 961,232 950,224 939,232 943,220 933,212 946,212" fill="#FFD700" stroke="#FFA500" stroke-width="1.5"/>
+
+  <!-- Left side: Example images to memorize -->
+  <g transform="translate(80, 140)">
+    <!-- Card 1: Sun -->
+    <rect x="0" y="0" width="120" height="120" rx="15" fill="#FFFFFF" stroke="#000000" stroke-width="3"/>
+    <circle cx="60" cy="55" r="25" fill="#FFD700" stroke="#FFA500" stroke-width="2"/>
+    <line x1="60" y1="15" x2="60" y2="5" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+    <line x1="85" y1="30" x2="95" y2="20" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+    <line x1="95" y1="55" x2="105" y2="55" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+    <line x1="85" y1="80" x2="95" y2="90" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+    <line x1="60" y1="95" x2="60" y2="105" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+    <line x1="35" y1="80" x2="25" y2="90" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+    <line x1="25" y1="55" x2="15" y2="55" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+    <line x1="35" y1="30" x2="25" y2="20" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+    <text x="60" y="115" text-anchor="middle" font-family="Comic Sans MS, cursive" font-size="11" fill="#333">Merken</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <g transform="translate(220, 185)">
+    <polygon points="0,15 30,15 30,5 50,20 30,35 30,25 0,25" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+  </g>
+
+  <!-- Card 2: Thinking/Brain -->
+  <g transform="translate(280, 140)">
+    <rect x="0" y="0" width="120" height="120" rx="15" fill="#FFFFFF" stroke="#000000" stroke-width="3"/>
+    <!-- Question marks -->
+    <text x="35" y="50" font-family="Comic Sans MS, cursive" font-size="28" font-weight="bold" fill="#60D5FA">?</text>
+    <text x="65" y="70" font-family="Comic Sans MS, cursive" font-size="36" font-weight="bold" fill="#3498DB">?</text>
+    <text x="80" y="45" font-family="Comic Sans MS, cursive" font-size="22" font-weight="bold" fill="#60D5FA">?</text>
+    <!-- Thought bubbles -->
+    <circle cx="40" cy="85" r="8" fill="#E0E0E0" stroke="#999" stroke-width="1.5"/>
+    <circle cx="55" cy="95" r="6" fill="#E0E0E0" stroke="#999" stroke-width="1.5"/>
+    <circle cx="70" cy="100" r="4" fill="#E0E0E0" stroke="#999" stroke-width="1.5"/>
+    <text x="60" y="115" text-anchor="middle" font-family="Comic Sans MS, cursive" font-size="11" fill="#333">Denken</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <g transform="translate(420, 185)">
+    <polygon points="0,15 30,15 30,5 50,20 30,35 30,25 0,25" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+  </g>
+
+  <!-- Card 3: Drawing -->
+  <g transform="translate(480, 140)">
+    <rect x="0" y="0" width="120" height="120" rx="15" fill="#FFFFFF" stroke="#000000" stroke-width="3"/>
+    <!-- Pencil -->
+    <rect x="70" y="25" width="12" height="50" rx="2" fill="#FFA500" stroke="#000000" stroke-width="2" transform="rotate(35 76 50)"/>
+    <polygon points="82,78 76,95 94,82" fill="#FFD700" stroke="#000000" stroke-width="1.5"/>
+    <!-- Drawn sun (sketchy) -->
+    <circle cx="45" cy="55" r="15" fill="none" stroke="#FFA500" stroke-width="2" stroke-dasharray="4,2"/>
+    <line x1="45" y1="35" x2="45" y2="28" stroke="#FFA500" stroke-width="2" stroke-dasharray="3,2"/>
+    <line x1="60" y1="55" x2="67" y2="55" stroke="#FFA500" stroke-width="2" stroke-dasharray="3,2"/>
+    <line x1="45" y1="75" x2="45" y2="82" stroke="#FFA500" stroke-width="2" stroke-dasharray="3,2"/>
+    <line x1="30" y1="55" x2="23" y2="55" stroke="#FFA500" stroke-width="2" stroke-dasharray="3,2"/>
+    <text x="60" y="115" text-anchor="middle" font-family="Comic Sans MS, cursive" font-size="11" fill="#333">Malen</text>
+  </g>
+
+  <!-- Right side: App title and child character placeholder -->
+  <g transform="translate(650, 80)">
+    <!-- Title background -->
+    <rect x="0" y="0" width="340" height="160" rx="20" fill="#FFFFFF" opacity="0.9" stroke="#000000" stroke-width="3"/>
+
+    <!-- App Name -->
+    <text x="170" y="70" text-anchor="middle" font-family="Comic Sans MS, cursive" font-size="48" font-weight="bold" fill="#3498DB">Merke</text>
+    <text x="170" y="130" text-anchor="middle" font-family="Comic Sans MS, cursive" font-size="48" font-weight="bold" fill="#E74C3C">und Male</text>
+  </g>
+
+  <!-- Subtitle -->
+  <text x="820" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#FFFFFF" font-weight="bold">Gedächtnistraining für Kinder</text>
+
+  <!-- Bottom icons: Drawing tools -->
+  <g transform="translate(620, 320)">
+    <!-- Brush -->
+    <circle cx="50" cy="60" r="35" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+    <rect x="40" y="35" width="20" height="40" rx="3" fill="#E74C3C" stroke="#000000" stroke-width="2"/>
+    <rect x="43" y="70" width="14" height="15" fill="#8B4513" stroke="#000000" stroke-width="1.5"/>
+
+    <!-- Palette -->
+    <circle cx="150" cy="60" r="35" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+    <ellipse cx="150" cy="60" rx="25" ry="18" fill="#D2691E" stroke="#000000" stroke-width="2"/>
+    <circle cx="140" cy="55" r="6" fill="#E74C3C"/>
+    <circle cx="155" cy="50" r="5" fill="#3498DB"/>
+    <circle cx="165" cy="58" r="5" fill="#27AE60"/>
+    <circle cx="155" cy="68" r="5" fill="#FFD700"/>
+
+    <!-- Eraser -->
+    <circle cx="250" cy="60" r="35" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+    <rect x="235" y="40" width="30" height="35" rx="3" fill="#FFC0CB" stroke="#000000" stroke-width="2"/>
+    <rect x="235" y="40" width="30" height="10" fill="#3498DB" stroke="#000000" stroke-width="1.5"/>
+  </g>
+
+  <!-- Age badge -->
+  <g transform="translate(900, 400)">
+    <circle cx="0" cy="0" r="40" fill="#27AE60" stroke="#FFFFFF" stroke-width="3"/>
+    <text x="0" y="-5" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#FFFFFF" font-weight="bold">ab</text>
+    <text x="0" y="18" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#FFFFFF" font-weight="bold">3+</text>
+  </g>
+
+  <!-- Free badge -->
+  <g transform="translate(80, 400)">
+    <rect x="-50" y="-20" width="100" height="40" rx="20" fill="#27AE60" stroke="#FFFFFF" stroke-width="3"/>
+    <text x="0" y="8" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#FFFFFF" font-weight="bold">GRATIS</text>
+  </g>
+</svg>

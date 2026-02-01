@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Feature Graphic Export - 1024x500</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    p {
+      color: #ccc;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      border: 2px solid white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Feature Graphic - 1024x500px</h1>
+  <p>Rechtsklick → "Bild speichern unter" → feature-graphic.png</p>
+  <div class="container">
+    <svg width="1024" height="500" viewBox="0 0 1024 500" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background -->
+      <rect width="1024" height="500" fill="#60D5FA"/>
+
+      <!-- Decorative circles in background -->
+      <circle cx="100" cy="400" r="80" fill="#7DE0FF" opacity="0.5"/>
+      <circle cx="924" cy="100" r="100" fill="#7DE0FF" opacity="0.5"/>
+      <circle cx="800" cy="420" r="60" fill="#7DE0FF" opacity="0.4"/>
+      <circle cx="200" cy="80" r="50" fill="#7DE0FF" opacity="0.4"/>
+
+      <!-- Stars decoration -->
+      <polygon points="150,120 158,145 185,145 163,162 172,188 150,172 128,188 137,162 115,145 142,145" fill="#FFD700" stroke="#FFA500" stroke-width="2"/>
+      <polygon points="880,350 886,368 905,368 890,380 896,398 880,387 864,398 870,380 855,368 874,368" fill="#FFD700" stroke="#FFA500" stroke-width="2"/>
+      <polygon points="950,200 954,212 967,212 957,220 961,232 950,224 939,232 943,220 933,212 946,212" fill="#FFD700" stroke="#FFA500" stroke-width="1.5"/>
+
+      <!-- Left side: Example images to memorize -->
+      <g transform="translate(60, 120)">
+        <!-- Card 1: Sun -->
+        <rect x="0" y="0" width="110" height="110" rx="12" fill="#FFFFFF" stroke="#333" stroke-width="3"/>
+        <circle cx="55" cy="50" r="22" fill="#FFD700" stroke="#FFA500" stroke-width="2"/>
+        <line x1="55" y1="15" x2="55" y2="8" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+        <line x1="77" y1="28" x2="84" y2="21" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+        <line x1="85" y1="50" x2="92" y2="50" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+        <line x1="77" y1="72" x2="84" y2="79" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+        <line x1="55" y1="85" x2="55" y2="92" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+        <line x1="33" y1="72" x2="26" y2="79" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+        <line x1="25" y1="50" x2="18" y2="50" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+        <line x1="33" y1="28" x2="26" y2="21" stroke="#FFA500" stroke-width="3" stroke-linecap="round"/>
+        <text x="55" y="105" text-anchor="middle" font-family="Comic Sans MS, Arial, sans-serif" font-size="11" fill="#333" font-weight="bold">Merken</text>
+      </g>
+
+      <!-- Arrow 1 -->
+      <g transform="translate(185, 162)">
+        <polygon points="0,13 25,13 25,5 42,18 25,31 25,23 0,23" fill="#FFFFFF" stroke="#333" stroke-width="2"/>
+      </g>
+
+      <!-- Card 2: Thinking -->
+      <g transform="translate(240, 120)">
+        <rect x="0" y="0" width="110" height="110" rx="12" fill="#FFFFFF" stroke="#333" stroke-width="3"/>
+        <text x="30" y="45" font-family="Comic Sans MS, Arial, sans-serif" font-size="26" font-weight="bold" fill="#60D5FA">?</text>
+        <text x="55" y="65" font-family="Comic Sans MS, Arial, sans-serif" font-size="34" font-weight="bold" fill="#3498DB">?</text>
+        <text x="75" y="42" font-family="Comic Sans MS, Arial, sans-serif" font-size="20" font-weight="bold" fill="#60D5FA">?</text>
+        <circle cx="38" cy="80" r="7" fill="#E0E0E0" stroke="#999" stroke-width="1.5"/>
+        <circle cx="52" cy="88" r="5" fill="#E0E0E0" stroke="#999" stroke-width="1.5"/>
+        <circle cx="64" cy="93" r="3" fill="#E0E0E0" stroke="#999" stroke-width="1.5"/>
+        <text x="55" y="105" text-anchor="middle" font-family="Comic Sans MS, Arial, sans-serif" font-size="11" fill="#333" font-weight="bold">Denken</text>
+      </g>
+
+      <!-- Arrow 2 -->
+      <g transform="translate(365, 162)">
+        <polygon points="0,13 25,13 25,5 42,18 25,31 25,23 0,23" fill="#FFFFFF" stroke="#333" stroke-width="2"/>
+      </g>
+
+      <!-- Card 3: Drawing -->
+      <g transform="translate(420, 120)">
+        <rect x="0" y="0" width="110" height="110" rx="12" fill="#FFFFFF" stroke="#333" stroke-width="3"/>
+        <!-- Pencil -->
+        <rect x="65" y="25" width="10" height="40" rx="2" fill="#FFA500" stroke="#333" stroke-width="2" transform="rotate(30 70 45)"/>
+        <polygon points="78,68 74,82 88,72" fill="#FFD700" stroke="#333" stroke-width="1.5"/>
+        <!-- Drawn sun (sketchy) -->
+        <circle cx="40" cy="50" r="14" fill="none" stroke="#FFA500" stroke-width="2" stroke-dasharray="4,2"/>
+        <line x1="40" y1="32" x2="40" y2="26" stroke="#FFA500" stroke-width="2" stroke-dasharray="3,2"/>
+        <line x1="54" y1="50" x2="60" y2="50" stroke="#FFA500" stroke-width="2" stroke-dasharray="3,2"/>
+        <line x1="40" y1="68" x2="40" y2="74" stroke="#FFA500" stroke-width="2" stroke-dasharray="3,2"/>
+        <line x1="26" y1="50" x2="20" y2="50" stroke="#FFA500" stroke-width="2" stroke-dasharray="3,2"/>
+        <text x="55" y="105" text-anchor="middle" font-family="Comic Sans MS, Arial, sans-serif" font-size="11" fill="#333" font-weight="bold">Malen</text>
+      </g>
+
+      <!-- Right side: App title -->
+      <g transform="translate(580, 60)">
+        <!-- Title background -->
+        <rect x="0" y="0" width="380" height="180" rx="20" fill="#FFFFFF" opacity="0.95" stroke="#333" stroke-width="3"/>
+
+        <!-- App Name -->
+        <text x="190" y="75" text-anchor="middle" font-family="Comic Sans MS, Arial, sans-serif" font-size="52" font-weight="bold" fill="#3498DB">Merke</text>
+        <text x="190" y="140" text-anchor="middle" font-family="Comic Sans MS, Arial, sans-serif" font-size="52" font-weight="bold" fill="#E74C3C">und Male</text>
+      </g>
+
+      <!-- Subtitle -->
+      <text x="770" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#FFFFFF" font-weight="bold">Gedächtnistraining für Kinder</text>
+
+      <!-- Bottom: Drawing tools -->
+      <g transform="translate(580, 310)">
+        <!-- Brush -->
+        <circle cx="60" cy="70" r="40" fill="#FFFFFF" stroke="#333" stroke-width="2"/>
+        <rect x="48" y="40" width="24" height="45" rx="4" fill="#E74C3C" stroke="#333" stroke-width="2"/>
+        <rect x="52" y="80" width="16" height="18" fill="#8B4513" stroke="#333" stroke-width="1.5"/>
+
+        <!-- Palette -->
+        <circle cx="170" cy="70" r="40" fill="#FFFFFF" stroke="#333" stroke-width="2"/>
+        <ellipse cx="170" cy="70" rx="28" ry="20" fill="#D2691E" stroke="#333" stroke-width="2"/>
+        <circle cx="158" cy="65" r="7" fill="#E74C3C"/>
+        <circle cx="175" cy="58" r="6" fill="#3498DB"/>
+        <circle cx="187" cy="68" r="6" fill="#27AE60"/>
+        <circle cx="175" cy="80" r="6" fill="#FFD700"/>
+
+        <!-- Eraser -->
+        <circle cx="280" cy="70" r="40" fill="#FFFFFF" stroke="#333" stroke-width="2"/>
+        <rect x="262" y="45" width="36" height="42" rx="4" fill="#FFC0CB" stroke="#333" stroke-width="2"/>
+        <rect x="262" y="45" width="36" height="12" fill="#3498DB" stroke="#333" stroke-width="1.5"/>
+      </g>
+
+      <!-- Age badge -->
+      <g transform="translate(920, 420)">
+        <circle cx="0" cy="0" r="45" fill="#27AE60" stroke="#FFFFFF" stroke-width="3"/>
+        <text x="0" y="-8" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#FFFFFF" font-weight="bold">ab</text>
+        <text x="0" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" fill="#FFFFFF" font-weight="bold">3+</text>
+      </g>
+
+      <!-- Free badge -->
+      <g transform="translate(80, 420)">
+        <rect x="-55" y="-22" width="110" height="44" rx="22" fill="#27AE60" stroke="#FFFFFF" stroke-width="3"/>
+        <text x="0" y="8" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#FFFFFF" font-weight="bold">GRATIS</text>
+      </g>
+    </svg>
+  </div>
+  <p style="margin-top: 20px;">Oder: Screenshot machen (exakt 1024x500px)</p>
+</body>
+</html>
