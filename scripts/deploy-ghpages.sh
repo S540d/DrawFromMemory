@@ -43,9 +43,9 @@ echo -e "${GREEN}✓${NC} Web build completed"
 # Step 4: Security check - verify no sensitive files
 echo -e "${BLUE}4. Running security checks...${NC}"
 
-# Check for node_modules
-if find dist -name "node_modules" -type d | grep -q .; then
-    echo -e "${RED}✗${NC} SECURITY ERROR: node_modules found in build!"
+# Check for node_modules (but allow dist/assets/node_modules which contains required assets)
+if find dist -name "node_modules" -type d ! -path "dist/assets/node_modules*" | grep -q .; then
+    echo -e "${RED}✗${NC} SECURITY ERROR: node_modules found in build (outside assets)!"
     ERRORS=$((ERRORS + 1))
 fi
 
