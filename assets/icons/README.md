@@ -1,74 +1,181 @@
-# App Icons für Play Store
+# App Icons & Play Store Assets
 
-## Benötigte Icons
+## Vorhandene Assets
 
-### 1. App Icon (app-icon.png)
-- **Größe:** 1024x1024px
-- **Format:** PNG (24-bit)
-- **Hintergrund:** Transparent oder Farbe
-- **Verwendung:** iOS App Store, generelle App-Identität
+| Asset | Datei | Größe | Status |
+|-------|-------|-------|--------|
+| App Icon | `app-icon.png` | 1024x1024px | ✅ Fertig |
+| Adaptive Icon | `adaptive-icon.png` | 1024x1024px | ✅ Fertig |
+| Feature Graphic | `feature-graphic.png` | 1024x500px | ⚠️ Erstellen |
+| Screenshots | `screenshots/` | 1080x1920px | ⚠️ Erstellen |
 
-### 2. Adaptive Icon (adaptive-icon.png)
-- **Größe:** 1024x1024px
-- **Format:** PNG (24-bit)
-- **Safe Zone:** 108x108dp Kreis in der Mitte (Icon sollte im 66dp Kreis zentriert sein)
-- **Verwendung:** Android adaptive Icons
-- **Background Color:** `#60D5FA` (bereits in app.json konfiguriert)
+## Design-Stil
 
-### 3. Play Store Feature Graphic
-- **Größe:** 1024x500px
-- **Format:** PNG oder JPEG
-- **Verwendung:** Hauptbanner im Play Store
+Alle Assets basieren auf dem bestehenden Icon-Design:
+- **Stil:** Freundlicher Cartoon-Stil für Kinder
+- **Hauptfarbe:** Hellblau (#60D5FA)
+- **Charakter:** Fröhliches Kind beim Zeichnen
+- **Elemente:** Buntstift, Papier, Stern, Blume
 
-### 4. Screenshots (mindestens 2 pro Kategorie)
-- **Phone:** Mindestens 320px auf der kürzeren Seite
-- **7-inch Tablet:** Optional
-- **10-inch Tablet:** Optional
-- **Empfohlen:** 1080x1920px (9:16) für Phones
+---
 
-## Aktueller Status
+## 1. Feature Graphic (1024x500px)
 
-- ✅ SVG-Quelle vorhanden: `app-icon.svg`
-- ⚠️ PNG Icons müssen noch generiert werden
-- ⚠️ Feature Graphic muss erstellt werden
-- ⚠️ Screenshots müssen erstellt werden
+**Datei:** `feature-graphic.png`
 
-## Generierung der Icons
+### Design-Vorgaben
+Das Feature Graphic ist das Hauptbanner im Play Store und sollte:
+- Den App-Namen "Merke und Male" enthalten
+- Das Kind aus dem Icon zeigen (vergrößert/angepasst)
+- Die Kernfunktion visualisieren (Bild merken → zeichnen)
+- Die Markenfarbe #60D5FA als Hintergrund verwenden
 
-### Option 1: Manuell mit Design-Tool
-1. `app-icon.svg` in Figma/Photoshop/GIMP öffnen
-2. Als 1024x1024px PNG exportieren
-3. Für adaptive-icon.png sicherstellen, dass das Icon im Safe-Zone-Kreis liegt
+### Prompt für KI-Bildgenerierung (z.B. ChatGPT/DALL-E)
+```
+Create a Google Play Store feature graphic (1024x500px) for a children's memory drawing app called "Remember and Draw" (German: "Merke und Male").
 
-### Option 2: Mit Expo Icon Generator (nach PNG-Erstellung)
-```bash
-npx expo prebuild --clean
+Style:
+- Friendly cartoon style matching the existing app icon
+- Light blue background (#60D5FA)
+- Playful and inviting for children ages 3-8
+
+Elements to include:
+- The same cartoon child character from the icon (brown hair, yellow shirt)
+- The child holding a crayon/pencil
+- A simple drawing sequence: picture → thinking → drawing
+- The app name "Merke und Male" in a fun, child-friendly font
+- Optional: stars, colorful elements, happy atmosphere
+
+The image should convey: "Look at a picture, remember it, draw it from memory"
+Make sure the main content is centered (safe zone for cropping).
 ```
 
-### Option 3: Online Tools
-- [Icon Kitchen](https://icon.kitchen/)
-- [App Icon Generator](https://www.appicon.co/)
-- [Adaptive Icon Generator](https://adapticon.tooo.io/)
+### Manuelles Erstellen
+1. Öffne das zweite Icon (`ChatGPT Image 6. Dez. 2025, 09_38_05.png`) in einem Bildeditor
+2. Erstelle eine neue Datei: 1024x500px
+3. Hintergrund: #60D5FA (App-Primärfarbe)
+4. Platziere das Kind links oder mittig
+5. Füge den App-Namen "Merke und Male" hinzu
+6. Optional: Füge Beispiel-Zeichnungen (Sonne, Stern, Haus) hinzu
 
-## Checkliste vor Play Store Upload
+---
 
-- [ ] app-icon.png (1024x1024px) erstellt
-- [ ] adaptive-icon.png (1024x1024px) erstellt
-- [ ] Feature Graphic (1024x500px) erstellt
-- [ ] Mindestens 2 Screenshots (Phone) erstellt
-- [ ] Icons in app.json referenziert
-- [ ] Visuelle Überprüfung auf verschiedenen Geräten
+## 2. Screenshots (1080x1920px)
 
-## Naming Convention
+**Ordner:** `screenshots/`
+
+### Benötigte Screenshots (mindestens 2-4)
+
+| Nr. | Szene | Dateiname | Beschreibung |
+|-----|-------|-----------|--------------|
+| 1 | Startbildschirm | `phone-1-home.png` | Home-Screen mit "Spiel starten" Button |
+| 2 | Level-Auswahl | `phone-2-levels.png` | Level-Grid mit Schwierigkeitsanzeige |
+| 3 | Bild anschauen | `phone-3-memorize.png` | Phase "Merken" mit Countdown |
+| 4 | Zeichnen | `phone-4-draw.png` | Zeichenoberfläche mit Tools |
+| 5 | Vergleich | `phone-5-compare.png` | Original vs. Zeichnung |
+
+### Screenshots erstellen
+
+**Option 1: Vom Gerät**
+```bash
+# Android (mit ADB)
+adb shell screencap -p /sdcard/screenshot.png
+adb pull /sdcard/screenshot.png phone-1-home.png
+
+# iOS (Simulator)
+xcrun simctl io booted screenshot phone-1-home.png
+```
+
+**Option 2: Expo Web (localhost)**
+1. Starte die App: `npm run web`
+2. Öffne Chrome DevTools (F12)
+3. Klicke auf "Toggle device toolbar" (Strg+Shift+M)
+4. Wähle Größe: 1080x1920 (oder "iPhone 12 Pro")
+5. Mache Screenshots mit Snipping Tool oder Browser-Extension
+
+**Option 3: Expo Go auf Gerät**
+1. App auf echtem Gerät starten
+2. Screenshots mit Gerät machen
+3. Bilder auf PC übertragen
+
+### Screenshot-Inhalte
+
+**Screenshot 1 - Startbildschirm:**
+- App-Name prominent
+- "Spiel starten" Button sichtbar
+- Freundliche, einladende Atmosphäre
+
+**Screenshot 2 - Level-Auswahl:**
+- Mehrere Level-Karten sichtbar
+- Schwierigkeitsanzeige (Farben/Sterne)
+- Klare Navigation
+
+**Screenshot 3 - Merkphase:**
+- Bild zum Merken (z.B. Sonne oder Haus)
+- Countdown-Anzeige
+- "Schau genau hin!" Text
+
+**Screenshot 4 - Zeichnen:**
+- Leere Zeichenfläche
+- Toolbar mit Pinsel, Radierer, Farben
+- Farbpalette sichtbar
+
+**Screenshot 5 - Ergebnis:**
+- Original-Bild und Zeichnung nebeneinander
+- Positive Bestätigung
+- "Weiter" Button
+
+---
+
+## 3. Zusätzliche Assets (optional)
+
+### Promo-Video (YouTube)
+- **Format:** 16:9 (1920x1080px)
+- **Länge:** 30 Sekunden bis 2 Minuten
+- **Inhalt:** Gameplay-Demo, Features zeigen
+
+### TV Banner (Android TV)
+- **Größe:** 1280x720px
+- Falls Android TV unterstützt wird
+
+---
+
+## Dateistruktur
 
 ```
 assets/icons/
-├── app-icon.png          # 1024x1024px
-├── adaptive-icon.png     # 1024x1024px (Foreground)
-├── app-icon.svg          # Source file
-├── feature-graphic.png   # 1024x500px (Play Store)
+├── app-icon.png              # ✅ 1024x1024px (App Icon)
+├── adaptive-icon.png         # ✅ 1024x1024px (Android Adaptive)
+├── feature-graphic.png       # ⚠️ 1024x500px (Play Store Banner)
+├── ChatGPT Image *.png       # Originale Quelldateien
+├── README.md                 # Diese Datei
 └── screenshots/
-    ├── phone-1.png
-    ├── phone-2.png
-    └── ...
+    ├── phone-1-home.png      # ⚠️ 1080x1920px
+    ├── phone-2-levels.png    # ⚠️ 1080x1920px
+    ├── phone-3-memorize.png  # ⚠️ 1080x1920px
+    ├── phone-4-draw.png      # ⚠️ 1080x1920px
+    └── phone-5-compare.png   # ⚠️ 1080x1920px
 ```
+
+---
+
+## Checkliste
+
+- [x] App Icon (1024x1024px)
+- [x] Adaptive Icon (1024x1024px)
+- [ ] Feature Graphic (1024x500px)
+- [ ] Screenshot 1: Startbildschirm
+- [ ] Screenshot 2: Level-Auswahl
+- [ ] Screenshot 3: Merkphase
+- [ ] Screenshot 4: Zeichnen
+- [ ] Screenshot 5: Ergebnis (optional)
+- [ ] Alle Dateien in korrektem Format (PNG, 24-bit)
+- [ ] Alle Größen korrekt
+
+---
+
+## Referenzen
+
+- [Google Play Store Asset Guidelines](https://support.google.com/googleplay/android-developer/answer/9866151)
+- [Material Design Icon Guidelines](https://m3.material.io/styles/icons/designing-icons)
+- [App Icon Template](https://developer.android.com/studio/write/image-asset-studio)
