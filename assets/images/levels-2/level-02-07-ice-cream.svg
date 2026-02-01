@@ -1,0 +1,18 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cone -->
+  <polygon
+    points="70,100 130,100 100,180"
+    fill="#D2691E"
+    stroke="#8B4513"
+    stroke-width="3"/>
+
+  <!-- Cone Lines -->
+  <line x1="85" y1="100" x2="100" y2="175" stroke="#8B4513" stroke-width="2"/>
+  <line x1="115" y1="100" x2="100" y2="175" stroke="#8B4513" stroke-width="2"/>
+
+  <!-- Ice Cream Scoop 1 (bottom) -->
+  <circle cx="100" cy="75" r="35" fill="#FFC0CB" stroke="#000000" stroke-width="3"/>
+
+  <!-- Ice Cream Scoop 2 (top) -->
+  <circle cx="100" cy="40" r="28" fill="#FFD700" stroke="#000000" stroke-width="3"/>
+</svg>

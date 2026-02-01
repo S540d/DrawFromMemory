@@ -1,0 +1,17 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Stem -->
+  <rect x="75" y="110" width="50" height="60" rx="5" fill="#FFFFFF" stroke="#000000" stroke-width="3"/>
+
+  <!-- Cap -->
+  <ellipse cx="100" cy="110" rx="60" ry="40" fill="#E74C3C" stroke="#000000" stroke-width="3"/>
+
+  <!-- Spots on cap -->
+  <circle cx="75" cy="95" r="10" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+  <circle cx="110" cy="85" r="12" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+  <circle cx="130" cy="105" r="8" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+  <circle cx="85" cy="115" r="7" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+
+  <!-- Grass -->
+  <path d="M 50 170 L 55 155 L 60 170" stroke="#27AE60" stroke-width="3" fill="none"/>
+  <path d="M 140 170 L 145 155 L 150 170" stroke="#27AE60" stroke-width="3" fill="none"/>
+</svg>
