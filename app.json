@@ -39,7 +39,7 @@
       },
       "package": "com.s540d.merkeundmale",
       "permissions": [],
-      "versionCode": 2,
+      "versionCode": 4,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.s540d.merkeundmale",
       "privacyPolicy": "https://s540d.github.io/DrawFromMemory/PRIVACY_POLICY.html"
     },
@@ -56,6 +56,7 @@
     "experiments": {
       "typedRoutes": true
     },
+    "newArchEnabled": false,
     "extra": {
       "router": {
         "origin": false

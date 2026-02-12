@@ -19,7 +19,6 @@
     },
     "production": {
       "autoIncrement": true,
-      "newArchEnabled": false,
       "android": {
         "buildType": "app-bundle"
       }
