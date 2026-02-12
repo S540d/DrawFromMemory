@@ -20,7 +20,13 @@
     "production": {
       "autoIncrement": true,
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "app-bundle",
+        "gradleCommand": ":app:bundleRelease"
+      },
+      "env": {
+        "EXPO_USE_UPDATES": "false",
+        "EXPO_USE_METRO_WORKSPACE_ROOT": "true",
+        "NEW_ARCH_ENABLED": "false"
       }
     }
   },
