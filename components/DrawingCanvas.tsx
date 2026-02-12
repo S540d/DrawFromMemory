@@ -309,7 +309,7 @@ export default function DrawingCanvas({
     return { x: 0, y: 0 };
   };
 
-  const handleStart = (event: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleStart = (event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     const pos = getPosition(event);
 
     if (tool === 'fill') {
@@ -334,7 +334,7 @@ export default function DrawingCanvas({
     }
   };
 
-  const handleMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMove = (event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     if (!isDrawing || tool === 'fill') return;
     const pos = getPosition(event);
     setCurrentPath([...currentPath, pos]);
@@ -378,11 +378,11 @@ export default function DrawingCanvas({
           onMouseLeave={handleEnd}
           onTouchStart={(e) => {
             e.preventDefault();
-            handleStart(e as unknown as React.MouseEvent<HTMLCanvasElement>);
+            handleStart(e);
           }}
           onTouchMove={(e) => {
             e.preventDefault();
-            handleMove(e as unknown as React.MouseEvent<HTMLCanvasElement>);
+            handleMove(e);
           }}
           onTouchEnd={handleEnd}
         />

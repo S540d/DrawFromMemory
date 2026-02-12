@@ -198,7 +198,7 @@ export default function GameScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.secondaryButton, drawing.paths.length === 0 && styles.buttonDisabled]}
-          accessibilityLabel="Löschen"
+          accessibilityLabel={t('game.draw.clear')}
           accessibilityRole="button"
           onPress={() => {
             if (Platform.OS === 'web') {
@@ -574,9 +574,8 @@ const styles = StyleSheet.create({
     fontSize: FontSize.xl, // Reduced from xxl
     fontWeight: FontWeight.bold,
     color: Colors.text.primary,
-    marginBottom: Spacing.xs, // Reduced spacing
+    marginBottom: Spacing.md, // Reduced spacing
     textAlign: 'center',
-    marginBottom: Spacing.lg,
   },
   timerContainer: {
     alignSelf: 'center',

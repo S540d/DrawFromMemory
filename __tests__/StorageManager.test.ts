@@ -4,7 +4,7 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import storageManager, { LevelProgress, AppProgress, AppSettings } from '../services/StorageManager';
+import storageManager, { AppProgress } from '../services/StorageManager';
 
 // Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => ({
@@ -222,14 +222,6 @@ describe('StorageManager', () => {
     });
 
     it('should merge partial settings with existing settings', async () => {
-      const existingSettings = {
-        theme: 'light' as const,
-        language: 'de' as const,
-        soundEnabled: true,
-        musicEnabled: false,
-        extraTimeMode: false,
-      };
-
       (AsyncStorage.getItem as jest.Mock).mockImplementation((key: string) => {
         const map: Record<string, string> = {
           '@merke_male:theme': 'light',
