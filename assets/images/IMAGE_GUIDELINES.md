@@ -225,23 +225,28 @@ Beispiele:
 - **Stroke-Width:** Minimum 2-3px für gute Sichtbarkeit
 
 ### Farben (App-Palette)
-Verwende diese Farben für Konsistenz:
+**WICHTIG:** Verwende NUR diese 12 Farben! Sie entsprechen exakt der Farbauswahl in der App (3x4 Grid).
 
-| Farbe | Hex | Verwendung |
-|-------|-----|------------|
-| Schwarz | `#000000` | Konturen |
-| Weiß | `#FFFFFF` | Highlights, Wolken |
-| Rot | `#E74C3C` | Herzen, Äpfel |
-| Orange | `#FFA500` | Sonne, Früchte |
-| Gelb | `#FFD700` | Sonne, Sterne |
-| Grün | `#27AE60` | Pflanzen, Bäume |
-| Hellgrün | `#90EE90` | Gras, Wiesen |
-| Blau | `#3498DB` | Wasser, Himmel |
-| Hellblau | `#87CEEB` | Himmel |
-| Braun | `#8B4513` | Baumstämme, Holz |
-| Hellbraun | `#D2691E` | Häuser |
-| Grau | `#808080` | Tiere, Steine |
-| Rosa | `#FFC0CB` | Details |
+| Zeile | Farbe | Hex | Verwendung |
+|-------|-------|-----|------------|
+| **1** | Schwarz | `#000000` | Konturen, Augen |
+| **1** | Weiß | `#FFFFFF` | Highlights, Wolken, Schnee |
+| **1** | Grau | `#808080` | Tiere (Elefant, Maus), Steine |
+| **2** | Rot | `#E74C3C` | Herzen, Äpfel, Dächer |
+| **2** | Orange | `#FFA500` | Sonne (Ring), Karotten, Kürbis |
+| **2** | Gelb | `#FFD700` | Sonne, Sterne, Blumen |
+| **3** | Grün | `#27AE60` | Bäume, Gras, Blätter |
+| **3** | Blau | `#3498DB` | Himmel, Wasser, Details |
+| **3** | Lila | `#9B59B6` | Blumen, Dekoration |
+| **4** | Rosa | `#FF69B4` | Blumen, Schwein, Details |
+| **4** | Braun | `#8B4513` | Baumstämme, Holz, Erde |
+| **4** | Hautfarbe | `#FDBCB4` | Gesichter, Hände (bei Menschen) |
+
+**Farben die NICHT mehr verfügbar sind:**
+- ~~Hellgrün (#90EE90)~~ → Nutze stattdessen: Grün (#27AE60)
+- ~~Hellblau (#87CEEB)~~ → Nutze stattdessen: Blau (#3498DB)
+- ~~Hellbraun (#D2691E)~~ → Nutze stattdessen: Orange (#FFA500)
+- ~~Rosa (#FFC0CB)~~ → Nutze stattdessen: Rosa (#FF69B4)
 
 ### Vermeiden
 - **Keine Farbverläufe** (schwer zu malen)

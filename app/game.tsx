@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, useWindowDimens
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getRandomImageForLevel } from '../services/ImagePoolManager';
 import { getLevel, getTotalLevels } from '../services/LevelManager';
-import { t } from '../services/i18n';
+import { t, getCurrentLanguage } from '../services/i18n';
 import { useTheme } from '../services/ThemeContext';
 import storageManager from '../services/StorageManager';
 import { DrawingColors } from '../constants/Colors';
@@ -39,10 +39,15 @@ export default function GameScreen() {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showToolPicker, setShowToolPicker] = useState(false);
+  const [showStrokeWidthPicker, setShowStrokeWidthPicker] = useState(false);
   const [userRating, setUserRating] = useState<number>(0);
 
   // Drawing Canvas Hook
   const drawing = useDrawingCanvas();
+
+  // Get current language for accessibility
+  const currentLang = getCurrentLanguage();
 
   // Speichere Fortschritt wenn Bewertung abgegeben wird
   const handleRatingSubmit = async (rating: number) => {
@@ -142,66 +147,43 @@ export default function GameScreen() {
         />
       </View>
 
-      {/* Farb-Auswahl Button */}
-      <View style={styles.colorPickerContainer}>
-        <Text style={styles.colorPickerLabel}>{t('game.draw.color')}:</Text>
+      {/* Kompakte Toolbar */}
+      <View style={styles.compactToolbar}>
+        {/* Farbe */}
         <TouchableOpacity
-          style={styles.colorPickerButton}
+          style={styles.toolbarButton}
           onPress={() => setShowColorPicker(true)}
+          accessibilityLabel={t('game.draw.selectColor')}
+          accessibilityRole="button"
         >
-          <View style={[styles.selectedColorPreview, { backgroundColor: drawing.color }]} />
-          <Text style={styles.colorPickerButtonText}>{t('game.draw.selectColor')}</Text>
+          <View style={[styles.toolbarColorPreview, { backgroundColor: drawing.color }]} />
+          <Text style={styles.toolbarButtonText}>{t('game.draw.color')}</Text>
         </TouchableOpacity>
-      </View>
 
-      {/* Tool-Auswahl: Pinsel / Füllen */}
-      <View style={styles.toolContainer}>
-        <Text style={styles.toolLabel}>{t('game.draw.tool')}:</Text>
-        <View style={styles.toolButtons}>
-          <TouchableOpacity
-            style={[styles.toolButton, drawing.tool === 'brush' && styles.toolButtonActive]}
-            onPress={() => drawing.setTool('brush')}
-          >
-            <Text style={[styles.toolButtonText, drawing.tool === 'brush' && styles.toolButtonTextActive]}>{t('game.draw.toolBrush')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.toolButton, drawing.tool === 'fill' && styles.toolButtonActive]}
-            onPress={() => drawing.setTool('fill')}
-          >
-            <Text style={[styles.toolButtonText, drawing.tool === 'fill' && styles.toolButtonTextActive]}>{t('game.draw.toolFill')}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        {/* Werkzeug */}
+        <TouchableOpacity
+          style={styles.toolbarButton}
+          onPress={() => setShowToolPicker(true)}
+          accessibilityLabel={t('game.draw.tool')}
+          accessibilityRole="button"
+        >
+          <Text style={styles.toolbarIcon}>{drawing.tool === 'brush' ? '🖌️' : '🪣'}</Text>
+          <Text style={styles.toolbarButtonText}>{t('game.draw.tool')}</Text>
+        </TouchableOpacity>
 
-      {/* Linienstärke-Auswahl (nur bei Pinsel-Werkzeug) */}
-      {drawing.tool === 'brush' && (
-        <View style={styles.strokeWidthContainer}>
-          <Text style={styles.strokeWidthLabel}>{t('game.draw.strokeWidth')}:</Text>
-          <View style={styles.strokeWidthButtons}>
-            <TouchableOpacity
-              style={[styles.strokeWidthButton, drawing.strokeWidth === 2 && styles.strokeWidthButtonActive]}
-              onPress={() => drawing.setStrokeWidth(2)}
-            >
-              <View style={[styles.strokeWidthPreview, { height: 2 }]} />
-              <Text style={[styles.strokeWidthButtonText, drawing.strokeWidth === 2 && styles.strokeWidthButtonTextActive]}>{t('game.draw.strokeWidthThin')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.strokeWidthButton, drawing.strokeWidth === 3 && styles.strokeWidthButtonActive]}
-              onPress={() => drawing.setStrokeWidth(3)}
-            >
-              <View style={[styles.strokeWidthPreview, { height: 3 }]} />
-              <Text style={[styles.strokeWidthButtonText, drawing.strokeWidth === 3 && styles.strokeWidthButtonTextActive]}>{t('game.draw.strokeWidthNormal')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.strokeWidthButton, drawing.strokeWidth === 5 && styles.strokeWidthButtonActive]}
-              onPress={() => drawing.setStrokeWidth(5)}
-            >
-              <View style={[styles.strokeWidthPreview, { height: 5 }]} />
-              <Text style={[styles.strokeWidthButtonText, drawing.strokeWidth === 5 && styles.strokeWidthButtonTextActive]}>{t('game.draw.strokeWidthThick')}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
+        {/* Strichstärke (nur bei Brush) */}
+        {drawing.tool === 'brush' && (
+          <TouchableOpacity
+            style={styles.toolbarButton}
+            onPress={() => setShowStrokeWidthPicker(true)}
+            accessibilityLabel={t('game.draw.strokeWidth')}
+            accessibilityRole="button"
+          >
+            <View style={[styles.toolbarStrokePreview, { height: drawing.strokeWidth }]} />
+            <Text style={styles.toolbarButtonText}>{t('game.draw.strokeWidth')}</Text>
+          </TouchableOpacity>
+        )}
+      </View>
 
       {/* Buttons */}
       <View style={styles.buttonRow}>
@@ -209,11 +191,15 @@ export default function GameScreen() {
           style={styles.secondaryButton}
           onPress={drawing.undo}
           disabled={drawing.paths.length === 0}
+          accessibilityLabel={t('game.draw.undo')}
+          accessibilityRole="button"
         >
           <Text style={styles.secondaryButtonText}>Rückgängig</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.secondaryButton, drawing.paths.length === 0 && styles.buttonDisabled]}
+          accessibilityLabel="Löschen"
+          accessibilityRole="button"
           onPress={() => {
             if (Platform.OS === 'web') {
               // Auf Web: Direktes Löschen ohne Alert (Alert funktioniert nicht zuverlässig)
@@ -387,7 +373,11 @@ export default function GameScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          accessibilityLabel={t('common.back')}
+          accessibilityRole="button"
+        >
           <Text style={styles.backButton}>← Zurück</Text>
         </TouchableOpacity>
         <View style={styles.headerCenter}>
@@ -396,7 +386,8 @@ export default function GameScreen() {
         <TouchableOpacity
           onPress={() => setShowSettings(true)}
           style={styles.settingsButton}
-          aria-label="Settings"
+          accessibilityLabel={t('common.settings')}
+          accessibilityRole="button"
         >
           <Text style={styles.settingsIcon}>⋮</Text>
         </TouchableOpacity>
@@ -422,35 +413,111 @@ export default function GameScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* Color Grid */}
+            {/* Color Grid - Fixed 3x4 Layout */}
             <View style={styles.colorGrid}>
-              {(() => {
-                // Farben für dieses Bild bestimmen
-                const availableColors = currentImage?.colors || DrawingColors.map(c => c.hex);
-                // DrawingColors auf verfügbare Farben filtern
-                const filteredColors = DrawingColors.filter(colorItem =>
-                  availableColors.includes(colorItem.hex)
-                );
-                return filteredColors.map((colorItem) => (
-                  <TouchableOpacity
-                    key={colorItem.hex}
-                    style={[
-                      styles.colorBoxLarge,
-                      { backgroundColor: colorItem.hex },
-                      colorItem.border && { borderColor: colorItem.border },
-                      drawing.color === colorItem.hex && styles.colorBoxLargeSelected,
-                    ]}
-                    onPress={() => {
-                      drawing.setColor(colorItem.hex);
-                      setShowColorPicker(false);
-                    }}
-                  >
-                    {drawing.color === colorItem.hex && (
-                      <Text style={styles.colorBoxCheckmark}>✓</Text>
-                    )}
-                  </TouchableOpacity>
-                ));
-              })()}
+              {DrawingColors.map((colorItem) => (
+                <TouchableOpacity
+                  key={colorItem.hex}
+                  style={[
+                    styles.colorBoxLarge,
+                    { backgroundColor: colorItem.hex },
+                    colorItem.border && { borderColor: colorItem.border },
+                    drawing.color === colorItem.hex && styles.colorBoxLargeSelected,
+                  ]}
+                  onPress={() => {
+                    drawing.setColor(colorItem.hex);
+                    setShowColorPicker(false);
+                  }}
+                  accessibilityLabel={currentLang === 'de' ? colorItem.name : colorItem.nameEn}
+                  accessibilityRole="button"
+                >
+                  {drawing.color === colorItem.hex && (
+                    <Text style={styles.colorBoxCheckmark}>✓</Text>
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Tool Picker Modal */}
+      <Modal
+        visible={showToolPicker}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowToolPicker(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.pickerModal}>
+            <Text style={styles.pickerTitle}>{t('game.draw.tool')}</Text>
+            <View style={styles.pickerOptions}>
+              <TouchableOpacity
+                style={[styles.pickerOption, drawing.tool === 'brush' && styles.pickerOptionActive]}
+                onPress={() => {
+                  drawing.setTool('brush');
+                  setShowToolPicker(false);
+                }}
+              >
+                <Text style={styles.pickerOptionIcon}>🖌️</Text>
+                <Text style={styles.pickerOptionText}>{t('game.draw.toolBrush')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.pickerOption, drawing.tool === 'fill' && styles.pickerOptionActive]}
+                onPress={() => {
+                  drawing.setTool('fill');
+                  setShowToolPicker(false);
+                }}
+              >
+                <Text style={styles.pickerOptionIcon}>🪣</Text>
+                <Text style={styles.pickerOptionText}>{t('game.draw.toolFill')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Stroke Width Picker Modal */}
+      <Modal
+        visible={showStrokeWidthPicker}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowStrokeWidthPicker(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.pickerModal}>
+            <Text style={styles.pickerTitle}>{t('game.draw.strokeWidth')}</Text>
+            <View style={styles.pickerOptions}>
+              <TouchableOpacity
+                style={[styles.pickerOption, drawing.strokeWidth === 2 && styles.pickerOptionActive]}
+                onPress={() => {
+                  drawing.setStrokeWidth(2);
+                  setShowStrokeWidthPicker(false);
+                }}
+              >
+                <View style={[styles.strokePreviewLine, { height: 2 }]} />
+                <Text style={styles.pickerOptionText}>{t('game.draw.strokeWidthThin')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.pickerOption, drawing.strokeWidth === 3 && styles.pickerOptionActive]}
+                onPress={() => {
+                  drawing.setStrokeWidth(3);
+                  setShowStrokeWidthPicker(false);
+                }}
+              >
+                <View style={[styles.strokePreviewLine, { height: 3 }]} />
+                <Text style={styles.pickerOptionText}>{t('game.draw.strokeWidthNormal')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.pickerOption, drawing.strokeWidth === 5 && styles.pickerOptionActive]}
+                onPress={() => {
+                  drawing.setStrokeWidth(5);
+                  setShowStrokeWidthPicker(false);
+                }}
+              >
+                <View style={[styles.strokePreviewLine, { height: 5 }]} />
+                <Text style={styles.pickerOptionText}>{t('game.draw.strokeWidthThick')}</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -500,13 +567,14 @@ const styles = StyleSheet.create({
   },
   phaseContainer: {
     flex: 1,
-    padding: Spacing.lg,
+    padding: Spacing.md, // Reduced from lg
     justifyContent: 'space-between',
   },
   phaseTitle: {
-    fontSize: FontSize.xxl,
+    fontSize: FontSize.xl, // Reduced from xxl
     fontWeight: FontWeight.bold,
     color: Colors.text.primary,
+    marginBottom: Spacing.xs, // Reduced spacing
     textAlign: 'center',
     marginBottom: Spacing.lg,
   },
@@ -553,6 +621,7 @@ const styles = StyleSheet.create({
   },
   canvasContainer: {
     flex: 1,
+    minHeight: 250, // Mindesthöhe für Canvas
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: Spacing.lg,
@@ -614,14 +683,15 @@ const styles = StyleSheet.create({
   colorGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: Spacing.md,
+    gap: Spacing.sm,
     justifyContent: 'center',
+    maxWidth: 280, // 3 Spalten: 3 * 70 + 2 * 12 (gaps)
   },
   colorBoxLarge: {
-    width: 64,
-    height: 64,
+    width: 70,
+    height: 70,
     borderRadius: BorderRadius.lg,
-    borderWidth: 2,
+    borderWidth: 3,
     borderColor: Colors.border,
     justifyContent: 'center',
     alignItems: 'center',
@@ -640,6 +710,92 @@ const styles = StyleSheet.create({
     textShadowColor: Colors.background,
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 3,
+  },
+  // Kompakte Toolbar Styles
+  compactToolbar: {
+    flexDirection: 'row',
+    gap: Spacing.sm,
+    marginVertical: Spacing.sm,
+  },
+  toolbarButton: {
+    flex: 1,
+    backgroundColor: Colors.surface,
+    borderRadius: BorderRadius.md,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.xs,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: Colors.border,
+    minHeight: 60,
+  },
+  toolbarColorPreview: {
+    width: 28,
+    height: 28,
+    borderRadius: BorderRadius.sm,
+    borderWidth: 2,
+    borderColor: Colors.border,
+    marginBottom: 4,
+  },
+  toolbarIcon: {
+    fontSize: 24,
+    marginBottom: 2,
+  },
+  toolbarStrokePreview: {
+    width: 30,
+    backgroundColor: Colors.text.primary,
+    borderRadius: 2,
+    marginBottom: 4,
+  },
+  toolbarButtonText: {
+    fontSize: FontSize.xs,
+    color: Colors.text.secondary,
+    textAlign: 'center',
+  },
+  // Picker Modal Styles
+  pickerModal: {
+    backgroundColor: Colors.background,
+    borderRadius: BorderRadius.xl,
+    padding: Spacing.lg,
+    width: '80%',
+    maxWidth: 300,
+  },
+  pickerTitle: {
+    fontSize: FontSize.lg,
+    fontWeight: FontWeight.semibold,
+    color: Colors.text.primary,
+    marginBottom: Spacing.md,
+    textAlign: 'center',
+  },
+  pickerOptions: {
+    gap: Spacing.sm,
+  },
+  pickerOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.md,
+    padding: Spacing.md,
+    backgroundColor: Colors.surface,
+    borderRadius: BorderRadius.md,
+    borderWidth: 2,
+    borderColor: Colors.border,
+  },
+  pickerOptionActive: {
+    borderColor: Colors.primary,
+    backgroundColor: Colors.primaryLight + '20',
+  },
+  pickerOptionIcon: {
+    fontSize: 32,
+  },
+  pickerOptionText: {
+    fontSize: FontSize.md,
+    color: Colors.text.primary,
+    flex: 1,
+  },
+  strokePreviewLine: {
+    width: 40,
+    backgroundColor: Colors.text.primary,
+    borderRadius: 2,
   },
   buttonRow: {
     flexDirection: 'row',

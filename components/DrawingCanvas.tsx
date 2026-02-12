@@ -43,6 +43,7 @@ export default function DrawingCanvas({
   const [currentPath, setCurrentPath] = useState<{ x: number; y: number }[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const tempCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // Flood-Fill Algorithmus für Web
   const floodFill = (startX: number, startY: number, fillColor: string) => {
@@ -168,7 +169,11 @@ export default function DrawingCanvas({
           };
 
           // Temporär den Canvas-Kontext wiederherstellen für Flood-Fill
-          const tempCanvas = document.createElement('canvas'); // platform-safe: web-only code block
+          // Reuse tempCanvas to avoid memory leaks
+          if (!tempCanvasRef.current) {
+            tempCanvasRef.current = document.createElement('canvas'); // platform-safe: web-only code block
+          }
+          const tempCanvas = tempCanvasRef.current;
           tempCanvas.width = width;
           tempCanvas.height = height;
           const tempCtx = tempCanvas.getContext('2d');
@@ -279,17 +284,32 @@ export default function DrawingCanvas({
     }
   }, [paths, currentPath, strokeColor, strokeWidth, width, height, onDrawingChange, tool]);
 
-  const getPosition = (event: any) => {
+  const getPosition = (event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent) => {
     if (Platform.OS === 'web' && canvasRef.current) {
       const rect = canvasRef.current.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+      let clientX: number;
+      let clientY: number;
+
+      if ('touches' in event && event.touches.length > 0) {
+        // Touch event
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+      } else if ('clientX' in event) {
+        // Mouse event
+        clientX = event.clientX;
+        clientY = event.clientY;
+      } else {
+        return { x: 0, y: 0 };
+      }
+
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
       return { x, y };
     }
     return { x: 0, y: 0 };
   };
 
-  const handleStart = (event: any) => {
+  const handleStart = (event: React.MouseEvent<HTMLCanvasElement>) => {
     const pos = getPosition(event);
 
     if (tool === 'fill') {
@@ -314,7 +334,7 @@ export default function DrawingCanvas({
     }
   };
 
-  const handleMove = (event: any) => {
+  const handleMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDrawing || tool === 'fill') return;
     const pos = getPosition(event);
     setCurrentPath([...currentPath, pos]);
@@ -358,11 +378,11 @@ export default function DrawingCanvas({
           onMouseLeave={handleEnd}
           onTouchStart={(e) => {
             e.preventDefault();
-            handleStart(e.touches[0]);
+            handleStart(e as unknown as React.MouseEvent<HTMLCanvasElement>);
           }}
           onTouchMove={(e) => {
             e.preventDefault();
-            handleMove(e.touches[0]);
+            handleMove(e as unknown as React.MouseEvent<HTMLCanvasElement>);
           }}
           onTouchEnd={handleEnd}
         />
@@ -379,7 +399,7 @@ export default function DrawingCanvas({
     setNativePaths(paths);
   }, [paths]);
 
-  const handleTouchStart = (event: any) => {
+  const handleTouchStart = (event: { nativeEvent: { locationX: number; locationY: number } }) => {
     if (!onDrawingChange) return; // Nur interaktiv wenn onDrawingChange vorhanden
     const { locationX, locationY } = event.nativeEvent;
 
@@ -403,7 +423,7 @@ export default function DrawingCanvas({
     }
   };
 
-  const handleTouchMove = (event: any) => {
+  const handleTouchMove = (event: { nativeEvent: { locationX: number; locationY: number } }) => {
     if (!onDrawingChange || currentNativePath.length === 0 || tool === 'fill') return;
     const { locationX, locationY } = event.nativeEvent;
     setCurrentNativePath([...currentNativePath, { x: locationX, y: locationY }]);
