@@ -3,7 +3,11 @@
     "name": "Merke und Male",
     "slug": "merke-und-male",
     "version": "1.1.0",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "orientation": "portrait",
     "icon": "./assets/icons/app-icon.png",
     "userInterfaceStyle": "light",
@@ -22,7 +26,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.s540d.merkeundmale",
-      "buildNumber": "1",
+      "buildNumber": "2",
       "appStoreUrl": "https://apps.apple.com/app/merke-und-male/id[TBD]",
       "config": {
         "usesNonExemptEncryption": false
@@ -35,12 +39,12 @@
       },
       "package": "com.s540d.merkeundmale",
       "permissions": [],
-      "versionCode": 1,
+      "versionCode": 2,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.s540d.merkeundmale",
       "privacyPolicy": "https://s540d.github.io/DrawFromMemory/PRIVACY_POLICY.html"
     },
     "web": {
-      "favicon": "./assets/icons/ChatGPT Image 6. Dez. 2025, 09_34_39.png",
+      "favicon": "./assets/icons/favicon.png",
       "output": "single",
       "baseUrl": "/DrawFromMemory/"
     },
@@ -57,14 +61,12 @@
         "origin": false
       },
       "eas": {
-        "projectId": "your-project-id-here"
+        "projectId": "00db964a-4f5d-4765-8b03-a9b6bb0ef963"
       }
     },
-    "updates": {
-      "url": "https://u.expo.dev/your-project-id-here"
-    },
     "runtimeVersion": {
-      "policy": "appVersion"
-    }
+      "policy": "nativeVersion"
+    },
+    "owner": "devsven"
   }
 }

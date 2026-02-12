@@ -26,9 +26,9 @@ export const Colors = {
   border: '#DDDDDD',       // Standardrahmen
   modalOverlay: 'rgba(0, 0, 0, 0.5)', // Halbtransparenter Overlay
   text: {
-    primary: '#2C3E50',    // Dunkelgrau - Haupttext
-    secondary: '#7F8C8D',  // Mittelgrau - Sekundärtext
-    light: '#95A5A6',      // Hellgrau - Platzhalter
+    primary: '#2C3E50',    // Dunkelgrau - Haupttext (WCAG AAA)
+    secondary: '#5D6D7E',  // Mittelgrau - Sekundärtext (WCAG AA compliant, darkened from #7F8C8D)
+    light: '#717171',      // Grau - Platzhalter (WCAG AA compliant, darkened from #95A5A6)
   },
 
   // Shadow-System (Soft & Modern)
@@ -88,20 +88,28 @@ export const Colors = {
 
 /**
  * Zeichen-Farben mit Namen (für UI)
+ * WICHTIG: Genau 12 Farben für 3x4 Grid Layout
+ * Diese Farben sind fest und sollten in allen Level-Bildern verwendet werden
  */
 export const DrawingColors = [
+  // Reihe 1: Basics
   { name: 'Schwarz', hex: Colors.drawing.black, nameEn: 'Black' },
   { name: 'Weiß', hex: Colors.drawing.white, nameEn: 'White', border: '#CCCCCC' },
+  { name: 'Grau', hex: Colors.drawing.gray, nameEn: 'Gray' },
+
+  // Reihe 2: Warme Farben
   { name: 'Rot', hex: Colors.drawing.red, nameEn: 'Red' },
   { name: 'Orange', hex: Colors.drawing.orange, nameEn: 'Orange' },
   { name: 'Gelb', hex: Colors.drawing.yellow, nameEn: 'Yellow' },
+
+  // Reihe 3: Kalte Farben
   { name: 'Grün', hex: Colors.drawing.green, nameEn: 'Green' },
   { name: 'Blau', hex: Colors.drawing.blue, nameEn: 'Blue' },
-  { name: 'Hellblau', hex: Colors.drawing.lightBlue, nameEn: 'Light Blue' },
   { name: 'Lila', hex: Colors.drawing.purple, nameEn: 'Purple' },
+
+  // Reihe 4: Spezialfarben
   { name: 'Rosa', hex: Colors.drawing.pink, nameEn: 'Pink' },
   { name: 'Braun', hex: Colors.drawing.brown, nameEn: 'Brown' },
-  { name: 'Grau', hex: Colors.drawing.gray, nameEn: 'Gray' },
   { name: 'Hautfarbe', hex: Colors.drawing.skin, nameEn: 'Skin' },
 ];
 

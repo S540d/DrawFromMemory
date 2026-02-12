@@ -106,6 +106,13 @@ export function getLanguage(): Language {
 }
 
 /**
+ * Alias for getLanguage() - returns current language
+ */
+export function getCurrentLanguage(): Language {
+  return currentLanguage;
+}
+
+/**
  * Übersetzt einen Key
  * Unterstützt verschachtelte Keys mit Punktnotation (z.B. "home.title")
  * Unterstützt Platzhalter (z.B. "{{number}}")

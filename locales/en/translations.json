@@ -73,6 +73,8 @@
     "no": "No",
     "cancel": "Cancel",
     "ok": "OK",
-    "close": "Close"
+    "close": "Close",
+    "back": "Back",
+    "settings": "Settings"
   }
 }

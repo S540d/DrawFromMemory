@@ -73,6 +73,8 @@
     "no": "Nein",
     "cancel": "Abbrechen",
     "ok": "OK",
-    "close": "Schließen"
+    "close": "Schließen",
+    "back": "Zurück",
+    "settings": "Einstellungen"
   }
 }
