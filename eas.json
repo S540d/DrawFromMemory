@@ -19,9 +19,9 @@
     },
     "production": {
       "autoIncrement": true,
+      "newArchEnabled": false,
       "android": {
-        "buildType": "app-bundle",
-        "newArchEnabled": false
+        "buildType": "app-bundle"
       }
     }
   },
