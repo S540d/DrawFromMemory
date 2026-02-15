@@ -184,21 +184,34 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   // Initialize theme from storage and system
   useEffect(() => {
+    let isMounted = true;
+
     // Set initial system theme after mount (client-side only)
     setSystemTheme(Appearance.getColorScheme() || 'light');
 
     const initTheme = async () => {
-      const theme = await storageManager.getSetting('theme');
-      setThemeSetting(theme);
+      try {
+        const theme = await storageManager.getSetting('theme');
+        if (isMounted) {
+          setThemeSetting(theme);
+        }
+      } catch (error) {
+        console.error('Error loading theme:', error);
+      }
     };
     initTheme();
 
     // Listen to system theme changes
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      setSystemTheme(colorScheme || 'light');
+      if (isMounted) {
+        setSystemTheme(colorScheme || 'light');
+      }
     });
 
-    return () => subscription.remove();
+    return () => {
+      isMounted = false;
+      subscription.remove();
+    };
   }, []);
 
   const currentTheme: 'light' | 'dark' =

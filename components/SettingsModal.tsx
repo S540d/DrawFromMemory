@@ -55,13 +55,17 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
           text: t('common.yes'),
           style: 'destructive',
           onPress: async () => {
-            await storageManager.resetProgress();
-            Alert.alert(
-              currentLang === 'de' ? 'Fortschritt gelöscht' : 'Progress reset',
-              currentLang === 'de'
-                ? 'Dein Spielfortschritt wurde erfolgreich zurückgesetzt.'
-                : 'Your game progress has been successfully reset.'
-            );
+            try {
+              await storageManager.resetProgress();
+              Alert.alert(
+                currentLang === 'de' ? 'Fortschritt gelöscht' : 'Progress reset',
+                currentLang === 'de'
+                  ? 'Dein Spielfortschritt wurde erfolgreich zurückgesetzt.'
+                  : 'Your game progress has been successfully reset.'
+              );
+            } catch (error) {
+              console.error('Error resetting progress:', error);
+            }
           },
         },
       ]
@@ -163,7 +167,11 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             <Text style={[styles.modalLabel, { color: colors.text.light, marginTop: Spacing.md }]}>
               GitHub
             </Text>
-            <TouchableOpacity onPress={() => Linking.openURL('https://github.com/S540d/DrawFromMemory')}>
+            <TouchableOpacity onPress={() => {
+              Linking.openURL('https://github.com/S540d/DrawFromMemory').catch(() => {
+                // Silently ignore if URL cannot be opened
+              });
+            }}>
               <Text style={[styles.modalLink, { color: colors.primary }]}>
                 S540d/DrawFromMemory ↗
               </Text>

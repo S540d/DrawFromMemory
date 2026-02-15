@@ -1,9 +1,22 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { Platform, LogBox } from 'react-native';
 import { ThemeProvider, useTheme } from '../services/ThemeContext';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { useEffect } from 'react';
 import { initLanguage } from '../services/i18n';
+
+// Global error handler for unhandled promise rejections (prevents crashes)
+if (!__DEV__) {
+  const originalHandler = ErrorUtils.getGlobalHandler();
+  ErrorUtils.setGlobalHandler((error, isFatal) => {
+    // Log but don't crash on non-fatal errors
+    console.error('Global error:', error);
+    if (isFatal) {
+      originalHandler(error, isFatal);
+    }
+  });
+}
 
 /**
  * Root Layout Content - wrapped with theme context

@@ -51,8 +51,12 @@ export default function GameScreen() {
 
   // Speichere Fortschritt wenn Bewertung abgegeben wird
   const handleRatingSubmit = async (rating: number) => {
-    setUserRating(rating);
-    await storageManager.saveLevelProgress(levelNumber, rating);
+    try {
+      setUserRating(rating);
+      await storageManager.saveLevelProgress(levelNumber, rating);
+    } catch (error) {
+      console.error('Error saving rating:', error);
+    }
   };
 
   // Funktion zum Starten des nächsten Levels
@@ -102,7 +106,8 @@ export default function GameScreen() {
       return () => clearTimeout(timer);
     } else if (phase === 'memorize' && timeRemaining === 0 && currentImage) {
       // Timer abgelaufen -> zur Draw-Phase
-      setTimeout(() => setPhase('draw'), 500);
+      const transitionTimer = setTimeout(() => setPhase('draw'), 500);
+      return () => clearTimeout(transitionTimer);
     }
   }, [phase, timeRemaining, currentImage]);
 
