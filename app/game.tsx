@@ -12,6 +12,7 @@ import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout
 import LevelImageDisplay from '../components/LevelImageDisplay';
 import DrawingCanvas, { useDrawingCanvas } from '../components/DrawingCanvas';
 import SettingsModal from '../components/SettingsModal';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 import type { GamePhase, LevelImage } from '../types';
 
 /**
@@ -61,40 +62,54 @@ export default function GameScreen() {
 
   // Funktion zum Starten des nächsten Levels
   const startNextLevel = () => {
-    const nextLevel = levelNumber + 1;
-    if (nextLevel <= getTotalLevels()) {
-      setLevelNumber(nextLevel);
-      setPhase('memorize');
-      setUserRating(0);
-      drawing.clearCanvas();
-      const image = getRandomImageForLevel(nextLevel);
-      const level = getLevel(nextLevel);
-      setCurrentImage(image);
-      setTimeRemaining(level.displayDuration);
+    try {
+      const nextLevel = levelNumber + 1;
+      if (nextLevel <= getTotalLevels()) {
+        setLevelNumber(nextLevel);
+        setPhase('memorize');
+        setUserRating(0);
+        drawing.clearCanvas();
+        const image = getRandomImageForLevel(nextLevel);
+        const level = getLevel(nextLevel);
+        setCurrentImage(image);
+        setTimeRemaining(level.displayDuration);
+      }
+    } catch (error) {
+      console.error('Error starting next level:', error);
     }
   };
 
   // Funktion zum Starten des vorherigen Levels
   const startPreviousLevel = () => {
-    const prevLevel = levelNumber - 1;
-    if (prevLevel >= 1) {
-      setLevelNumber(prevLevel);
-      setPhase('memorize');
-      setUserRating(0);
-      drawing.clearCanvas();
-      const image = getRandomImageForLevel(prevLevel);
-      const level = getLevel(prevLevel);
-      setCurrentImage(image);
-      setTimeRemaining(level.displayDuration);
+    try {
+      const prevLevel = levelNumber - 1;
+      if (prevLevel >= 1) {
+        setLevelNumber(prevLevel);
+        setPhase('memorize');
+        setUserRating(0);
+        drawing.clearCanvas();
+        const image = getRandomImageForLevel(prevLevel);
+        const level = getLevel(prevLevel);
+        setCurrentImage(image);
+        setTimeRemaining(level.displayDuration);
+      }
+    } catch (error) {
+      console.error('Error starting previous level:', error);
     }
   };
 
   // Initialisiere Level und Bild beim Start
   useEffect(() => {
-    const level = getLevel(levelNumber);
-    const image = getRandomImageForLevel(levelNumber);
-    setCurrentImage(image);
-    setTimeRemaining(level.displayDuration);
+    try {
+      const level = getLevel(levelNumber);
+      const image = getRandomImageForLevel(levelNumber);
+      setCurrentImage(image);
+      setTimeRemaining(level.displayDuration);
+    } catch (error) {
+      console.error('Error initializing level:', error);
+      // Fallback: Zurück zum Menü bei kritischem Fehler
+      router.back();
+    }
   }, [levelNumber]);
 
   // Timer für Memorize-Phase
@@ -143,13 +158,15 @@ export default function GameScreen() {
 
       {/* Zeichenfläche mit react-native-skia */}
       <View style={styles.canvasContainer}>
-        <DrawingCanvas
-          strokeColor={drawing.color}
-          strokeWidth={drawing.strokeWidth}
-          tool={drawing.tool}
-          paths={drawing.paths}
-          onDrawingChange={drawing.setPaths}
-        />
+        <ErrorBoundary>
+          <DrawingCanvas
+            strokeColor={drawing.color}
+            strokeWidth={drawing.strokeWidth}
+            tool={drawing.tool}
+            paths={drawing.paths}
+            onDrawingChange={drawing.setPaths}
+          />
+        </ErrorBoundary>
       </View>
 
       {/* Kompakte Toolbar */}
@@ -350,14 +367,18 @@ export default function GameScreen() {
           <TouchableOpacity
             style={styles.primaryButton}
             onPress={() => {
-              // Reset für aktuelles Level
-              setPhase('memorize');
-              setUserRating(0);
-              drawing.clearCanvas();
-              const image = getRandomImageForLevel(levelNumber);
-              const level = getLevel(levelNumber);
-              setCurrentImage(image);
-              setTimeRemaining(level.displayDuration);
+              try {
+                // Reset für aktuelles Level
+                setPhase('memorize');
+                setUserRating(0);
+                drawing.clearCanvas();
+                const image = getRandomImageForLevel(levelNumber);
+                const level = getLevel(levelNumber);
+                setCurrentImage(image);
+                setTimeRemaining(level.displayDuration);
+              } catch (error) {
+                console.error('Error restarting level:', error);
+              }
             }}
           >
             <Text style={styles.primaryButtonText}>Nochmal versuchen</Text>

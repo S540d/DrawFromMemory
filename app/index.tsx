@@ -55,7 +55,7 @@ export default function HomeScreen() {
 
       {/* Footer */}
       <View style={styles.footer}>
-        <Text style={[styles.footerText, { color: colors.text.light }]}>Version 1.1.0</Text>
+        <Text style={[styles.footerText, { color: colors.text.light }]}>Version 1.1.1</Text>
       </View>
 
       {/* Settings Modal */}

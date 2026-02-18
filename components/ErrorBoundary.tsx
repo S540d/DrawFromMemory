@@ -32,9 +32,9 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    // Log error details in development
+    // Log error details
+    console.error('ErrorBoundary caught an error:', error);
     if (__DEV__) {
-      console.error('ErrorBoundary caught an error:', error);
       console.error('Error Info:', errorInfo);
     }
   }

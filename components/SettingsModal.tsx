@@ -157,7 +157,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             <Text style={[styles.modalLabel, { color: colors.text.light }]}>
               {currentLang === 'de' ? 'Version' : 'Version'}
             </Text>
-            <Text style={[styles.modalValue, { color: colors.text.primary }]}>1.1.0</Text>
+            <Text style={[styles.modalValue, { color: colors.text.primary }]}>1.1.1</Text>
 
             <Text style={[styles.modalLabel, { color: colors.text.light, marginTop: Spacing.md }]}>
               {currentLang === 'de' ? 'Lizenz' : 'License'}

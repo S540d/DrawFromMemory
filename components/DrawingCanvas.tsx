@@ -5,6 +5,9 @@ import { Canvas, Path, Skia, Circle } from '@shopify/react-native-skia';
 // Default width for SSR (will be overridden by actual window dimensions on client)
 const DEFAULT_CANVAS_WIDTH = 300;
 
+// Maximum pixels for flood-fill to prevent stack overflow / infinite loops
+const MAX_FLOOD_FILL_PIXELS = 500000;
+
 interface Props {
   width?: number;
   height?: number;
@@ -45,6 +48,15 @@ export default function DrawingCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const tempCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  // Native-specific state (must be declared unconditionally for React Rules of Hooks)
+  const [nativePaths, setNativePaths] = useState(paths);
+  const [currentNativePath, setCurrentNativePath] = useState<{ x: number; y: number }[]>([]);
+
+  // Update native paths when paths change
+  useEffect(() => {
+    setNativePaths(paths);
+  }, [paths]);
+
   // Flood-Fill Algorithmus für Web
   const floodFill = (startX: number, startY: number, fillColor: string) => {
     if (Platform.OS !== 'web' || !canvasRef.current) return;
@@ -68,7 +80,13 @@ export default function DrawingCanvas({
     };
 
     const targetColor = hexToRgb(fillColor);
-    const startPos = (Math.floor(startY) * width + Math.floor(startX)) * 4;
+    const floorStartX = Math.floor(startX);
+    const floorStartY = Math.floor(startY);
+
+    // Bounds check for start position
+    if (floorStartX < 0 || floorStartX >= width || floorStartY < 0 || floorStartY >= height) return;
+
+    const startPos = (floorStartY * width + floorStartX) * 4;
     const startR = pixels[startPos];
     const startG = pixels[startPos + 1];
     const startB = pixels[startPos + 2];
@@ -80,11 +98,11 @@ export default function DrawingCanvas({
       return;
     }
 
-    // Stack-basierter Flood-Fill (effizienter als Rekursion)
-    const stack: { x: number; y: number }[] = [{ x: Math.floor(startX), y: Math.floor(startY) }];
+    // Stack-basierter Flood-Fill mit Pixel-Limit gegen Endlos-Schleifen
+    const stack: { x: number; y: number }[] = [{ x: floorStartX, y: floorStartY }];
     const visited = new Set<number>();
 
-    while (stack.length > 0) {
+    while (stack.length > 0 && visited.size < MAX_FLOOD_FILL_PIXELS) {
       const { x, y } = stack.pop()!;
 
       if (x < 0 || x >= width || y < 0 || y >= height) continue;
@@ -149,14 +167,18 @@ export default function DrawingCanvas({
         const drawingWidth = maxX - minX;
         const drawingHeight = maxY - minY;
         const padding = 10;
-        const scaleX = (width - 2 * padding) / drawingWidth;
-        const scaleY = (height - 2 * padding) / drawingHeight;
-        scale = Math.min(scaleX, scaleY, 1);
 
-        const scaledWidth = drawingWidth * scale;
-        const scaledHeight = drawingHeight * scale;
-        offsetX = (width - scaledWidth) / 2 - minX * scale;
-        offsetY = (height - scaledHeight) / 2 - minY * scale;
+        // Guard against division by zero when all points are at the same position
+        if (drawingWidth > 0 && drawingHeight > 0) {
+          const scaleX = (width - 2 * padding) / drawingWidth;
+          const scaleY = (height - 2 * padding) / drawingHeight;
+          scale = Math.min(scaleX, scaleY, 1);
+
+          const scaledWidth = drawingWidth * scale;
+          const scaledHeight = drawingHeight * scale;
+          offsetX = (width - scaledWidth) / 2 - minX * scale;
+          offsetY = (height - scaledHeight) / 2 - minY * scale;
+        }
       }
 
       // Zeichne alle fertigen Pfade
@@ -202,12 +224,13 @@ export default function DrawingCanvas({
             const startB = pixels[startPos + 2];
             const startA = pixels[startPos + 3];
 
-            if (!(startR === targetColor.r && startG === targetColor.g &&
+            if (startX >= 0 && startX < width && startY >= 0 && startY < height &&
+                !(startR === targetColor.r && startG === targetColor.g &&
                   startB === targetColor.b && startA === targetColor.a)) {
               const stack: { x: number; y: number }[] = [{ x: startX, y: startY }];
               const visited = new Set<number>();
 
-              while (stack.length > 0) {
+              while (stack.length > 0 && visited.size < MAX_FLOOD_FILL_PIXELS) {
                 const { x, y } = stack.pop()!;
                 if (x < 0 || x >= width || y < 0 || y >= height) continue;
 
@@ -391,14 +414,6 @@ export default function DrawingCanvas({
   }
 
   // Native version mit react-native-skia
-  const [nativePaths, setNativePaths] = useState(paths);
-  const [currentNativePath, setCurrentNativePath] = useState<{ x: number; y: number }[]>([]);
-
-  // Update native paths wenn sich paths ändern
-  useEffect(() => {
-    setNativePaths(paths);
-  }, [paths]);
-
   const handleTouchStart = (event: { nativeEvent: { locationX: number; locationY: number } }) => {
     if (!onDrawingChange) return; // Nur interaktiv wenn onDrawingChange vorhanden
     const { locationX, locationY } = event.nativeEvent;
@@ -464,6 +479,11 @@ export default function DrawingCanvas({
     // Berechne die Dimensionen der Zeichnung
     const drawingWidth = maxX - minX;
     const drawingHeight = maxY - minY;
+
+    // Guard against division by zero when all points are at the same position
+    if (drawingWidth <= 0 || drawingHeight <= 0) {
+      return { scaledPaths: nativePaths, scale: 1, offsetX: 0, offsetY: 0 };
+    }
 
     // Berechne Skalierungsfaktor (mit etwas Padding)
     const padding = 10;

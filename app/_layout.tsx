@@ -6,16 +6,20 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
 import { useEffect } from 'react';
 import { initLanguage } from '../services/i18n';
 
-// Global error handler for unhandled promise rejections (prevents crashes)
+// Global error handler for unhandled errors (prevents crashes in production)
 if (!__DEV__) {
-  const originalHandler = ErrorUtils.getGlobalHandler();
-  ErrorUtils.setGlobalHandler((error, isFatal) => {
-    // Log but don't crash on non-fatal errors
-    console.error('Global error:', error);
-    if (isFatal) {
-      originalHandler(error, isFatal);
-    }
-  });
+  try {
+    const originalHandler = ErrorUtils.getGlobalHandler();
+    ErrorUtils.setGlobalHandler((error, isFatal) => {
+      // Log but don't crash on non-fatal errors
+      console.error('Global error:', error);
+      if (isFatal) {
+        originalHandler(error, isFatal);
+      }
+    });
+  } catch (e) {
+    // ErrorUtils may not be available in all environments
+  }
 }
 
 /**
@@ -26,7 +30,9 @@ function RootLayoutContent() {
 
   // Initialize language from storage
   useEffect(() => {
-    initLanguage();
+    initLanguage().catch((error) => {
+      console.error('Failed to initialize language:', error);
+    });
   }, []);
 
   return (
