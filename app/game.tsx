@@ -344,6 +344,14 @@ export default function GameScreen() {
           </View>
         </View>
 
+        {/* Completion banner for Level 10 */}
+        {levelNumber >= getTotalLevels() && userRating > 0 && (
+          <View style={styles.completionBanner}>
+            <Text style={styles.completionTitle}>{t('game.result.allLevelsComplete')}</Text>
+            <Text style={styles.completionMessage}>{t('game.result.allLevelsCompleteMessage')}</Text>
+          </View>
+        )}
+
         {/* Level Navigation */}
         <View style={styles.levelNavigation}>
           <TouchableOpacity
@@ -353,13 +361,34 @@ export default function GameScreen() {
           >
             <Text style={[styles.navButtonText, levelNumber <= 1 && styles.navButtonTextDisabled]}>← Zurück</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.navButton, levelNumber >= getTotalLevels() && styles.navButtonDisabled]}
-            onPress={startNextLevel}
-            disabled={levelNumber >= getTotalLevels()}
-          >
-            <Text style={[styles.navButtonText, levelNumber >= getTotalLevels() && styles.navButtonTextDisabled]}>Weiter →</Text>
-          </TouchableOpacity>
+          {levelNumber < getTotalLevels() ? (
+            <TouchableOpacity
+              style={styles.navButton}
+              onPress={startNextLevel}
+            >
+              <Text style={styles.navButtonText}>Weiter →</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.navButton}
+              onPress={() => {
+                try {
+                  setLevelNumber(1);
+                  setPhase('memorize');
+                  setUserRating(0);
+                  drawing.clearCanvas();
+                  const image = getRandomImageForLevel(1);
+                  const level = getLevel(1);
+                  setCurrentImage(image);
+                  setTimeRemaining(level.displayDuration);
+                } catch (error) {
+                  console.error('Error restarting from level 1:', error);
+                }
+              }}
+            >
+              <Text style={styles.navButtonText}>{t('game.result.playAgain')}</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* Buttons */}
@@ -987,6 +1016,27 @@ const styles = StyleSheet.create({
   },
   navButtonTextDisabled: {
     color: Colors.text.light,
+  },
+  completionBanner: {
+    backgroundColor: Colors.success + '15',
+    borderWidth: 2,
+    borderColor: Colors.success,
+    borderRadius: BorderRadius.xl,
+    padding: Spacing.lg,
+    alignItems: 'center',
+    marginBottom: Spacing.lg,
+  },
+  completionTitle: {
+    fontSize: FontSize.xl,
+    fontWeight: FontWeight.bold,
+    color: Colors.success,
+    marginBottom: Spacing.sm,
+    textAlign: 'center',
+  },
+  completionMessage: {
+    fontSize: FontSize.md,
+    color: Colors.text.secondary,
+    textAlign: 'center',
   },
   toolContainer: {
     marginBottom: Spacing.md,
