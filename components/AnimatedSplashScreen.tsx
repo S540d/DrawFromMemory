@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Dimensions } from 'react-native';
 import Colors from '../constants/Colors';
 import { FontWeight } from '../constants/Layout';
+import { t } from '../services/i18n';
 
 interface Props {
   onFinish: () => void;
@@ -79,7 +80,7 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
     ]).start(() => {
       onFinish();
     });
-  }, []);
+  }, [onFinish]);
 
   const spin = iconRotation.interpolate({
     inputRange: [0, 1],
@@ -115,7 +116,7 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
           },
         ]}
       >
-        Merke und Male
+        {t('home.title')}
       </Animated.Text>
 
       {/* Untertitel */}
@@ -128,7 +129,7 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
           },
         ]}
       >
-        Trainiere dein Gedächtnis!
+        {t('home.subtitle')}
       </Animated.Text>
     </Animated.View>
   );

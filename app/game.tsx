@@ -359,14 +359,14 @@ export default function GameScreen() {
             onPress={startPreviousLevel}
             disabled={levelNumber <= 1}
           >
-            <Text style={[styles.navButtonText, levelNumber <= 1 && styles.navButtonTextDisabled]}>← Zurück</Text>
+            <Text style={[styles.navButtonText, levelNumber <= 1 && styles.navButtonTextDisabled]}>← {t('common.back')}</Text>
           </TouchableOpacity>
           {levelNumber < getTotalLevels() ? (
             <TouchableOpacity
               style={styles.navButton}
               onPress={startNextLevel}
             >
-              <Text style={styles.navButtonText}>Weiter →</Text>
+              <Text style={styles.navButtonText}>{t('game.result.nextLevel')} →</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
