@@ -1,4 +1,5 @@
 import { Stack } from 'expo-router';
+import Head from 'expo-router/head';
 import { StatusBar } from 'expo-status-bar';
 import { Platform, LogBox } from 'react-native';
 import { ThemeProvider, useTheme } from '../services/ThemeContext';
@@ -37,6 +38,12 @@ function RootLayoutContent() {
 
   return (
     <>
+      <Head>
+        <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-title" content="Merke und Male" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+      </Head>
       <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
       <Stack
         screenOptions={{
