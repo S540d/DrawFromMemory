@@ -8,6 +8,7 @@
     "startButton": "Spiel starten",
     "continueButton": "Weiterspielen",
     "levelsButton": "Level auswählen",
+    "galleryButton": "Meine Galerie",
     "settingsButton": "Einstellungen"
   },
   "levels": {
@@ -70,6 +71,15 @@
     "3": "Mittel",
     "4": "Schwierig",
     "5": "Sehr schwierig"
+  },
+  "gallery": {
+    "title": "Meine Galerie",
+    "empty": "Noch keine Zeichnungen gespeichert. Male ein Bild und tippe auf \"Speichern\"!",
+    "save": "In Galerie speichern",
+    "saved": "Gespeichert!",
+    "delete": "Löschen",
+    "deleteTitle": "Zeichnung löschen",
+    "deleteConfirm": "Möchtest du diese Zeichnung wirklich löschen?"
   },
   "common": {
     "yes": "Ja",

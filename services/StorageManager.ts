@@ -14,6 +14,7 @@ const KEYS = {
   SOUND_ENABLED: '@merke_male:sound_enabled',
   MUSIC_ENABLED: '@merke_male:music_enabled',
   EXTRA_TIME_MODE: '@merke_male:extra_time_mode',
+  GALLERY: '@merke_male:gallery',
 };
 
 // In-memory fallback for Web when localStorage is unavailable
@@ -96,6 +97,16 @@ export interface AppSettings {
   soundEnabled: boolean;
   musicEnabled: boolean;
   extraTimeMode: boolean; // Add 5 seconds to all timers
+}
+
+export interface GalleryEntry {
+  id: string;
+  levelNumber: number;
+  imageFilename: string;
+  imageName: string;
+  paths: { points: { x: number; y: number }[]; color: string; strokeWidth: number; type?: 'stroke' | 'fill' }[];
+  rating: number;
+  savedAt: string; // ISO timestamp
 }
 
 class StorageManager {
@@ -282,6 +293,63 @@ class StorageManager {
   ): Promise<AppSettings[K]> {
     const settings = await this.getSettings();
     return settings[key];
+  }
+
+  // ========== Gallery Management ==========
+
+  /**
+   * Speichert eine Zeichnung in der Galerie
+   */
+  async saveToGallery(entry: Omit<GalleryEntry, 'id' | 'savedAt'>): Promise<void> {
+    try {
+      const gallery = await this.getGallery();
+      const newEntry: GalleryEntry = {
+        ...entry,
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        savedAt: new Date().toISOString(),
+      };
+      gallery.unshift(newEntry); // Newest first
+      // Limit gallery to 50 entries to keep storage manageable
+      if (gallery.length > 50) {
+        gallery.length = 50;
+      }
+      await safeStorageOps.setItem(KEYS.GALLERY, JSON.stringify(gallery));
+    } catch (error) {
+      console.error('Error saving to gallery:', error);
+    }
+  }
+
+  /**
+   * Lädt alle Galerie-Einträge
+   */
+  async getGallery(): Promise<GalleryEntry[]> {
+    try {
+      const data = await safeStorageOps.getItem(KEYS.GALLERY);
+      if (data) {
+        try {
+          return JSON.parse(data);
+        } catch (parseError) {
+          console.error('Failed to parse gallery data, resetting:', parseError);
+          await safeStorageOps.removeItem(KEYS.GALLERY);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading gallery:', error);
+    }
+    return [];
+  }
+
+  /**
+   * Löscht einen Galerie-Eintrag
+   */
+  async deleteFromGallery(id: string): Promise<void> {
+    try {
+      const gallery = await this.getGallery();
+      const filtered = gallery.filter(e => e.id !== id);
+      await safeStorageOps.setItem(KEYS.GALLERY, JSON.stringify(filtered));
+    } catch (error) {
+      console.error('Error deleting gallery entry:', error);
+    }
   }
 
   // ========== General Cleanup ==========
