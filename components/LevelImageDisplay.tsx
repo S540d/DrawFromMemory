@@ -6,19 +6,24 @@ import type { LevelImage } from '../types';
 interface Props {
   image: LevelImage;
   size?: number;
+  revealStep?: number; // If set, only show SVG children 0..revealStep (for progressive reveal)
 }
 
 /**
- * Zeigt ein Level-Bild an (SVG inline)
- * Rendert die SVG-Bilder als React Native SVG Komponenten
+ * Returns the total number of SVG child elements for a given image.
+ * Used by the memorize phase to know how many reveal steps exist.
  */
-export default function LevelImageDisplay({ image, size = 300 }: Props) {
-  const svgSize = size;
-  const viewBox = "0 0 200 200";
+export function getImageElementCount(image: LevelImage): number {
+  const svgElement = renderSvgForImage(image, 200, "0 0 200 200");
+  if (!svgElement) return 1;
+  return React.Children.count(svgElement.props.children);
+}
 
-  // Render basierend auf Dateinamen
-  const renderSvg = () => {
-    switch (image.filename) {
+/**
+ * Standalone SVG render function (extracted so it can be used by getImageElementCount)
+ */
+function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string): React.ReactElement | null {
+  switch (image.filename) {
       case 'level-01-sun.svg':
         return (
           <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
@@ -548,11 +553,38 @@ export default function LevelImageDisplay({ image, size = 300 }: Props) {
           </Svg>
         );
     }
-  };
+}
+
+/**
+ * Zeigt ein Level-Bild an (SVG inline)
+ * Rendert die SVG-Bilder als React Native SVG Komponenten
+ * Optional: revealStep für schrittweises Aufdecken
+ */
+export default function LevelImageDisplay({ image, size = 300, revealStep }: Props) {
+  const svgSize = size;
+  const viewBox = "0 0 200 200";
+
+  const svgElement = renderSvgForImage(image, svgSize, viewBox);
+
+  if (!svgElement) {
+    return <View style={[styles.container, { width: svgSize, height: svgSize }]} />;
+  }
+
+  // Progressive reveal: only show children up to revealStep
+  if (revealStep !== undefined) {
+    const children = React.Children.toArray(svgElement.props.children);
+    const visibleChildren = children.slice(0, revealStep + 1);
+    const cloned = React.cloneElement(svgElement, {}, ...visibleChildren);
+    return (
+      <View style={[styles.container, { width: svgSize, height: svgSize }]}>
+        {cloned}
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { width: svgSize, height: svgSize }]}>
-      {renderSvg()}
+      {svgElement}
     </View>
   );
 }

@@ -9,7 +9,7 @@ import storageManager from '../services/StorageManager';
 import { DrawingColors } from '../constants/Colors';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
-import LevelImageDisplay from '../components/LevelImageDisplay';
+import LevelImageDisplay, { getImageElementCount } from '../components/LevelImageDisplay';
 import DrawingCanvas, { useDrawingCanvas } from '../components/DrawingCanvas';
 import SettingsModal from '../components/SettingsModal';
 import { ErrorBoundary } from '../components/ErrorBoundary';
@@ -43,6 +43,8 @@ export default function GameScreen() {
   const [showToolPicker, setShowToolPicker] = useState(false);
   const [showStrokeWidthPicker, setShowStrokeWidthPicker] = useState(false);
   const [userRating, setUserRating] = useState<number>(0);
+  const [revealStep, setRevealStep] = useState<number>(0);
+  const [savedToGallery, setSavedToGallery] = useState(false);
 
   // Drawing Canvas Hook
   const drawing = useDrawingCanvas();
@@ -60,6 +62,23 @@ export default function GameScreen() {
     }
   };
 
+  // Zeichnung in Galerie speichern
+  const saveToGallery = async () => {
+    if (!currentImage || drawing.paths.length === 0) return;
+    try {
+      await storageManager.saveToGallery({
+        levelNumber,
+        imageFilename: currentImage.filename,
+        imageName: currentImage.displayName,
+        paths: drawing.paths,
+        rating: userRating,
+      });
+      setSavedToGallery(true);
+    } catch (error) {
+      console.error('Error saving to gallery:', error);
+    }
+  };
+
   // Funktion zum Starten des nächsten Levels
   const startNextLevel = () => {
     try {
@@ -68,6 +87,7 @@ export default function GameScreen() {
         setLevelNumber(nextLevel);
         setPhase('memorize');
         setUserRating(0);
+        setSavedToGallery(false);
         drawing.clearCanvas();
         const image = getRandomImageForLevel(nextLevel);
         const level = getLevel(nextLevel);
@@ -87,6 +107,7 @@ export default function GameScreen() {
         setLevelNumber(prevLevel);
         setPhase('memorize');
         setUserRating(0);
+        setSavedToGallery(false);
         drawing.clearCanvas();
         const image = getRandomImageForLevel(prevLevel);
         const level = getLevel(prevLevel);
@@ -126,6 +147,32 @@ export default function GameScreen() {
     }
   }, [phase, timeRemaining, currentImage]);
 
+  // Progressive reveal: reveal SVG elements one by one during memorize phase
+  useEffect(() => {
+    if (phase !== 'memorize' || !currentImage) return;
+
+    const totalElements = getImageElementCount(currentImage);
+    const level = getLevel(levelNumber);
+    // Use 80% of display time for reveal, last 20% shows complete image
+    const revealDurationMs = level.displayDuration * 800;
+    const stepInterval = revealDurationMs / totalElements;
+
+    setRevealStep(0);
+    let step = 0;
+
+    const interval = setInterval(() => {
+      step++;
+      if (step >= totalElements) {
+        clearInterval(interval);
+        setRevealStep(totalElements); // Show all
+      } else {
+        setRevealStep(step);
+      }
+    }, stepInterval);
+
+    return () => clearInterval(interval);
+  }, [phase, currentImage, levelNumber]);
+
   // Render Memorize Phase
   const renderMemorizePhase = () => (
     <View style={styles.phaseContainer}>
@@ -140,7 +187,7 @@ export default function GameScreen() {
       <View style={styles.imageContainer}>
         {currentImage && (
           <View style={styles.imagePlaceholder}>
-            <LevelImageDisplay image={currentImage} size={280} />
+            <LevelImageDisplay image={currentImage} size={280} revealStep={revealStep} />
             <Text style={styles.imageName}>{currentImage.displayName}</Text>
             <Text style={styles.imageInfo}>
               Level {levelNumber} • {currentImage.strokeCount} Striche
@@ -352,6 +399,19 @@ export default function GameScreen() {
           </View>
         )}
 
+        {/* Save to Gallery */}
+        {drawing.paths.length > 0 && (
+          <TouchableOpacity
+            style={[styles.galleryButton, savedToGallery && styles.galleryButtonSaved]}
+            onPress={saveToGallery}
+            disabled={savedToGallery}
+          >
+            <Text style={[styles.galleryButtonText, savedToGallery && styles.galleryButtonTextSaved]}>
+              {savedToGallery ? t('gallery.saved') : t('gallery.save')}
+            </Text>
+          </TouchableOpacity>
+        )}
+
         {/* Level Navigation */}
         <View style={styles.levelNavigation}>
           <TouchableOpacity
@@ -400,6 +460,7 @@ export default function GameScreen() {
                 // Reset für aktuelles Level
                 setPhase('memorize');
                 setUserRating(0);
+                setSavedToGallery(false);
                 drawing.clearCanvas();
                 const image = getRandomImageForLevel(levelNumber);
                 const level = getLevel(levelNumber);
@@ -1037,6 +1098,28 @@ const styles = StyleSheet.create({
     fontSize: FontSize.md,
     color: Colors.text.secondary,
     textAlign: 'center',
+  },
+  galleryButton: {
+    alignSelf: 'center',
+    backgroundColor: Colors.surface,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.lg,
+    borderWidth: 2,
+    borderColor: Colors.secondary,
+    marginBottom: Spacing.md,
+  },
+  galleryButtonSaved: {
+    borderColor: Colors.success,
+    backgroundColor: Colors.success + '15',
+  },
+  galleryButtonText: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
+    color: Colors.secondary,
+  },
+  galleryButtonTextSaved: {
+    color: Colors.success,
   },
   toolContainer: {
     marginBottom: Spacing.md,
