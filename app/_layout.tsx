@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider, useTheme } from '../services/ThemeContext';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import AnimatedSplashScreen from '../components/AnimatedSplashScreen';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { initLanguage } from '../services/i18n';
 
 // Global error handler for unhandled errors (prevents crashes in production)
@@ -29,6 +29,7 @@ if (!__DEV__) {
 function RootLayoutContent() {
   const { theme, colors } = useTheme();
   const [showSplash, setShowSplash] = useState(true);
+  const handleSplashFinish = useCallback(() => setShowSplash(false), []);
 
   // Initialize language from storage
   useEffect(() => {
@@ -59,7 +60,7 @@ function RootLayoutContent() {
         <Stack.Screen name="settings" />
       </Stack>
       {showSplash && (
-        <AnimatedSplashScreen onFinish={() => setShowSplash(false)} />
+        <AnimatedSplashScreen onFinish={handleSplashFinish} />
       )}
     </>
   );
