@@ -1,7 +1,6 @@
 import { Stack } from 'expo-router';
 import Head from 'expo-router/head';
 import { StatusBar } from 'expo-status-bar';
-import { Platform, LogBox } from 'react-native';
 import { ThemeProvider, useTheme } from '../services/ThemeContext';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import AnimatedSplashScreen from '../components/AnimatedSplashScreen';
