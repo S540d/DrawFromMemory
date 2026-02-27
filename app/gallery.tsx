@@ -31,7 +31,7 @@ export default function GalleryScreen() {
     };
 
     if (Platform.OS === 'web') {
-      if (window.confirm(t('gallery.deleteConfirm'))) {
+      if (window.confirm(t('gallery.deleteConfirm'))) { // platform-safe
         doDelete();
       }
     } else {
