@@ -52,7 +52,9 @@
       "backToMenu": "Zum Menü",
       "allLevelsComplete": "Alle Level geschafft!",
       "allLevelsCompleteMessage": "Du hast alle 10 Level gemeistert. Du bist ein echtes Gedächtnis-Ass!",
-      "playAgain": "Nochmal von vorne"
+      "playAgain": "Nochmal von vorne",
+      "replay": "▶ Abspielen",
+      "replayStop": "⏹ Stopp"
     }
   },
   "settings": {
