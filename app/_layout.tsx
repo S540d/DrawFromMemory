@@ -4,7 +4,8 @@ import { StatusBar } from 'expo-status-bar';
 import { Platform, LogBox } from 'react-native';
 import { ThemeProvider, useTheme } from '../services/ThemeContext';
 import { ErrorBoundary } from '../components/ErrorBoundary';
-import { useEffect } from 'react';
+import AnimatedSplashScreen from '../components/AnimatedSplashScreen';
+import { useEffect, useState } from 'react';
 import { initLanguage } from '../services/i18n';
 
 // Global error handler for unhandled errors (prevents crashes in production)
@@ -28,6 +29,7 @@ if (!__DEV__) {
  */
 function RootLayoutContent() {
   const { theme, colors } = useTheme();
+  const [showSplash, setShowSplash] = useState(true);
 
   // Initialize language from storage
   useEffect(() => {
@@ -44,7 +46,7 @@ function RootLayoutContent() {
         <meta name="apple-mobile-web-app-title" content="Merke und Male" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </Head>
-      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
+      <StatusBar style={showSplash ? 'light' : (theme === 'dark' ? 'light' : 'dark')} />
       <Stack
         screenOptions={{
           headerShown: false,
@@ -56,6 +58,9 @@ function RootLayoutContent() {
         <Stack.Screen name="game" />
         <Stack.Screen name="settings" />
       </Stack>
+      {showSplash && (
+        <AnimatedSplashScreen onFinish={() => setShowSplash(false)} />
+      )}
     </>
   );
 }

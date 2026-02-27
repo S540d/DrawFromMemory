@@ -48,7 +48,10 @@
       "rating": "Your Rating",
       "retry": "Try again",
       "nextLevel": "Next Level",
-      "backToMenu": "Back to Menu"
+      "backToMenu": "Back to Menu",
+      "allLevelsComplete": "All levels complete!",
+      "allLevelsCompleteMessage": "You have mastered all 10 levels. You are a true memory champion!",
+      "playAgain": "Start over"
     }
   },
   "settings": {

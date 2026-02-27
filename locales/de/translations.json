@@ -48,7 +48,10 @@
       "rating": "Deine Bewertung",
       "retry": "Nochmal versuchen",
       "nextLevel": "Nächstes Level",
-      "backToMenu": "Zum Menü"
+      "backToMenu": "Zum Menü",
+      "allLevelsComplete": "Alle Level geschafft!",
+      "allLevelsCompleteMessage": "Du hast alle 10 Level gemeistert. Du bist ein echtes Gedächtnis-Ass!",
+      "playAgain": "Nochmal von vorne"
     }
   },
   "settings": {
