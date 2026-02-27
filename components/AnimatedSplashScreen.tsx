@@ -20,7 +20,7 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
   const iconScale = useRef(new Animated.Value(0)).current;
   const iconRotation = useRef(new Animated.Value(0)).current;
   const containerOpacity = useRef(new Animated.Value(1)).current;
-  const animationRef = useRef<{ stop: () => void } | null>(null);
+  const animationRef = useRef<Animated.CompositeAnimation | null>(null);
   const onFinishRef = useRef(onFinish);
 
   // Keep the ref up-to-date without restarting the animation
@@ -102,8 +102,17 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
       animationRef.current?.stop();
       animationRef.current = null;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [
+    titleOpacity,
+    titleScale,
+    subtitleOpacity,
+    subtitleTranslateY,
+    iconScale,
+    iconRotation,
+    containerOpacity,
+    animationRef,
+    onFinishRef,
+  ]);
 
   const spin = iconRotation.interpolate({
     inputRange: [0, 1],
