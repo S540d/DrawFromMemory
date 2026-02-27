@@ -33,7 +33,12 @@
 ## ✨ Features
 
 - 🎯 **10+ Level** mit steigendem Schwierigkeitsgrad
-- 🎨 **Einfache Zeichen-Tools** (Pinsel, Farben, Radiergummi)
+- 🎨 **Einfache Zeichen-Tools** (Pinsel, Füllen, Farben, Strichstärken)
+- 🔍 **Schrittweises Aufdecken** - SVG-Elemente erscheinen nacheinander
+- 🎬 **Zeichnungs-Zeitraffer** - Strich-für-Strich Replay-Animation
+- 🔊 **Sound-Effekte** - Timer-Tick, Phasenwechsel-Chime, Stern-Bewertung
+- 📳 **Haptisches Feedback** - Vibration bei Interaktionen (Native)
+- 🖼️ **Galerie** - Zeichnungen speichern und ansehen
 - 💾 **Fortschritt speichern** (AsyncStorage)
 - 🌓 **Dark Mode** Support
 - 🌍 **Mehrsprachig** (Deutsch, English)
@@ -59,21 +64,24 @@
 - ✅ Fortschritt speichern (AsyncStorage mit completedLevels)
 - ✅ GitHub Pages Deployment (Web-Testing auf Telefon)
 - ✅ i18n (DE/EN) Service vorhanden
-- 🔴 Settings Screen (geplant für Phase 2)
-- 🔴 Dark Mode (geplant für Phase 2)
+- ✅ Settings Screen (Theme, Sprache, Sound)
+- ✅ Dark Mode Support
 
 **Nächste Schritte:**
-1. Settings-Menü (Theme, Sprache, Zeichenzeit)
-2. Dark Mode Support
-3. Sound-Effekte (optional)
+1. Variabler Timer (Schwierigkeit beeinflusst Memorize-Zeit)
+2. Farbauswahl-Popup Verbesserung (#32)
+3. Weitere Level & Perspektivische Bilder
 
 ### Phase 2: Erweiterte Features
+- ✅ Galerie zum Speichern von Zeichnungen
+- ✅ Sound-Effekte (Web Audio API)
+- ✅ Haptisches Feedback (Native)
+- ✅ Schrittweises Aufdecken (Progressive Reveal)
+- ✅ Zeichnungs-Zeitraffer (Replay-Animation)
 - 🔲 Weitere 10 Level (Schwierigkeitsgrad 4-5)
-- 🔲 Icon-Erweiterung: +28 neue Icons (siehe [Icon-Plan](ICON_GENERATION_PLAN.md))
 - 🔲 Perspektivische Zeichnungen (Level 11+)
-- 🔲 Galerie zum Speichern von Zeichnungen
-- 🔲 Share-Funktion
-- 🔲 Sound-Effekte
+- 🔲 Farbauswahl-Popup Verbesserung
+- 🔲 Variabler Timer (Schwierigkeitsgrad-abhängig)
 - 🔲 Achievements
 
 ### Phase 3: Advanced Features
@@ -86,9 +94,11 @@
 
 ## 🛠 Tech Stack
 
-- **Framework:** React Native (Expo 52) mit expo-router
+- **Framework:** React Native (Expo 54) mit expo-router
 - **Language:** TypeScript
-- **Zeichnen:** @shopify/react-native-skia
+- **Zeichnen:** @shopify/react-native-skia (Native) + HTML5 Canvas (Web)
+- **Sound:** Web Audio API (programmatisch, keine Assets nötig)
+- **Haptik:** expo-haptics (Native)
 - **Storage:** @react-native-async-storage/async-storage
 - **i18n:** Custom Implementation (DE/EN)
 - **Deployment:** GitHub Pages + GitHub Actions
@@ -101,36 +111,44 @@
 ```
 DrawFromMemory/
 ├── app/                         # Expo Router (File-based Routing)
+│   ├── _layout.tsx              # Root Layout
 │   ├── index.tsx                # Home Screen
-│   ├── game/[id].tsx            # Game Screen (Dynamic Route)
-│   └── _layout.tsx              # Root Layout
+│   ├── game.tsx                 # Game Screen (3 Phasen)
+│   ├── levels.tsx               # Level-Auswahl
+│   ├── gallery.tsx              # Gespeicherte Zeichnungen
+│   └── settings.tsx             # Einstellungen
 │
 ├── components/
-│   ├── DrawingCanvas.tsx        # Skia Canvas Component
-│   └── StarRating.tsx           # Interaktive Sterne-Bewertung
-│
-├── assets/
-│   ├── images/                  # Level-Bilder (SVG)
-│   │   └── level-*.svg          # 10 Level + 4 Extra-Bilder
-│   ├── icons/                   # App Icons
-│   └── splash.png               # Splash Screen
+│   ├── DrawingCanvas.tsx        # Zeichenfläche (Skia Native / Canvas Web)
+│   ├── LevelImageDisplay.tsx    # SVG-Bildanzeige mit progressivem Aufdecken
+│   ├── SettingsModal.tsx        # Einstellungs-Dialog
+│   └── ErrorBoundary.tsx        # Fehlerbehandlung
 │
 ├── services/
-│   ├── i18n.ts                  # Internationalisierung (DE/EN)
-│   └── storage.ts               # AsyncStorage Helper
+│   ├── StorageManager.ts        # AsyncStorage + Web-Fallback
+│   ├── SoundManager.ts          # Sound-Effekte (Web Audio API) + Haptik
+│   ├── ImagePoolManager.ts      # Zufällige Bildauswahl pro Level
+│   ├── LevelManager.ts          # Level-Konfiguration
+│   ├── RatingManager.ts         # Bewertungs-Feedback
+│   ├── ThemeContext.tsx          # Dark/Light Theme
+│   └── i18n.ts                  # Internationalisierung (DE/EN)
 │
 ├── constants/
-│   └── levels.ts                # Level-Definitionen & Konfiguration
+│   ├── Colors.ts                # Farbpalette + Zeichen-Farben
+│   └── Layout.ts                # Spacing, Fonts, Border Radius
 │
-├── types/
-│   └── index.ts                 # TypeScript Typen
+├── locales/
+│   ├── de/translations.json     # Deutsche Übersetzungen
+│   └── en/translations.json     # Englische Übersetzungen
+│
+├── assets/
+│   └── images/levels/           # Level-Bilder (SVG als TSX)
 │
 ├── docs/                        # Dokumentation
 │   ├── DEPLOYMENT_GUIDE.md      # App Store Deployment Guide
 │   ├── PLAY_STORE_METADATA.md   # Store Listing Texte
-│   ├── STORE_ASSETS_TODO.md     # Asset Status Tracking
-│   ├── ICON_GENERATION_PLAN.md  # Icon-Erweiterungsplan (Issue #5)
-│   └── PROMPT_TEMPLATES.md      # AI-Prompts für Icon-Generierung
+│   ├── TESTING_README.md        # Testing Guide
+│   └── archive/                 # Historische Docs
 │
 ├── .github/
 │   └── workflows/
@@ -220,24 +238,22 @@ Dieses Projekt folgt dem **"Mit Kindern, für Kinder"** Ansatz:
 **Was funktioniert bereits:**
 - ✅ 10 Level-Bilder (SVG) + 4 Extra-Bilder
 - ✅ Home Screen mit Level-Auswahl
-- ✅ Memorize-Phase (Bild anzeigen mit 5-Sekunden-Timer)
-- ✅ Drawing-Phase (Skia Canvas mit Zeichnen, Löschen, Undo)
-- ✅ Result-Phase (Side-by-Side Vergleich + Interaktive Sterne-Bewertung + Dynamisches Feedback)
+- ✅ Memorize-Phase (Bild anzeigen mit Timer + Schrittweises Aufdecken)
+- ✅ Drawing-Phase (Skia/Canvas mit Pinsel, Füllen, Farben, Strichstärken, Undo)
+- ✅ Result-Phase (Side-by-Side Vergleich + Sterne-Bewertung + Zeitraffer-Replay)
+- ✅ Sound-Effekte (Web Audio API) + Haptisches Feedback (Native)
+- ✅ Galerie zum Speichern und Ansehen von Zeichnungen
 - ✅ Level-System mit progressiver Schwierigkeit
 - ✅ Progress-Speicherung (AsyncStorage - abgeschlossene Level)
 - ✅ Internationalisierung (DE/EN)
+- ✅ Dark Mode Support
 - ✅ Level-Navigation (← Zurück / Weiter →)
 - ✅ GitHub Pages Deployment (testbar auf Telefon)
 - ✅ CI/CD Pipeline mit automatischen Quality Checks
 
-**In Arbeit (Play Store Release):**
-- 🔨 App Icons generieren (1024x1024)
-- 🔨 Screenshots erstellen
-- 🔨 Privacy Policy hosten
-- 🔨 EAS Build Setup
-
 **Geplant für zukünftige Updates:**
-- 🔲 Sound-Effekte
+- 🔲 Variabler Timer (Schwierigkeit-abhängig)
+- 🔲 Farbauswahl-Popup Verbesserung
 - 🔲 Weitere Level (perspektivische Bilder)
 - 🔲 Achievements System
 
