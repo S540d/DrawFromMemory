@@ -55,6 +55,7 @@ function RootLayoutContent() {
         <Stack.Screen name="index" />
         <Stack.Screen name="levels" />
         <Stack.Screen name="game" />
+        <Stack.Screen name="gallery" />
         <Stack.Screen name="settings" />
       </Stack>
       {showSplash && (

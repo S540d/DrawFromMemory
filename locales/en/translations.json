@@ -8,6 +8,7 @@
     "startButton": "Start Game",
     "continueButton": "Continue",
     "levelsButton": "Select Level",
+    "galleryButton": "My Gallery",
     "settingsButton": "Settings"
   },
   "levels": {
@@ -51,7 +52,9 @@
       "backToMenu": "Back to Menu",
       "allLevelsComplete": "All levels complete!",
       "allLevelsCompleteMessage": "You have mastered all 10 levels. You are a true memory champion!",
-      "playAgain": "Start over"
+      "playAgain": "Start over",
+      "replay": "▶ Replay",
+      "replayStop": "⏹ Stop"
     }
   },
   "settings": {
@@ -70,6 +73,15 @@
     "3": "Medium",
     "4": "Hard",
     "5": "Very hard"
+  },
+  "gallery": {
+    "title": "My Gallery",
+    "empty": "No drawings saved yet. Draw a picture and tap \"Save\"!",
+    "save": "Save to Gallery",
+    "saved": "Saved!",
+    "delete": "Delete",
+    "deleteTitle": "Delete drawing",
+    "deleteConfirm": "Do you really want to delete this drawing?"
   },
   "common": {
     "yes": "Yes",

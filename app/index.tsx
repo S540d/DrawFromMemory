@@ -51,6 +51,15 @@ export default function HomeScreen() {
             {t('home.levelsButton')}
           </Text>
         </Pressable>
+
+        <Pressable
+          style={[styles.button, styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary, ...Colors.shadow.small }]}
+          onPress={() => router.push('/gallery')}
+        >
+          <Text style={[styles.buttonText, styles.secondaryButtonText, { color: colors.primary }]}>
+            {t('home.galleryButton')}
+          </Text>
+        </Pressable>
       </View>
 
       {/* Footer */}

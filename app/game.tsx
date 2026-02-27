@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, useWindowDimensions, Platform } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getRandomImageForLevel } from '../services/ImagePoolManager';
@@ -9,10 +9,11 @@ import storageManager from '../services/StorageManager';
 import { DrawingColors } from '../constants/Colors';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
-import LevelImageDisplay from '../components/LevelImageDisplay';
-import DrawingCanvas, { useDrawingCanvas } from '../components/DrawingCanvas';
+import LevelImageDisplay, { getImageElementCount } from '../components/LevelImageDisplay';
+import DrawingCanvas, { useDrawingCanvas, DrawingPath } from '../components/DrawingCanvas';
 import SettingsModal from '../components/SettingsModal';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import SoundManager from '../services/SoundManager';
 import type { GamePhase, LevelImage } from '../types';
 
 /**
@@ -43,6 +44,10 @@ export default function GameScreen() {
   const [showToolPicker, setShowToolPicker] = useState(false);
   const [showStrokeWidthPicker, setShowStrokeWidthPicker] = useState(false);
   const [userRating, setUserRating] = useState<number>(0);
+  const [revealStep, setRevealStep] = useState<number>(0);
+  const [savedToGallery, setSavedToGallery] = useState(false);
+  const [isReplaying, setIsReplaying] = useState(false);
+  const [replayPaths, setReplayPaths] = useState<DrawingPath[]>([]);
 
   // Drawing Canvas Hook
   const drawing = useDrawingCanvas();
@@ -50,13 +55,37 @@ export default function GameScreen() {
   // Get current language for accessibility
   const currentLang = getCurrentLanguage();
 
+  // Initialize sound manager
+  useEffect(() => {
+    SoundManager.init();
+  }, []);
+
   // Speichere Fortschritt wenn Bewertung abgegeben wird
   const handleRatingSubmit = async (rating: number) => {
     try {
+      SoundManager.playStarTap(rating);
       setUserRating(rating);
       await storageManager.saveLevelProgress(levelNumber, rating);
     } catch (error) {
       console.error('Error saving rating:', error);
+    }
+  };
+
+  // Zeichnung in Galerie speichern
+  const saveToGallery = async () => {
+    if (!currentImage || drawing.paths.length === 0) return;
+    try {
+      await storageManager.saveToGallery({
+        levelNumber,
+        imageFilename: currentImage.filename,
+        imageName: currentImage.displayName,
+        paths: drawing.paths,
+        rating: userRating,
+      });
+      SoundManager.playSuccess();
+      setSavedToGallery(true);
+    } catch (error) {
+      console.error('Error saving to gallery:', error);
     }
   };
 
@@ -68,6 +97,7 @@ export default function GameScreen() {
         setLevelNumber(nextLevel);
         setPhase('memorize');
         setUserRating(0);
+        setSavedToGallery(false);
         drawing.clearCanvas();
         const image = getRandomImageForLevel(nextLevel);
         const level = getLevel(nextLevel);
@@ -87,6 +117,7 @@ export default function GameScreen() {
         setLevelNumber(prevLevel);
         setPhase('memorize');
         setUserRating(0);
+        setSavedToGallery(false);
         drawing.clearCanvas();
         const image = getRandomImageForLevel(prevLevel);
         const level = getLevel(prevLevel);
@@ -116,15 +147,99 @@ export default function GameScreen() {
   useEffect(() => {
     if (phase === 'memorize' && timeRemaining > 0) {
       const timer = setTimeout(() => {
+        SoundManager.playTimerTick();
         setTimeRemaining(timeRemaining - 1);
       }, 1000);
       return () => clearTimeout(timer);
     } else if (phase === 'memorize' && timeRemaining === 0 && currentImage) {
       // Timer abgelaufen -> zur Draw-Phase
+      SoundManager.playPhaseTransition();
       const transitionTimer = setTimeout(() => setPhase('draw'), 500);
       return () => clearTimeout(transitionTimer);
     }
   }, [phase, timeRemaining, currentImage]);
+
+  // Progressive reveal: reveal SVG elements one by one during memorize phase
+  useEffect(() => {
+    if (phase !== 'memorize' || !currentImage) return;
+
+    const totalElements = getImageElementCount(currentImage);
+    const level = getLevel(levelNumber);
+    // Use 80% of display time for reveal, last 20% shows complete image
+    const revealDurationMs = level.displayDuration * 800;
+    const stepInterval = revealDurationMs / totalElements;
+
+    setRevealStep(0);
+    let step = 0;
+
+    const interval = setInterval(() => {
+      step++;
+      if (step >= totalElements) {
+        clearInterval(interval);
+        setRevealStep(totalElements); // Show all
+      } else {
+        setRevealStep(step);
+      }
+    }, stepInterval);
+
+    return () => clearInterval(interval);
+  }, [phase, currentImage, levelNumber]);
+
+  // Drawing replay animation
+  const REPLAY_DURATION_MS = 3000;
+  const REPLAY_FRAME_MS = 30;
+
+  const startReplay = useCallback(() => {
+    if (drawing.paths.length === 0) return;
+    setReplayPaths([]);
+    setIsReplaying(true);
+  }, [drawing.paths]);
+
+  useEffect(() => {
+    if (!isReplaying || drawing.paths.length === 0) return;
+
+    const totalPoints = drawing.paths.reduce(
+      (sum, p) => sum + (p.type === 'fill' ? 1 : p.points.length), 0
+    );
+    const totalFrames = Math.ceil(REPLAY_DURATION_MS / REPLAY_FRAME_MS);
+    const pointsPerFrame = Math.max(1, Math.ceil(totalPoints / totalFrames));
+    let pointsShown = 0;
+
+    const interval = setInterval(() => {
+      pointsShown += pointsPerFrame;
+
+      const visiblePaths: DrawingPath[] = [];
+      let remaining = pointsShown;
+
+      for (const path of drawing.paths) {
+        const count = path.type === 'fill' ? 1 : path.points.length;
+        if (remaining >= count) {
+          visiblePaths.push(path);
+          remaining -= count;
+        } else if (remaining > 0) {
+          if (path.type === 'fill') {
+            visiblePaths.push(path);
+          } else {
+            visiblePaths.push({ ...path, points: path.points.slice(0, remaining) });
+          }
+          remaining = 0;
+          break;
+        } else {
+          break;
+        }
+      }
+
+      setReplayPaths(visiblePaths);
+
+      if (pointsShown >= totalPoints) {
+        clearInterval(interval);
+        setReplayPaths(drawing.paths);
+        setTimeout(() => setIsReplaying(false), 500);
+      }
+    }, REPLAY_FRAME_MS);
+
+    return () => clearInterval(interval);
+  }, [isReplaying, drawing.paths]);
 
   // Render Memorize Phase
   const renderMemorizePhase = () => (
@@ -140,7 +255,7 @@ export default function GameScreen() {
       <View style={styles.imageContainer}>
         {currentImage && (
           <View style={styles.imagePlaceholder}>
-            <LevelImageDisplay image={currentImage} size={280} />
+            <LevelImageDisplay image={currentImage} size={280} revealStep={revealStep} />
             <Text style={styles.imageName}>{currentImage.displayName}</Text>
             <Text style={styles.imageInfo}>
               Level {levelNumber} • {currentImage.strokeCount} Striche
@@ -253,7 +368,10 @@ export default function GameScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.primaryButton}
-          onPress={() => setPhase('result')}
+          onPress={() => {
+            SoundManager.playPhaseTransition();
+            setPhase('result');
+          }}
         >
           <Text style={styles.primaryButtonText}>Fertig</Text>
         </TouchableOpacity>
@@ -331,16 +449,26 @@ export default function GameScreen() {
             </View>
           </View>
           <View style={styles.comparisonBox}>
-            <Text style={styles.comparisonLabel}>Deine Zeichnung</Text>
+            <Text style={styles.comparisonLabel}>{t('game.result.yourDrawing')}</Text>
             <View style={[styles.comparisonImage, { width: imageSize, height: imageSize }]}>
               <DrawingCanvas
                 width={imageSize}
                 height={imageSize}
-                paths={drawing.paths}
+                paths={isReplaying ? replayPaths : drawing.paths}
                 strokeColor={Colors.drawing.black}
                 strokeWidth={2}
               />
             </View>
+            {drawing.paths.length > 0 && (
+              <TouchableOpacity
+                style={[styles.replayButton, isReplaying && styles.replayButtonActive]}
+                onPress={isReplaying ? () => setIsReplaying(false) : startReplay}
+              >
+                <Text style={[styles.replayButtonText, isReplaying && styles.replayButtonTextActive]}>
+                  {isReplaying ? t('game.result.replayStop') : t('game.result.replay')}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 
@@ -350,6 +478,19 @@ export default function GameScreen() {
             <Text style={styles.completionTitle}>{t('game.result.allLevelsComplete')}</Text>
             <Text style={styles.completionMessage}>{t('game.result.allLevelsCompleteMessage')}</Text>
           </View>
+        )}
+
+        {/* Save to Gallery */}
+        {drawing.paths.length > 0 && (
+          <TouchableOpacity
+            style={[styles.galleryButton, savedToGallery && styles.galleryButtonSaved]}
+            onPress={saveToGallery}
+            disabled={savedToGallery}
+          >
+            <Text style={[styles.galleryButtonText, savedToGallery && styles.galleryButtonTextSaved]}>
+              {savedToGallery ? t('gallery.saved') : t('gallery.save')}
+            </Text>
+          </TouchableOpacity>
         )}
 
         {/* Level Navigation */}
@@ -400,6 +541,7 @@ export default function GameScreen() {
                 // Reset für aktuelles Level
                 setPhase('memorize');
                 setUserRating(0);
+                setSavedToGallery(false);
                 drawing.clearCanvas();
                 const image = getRandomImageForLevel(levelNumber);
                 const level = getLevel(levelNumber);
@@ -1037,6 +1179,49 @@ const styles = StyleSheet.create({
     fontSize: FontSize.md,
     color: Colors.text.secondary,
     textAlign: 'center',
+  },
+  galleryButton: {
+    alignSelf: 'center',
+    backgroundColor: Colors.surface,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.lg,
+    borderWidth: 2,
+    borderColor: Colors.secondary,
+    marginBottom: Spacing.md,
+  },
+  galleryButtonSaved: {
+    borderColor: Colors.success,
+    backgroundColor: Colors.success + '15',
+  },
+  galleryButtonText: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
+    color: Colors.secondary,
+  },
+  galleryButtonTextSaved: {
+    color: Colors.success,
+  },
+  replayButton: {
+    marginTop: Spacing.sm,
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.md,
+    borderRadius: BorderRadius.md,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.primary,
+  },
+  replayButtonActive: {
+    backgroundColor: Colors.primary,
+  },
+  replayButtonText: {
+    fontSize: FontSize.xs,
+    fontWeight: FontWeight.semibold,
+    color: Colors.primary,
+    textAlign: 'center',
+  },
+  replayButtonTextActive: {
+    color: Colors.background,
   },
   toolContainer: {
     marginBottom: Spacing.md,

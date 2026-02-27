@@ -1,5 +1,45 @@
 # 🎉 Changelog - Aktuelle Releases
 
+## Version 1.2.0 - Feb 27, 2026
+
+### 🎬 Zeichnungs-Zeitraffer (Drawing Replay)
+- **Strich-für-Strich Replay** in der Ergebnisphase
+- Play/Stop-Button unter "Deine Zeichnung"
+- Animation über ~3 Sekunden mit progressiver Punkt-Aufdeckung
+- Unterstützt sowohl Pinsel- als auch Füll-Pfade
+
+### 🔊 Sound-Effekte & Haptik (Issue #31)
+- **Web Audio API** basierte Tonerzeugung (keine Sound-Dateien nötig)
+- **Timer-Tick**: Sanfter Ton bei jedem Countdown-Schritt
+- **Phasenwechsel-Chime**: Aufsteigender Dreiklang (C-E-G) bei Memorize→Draw und Draw→Result
+- **Stern-Bewertung**: Aufsteigender Ton je nach Sternzahl (1-5)
+- **Erfolgs-Sound**: Zweiklang beim Speichern in die Galerie
+- **Haptisches Feedback** (Native): expo-haptics mit Light/Success Patterns
+- **Sound-Toggle** in den Einstellungen (An/Aus, persistiert)
+
+### 🖼️ Galerie & Progressive Reveal (vorherige Session)
+- Zeichnungen in Galerie speichern (max 50)
+- SVG-Elemente erscheinen einzeln während Memorize-Phase
+- Level-10-Completion-Banner
+
+### Implementierungsdetails
+
+**Neue Dateien:**
+- `services/SoundManager.ts` - Sound-Effekte (Web Audio API) + Haptik (expo-haptics)
+
+**Geänderte Dateien:**
+- `app/game.tsx` - Replay-Animation, Sound-Integration an 5 Stellen
+- `components/SettingsModal.tsx` - Sound An/Aus Toggle
+- `locales/de/translations.json` - Replay/Stop Übersetzungen
+- `locales/en/translations.json` - Replay/Stop Übersetzungen
+- `package.json` - expo-av, expo-haptics Dependencies
+
+### Neue Dependencies
+- `expo-av` ^16.0.8
+- `expo-haptics` ^55.0.8
+
+---
+
 ## Version 1.1.0 - Jan 5, 2026
 
 ### 🎨 Features
