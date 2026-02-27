@@ -20,10 +20,17 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
   const iconScale = useRef(new Animated.Value(0)).current;
   const iconRotation = useRef(new Animated.Value(0)).current;
   const containerOpacity = useRef(new Animated.Value(1)).current;
+  const animationRef = useRef<{ stop: () => void } | null>(null);
+  const onFinishRef = useRef(onFinish);
+
+  // Keep the ref up-to-date without restarting the animation
+  useEffect(() => {
+    onFinishRef.current = onFinish;
+  }, [onFinish]);
 
   useEffect(() => {
-    // Sequenzielle Animation
-    Animated.sequence([
+    // Sequenzielle Animation – läuft nur einmal beim Mounten
+    const animation = Animated.sequence([
       // 1. Icon erscheint mit Bounce
       Animated.parallel([
         Animated.spring(iconScale, {
@@ -77,10 +84,26 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
         duration: 400,
         useNativeDriver: true,
       }),
-    ]).start(() => {
-      onFinish();
+    ]);
+
+    animationRef.current = animation;
+
+    animation.start(({ finished }) => {
+      // Nur aufrufen, wenn die Animation vollständig abgeschlossen ist,
+      // nicht wenn sie vorzeitig gestoppt wurde (z. B. beim Unmounten).
+      if (finished) {
+        onFinishRef.current();
+      }
     });
-  }, [onFinish]);
+
+    // Cleanup: Animation stoppen, bevor die nativen Views zerstört werden.
+    // Verhindert Crashes durch den nativen Animationstreiber auf ungültige Views.
+    return () => {
+      animationRef.current?.stop();
+      animationRef.current = null;
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const spin = iconRotation.interpolate({
     inputRange: [0, 1],
