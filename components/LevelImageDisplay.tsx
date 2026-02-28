@@ -10,13 +10,39 @@ interface Props {
 }
 
 /**
+ * Static lookup for SVG child element counts per image.
+ * Avoids rendering SVG elements outside a render cycle (which crashes on Android native).
+ */
+const IMAGE_ELEMENT_COUNTS: Record<string, number> = {
+  'level-01-sun.svg': 9,
+  'level-02-face.svg': 8,
+  'level-03-cloud.svg': 5,
+  'extra-01-stick-figure.svg': 6,
+  'level-02-01-house.svg': 7,
+  'level-02-02-apple.svg': 5,
+  'level-02-03-rocket.svg': 8,
+  'level-02-04-balloon.svg': 8,
+  'level-05-01-lion.svg': 16,
+  'level-05-02-landscape.svg': 9,
+  'level-05-03-castle.svg': 15,
+  'level-06-dog.svg': 19,
+  'level-07-cat.svg': 15,
+  'level-08-sheep.svg': 18,
+  'extra-03-flower.svg': 12,
+  'extra-04-bird.svg': 16,
+  'level-04-house.svg': 13,
+  'level-05-tree.svg': 8,
+  'extra-02-car.svg': 15,
+  'level-09-fish.svg': 15,
+  'level-10-butterfly.svg': 16,
+};
+
+/**
  * Returns the total number of SVG child elements for a given image.
- * Used by the memorize phase to know how many reveal steps exist.
+ * Uses a static lookup to avoid native SVG rendering outside render cycle.
  */
 export function getImageElementCount(image: LevelImage): number {
-  const svgElement = renderSvgForImage(image, 200, "0 0 200 200");
-  if (!svgElement) return 1;
-  return React.Children.count(svgElement.props.children);
+  return IMAGE_ELEMENT_COUNTS[image.filename] || 1;
 }
 
 /**

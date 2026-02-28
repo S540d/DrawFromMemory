@@ -255,7 +255,9 @@ export default function GameScreen() {
       <View style={styles.imageContainer}>
         {currentImage && (
           <View style={styles.imagePlaceholder}>
-            <LevelImageDisplay image={currentImage} size={280} revealStep={revealStep} />
+            <ErrorBoundary>
+              <LevelImageDisplay image={currentImage} size={280} revealStep={revealStep} />
+            </ErrorBoundary>
             <Text style={styles.imageName}>{currentImage.displayName}</Text>
             <Text style={styles.imageInfo}>
               Level {levelNumber} • {currentImage.strokeCount} Striche
