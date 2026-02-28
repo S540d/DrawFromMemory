@@ -198,8 +198,7 @@ describe('SoundManager', () => {
       sm.setSoundEnabled(true);
       sm.playPhaseTransition();
 
-      // First tone fires synchronously inside forEach at i=0 (setTimeout 0ms)
-      // Remaining 2 tones scheduled via setTimeout
+      // All 3 tones are scheduled via setTimeout (0ms, 150ms, 300ms)
       expect(timeouts.length).toBeGreaterThanOrEqual(2);
 
       // Fire all scheduled callbacks

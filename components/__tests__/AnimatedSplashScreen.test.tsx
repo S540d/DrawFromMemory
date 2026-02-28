@@ -20,6 +20,7 @@ describe('AnimatedSplashScreen', () => {
   });
 
   afterEach(() => {
+    jest.clearAllTimers();
     jest.useRealTimers();
   });
 
