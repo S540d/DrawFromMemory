@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, Linking, Share 
 import { t, getLanguage, setLanguage } from '../services/i18n';
 import { useTheme } from '../services/ThemeContext';
 import storageManager from '../services/StorageManager';
+import SoundManager from '../services/SoundManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 
@@ -21,10 +22,12 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   const [currentLang, setCurrentLang] = useState(getLanguage());
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>(themeSetting);
   const [showAboutModal, setShowAboutModal] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
   useEffect(() => {
     setCurrentLang(getLanguage());
     setCurrentTheme(themeSetting);
+    storageManager.getSetting('soundEnabled').then(setSoundEnabled);
   }, [visible, themeSetting]);
 
   const handleLanguageChange = async (lang: 'de' | 'en') => {
@@ -299,6 +302,55 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               currentLang === 'en' && [styles.optionTextActive, { color: colors.primary }]
             ]}>
               English
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Sound */}
+      <View style={styles.section}>
+        <Text style={[styles.optionLabel, { color: colors.text.primary }]}>
+          {currentLang === 'de' ? 'Sound-Effekte' : 'Sound Effects'}
+        </Text>
+        <View style={styles.optionsRow}>
+          <TouchableOpacity
+            style={[
+              styles.optionButton,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+              soundEnabled && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
+            ]}
+            onPress={async () => {
+              setSoundEnabled(true);
+              SoundManager.setSoundEnabled(true);
+              await storageManager.setSetting('soundEnabled', true);
+            }}
+          >
+            <Text style={[
+              styles.optionText,
+              { color: colors.text.secondary },
+              soundEnabled && [styles.optionTextActive, { color: colors.primary }]
+            ]}>
+              {currentLang === 'de' ? 'An' : 'On'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.optionButton,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+              !soundEnabled && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
+            ]}
+            onPress={async () => {
+              setSoundEnabled(false);
+              SoundManager.setSoundEnabled(false);
+              await storageManager.setSetting('soundEnabled', false);
+            }}
+          >
+            <Text style={[
+              styles.optionText,
+              { color: colors.text.secondary },
+              !soundEnabled && [styles.optionTextActive, { color: colors.primary }]
+            ]}>
+              {currentLang === 'de' ? 'Aus' : 'Off'}
             </Text>
           </TouchableOpacity>
         </View>

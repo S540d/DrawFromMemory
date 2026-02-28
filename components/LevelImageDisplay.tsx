@@ -6,19 +6,24 @@ import type { LevelImage } from '../types';
 interface Props {
   image: LevelImage;
   size?: number;
+  revealStep?: number; // If set, only show SVG children 0..revealStep (for progressive reveal)
 }
 
 /**
- * Zeigt ein Level-Bild an (SVG inline)
- * Rendert die SVG-Bilder als React Native SVG Komponenten
+ * Returns the total number of SVG child elements for a given image.
+ * Used by the memorize phase to know how many reveal steps exist.
  */
-export default function LevelImageDisplay({ image, size = 300 }: Props) {
-  const svgSize = size;
-  const viewBox = "0 0 200 200";
+export function getImageElementCount(image: LevelImage): number {
+  const svgElement = renderSvgForImage(image, 200, "0 0 200 200");
+  if (!svgElement) return 1;
+  return React.Children.count(svgElement.props.children);
+}
 
-  // Render basierend auf Dateinamen
-  const renderSvg = () => {
-    switch (image.filename) {
+/**
+ * Standalone SVG render function (extracted so it can be used by getImageElementCount)
+ */
+function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string): React.ReactElement | null {
+  switch (image.filename) {
       case 'level-01-sun.svg':
         return (
           <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
@@ -399,6 +404,145 @@ export default function LevelImageDisplay({ image, size = 300 }: Props) {
           </Svg>
         );
 
+      case 'level-04-house.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 200 240">
+            {/* House body */}
+            <Rect x="35" y="100" width="130" height="110" fill="#E74C3C" stroke="#000000" strokeWidth="2" />
+            {/* Roof */}
+            <Polygon points="30,100 100,25 170,100" fill="#8B4513" stroke="#000000" strokeWidth="2" />
+            {/* Chimney */}
+            <Rect x="135" y="45" width="20" height="40" fill="#A0522D" stroke="#000000" strokeWidth="2" />
+            {/* Door */}
+            <Rect x="80" y="150" width="40" height="60" fill="#654321" stroke="#000000" strokeWidth="2" rx="3" />
+            {/* Door handle */}
+            <Circle cx="113" cy="180" r="3" fill="#FFD700" />
+            {/* Door arch */}
+            <Path d="M 80 150 Q 100 135 120 150" fill="#654321" stroke="#000000" strokeWidth="2" />
+            {/* Left window */}
+            <Rect x="45" y="120" width="28" height="28" fill="#87CEEB" stroke="#000000" strokeWidth="2" />
+            <Line x1="59" y1="120" x2="59" y2="148" stroke="#000000" strokeWidth="1.5" />
+            <Line x1="45" y1="134" x2="73" y2="134" stroke="#000000" strokeWidth="1.5" />
+            {/* Right window */}
+            <Rect x="127" y="120" width="28" height="28" fill="#87CEEB" stroke="#000000" strokeWidth="2" />
+            <Line x1="141" y1="120" x2="141" y2="148" stroke="#000000" strokeWidth="1.5" />
+            <Line x1="127" y1="134" x2="155" y2="134" stroke="#000000" strokeWidth="1.5" />
+            {/* Ground */}
+            <Line x1="20" y1="210" x2="180" y2="210" stroke="#000000" strokeWidth="2" />
+          </Svg>
+        );
+
+      case 'level-05-tree.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Trunk */}
+            <Rect x="88" y="110" width="24" height="60" fill="#8B4513" stroke="#000000" strokeWidth="2" rx="2" />
+            {/* Root bumps */}
+            <Ellipse cx="92" cy="168" rx="10" ry="5" fill="#8B4513" stroke="#000000" strokeWidth="1.5" />
+            <Ellipse cx="108" cy="168" rx="10" ry="5" fill="#8B4513" stroke="#000000" strokeWidth="1.5" />
+            {/* Crown - bottom layer */}
+            <Circle cx="100" cy="85" r="35" fill="#27AE60" stroke="#000000" strokeWidth="2" />
+            {/* Crown - left */}
+            <Circle cx="75" cy="90" r="25" fill="#27AE60" stroke="#000000" strokeWidth="2" />
+            {/* Crown - right */}
+            <Circle cx="125" cy="90" r="25" fill="#27AE60" stroke="#000000" strokeWidth="2" />
+            {/* Crown - top */}
+            <Circle cx="100" cy="60" r="28" fill="#2ECC71" stroke="#000000" strokeWidth="2" />
+            {/* Crown highlights */}
+            <Circle cx="85" cy="70" r="12" fill="#2ECC71" stroke="none" opacity="0.6" />
+          </Svg>
+        );
+
+      case 'extra-02-car.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox="0 0 240 180">
+            {/* Car body */}
+            <Rect x="30" y="80" width="180" height="50" fill="#E74C3C" stroke="#000000" strokeWidth="2" rx="8" />
+            {/* Car roof/cabin */}
+            <Path d="M 70 80 L 85 45 L 165 45 L 180 80" fill="#E74C3C" stroke="#000000" strokeWidth="2" />
+            {/* Windshield */}
+            <Path d="M 88 48 L 78 78 L 115 78 L 115 48 Z" fill="#87CEEB" stroke="#000000" strokeWidth="1.5" />
+            {/* Rear window */}
+            <Path d="M 125 48 L 125 78 L 172 78 L 162 48 Z" fill="#87CEEB" stroke="#000000" strokeWidth="1.5" />
+            {/* Front bumper */}
+            <Rect x="195" y="90" width="20" height="30" fill="#C0392B" stroke="#000000" strokeWidth="2" rx="4" />
+            {/* Rear bumper */}
+            <Rect x="25" y="90" width="15" height="30" fill="#C0392B" stroke="#000000" strokeWidth="2" rx="4" />
+            {/* Headlight */}
+            <Circle cx="210" cy="100" r="6" fill="#FFD700" stroke="#000000" strokeWidth="1.5" />
+            {/* Taillight */}
+            <Circle cx="30" cy="100" r="5" fill="#FF4500" stroke="#000000" strokeWidth="1.5" />
+            {/* Front wheel */}
+            <Circle cx="170" cy="130" r="22" fill="#333333" stroke="#000000" strokeWidth="2" />
+            <Circle cx="170" cy="130" r="12" fill="#808080" stroke="#000000" strokeWidth="1.5" />
+            <Circle cx="170" cy="130" r="4" fill="#333333" />
+            {/* Rear wheel */}
+            <Circle cx="75" cy="130" r="22" fill="#333333" stroke="#000000" strokeWidth="2" />
+            <Circle cx="75" cy="130" r="12" fill="#808080" stroke="#000000" strokeWidth="1.5" />
+            <Circle cx="75" cy="130" r="4" fill="#333333" />
+            {/* Door handle */}
+            <Line x1="120" y1="95" x2="140" y2="95" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
+          </Svg>
+        );
+
+      case 'level-09-fish.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Fish body */}
+            <Ellipse cx="100" cy="100" rx="50" ry="30" fill="#FFA500" stroke="#000000" strokeWidth="2" />
+            {/* Tail fin */}
+            <Polygon points="150,100 180,75 180,125" fill="#FF6347" stroke="#000000" strokeWidth="2" />
+            {/* Dorsal fin */}
+            <Path d="M 80 70 Q 100 45 120 70" fill="#FF6347" stroke="#000000" strokeWidth="2" />
+            {/* Bottom fin */}
+            <Path d="M 90 130 Q 100 150 115 130" fill="#FF6347" stroke="#000000" strokeWidth="2" />
+            {/* Eye */}
+            <Circle cx="70" cy="95" r="8" fill="#FFFFFF" stroke="#000000" strokeWidth="2" />
+            <Circle cx="72" cy="95" r="4" fill="#000000" />
+            <Circle cx="73" cy="93" r="2" fill="#FFFFFF" />
+            {/* Mouth */}
+            <Path d="M 50 100 Q 55 105 50 110" stroke="#000000" strokeWidth="2" fill="none" />
+            {/* Scales pattern */}
+            <Path d="M 85 90 Q 95 85 105 90" stroke="#E8860C" strokeWidth="1.5" fill="none" />
+            <Path d="M 95 100 Q 105 95 115 100" stroke="#E8860C" strokeWidth="1.5" fill="none" />
+            <Path d="M 85 110 Q 95 105 105 110" stroke="#E8860C" strokeWidth="1.5" fill="none" />
+            <Path d="M 105 90 Q 115 85 125 90" stroke="#E8860C" strokeWidth="1.5" fill="none" />
+            <Path d="M 105 110 Q 115 105 125 110" stroke="#E8860C" strokeWidth="1.5" fill="none" />
+            {/* Bubbles */}
+            <Circle cx="42" cy="85" r="4" fill="none" stroke="#87CEEB" strokeWidth="1.5" />
+            <Circle cx="35" cy="75" r="3" fill="none" stroke="#87CEEB" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'level-10-butterfly.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Ellipse cx="100" cy="100" rx="5" ry="35" fill="#000000" />
+            {/* Head */}
+            <Circle cx="100" cy="60" r="8" fill="#000000" />
+            {/* Antennae */}
+            <Path d="M 96 55 Q 80 35 75 30" stroke="#000000" strokeWidth="2" fill="none" strokeLinecap="round" />
+            <Circle cx="75" cy="30" r="3" fill="#000000" />
+            <Path d="M 104 55 Q 120 35 125 30" stroke="#000000" strokeWidth="2" fill="none" strokeLinecap="round" />
+            <Circle cx="125" cy="30" r="3" fill="#000000" />
+            {/* Upper left wing */}
+            <Ellipse cx="65" cy="80" rx="35" ry="28" fill="#9B59B6" stroke="#000000" strokeWidth="2" rotation="-20" origin="65, 80" />
+            <Ellipse cx="60" cy="78" rx="15" ry="12" fill="#FF69B4" stroke="none" opacity="0.7" rotation="-20" origin="60, 78" />
+            <Circle cx="55" cy="75" r="5" fill="#FFD700" stroke="none" opacity="0.8" />
+            {/* Upper right wing */}
+            <Ellipse cx="135" cy="80" rx="35" ry="28" fill="#9B59B6" stroke="#000000" strokeWidth="2" rotation="20" origin="135, 80" />
+            <Ellipse cx="140" cy="78" rx="15" ry="12" fill="#FF69B4" stroke="none" opacity="0.7" rotation="20" origin="140, 78" />
+            <Circle cx="145" cy="75" r="5" fill="#FFD700" stroke="none" opacity="0.8" />
+            {/* Lower left wing */}
+            <Ellipse cx="70" cy="115" rx="28" ry="22" fill="#BB6BD9" stroke="#000000" strokeWidth="2" rotation="15" origin="70, 115" />
+            <Ellipse cx="65" cy="115" rx="12" ry="10" fill="#FFFFFF" stroke="none" opacity="0.4" rotation="15" origin="65, 115" />
+            {/* Lower right wing */}
+            <Ellipse cx="130" cy="115" rx="28" ry="22" fill="#BB6BD9" stroke="#000000" strokeWidth="2" rotation="-15" origin="130, 115" />
+            <Ellipse cx="135" cy="115" rx="12" ry="10" fill="#FFFFFF" stroke="none" opacity="0.4" rotation="-15" origin="135, 115" />
+          </Svg>
+        );
+
       default:
         // Fallback für noch nicht implementierte Bilder
         return (
@@ -409,11 +553,38 @@ export default function LevelImageDisplay({ image, size = 300 }: Props) {
           </Svg>
         );
     }
-  };
+}
+
+/**
+ * Zeigt ein Level-Bild an (SVG inline)
+ * Rendert die SVG-Bilder als React Native SVG Komponenten
+ * Optional: revealStep für schrittweises Aufdecken
+ */
+export default function LevelImageDisplay({ image, size = 300, revealStep }: Props) {
+  const svgSize = size;
+  const viewBox = "0 0 200 200";
+
+  const svgElement = renderSvgForImage(image, svgSize, viewBox);
+
+  if (!svgElement) {
+    return <View style={[styles.container, { width: svgSize, height: svgSize }]} />;
+  }
+
+  // Progressive reveal: only show children up to revealStep
+  if (revealStep !== undefined) {
+    const children = React.Children.toArray(svgElement.props.children);
+    const visibleChildren = children.slice(0, revealStep + 1);
+    const cloned = React.cloneElement(svgElement, {}, ...visibleChildren);
+    return (
+      <View style={[styles.container, { width: svgSize, height: svgSize }]}>
+        {cloned}
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { width: svgSize, height: svgSize }]}>
-      {renderSvg()}
+      {svgElement}
     </View>
   );
 }
