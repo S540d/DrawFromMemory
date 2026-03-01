@@ -1,6 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, useWindowDimensions, Platform } from 'react-native';
-import { Canvas, Path, Skia, Circle } from '@shopify/react-native-skia';
+
+// Lazy-load Skia only on native platforms to prevent crash on Android
+// The top-level import initializes native modules immediately, which can crash
+let SkiaCanvas: any = null;
+let SkiaPath: any = null;
+let SkiaModule: any = null;
+let SkiaCircle: any = null;
+
+if (Platform.OS !== 'web') {
+  try {
+    const skia = require('@shopify/react-native-skia');
+    SkiaCanvas = skia.Canvas;
+    SkiaPath = skia.Path;
+    SkiaModule = skia.Skia;
+    SkiaCircle = skia.Circle;
+  } catch (e) {
+    console.error('Failed to load @shopify/react-native-skia:', e);
+  }
+}
 
 // Default width for SSR (will be overridden by actual window dimensions on client)
 const DEFAULT_CANVAS_WIDTH = 300;
@@ -511,7 +529,7 @@ export default function DrawingCanvas({
   ) => {
     if (points.length < 2) return null;
 
-    const path = Skia.Path.Make();
+    const path = SkiaModule.Path.Make();
     const firstPoint = {
       x: points[0].x * scale + offsetX,
       y: points[0].y * scale + offsetY
@@ -532,9 +550,18 @@ export default function DrawingCanvas({
   // Berechne Skalierung (nur wenn nicht im Zeichenmodus)
   const { scale, offsetX, offsetY } = !onDrawingChange ? getScaledPaths() : { scale: 1, offsetX: 0, offsetY: 0 };
 
+  // If Skia failed to load, show a fallback
+  if (!SkiaCanvas || !SkiaModule) {
+    return (
+      <View style={[styles.container, { width, height, justifyContent: 'center', alignItems: 'center' }]}>
+        <View style={{ flex: 1, backgroundColor: '#f0f0f0' }} />
+      </View>
+    );
+  }
+
   return (
     <View style={[styles.container, { width, height }]}>
-      <Canvas
+      <SkiaCanvas
         style={{ width, height }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -549,7 +576,7 @@ export default function DrawingCanvas({
               y: pathData.points[0].y * scale + offsetY
             };
             return (
-              <Circle
+              <SkiaCircle
                 key={index}
                 cx={point.x}
                 cy={point.y}
@@ -570,7 +597,7 @@ export default function DrawingCanvas({
           );
           if (!skiaPath) return null;
           return (
-            <Path
+            <SkiaPath
               key={index}
               path={skiaPath.path}
               color={skiaPath.color}
@@ -587,7 +614,7 @@ export default function DrawingCanvas({
           const skiaPath = createSkiaPath(currentNativePath, strokeColor, strokeWidth, 1, 0, 0);
           if (!skiaPath) return null;
           return (
-            <Path
+            <SkiaPath
               path={skiaPath.path}
               color={skiaPath.color}
               style="stroke"
@@ -597,7 +624,7 @@ export default function DrawingCanvas({
             />
           );
         })()}
-      </Canvas>
+      </SkiaCanvas>
     </View>
   );
 }
