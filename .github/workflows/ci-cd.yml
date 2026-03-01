@@ -67,6 +67,9 @@ jobs:
             echo "✅ AsyncStorage is properly used"
           fi
 
+      - name: ESLint (React Hooks Rules)
+        run: npm run lint
+
       - name: TypeScript Type Check
         run: npx tsc --noEmit || true
 
