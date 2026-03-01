@@ -141,7 +141,7 @@ export default function GameScreen() {
       // Fallback: Zurück zum Menü bei kritischem Fehler
       router.back();
     }
-  }, [levelNumber]);
+  }, [levelNumber]); // eslint-disable-line react-hooks/exhaustive-deps -- router from useRouter() is stable
 
   // Timer für Memorize-Phase
   useEffect(() => {
