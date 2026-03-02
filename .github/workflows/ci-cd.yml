@@ -70,6 +70,9 @@ jobs:
       - name: ESLint (React Hooks Rules)
         run: npm run lint
 
+      - name: Validate SVG element counts
+        run: npm run validate:svg-counts
+
       - name: TypeScript Type Check
         run: npx tsc --noEmit || true
 
