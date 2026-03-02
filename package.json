@@ -1,6 +1,6 @@
 {
   "name": "merke-und-male",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "main": "expo-router/entry",
   "homepage": "https://s540d.github.io/DrawFromMemory/",
   "repository": {
@@ -27,6 +27,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:ci": "jest --ci --coverage --maxWorkers=2",
+    "validate:svg-counts": "node scripts/validate-svg-counts.js",
     "validate": "./scripts/validate-release.sh",
     "prepare-release": "./scripts/prepare-release.sh",
     "deploy:ghpages": "./scripts/deploy-ghpages.sh",
