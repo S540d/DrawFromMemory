@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, useWindowDimensions, Platform } from 'react-native';
+import { floodFillPixels, hexToRgb } from '../services/FloodFillService';
 
 // Lazy-load Skia only on native platforms to prevent crash on Android
 // The top-level import initializes native modules immediately, which can crash
@@ -23,8 +24,6 @@ if (Platform.OS !== 'web') {
 // Default width for SSR (will be overridden by actual window dimensions on client)
 const DEFAULT_CANVAS_WIDTH = 300;
 
-// Maximum pixels for flood-fill to prevent stack overflow / infinite loops
-const MAX_FLOOD_FILL_PIXELS = 500000;
 
 interface Props {
   width?: number;
@@ -64,8 +63,6 @@ export default function DrawingCanvas({
   const [currentPath, setCurrentPath] = useState<{ x: number; y: number }[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const tempCanvasRef = useRef<HTMLCanvasElement | null>(null);
-
   // Native-specific state (must be declared unconditionally for React Rules of Hooks)
   const [nativePaths, setNativePaths] = useState(paths);
   const [currentNativePath, setCurrentNativePath] = useState<{ x: number; y: number }[]>([]);
@@ -84,74 +81,7 @@ export default function DrawingCanvas({
     if (!ctx) return;
 
     const imageData = ctx.getImageData(0, 0, width, height);
-    const pixels = imageData.data;
-
-    // Konvertiere Hex-Farbe zu RGBA
-    const hexToRgb = (hex: string) => {
-      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-        a: 255
-      } : { r: 0, g: 0, b: 0, a: 255 };
-    };
-
-    const targetColor = hexToRgb(fillColor);
-    const floorStartX = Math.floor(startX);
-    const floorStartY = Math.floor(startY);
-
-    // Bounds check for start position
-    if (floorStartX < 0 || floorStartX >= width || floorStartY < 0 || floorStartY >= height) return;
-
-    const startPos = (floorStartY * width + floorStartX) * 4;
-    const startR = pixels[startPos];
-    const startG = pixels[startPos + 1];
-    const startB = pixels[startPos + 2];
-    const startA = pixels[startPos + 3];
-
-    // Prüfe ob Zielfarbe bereits die Startfarbe ist
-    if (startR === targetColor.r && startG === targetColor.g &&
-        startB === targetColor.b && startA === targetColor.a) {
-      return;
-    }
-
-    // Stack-basierter Flood-Fill mit Pixel-Limit gegen Endlos-Schleifen
-    const stack: { x: number; y: number }[] = [{ x: floorStartX, y: floorStartY }];
-    const visited = new Set<number>();
-
-    while (stack.length > 0 && visited.size < MAX_FLOOD_FILL_PIXELS) {
-      const { x, y } = stack.pop()!;
-
-      if (x < 0 || x >= width || y < 0 || y >= height) continue;
-
-      const pos = (y * width + x) * 4;
-      if (visited.has(pos)) continue;
-
-      const r = pixels[pos];
-      const g = pixels[pos + 1];
-      const b = pixels[pos + 2];
-      const a = pixels[pos + 3];
-
-      // Farbtoleranz für besseres Ergebnis (±2 RGB-Werte)
-      if (Math.abs(r - startR) > 2 || Math.abs(g - startG) > 2 ||
-          Math.abs(b - startB) > 2 || Math.abs(a - startA) > 2) {
-        continue;
-      }
-
-      visited.add(pos);
-      pixels[pos] = targetColor.r;
-      pixels[pos + 1] = targetColor.g;
-      pixels[pos + 2] = targetColor.b;
-      pixels[pos + 3] = targetColor.a;
-
-      // Füge Nachbarn hinzu (4-Richtungen)
-      stack.push({ x: x + 1, y });
-      stack.push({ x: x - 1, y });
-      stack.push({ x, y: y + 1 });
-      stack.push({ x, y: y - 1 });
-    }
-
+    floodFillPixels(imageData.data, width, height, startX, startY, hexToRgb(fillColor));
     ctx.putImageData(imageData, 0, 0);
   };
 
@@ -208,78 +138,9 @@ export default function DrawingCanvas({
             y: path.points[0].y * scale + offsetY
           };
 
-          // Temporär den Canvas-Kontext wiederherstellen für Flood-Fill
-          // Reuse tempCanvas to avoid memory leaks
-          if (!tempCanvasRef.current) {
-            tempCanvasRef.current = document.createElement('canvas'); // platform-safe: web-only code block
-          }
-          const tempCanvas = tempCanvasRef.current;
-          tempCanvas.width = width;
-          tempCanvas.height = height;
-          const tempCtx = tempCanvas.getContext('2d');
-          if (tempCtx) {
-            tempCtx.drawImage(canvas, 0, 0);
-            // Flood-Fill direkt ausführen
-            const imageData = ctx.getImageData(0, 0, width, height);
-            const pixels = imageData.data;
-
-            const hexToRgb = (hex: string) => {
-              const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-              return result ? {
-                r: parseInt(result[1], 16),
-                g: parseInt(result[2], 16),
-                b: parseInt(result[3], 16),
-                a: 255
-              } : { r: 0, g: 0, b: 0, a: 255 };
-            };
-
-            const targetColor = hexToRgb(path.color);
-            const startX = Math.floor(point.x);
-            const startY = Math.floor(point.y);
-            const startPos = (startY * width + startX) * 4;
-            const startR = pixels[startPos];
-            const startG = pixels[startPos + 1];
-            const startB = pixels[startPos + 2];
-            const startA = pixels[startPos + 3];
-
-            if (startX >= 0 && startX < width && startY >= 0 && startY < height &&
-                !(startR === targetColor.r && startG === targetColor.g &&
-                  startB === targetColor.b && startA === targetColor.a)) {
-              const stack: { x: number; y: number }[] = [{ x: startX, y: startY }];
-              const visited = new Set<number>();
-
-              while (stack.length > 0 && visited.size < MAX_FLOOD_FILL_PIXELS) {
-                const { x, y } = stack.pop()!;
-                if (x < 0 || x >= width || y < 0 || y >= height) continue;
-
-                const pos = (y * width + x) * 4;
-                if (visited.has(pos)) continue;
-
-                const r = pixels[pos];
-                const g = pixels[pos + 1];
-                const b = pixels[pos + 2];
-                const a = pixels[pos + 3];
-
-                if (Math.abs(r - startR) > 2 || Math.abs(g - startG) > 2 ||
-                    Math.abs(b - startB) > 2 || Math.abs(a - startA) > 2) {
-                  continue;
-                }
-
-                visited.add(pos);
-                pixels[pos] = targetColor.r;
-                pixels[pos + 1] = targetColor.g;
-                pixels[pos + 2] = targetColor.b;
-                pixels[pos + 3] = targetColor.a;
-
-                stack.push({ x: x + 1, y });
-                stack.push({ x: x - 1, y });
-                stack.push({ x, y: y + 1 });
-                stack.push({ x, y: y - 1 });
-              }
-
-              ctx.putImageData(imageData, 0, 0);
-            }
-          }
+          const imageData = ctx.getImageData(0, 0, width, height);
+          floodFillPixels(imageData.data, width, height, point.x, point.y, hexToRgb(path.color));
+          ctx.putImageData(imageData, 0, 0);
         } else if (path.points.length >= 2) {
           // Stroke-Pfad
           ctx.strokeStyle = path.color;
