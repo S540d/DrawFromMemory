@@ -81,8 +81,8 @@ export default function DrawingCanvas({
     if (!ctx) return;
 
     const imageData = ctx.getImageData(0, 0, width, height);
-    floodFillPixels(imageData.data, width, height, startX, startY, hexToRgb(fillColor));
-    ctx.putImageData(imageData, 0, 0);
+    const changed = floodFillPixels(imageData.data, width, height, startX, startY, hexToRgb(fillColor));
+    if (changed) ctx.putImageData(imageData, 0, 0);
   };
 
   // Zeichne alle Pfade auf dem Canvas
@@ -139,8 +139,8 @@ export default function DrawingCanvas({
           };
 
           const imageData = ctx.getImageData(0, 0, width, height);
-          floodFillPixels(imageData.data, width, height, point.x, point.y, hexToRgb(path.color));
-          ctx.putImageData(imageData, 0, 0);
+          const changed = floodFillPixels(imageData.data, width, height, point.x, point.y, hexToRgb(path.color));
+          if (changed) ctx.putImageData(imageData, 0, 0);
         } else if (path.points.length >= 2) {
           // Stroke-Pfad
           ctx.strokeStyle = path.color;

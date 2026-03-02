@@ -1,4 +1,5 @@
-// Maximum pixels for flood-fill to prevent stack overflow / infinite loops
+// Maximum pixels for flood-fill to limit runtime/memory usage and guard against
+// runaway fills (the fill may stop early when this limit is hit)
 export const MAX_FLOOD_FILL_PIXELS = 500000;
 
 export interface RGBAColor {
@@ -39,11 +40,11 @@ export function floodFillPixels(
   startX: number,
   startY: number,
   targetColor: RGBAColor
-): void {
+): boolean {
   const x0 = Math.floor(startX);
   const y0 = Math.floor(startY);
 
-  if (x0 < 0 || x0 >= width || y0 < 0 || y0 >= height) return;
+  if (x0 < 0 || x0 >= width || y0 < 0 || y0 >= height) return false;
 
   const startPos = (y0 * width + x0) * 4;
   const startR = pixels[startPos];
@@ -58,7 +59,7 @@ export function floodFillPixels(
     startB === targetColor.b &&
     startA === targetColor.a
   ) {
-    return;
+    return false;
   }
 
   const stack: { x: number; y: number }[] = [{ x: x0, y: y0 }];
@@ -98,4 +99,6 @@ export function floodFillPixels(
     stack.push({ x, y: y + 1 });
     stack.push({ x, y: y - 1 });
   }
+
+  return visited.size > 0;
 }

@@ -39,7 +39,8 @@ describe('floodFillPixels', () => {
     const pixels = whiteCanvas(W, H);
     const red = { r: 255, g: 0, b: 0, a: 255 };
 
-    floodFillPixels(pixels, W, H, 0, 0, red);
+    const changed = floodFillPixels(pixels, W, H, 0, 0, red);
+    expect(changed).toBe(true);
 
     for (let y = 0; y < H; y++) {
       for (let x = 0; x < W; x++) {
@@ -53,8 +54,9 @@ describe('floodFillPixels', () => {
     const pixels = whiteCanvas(W, H);
     const white = { r: 255, g: 255, b: 255, a: 255 };
 
-    floodFillPixels(pixels, W, H, 1, 1, white);
+    const changed = floodFillPixels(pixels, W, H, 1, 1, white);
 
+    expect(changed).toBe(false);
     expect(getPixel(pixels, W, 1, 1)).toEqual(white);
   });
 
@@ -64,10 +66,10 @@ describe('floodFillPixels', () => {
     const red = { r: 255, g: 0, b: 0, a: 255 };
     const before = pixels.slice();
 
-    floodFillPixels(pixels, W, H, -1, 0, red);
-    floodFillPixels(pixels, W, H, 0, -1, red);
-    floodFillPixels(pixels, W, H, W, 0, red);
-    floodFillPixels(pixels, W, H, 0, H, red);
+    expect(floodFillPixels(pixels, W, H, -1, 0, red)).toBe(false);
+    expect(floodFillPixels(pixels, W, H, 0, -1, red)).toBe(false);
+    expect(floodFillPixels(pixels, W, H, W, 0, red)).toBe(false);
+    expect(floodFillPixels(pixels, W, H, 0, H, red)).toBe(false);
 
     expect(pixels).toEqual(before);
   });
@@ -93,19 +95,20 @@ describe('floodFillPixels', () => {
     expect(getPixel(pixels, W, 3, 0)).toEqual({ r: 0, g: 0, b: 0, a: 255 });
   });
 
-  it('fills only connected pixels (no diagonal spread)', () => {
-    // 3x3 canvas, center pixel is black, corners are white
+  it('does not fill pixels across a color boundary (black center isolates corners)', () => {
+    // 3x3 canvas: all white except center pixel (black)
+    // The center forms a cross-shaped barrier via 4-connectivity
     const W = 3, H = 3;
     const pixels = whiteCanvas(W, H);
-    // Set center to black
     const centerPos = (1 * W + 1) * 4;
     pixels[centerPos] = 0; pixels[centerPos + 1] = 0;
     pixels[centerPos + 2] = 0; pixels[centerPos + 3] = 255;
 
     const red = { r: 255, g: 0, b: 0, a: 255 };
-    floodFillPixels(pixels, W, H, 0, 0, red);
+    const changed = floodFillPixels(pixels, W, H, 0, 0, red);
 
-    // All white pixels should be red
+    expect(changed).toBe(true);
+    // All white pixels reachable from (0,0) should be red
     expect(getPixel(pixels, W, 0, 0)).toEqual(red);
     expect(getPixel(pixels, W, 2, 2)).toEqual(red);
     // Center black pixel must remain unchanged
