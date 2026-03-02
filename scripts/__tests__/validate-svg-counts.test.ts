@@ -6,11 +6,12 @@
  * match the actual inline SVG elements in each case.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
+/* eslint-disable */
 const { extractImageElementCounts, extractCaseCounts } = require('../validate-svg-counts');
 
 const fs = require('fs');
 const path = require('path');
+/* eslint-enable */
 
 const LEVEL_IMAGE_DISPLAY = path.resolve(
   __dirname,
