@@ -86,6 +86,18 @@ describe('extractCaseCounts', () => {
     const counts = extractCaseCounts('no cases here');
     expect(counts).toEqual({});
   });
+
+  it('does not count primitives in the default: branch toward the last case', () => {
+    const source = `
+      case 'last.svg':
+        return (<Svg><Circle cx="1" cy="1" r="1" /></Svg>);
+      default:
+        return (<Svg><Rect x="0" y="0" width="1" height="1" /><Line x1="0" y1="0" x2="1" y2="1" /></Svg>);
+    `;
+    const counts = extractCaseCounts(source);
+    // Only the 1 Circle from last.svg should be counted, not the Rect+Line from default
+    expect(counts['last.svg']).toBe(1);
+  });
 });
 
 describe('IMAGE_ELEMENT_COUNTS vs. actual renderSvgForImage elements', () => {

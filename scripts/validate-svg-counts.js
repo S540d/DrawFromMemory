@@ -37,6 +37,10 @@ function extractImageElementCounts(source) {
 function extractCaseCounts(source) {
   const counts = {};
 
+  // Find the end of the switch body to exclude default: and anything after it
+  const defaultMatch = source.search(/^\s*default\s*:/m);
+  const switchEnd = defaultMatch !== -1 ? defaultMatch : source.length;
+
   // Split on case statements, keeping the case label in each chunk
   const caseRegex = /case\s+'([^']+\.svg)':/g;
   const positions = [];
@@ -47,7 +51,8 @@ function extractCaseCounts(source) {
 
   for (let i = 0; i < positions.length; i++) {
     const start = positions[i].index;
-    const end = i + 1 < positions.length ? positions[i + 1].index : source.length;
+    const nextBoundary = i + 1 < positions.length ? positions[i + 1].index : switchEnd;
+    const end = Math.min(nextBoundary, switchEnd);
     const chunk = source.slice(start, end);
 
     // Count opening tags of SVG primitives in this chunk (self-closing or opening)

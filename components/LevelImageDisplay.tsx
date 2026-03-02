@@ -34,7 +34,7 @@ const IMAGE_ELEMENT_COUNTS: Record<string, number> = {
   'level-05-tree.svg': 8,
   'extra-02-car.svg': 15,
   'level-09-fish.svg': 15,
-  'level-10-butterfly.svg': 19,
+  'level-10-butterfly.svg': 16,
 };
 
 /**
