@@ -61,7 +61,9 @@ export default function DrawingCanvas({
   const width = propWidth ?? (windowWidth > 0 ? windowWidth - 48 : DEFAULT_CANVAS_WIDTH);
 
   const [currentPath, setCurrentPath] = useState<{ x: number; y: number }[]>([]);
-  const [isDrawing, setIsDrawing] = useState(false);
+  // Refs mirror state so event handlers always read the latest value without stale closures
+  const isDrawingRef = useRef(false);
+  const currentPathRef = useRef<{ x: number; y: number }[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   // Native-specific state (must be declared unconditionally for React Rules of Hooks)
   const [nativePaths, setNativePaths] = useState(paths);
@@ -212,6 +214,7 @@ export default function DrawingCanvas({
   };
 
   const handleStart = (event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    if (!onDrawingChange) return; // read-only canvas (gallery/result view)
     const pos = getPosition(event);
 
     if (tool === 'fill') {
@@ -228,36 +231,55 @@ export default function DrawingCanvas({
           type: 'fill' as const,
         },
       ];
-      onDrawingChange?.(newPaths);
+      onDrawingChange(newPaths);
     } else {
       // Brush-Tool: Starte Zeichnung
-      setCurrentPath([pos]);
-      setIsDrawing(true);
+      const initial = [pos];
+      currentPathRef.current = initial;
+      isDrawingRef.current = true;
+      setCurrentPath(initial);
     }
   };
 
   const handleMove = (event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    if (!isDrawing || tool === 'fill') return;
+    if (!onDrawingChange) return; // read-only canvas
+    // Use refs instead of state to avoid stale closures in rapid event sequences
+    if (!isDrawingRef.current || tool === 'fill') return;
     const pos = getPosition(event);
-    setCurrentPath([...currentPath, pos]);
+    const next = [...currentPathRef.current, pos];
+    currentPathRef.current = next;
+    setCurrentPath(next);
   };
 
   const handleEnd = () => {
-    if (tool === 'fill') return;
+    if (!onDrawingChange) return; // read-only canvas
+    // Reset refs on tool switch mid-stroke (e.g. fill selected while brush was active)
+    if (tool === 'fill') {
+      isDrawingRef.current = false;
+      currentPathRef.current = [];
+      setCurrentPath([]);
+      return;
+    }
 
-    if (isDrawing && currentPath.length > 0) {
+    if (isDrawingRef.current && currentPathRef.current.length > 1) {
       const newPaths = [
         ...paths,
         {
-          points: currentPath,
+          points: currentPathRef.current,
           color: strokeColor,
           strokeWidth: strokeWidth,
           type: 'stroke' as const,
         },
       ];
+      currentPathRef.current = [];
+      isDrawingRef.current = false;
       setCurrentPath([]);
-      setIsDrawing(false);
-      onDrawingChange?.(newPaths);
+      onDrawingChange(newPaths);
+    } else {
+      // Discard single-point taps – they can't render and pollute undo history
+      currentPathRef.current = [];
+      isDrawingRef.current = false;
+      setCurrentPath([]);
     }
   };
 
