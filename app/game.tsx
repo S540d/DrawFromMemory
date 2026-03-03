@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, useWindowDimensions, Platform } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { getRandomImageForLevel } from '../services/ImagePoolManager';
-import { getLevel, getTotalLevels } from '../services/LevelManager';
-import { t, getCurrentLanguage } from '../services/i18n';
-import { useTheme } from '../services/ThemeContext';
-import storageManager from '../services/StorageManager';
+import { getRandomImageForLevel } from '@services/ImagePoolManager';
+import { getLevel, getTotalLevels } from '@services/LevelManager';
+import { t, getCurrentLanguage } from '@services/i18n';
+import { useTheme } from '@services/ThemeContext';
+import storageManager from '@services/StorageManager';
 import { DrawingColors } from '../constants/Colors';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
-import LevelImageDisplay, { getImageElementCount } from '../components/LevelImageDisplay';
-import DrawingCanvas, { useDrawingCanvas, DrawingPath } from '../components/DrawingCanvas';
-import SettingsModal from '../components/SettingsModal';
-import { ErrorBoundary } from '../components/ErrorBoundary';
-import SoundManager from '../services/SoundManager';
+import LevelImageDisplay, { getImageElementCount } from '@components/LevelImageDisplay';
+import DrawingCanvas, { useDrawingCanvas, DrawingPath } from '@components/DrawingCanvas';
+import SettingsModal from '@components/SettingsModal';
+import { ErrorBoundary } from '@components/ErrorBoundary';
+import SoundManager from '@services/SoundManager';
 import type { GamePhase, LevelImage } from '../types';
 
 /**

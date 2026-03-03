@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
-import { t } from '../services/i18n';
-import { useTheme } from '../services/ThemeContext';
-import storageManager, { GalleryEntry } from '../services/StorageManager';
-import DrawingCanvas from '../components/DrawingCanvas';
+import { t } from '@services/i18n';
+import { useTheme } from '@services/ThemeContext';
+import storageManager, { GalleryEntry } from '@services/StorageManager';
+import DrawingCanvas from '@components/DrawingCanvas';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 
