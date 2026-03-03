@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, Linking, Share } from 'react-native';
-import { t, getLanguage, setLanguage } from '../services/i18n';
-import { useTheme } from '../services/ThemeContext';
-import storageManager from '../services/StorageManager';
-import SoundManager from '../services/SoundManager';
+import { t, getLanguage, setLanguage } from '@services/i18n';
+import { useTheme } from '@services/ThemeContext';
+import storageManager from '@services/StorageManager';
+import SoundManager from '@services/SoundManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
-import { t } from '../services/i18n';
-import { useTheme } from '../services/ThemeContext';
-import { getAllLevels } from '../services/LevelManager';
+import { t } from '@services/i18n';
+import { useTheme } from '@services/ThemeContext';
+import { getAllLevels } from '@services/LevelManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 

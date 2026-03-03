@@ -1,11 +1,11 @@
 import { Stack } from 'expo-router';
 import Head from 'expo-router/head';
 import { StatusBar } from 'expo-status-bar';
-import { ThemeProvider, useTheme } from '../services/ThemeContext';
-import { ErrorBoundary } from '../components/ErrorBoundary';
-import AnimatedSplashScreen from '../components/AnimatedSplashScreen';
+import { ThemeProvider, useTheme } from '@services/ThemeContext';
+import { ErrorBoundary } from '@components/ErrorBoundary';
+import AnimatedSplashScreen from '@components/AnimatedSplashScreen';
 import { useCallback, useEffect, useState } from 'react';
-import { initLanguage } from '../services/i18n';
+import { initLanguage } from '@services/i18n';
 
 // Global error handler for unhandled errors (prevents crashes in production)
 if (!__DEV__) {

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, useWindowDimensions, Platform } from 'react-native';
-import { floodFillPixels, hexToRgb } from '../services/FloodFillService';
+import { floodFillPixels, hexToRgb } from '@services/FloodFillService';
 
 // Lazy-load Skia only on native platforms to prevent crash on Android
 // The top-level import initializes native modules immediately, which can crash

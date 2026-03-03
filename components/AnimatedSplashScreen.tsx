@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Dimensions } from 'react-native';
 import Colors from '../constants/Colors';
 import { FontWeight } from '../constants/Layout';
-import { t } from '../services/i18n';
+import { t } from '@services/i18n';
 
 interface Props {
   onFinish: () => void;
