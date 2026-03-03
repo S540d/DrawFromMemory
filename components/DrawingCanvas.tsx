@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, useWindowDimensions, Platform } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions, Platform } from 'react-native';
 import { floodFillPixels, hexToRgb } from '@services/FloodFillService';
 
 // Lazy-load Skia only on native platforms to prevent crash on Android
@@ -8,6 +8,7 @@ let SkiaCanvas: any = null;
 let SkiaPath: any = null;
 let SkiaModule: any = null;
 let SkiaCircle: any = null;
+let skiaLoadError: Error | null = null;
 
 if (Platform.OS !== 'web') {
   try {
@@ -17,7 +18,12 @@ if (Platform.OS !== 'web') {
     SkiaModule = skia.Skia;
     SkiaCircle = skia.Circle;
   } catch (e) {
-    console.error('Failed to load @shopify/react-native-skia:', e);
+    skiaLoadError = e instanceof Error ? e : new Error(String(e));
+    console.error('[DrawingCanvas] Failed to load @shopify/react-native-skia:', {
+      message: skiaLoadError.message,
+      platform: Platform.OS,
+      version: Platform.Version,
+    });
   }
 }
 
@@ -433,11 +439,18 @@ export default function DrawingCanvas({
   // Berechne Skalierung (nur wenn nicht im Zeichenmodus)
   const { scale, offsetX, offsetY } = !onDrawingChange ? getScaledPaths() : { scale: 1, offsetX: 0, offsetY: 0 };
 
-  // If Skia failed to load, show a fallback
+  // If Skia failed to load, show a proper error fallback
   if (!SkiaCanvas || !SkiaModule) {
     return (
-      <View style={[styles.container, { width, height, justifyContent: 'center', alignItems: 'center' }]}>
-        <View style={{ flex: 1, backgroundColor: '#f0f0f0' }} />
+      <View style={[styles.container, styles.fallbackContainer, { width, height }]}>
+        <Text style={styles.fallbackEmoji}>⚠️</Text>
+        <Text style={styles.fallbackTitle}>Zeichenfläche nicht verfügbar</Text>
+        <Text style={styles.fallbackMessage}>
+          Die Zeichenfunktion konnte nicht geladen werden.{'\n'}Bitte starte die App neu.
+        </Text>
+        {__DEV__ && skiaLoadError && (
+          <Text style={styles.fallbackErrorDetail}>{skiaLoadError.message}</Text>
+        )}
       </View>
     );
   }
@@ -516,6 +529,36 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
+  },
+  fallbackContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFF5E6',
+    padding: 16,
+  },
+  fallbackEmoji: {
+    fontSize: 40,
+    marginBottom: 12,
+  },
+  fallbackTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  fallbackMessage: {
+    fontSize: 13,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  fallbackErrorDetail: {
+    marginTop: 12,
+    fontSize: 11,
+    color: '#C33',
+    fontFamily: 'monospace',
+    textAlign: 'center',
   },
 });
 
