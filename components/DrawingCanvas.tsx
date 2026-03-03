@@ -214,6 +214,7 @@ export default function DrawingCanvas({
   };
 
   const handleStart = (event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    if (!onDrawingChange) return; // read-only canvas (gallery/result view)
     const pos = getPosition(event);
 
     if (tool === 'fill') {
@@ -230,7 +231,7 @@ export default function DrawingCanvas({
           type: 'fill' as const,
         },
       ];
-      onDrawingChange?.(newPaths);
+      onDrawingChange(newPaths);
     } else {
       // Brush-Tool: Starte Zeichnung
       const initial = [pos];
@@ -241,6 +242,7 @@ export default function DrawingCanvas({
   };
 
   const handleMove = (event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    if (!onDrawingChange) return; // read-only canvas
     // Use refs instead of state to avoid stale closures in rapid event sequences
     if (!isDrawingRef.current || tool === 'fill') return;
     const pos = getPosition(event);
@@ -250,9 +252,16 @@ export default function DrawingCanvas({
   };
 
   const handleEnd = () => {
-    if (tool === 'fill') return;
+    if (!onDrawingChange) return; // read-only canvas
+    // Reset refs on tool switch mid-stroke (e.g. fill selected while brush was active)
+    if (tool === 'fill') {
+      isDrawingRef.current = false;
+      currentPathRef.current = [];
+      setCurrentPath([]);
+      return;
+    }
 
-    if (isDrawingRef.current && currentPathRef.current.length > 0) {
+    if (isDrawingRef.current && currentPathRef.current.length > 1) {
       const newPaths = [
         ...paths,
         {
@@ -265,7 +274,12 @@ export default function DrawingCanvas({
       currentPathRef.current = [];
       isDrawingRef.current = false;
       setCurrentPath([]);
-      onDrawingChange?.(newPaths);
+      onDrawingChange(newPaths);
+    } else {
+      // Discard single-point taps – they can't render and pollute undo history
+      currentPathRef.current = [];
+      isDrawingRef.current = false;
+      setCurrentPath([]);
     }
   };
 
