@@ -1,8 +1,8 @@
 {
-  "version": "1.1.7",
+  "version": "1.1.8",
   "name": "merke-und-male",
   "buildDate": "2026-03-03",
-  "buildTime": 1772568204233,
-  "timestamp": "2026-03-03T20:03:24.233Z",
-  "commit": "ec9c222c951477f8c32611be528d87b7c4779dc8"
+  "buildTime": 1772568976924,
+  "timestamp": "2026-03-03T20:16:16.924Z",
+  "commit": "cd1e262cdfbc78a57cf4ca97e29a2e8c71154f4f"
 }
