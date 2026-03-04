@@ -62,11 +62,6 @@ export default function HomeScreen() {
         </Pressable>
       </View>
 
-      {/* Footer */}
-      <View style={styles.footer}>
-        <Text style={[styles.footerText, { color: colors.text.light }]}>Version 1.1.1</Text>
-      </View>
-
       {/* Settings Modal */}
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
     </View>
@@ -143,13 +138,5 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     color: Colors.primary,
-  },
-  footer: {
-    alignItems: 'center',
-    paddingBottom: Spacing.md,
-  },
-  footerText: {
-    fontSize: FontSize.sm,
-    color: Colors.text.light,
   },
 });

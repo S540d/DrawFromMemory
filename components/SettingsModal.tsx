@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, Linking, Share } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, Linking, Share, ScrollView } from 'react-native';
 import { t, getLanguage, setLanguage } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import storageManager from '@services/StorageManager';
@@ -445,10 +445,14 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               </TouchableOpacity>
             </View>
 
-            {/* Content */}
-            <View style={styles.settingsContent}>
+            {/* Content – scrollable so all settings are reachable on small screens */}
+            <ScrollView
+              style={styles.settingsContent}
+              showsVerticalScrollIndicator={true}
+              contentContainerStyle={styles.settingsContentInner}
+            >
               {renderContent()}
-            </View>
+            </ScrollView>
           </View>
         </View>
       </Modal>
@@ -479,7 +483,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.lg,
+    paddingVertical: Spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
@@ -497,8 +501,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   settingsContent: {
+    flex: 1,
+  },
+  settingsContentInner: {
     paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.lg,
+    paddingVertical: Spacing.sm,
   },
 
   // Content styles
@@ -507,16 +514,16 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
-    marginTop: Spacing.lg,
-    marginBottom: Spacing.md,
+    marginTop: Spacing.md,
+    marginBottom: Spacing.sm,
   },
   section: {
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
   },
   optionLabel: {
     fontSize: FontSize.sm,
     fontWeight: FontWeight.medium,
-    marginBottom: Spacing.sm,
+    marginBottom: Spacing.xs,
   },
   optionsRow: {
     flexDirection: 'row',
@@ -524,7 +531,7 @@ const styles = StyleSheet.create({
   },
   optionButton: {
     flex: 1,
-    paddingVertical: Spacing.md,
+    paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.sm,
     borderRadius: BorderRadius.md,
     borderWidth: 2,
@@ -543,12 +550,12 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    marginVertical: Spacing.lg,
+    marginVertical: Spacing.md,
   },
   dangerButton: {
     borderWidth: 2,
     borderRadius: BorderRadius.md,
-    paddingVertical: Spacing.md,
+    paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.lg,
     alignItems: 'center',
     ...Colors.shadow.small,
@@ -566,7 +573,7 @@ const styles = StyleSheet.create({
   },
   gridButton: {
     flex: 1,
-    paddingVertical: Spacing.md,
+    paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.sm,
     borderRadius: BorderRadius.md,
     borderWidth: 2,
