@@ -83,6 +83,10 @@
     "deleteTitle": "Delete drawing",
     "deleteConfirm": "Do you really want to delete this drawing?"
   },
+  "errors": {
+    "skiaUnavailableTitle": "Drawing surface unavailable",
+    "skiaUnavailableMessage": "The drawing function could not be loaded.\nPlease restart the app."
+  },
   "common": {
     "yes": "Yes",
     "no": "No",

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, useWindowDimensions, Platform } from 'react-native';
 import { floodFillPixels, hexToRgb } from '@services/FloodFillService';
+import { t } from '@services/i18n';
 
 // Lazy-load Skia only on native platforms to prevent crash on Android
 // The top-level import initializes native modules immediately, which can crash
@@ -23,6 +24,8 @@ if (Platform.OS !== 'web') {
       message: skiaLoadError.message,
       platform: Platform.OS,
       version: Platform.Version,
+      stack: skiaLoadError.stack,
+      error: skiaLoadError,
     });
   }
 }
@@ -444,10 +447,8 @@ export default function DrawingCanvas({
     return (
       <View style={[styles.container, styles.fallbackContainer, { width, height }]}>
         <Text style={styles.fallbackEmoji}>⚠️</Text>
-        <Text style={styles.fallbackTitle}>Zeichenfläche nicht verfügbar</Text>
-        <Text style={styles.fallbackMessage}>
-          Die Zeichenfunktion konnte nicht geladen werden.{'\n'}Bitte starte die App neu.
-        </Text>
+        <Text style={styles.fallbackTitle}>{t('errors.skiaUnavailableTitle')}</Text>
+        <Text style={styles.fallbackMessage}>{t('errors.skiaUnavailableMessage')}</Text>
         {__DEV__ && skiaLoadError && (
           <Text style={styles.fallbackErrorDetail}>{skiaLoadError.message}</Text>
         )}
