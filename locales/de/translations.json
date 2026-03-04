@@ -83,6 +83,10 @@
     "deleteTitle": "Zeichnung löschen",
     "deleteConfirm": "Möchtest du diese Zeichnung wirklich löschen?"
   },
+  "errors": {
+    "skiaUnavailableTitle": "Zeichenfläche nicht verfügbar",
+    "skiaUnavailableMessage": "Die Zeichenfunktion konnte nicht geladen werden.\nBitte starte die App neu."
+  },
   "common": {
     "yes": "Ja",
     "no": "Nein",
