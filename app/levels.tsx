@@ -43,10 +43,6 @@ export default function LevelsScreen() {
           <Text style={styles.difficultyText}>{difficultyText}</Text>
         </View>
 
-        {/* Platzhalter für Sterne (später mit Progress-System) */}
-        <View style={styles.starsContainer}>
-          <Text style={[styles.starsPlaceholder, { color: colors.text.light }]}>☆ ☆ ☆ ☆ ☆</Text>
-        </View>
       </TouchableOpacity>
     );
   };
@@ -152,12 +148,5 @@ const styles = StyleSheet.create({
     fontSize: FontSize.sm,
     fontWeight: FontWeight.medium,
     color: Colors.drawing.white,
-  },
-  starsContainer: {
-    marginTop: Spacing.xs,
-  },
-  starsPlaceholder: {
-    fontSize: FontSize.md,
-    color: Colors.text.light,
   },
 });
