@@ -85,7 +85,9 @@
   },
   "errors": {
     "skiaUnavailableTitle": "Zeichenfläche nicht verfügbar",
-    "skiaUnavailableMessage": "Die Zeichenfunktion konnte nicht geladen werden.\nBitte starte die App neu."
+    "skiaUnavailableMessage": "Die Zeichenfunktion konnte nicht geladen werden.\nBitte versuche es erneut oder starte die App neu.",
+    "skiaLoading": "Zeichenfläche wird geladen…",
+    "skiaRetry": "Nochmal versuchen"
   },
   "common": {
     "yes": "Ja",

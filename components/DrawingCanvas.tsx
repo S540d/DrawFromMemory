@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, useWindowDimensions, Platform } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { floodFillPixels, hexToRgb } from '@services/FloodFillService';
 import { t } from '@services/i18n';
 
@@ -10,25 +10,42 @@ let SkiaPath: any = null;
 let SkiaModule: any = null;
 let SkiaCircle: any = null;
 let skiaLoadError: Error | null = null;
+function tryLoadSkia(): boolean {
+  if (Platform.OS === 'web') return false;
+  if (SkiaCanvas && SkiaModule) return true;
 
-if (Platform.OS !== 'web') {
+  skiaLoadError = null;
+
   try {
     const skia = require('@shopify/react-native-skia');
     SkiaCanvas = skia.Canvas;
     SkiaPath = skia.Path;
     SkiaModule = skia.Skia;
     SkiaCircle = skia.Circle;
+
+    // Verify that the native module is actually ready (not just exported)
+    if (!SkiaModule?.Path?.Make) {
+      throw new Error('Skia native module not fully initialized');
+    }
+
+    return true;
   } catch (e) {
+    SkiaCanvas = null;
+    SkiaPath = null;
+    SkiaModule = null;
+    SkiaCircle = null;
     skiaLoadError = e instanceof Error ? e : new Error(String(e));
     console.error('[DrawingCanvas] Failed to load @shopify/react-native-skia:', {
       message: skiaLoadError.message,
       platform: Platform.OS,
       version: Platform.Version,
-      stack: skiaLoadError.stack,
-      error: skiaLoadError,
     });
+    return false;
   }
 }
+
+// Attempt initial load at module level
+tryLoadSkia();
 
 // Default width for SSR (will be overridden by actual window dimensions on client)
 const DEFAULT_CANVAS_WIDTH = 300;
@@ -49,6 +66,95 @@ export interface DrawingPath {
   color: string;
   strokeWidth: number;
   type?: 'stroke' | 'fill'; // Optional: default = 'stroke'
+}
+
+/**
+ * Fallback UI when Skia fails to load, with retry capability.
+ * On some Android devices, the native module isn't ready on first load
+ * but works after a short delay or app restart.
+ */
+function SkiaFallback({ width, height, onRetrySuccess }: {
+  width: number;
+  height: number;
+  onRetrySuccess: () => void;
+}) {
+  const [retrying, setRetrying] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const onRetrySuccessRef = useRef(onRetrySuccess);
+  const manualRetryRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const MAX_AUTO_RETRIES = 3;
+  const RETRY_DELAY_MS = 1000;
+
+  // Keep callback ref stable to avoid resetting the auto-retry timer
+  useEffect(() => {
+    onRetrySuccessRef.current = onRetrySuccess;
+  }, [onRetrySuccess]);
+
+  // Auto-retry a few times on mount – the native module may just need time to init
+  useEffect(() => {
+    if (retryCount >= MAX_AUTO_RETRIES) return;
+
+    const timer = setTimeout(() => {
+      if (tryLoadSkia()) {
+        onRetrySuccessRef.current();
+      } else {
+        setRetryCount((c) => c + 1);
+      }
+    }, RETRY_DELAY_MS);
+
+    return () => clearTimeout(timer);
+  }, [retryCount]);
+
+  // Cleanup manual retry timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (manualRetryRef.current) clearTimeout(manualRetryRef.current);
+    };
+  }, []);
+
+  const handleManualRetry = () => {
+    setRetrying(true);
+    // Small delay to let native bridge settle
+    manualRetryRef.current = setTimeout(() => {
+      if (tryLoadSkia()) {
+        onRetrySuccessRef.current();
+      }
+      setRetrying(false);
+    }, 500);
+  };
+
+  const showAutoRetrying = retryCount < MAX_AUTO_RETRIES;
+
+  return (
+    <View style={[styles.container, styles.fallbackContainer, { width, height }]}>
+      {showAutoRetrying ? (
+        <>
+          <ActivityIndicator size="large" color="#4ECDC4" />
+          <Text style={styles.fallbackMessage}>{t('errors.skiaLoading')}</Text>
+        </>
+      ) : (
+        <>
+          <Text style={styles.fallbackEmoji}>⚠️</Text>
+          <Text style={styles.fallbackTitle}>{t('errors.skiaUnavailableTitle')}</Text>
+          <Text style={styles.fallbackMessage}>{t('errors.skiaUnavailableMessage')}</Text>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={handleManualRetry}
+            disabled={retrying}
+          >
+            {retrying ? (
+              <ActivityIndicator size="small" color="#FFFFFF" />
+            ) : (
+              <Text style={styles.retryButtonText}>{t('errors.skiaRetry')}</Text>
+            )}
+          </TouchableOpacity>
+          {__DEV__ && skiaLoadError && (
+            <Text style={styles.fallbackErrorDetail}>{skiaLoadError.message}</Text>
+          )}
+        </>
+      )}
+    </View>
+  );
 }
 
 /**
@@ -442,17 +548,14 @@ export default function DrawingCanvas({
   // Berechne Skalierung (nur wenn nicht im Zeichenmodus)
   const { scale, offsetX, offsetY } = !onDrawingChange ? getScaledPaths() : { scale: 1, offsetX: 0, offsetY: 0 };
 
-  // If Skia failed to load, show a proper error fallback
+  // If Skia failed to load, show fallback with retry option
   if (!SkiaCanvas || !SkiaModule) {
     return (
-      <View style={[styles.container, styles.fallbackContainer, { width, height }]}>
-        <Text style={styles.fallbackEmoji}>⚠️</Text>
-        <Text style={styles.fallbackTitle}>{t('errors.skiaUnavailableTitle')}</Text>
-        <Text style={styles.fallbackMessage}>{t('errors.skiaUnavailableMessage')}</Text>
-        {__DEV__ && skiaLoadError && (
-          <Text style={styles.fallbackErrorDetail}>{skiaLoadError.message}</Text>
-        )}
-      </View>
+      <SkiaFallback
+        width={width}
+        height={height}
+        onRetrySuccess={() => setNativePaths([...nativePaths])} // force re-render
+      />
     );
   }
 
@@ -560,6 +663,20 @@ const styles = StyleSheet.create({
     color: '#C33',
     fontFamily: 'monospace',
     textAlign: 'center',
+  },
+  retryButton: {
+    marginTop: 12,
+    backgroundColor: '#4ECDC4',
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+    minWidth: 140,
+    alignItems: 'center',
+  },
+  retryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
 
