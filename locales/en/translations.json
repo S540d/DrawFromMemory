@@ -85,7 +85,9 @@
   },
   "errors": {
     "skiaUnavailableTitle": "Drawing surface unavailable",
-    "skiaUnavailableMessage": "The drawing function could not be loaded.\nPlease restart the app."
+    "skiaUnavailableMessage": "The drawing function could not be loaded.\nPlease try again or restart the app.",
+    "skiaLoading": "Loading drawing surface…",
+    "skiaRetry": "Try again"
   },
   "common": {
     "yes": "Yes",
