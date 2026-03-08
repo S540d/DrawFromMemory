@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'expo-router';
 import { getRandomImageForLevel } from '@services/ImagePoolManager';
 import { getLevel, getTotalLevels } from '@services/LevelManager';
@@ -13,14 +13,12 @@ interface UseGamePhaseOptions {
   initialLevel: number;
   drawingPaths: DrawingPath[];
   clearCanvas: () => void;
-  setPaths: (paths: DrawingPath[]) => void;
 }
 
 export function useGamePhase({
   initialLevel,
   drawingPaths,
   clearCanvas,
-  setPaths,
 }: UseGamePhaseOptions) {
   const router = useRouter();
   const [phase, setPhase] = useState<GamePhase>('memorize');
@@ -31,6 +29,8 @@ export function useGamePhase({
   const [savedToGallery, setSavedToGallery] = useState(false);
   const [isReplaying, setIsReplaying] = useState(false);
   const [replayPaths, setReplayPaths] = useState<DrawingPath[]>([]);
+  const timerExpireTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const replayCompleteTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const REPLAY_DURATION_MS = 3000;
   const REPLAY_FRAME_MS = 30;
@@ -38,7 +38,8 @@ export function useGamePhase({
   const handleTimerExpire = useCallback(() => {
     if (currentImage) {
       SoundManager.playPhaseTransition();
-      setTimeout(() => setPhase('draw'), 500);
+      if (timerExpireTimeoutRef.current) clearTimeout(timerExpireTimeoutRef.current);
+      timerExpireTimeoutRef.current = setTimeout(() => setPhase('draw'), 500);
     }
   }, [currentImage]);
 
@@ -126,12 +127,21 @@ export function useGamePhase({
       if (pointsShown >= totalPoints) {
         clearInterval(interval);
         setReplayPaths(drawingPaths);
-        setTimeout(() => setIsReplaying(false), 500);
+        if (replayCompleteTimeoutRef.current) clearTimeout(replayCompleteTimeoutRef.current);
+        replayCompleteTimeoutRef.current = setTimeout(() => setIsReplaying(false), 500);
       }
     }, REPLAY_FRAME_MS);
 
     return () => clearInterval(interval);
   }, [isReplaying, drawingPaths]);
+
+  // Cleanup all pending timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (timerExpireTimeoutRef.current) clearTimeout(timerExpireTimeoutRef.current);
+      if (replayCompleteTimeoutRef.current) clearTimeout(replayCompleteTimeoutRef.current);
+    };
+  }, []);
 
   const handleRatingSubmit = async (rating: number) => {
     try {
@@ -167,71 +177,49 @@ export function useGamePhase({
   }, [drawingPaths]);
 
   const restartCurrentLevel = () => {
+    setUserRating(0);
+    setSavedToGallery(false);
+    clearCanvas();
+    // Re-trigger level-init useEffect by setting a fresh image + time directly
+    // (levelNumber doesn't change, so we init manually here)
     try {
-      setPhase('memorize');
-      setUserRating(0);
-      setSavedToGallery(false);
-      clearCanvas();
       const image = getRandomImageForLevel(levelNumber);
       const level = getLevel(levelNumber);
       setCurrentImage(image);
       setTimeRemaining(level.displayDuration);
+      setPhase('memorize');
     } catch (error) {
       console.error('Error restarting level:', error);
     }
   };
 
   const startNextLevel = () => {
-    try {
-      const nextLevel = levelNumber + 1;
-      if (nextLevel <= getTotalLevels()) {
-        setLevelNumber(nextLevel);
-        setPhase('memorize');
-        setUserRating(0);
-        setSavedToGallery(false);
-        clearCanvas();
-        const image = getRandomImageForLevel(nextLevel);
-        const level = getLevel(nextLevel);
-        setCurrentImage(image);
-        setTimeRemaining(level.displayDuration);
-      }
-    } catch (error) {
-      console.error('Error starting next level:', error);
+    const nextLevel = levelNumber + 1;
+    if (nextLevel <= getTotalLevels()) {
+      setPhase('memorize');
+      setUserRating(0);
+      setSavedToGallery(false);
+      clearCanvas();
+      setLevelNumber(nextLevel); // triggers level-init useEffect
     }
   };
 
   const startPreviousLevel = () => {
-    try {
-      const prevLevel = levelNumber - 1;
-      if (prevLevel >= 1) {
-        setLevelNumber(prevLevel);
-        setPhase('memorize');
-        setUserRating(0);
-        setSavedToGallery(false);
-        clearCanvas();
-        const image = getRandomImageForLevel(prevLevel);
-        const level = getLevel(prevLevel);
-        setCurrentImage(image);
-        setTimeRemaining(level.displayDuration);
-      }
-    } catch (error) {
-      console.error('Error starting previous level:', error);
+    const prevLevel = levelNumber - 1;
+    if (prevLevel >= 1) {
+      setPhase('memorize');
+      setUserRating(0);
+      setSavedToGallery(false);
+      clearCanvas();
+      setLevelNumber(prevLevel); // triggers level-init useEffect
     }
   };
 
   const restartFromLevel1 = () => {
-    try {
-      setLevelNumber(1);
-      setPhase('memorize');
-      setUserRating(0);
-      clearCanvas();
-      const image = getRandomImageForLevel(1);
-      const level = getLevel(1);
-      setCurrentImage(image);
-      setTimeRemaining(level.displayDuration);
-    } catch (error) {
-      console.error('Error restarting from level 1:', error);
-    }
+    setPhase('memorize');
+    setUserRating(0);
+    clearCanvas();
+    setLevelNumber(1); // triggers level-init useEffect
   };
 
   return {

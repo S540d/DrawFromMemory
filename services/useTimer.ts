@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import SoundManager from '@services/SoundManager';
 import type { GamePhase } from '../types';
 
@@ -9,18 +9,26 @@ interface UseTimerOptions {
 
 export function useTimer({ phase, onExpire }: UseTimerOptions) {
   const [timeRemaining, setTimeRemaining] = useState(0);
+  const hasStartedRef = useRef(false);
 
   useEffect(() => {
     if (phase === 'memorize' && timeRemaining > 0) {
+      hasStartedRef.current = true;
       const timer = setTimeout(() => {
         SoundManager.playTimerTick();
         setTimeRemaining((t) => t - 1);
       }, 1000);
       return () => clearTimeout(timer);
-    } else if (phase === 'memorize' && timeRemaining === 0) {
+    } else if (phase === 'memorize' && timeRemaining === 0 && hasStartedRef.current) {
+      hasStartedRef.current = false;
       onExpire();
     }
   }, [phase, timeRemaining, onExpire]);
 
-  return { timeRemaining, setTimeRemaining };
+  const setTimeRemainingWrapped = (value: number | ((prev: number) => number)) => {
+    hasStartedRef.current = false;
+    setTimeRemaining(value);
+  };
+
+  return { timeRemaining, setTimeRemaining: setTimeRemainingWrapped };
 }

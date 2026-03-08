@@ -69,7 +69,6 @@ export default function GameScreen() {
     initialLevel,
     drawingPaths: drawing.paths,
     clearCanvas: drawing.clearCanvas,
-    setPaths: drawing.setPaths,
   });
 
   // Initialize sound manager
@@ -363,7 +362,7 @@ export default function GameScreen() {
             style={styles.primaryButton}
             onPress={restartCurrentLevel}
           >
-            <Text style={styles.primaryButtonText}>Nochmal versuchen</Text>
+            <Text style={styles.primaryButtonText}>{t('game.result.retry')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
