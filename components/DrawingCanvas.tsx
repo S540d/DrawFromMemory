@@ -80,8 +80,15 @@ function SkiaFallback({ width, height, onRetrySuccess }: {
 }) {
   const [retrying, setRetrying] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
+  const onRetrySuccessRef = useRef(onRetrySuccess);
+  const manualRetryRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const MAX_AUTO_RETRIES = 3;
   const RETRY_DELAY_MS = 1000;
+
+  // Keep callback ref stable to avoid resetting the auto-retry timer
+  useEffect(() => {
+    onRetrySuccessRef.current = onRetrySuccess;
+  }, [onRetrySuccess]);
 
   // Auto-retry a few times on mount – the native module may just need time to init
   useEffect(() => {
@@ -89,21 +96,28 @@ function SkiaFallback({ width, height, onRetrySuccess }: {
 
     const timer = setTimeout(() => {
       if (tryLoadSkia()) {
-        onRetrySuccess();
+        onRetrySuccessRef.current();
       } else {
         setRetryCount((c) => c + 1);
       }
     }, RETRY_DELAY_MS);
 
     return () => clearTimeout(timer);
-  }, [retryCount, onRetrySuccess]);
+  }, [retryCount]);
+
+  // Cleanup manual retry timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (manualRetryRef.current) clearTimeout(manualRetryRef.current);
+    };
+  }, []);
 
   const handleManualRetry = () => {
     setRetrying(true);
     // Small delay to let native bridge settle
-    setTimeout(() => {
+    manualRetryRef.current = setTimeout(() => {
       if (tryLoadSkia()) {
-        onRetrySuccess();
+        onRetrySuccessRef.current();
       }
       setRetrying(false);
     }, 500);
