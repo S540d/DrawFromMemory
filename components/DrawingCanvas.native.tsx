@@ -1,8 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, Platform, useWindowDimensions } from 'react-native';
 import { t } from '@services/i18n';
-import { styles, DEFAULT_CANVAS_WIDTH } from './DrawingCanvas';
-import type { DrawingPath } from './DrawingCanvas';
+import { styles, DEFAULT_CANVAS_WIDTH } from './DrawingCanvas.shared';
+import type { DrawingPath } from './DrawingCanvas.shared';
+
+// Re-export shared API so '@components/DrawingCanvas' provides a complete module on native
+export type { DrawingPath } from './DrawingCanvas.shared';
+export { useDrawingCanvas } from './DrawingCanvas.hooks';
 
 // Lazy-load Skia only on native platforms to prevent crash on Android
 // The top-level import initializes native modules immediately, which can crash
@@ -171,12 +175,12 @@ export default function DrawingCanvas({
     const { locationX, locationY } = event.nativeEvent;
 
     if (tool === 'fill') {
-      const newPaths = [
-        ...nativePaths,
-        { points: [{ x: locationX, y: locationY }], color: strokeColor, strokeWidth: 0, type: 'fill' as const },
-      ];
-      setNativePaths(newPaths);
-      onDrawingChange(newPaths);
+      const newPath = { points: [{ x: locationX, y: locationY }], color: strokeColor, strokeWidth: 0, type: 'fill' as const };
+      setNativePaths((prev) => {
+        const newPaths = [...prev, newPath];
+        onDrawingChange(newPaths);
+        return newPaths;
+      });
     } else {
       setCurrentNativePath([{ x: locationX, y: locationY }]);
     }
@@ -185,18 +189,18 @@ export default function DrawingCanvas({
   const handleTouchMove = (event: { nativeEvent: { locationX: number; locationY: number } }) => {
     if (!onDrawingChange || currentNativePath.length === 0 || tool === 'fill') return;
     const { locationX, locationY } = event.nativeEvent;
-    setCurrentNativePath([...currentNativePath, { x: locationX, y: locationY }]);
+    setCurrentNativePath((prev) => [...prev, { x: locationX, y: locationY }]);
   };
 
   const handleTouchEnd = () => {
     if (!onDrawingChange || currentNativePath.length === 0 || tool === 'fill') return;
-    const newPaths = [
-      ...nativePaths,
-      { points: currentNativePath, color: strokeColor, strokeWidth, type: 'stroke' as const },
-    ];
-    setNativePaths(newPaths);
+    const finishedPath = { points: currentNativePath, color: strokeColor, strokeWidth, type: 'stroke' as const };
+    setNativePaths((prev) => {
+      const newPaths = [...prev, finishedPath];
+      onDrawingChange(newPaths);
+      return newPaths;
+    });
     setCurrentNativePath([]);
-    onDrawingChange(newPaths);
   };
 
   const getScaledPaths = () => {

@@ -1,8 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, useWindowDimensions } from 'react-native';
 import { floodFillPixels, hexToRgb } from '@services/FloodFillService';
-import { styles, DEFAULT_CANVAS_WIDTH } from './DrawingCanvas';
-import type { DrawingPath } from './DrawingCanvas';
+import { styles, DEFAULT_CANVAS_WIDTH } from './DrawingCanvas.shared';
+import type { DrawingPath } from './DrawingCanvas.shared';
+
+// Re-export shared API so '@components/DrawingCanvas' provides a complete module on web
+export type { DrawingPath } from './DrawingCanvas.shared';
+export { useDrawingCanvas } from './DrawingCanvas.hooks';
 
 interface Props {
   width?: number;
