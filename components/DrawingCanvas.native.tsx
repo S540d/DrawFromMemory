@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ActivityIndicator, Platform, useWindowDim
 import { t } from '@services/i18n';
 import { styles, DEFAULT_CANVAS_WIDTH } from './DrawingCanvas.shared';
 import type { DrawingPath } from './DrawingCanvas.shared';
+import { captureException } from '@services/SentryService';
 
 // Re-export shared API so '@components/DrawingCanvas' provides a complete module on native
 export type { DrawingPath } from './DrawingCanvas.shared';
@@ -44,6 +45,11 @@ function tryLoadSkia(): boolean {
       message: skiaLoadError.message,
       platform: Platform.OS,
       version: Platform.Version,
+    });
+    captureException(skiaLoadError, {
+      component: 'DrawingCanvas',
+      platform: String(Platform.OS),
+      platformVersion: String(Platform.Version),
     });
     return false;
   }
