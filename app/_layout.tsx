@@ -6,22 +6,10 @@ import { ErrorBoundary } from '@components/ErrorBoundary';
 import AnimatedSplashScreen from '@components/AnimatedSplashScreen';
 import { useCallback, useEffect, useState } from 'react';
 import { initLanguage } from '@services/i18n';
+import { initSentry } from '@services/SentryService';
 
-// Global error handler for unhandled errors (prevents crashes in production)
-if (!__DEV__) {
-  try {
-    const originalHandler = ErrorUtils.getGlobalHandler();
-    ErrorUtils.setGlobalHandler((error, isFatal) => {
-      // Log but don't crash on non-fatal errors
-      console.error('Global error:', error);
-      if (isFatal) {
-        originalHandler(error, isFatal);
-      }
-    });
-  } catch (e) {
-    // ErrorUtils may not be available in all environments
-  }
-}
+// Initialize Sentry as early as possible (no-op on web or without DSN)
+initSentry();
 
 /**
  * Root Layout Content - wrapped with theme context
