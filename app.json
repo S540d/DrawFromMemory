@@ -39,7 +39,7 @@
       },
       "package": "com.s540d.merkeundmale",
       "permissions": [],
-      "versionCode": 32,
+      "versionCode": 33,
       "newArchEnabled": false,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.s540d.merkeundmale",
       "privacyPolicy": "https://s540d.github.io/DrawFromMemory/PRIVACY_POLICY.html"
@@ -53,7 +53,14 @@
       "expo-router",
       "expo-asset",
       "expo-font",
-      "@sentry/react-native"
+      [
+        "@sentry/react-native",
+        {
+          "uploadNativeSymbols": false,
+          "autoUploadNativeSymbols": false,
+          "url": "https://sentry.io/"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

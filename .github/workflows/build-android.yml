@@ -61,6 +61,7 @@ jobs:
       - name: Build Android (local, no EAS credits)
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          SENTRY_DISABLE_AUTO_UPLOAD: "true"
         run: |
           eas build \
             --platform android \
