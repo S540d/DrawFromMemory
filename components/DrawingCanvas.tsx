@@ -12,3 +12,7 @@
 
 export type { DrawingPath } from './DrawingCanvas.shared';
 export { useDrawingCanvas } from './DrawingCanvas.hooks';
+
+// Default export for TypeScript – at runtime the bundler resolves the
+// platform-specific file (DrawingCanvas.native.tsx / DrawingCanvas.web.tsx).
+export { default } from './DrawingCanvas.native';
