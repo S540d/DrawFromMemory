@@ -49,6 +49,10 @@ fi
 # Output-Verzeichnis anlegen
 mkdir -p build
 
+# Sentry Source Map Upload deaktivieren (kein Sentry-Projekt lokal konfiguriert)
+# Sentry lädt Source Maps nur in CI hoch, wo SENTRY_DSN/Org gesetzt sind
+export SENTRY_DISABLE_AUTO_UPLOAD=true
+
 # Build starten
 eas build \
   --platform android \
