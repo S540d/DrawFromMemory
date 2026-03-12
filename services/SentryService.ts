@@ -1,11 +1,19 @@
 import { Platform } from 'react-native';
-import * as Sentry from '@sentry/react-native';
 
 const DSN = process.env.EXPO_PUBLIC_SENTRY_DSN ?? '';
 
+// Dynamic import: web bundle never imports the native-only Sentry SDK
+let Sentry: typeof import('@sentry/react-native') | null = null;
+if (Platform.OS !== 'web') {
+  try {
+    Sentry = require('@sentry/react-native');
+  } catch {
+    // SDK not available
+  }
+}
+
 export function initSentry() {
-  // Skip on web – Sentry React Native SDK targets native only
-  if (Platform.OS === 'web' || !DSN) return;
+  if (!Sentry || !DSN) return;
 
   Sentry.init({
     dsn: DSN,
@@ -20,7 +28,7 @@ export function initSentry() {
  * Safe to call on all platforms – no-ops on web or when Sentry is not initialized.
  */
 export function captureException(error: unknown, context?: Record<string, string>) {
-  if (Platform.OS === 'web' || !DSN) return;
+  if (!Sentry || !DSN) return;
 
   Sentry.withScope((scope) => {
     if (context) {
