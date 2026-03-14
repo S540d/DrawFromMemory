@@ -580,19 +580,19 @@ const styles = StyleSheet.create({
     fontSize: FontSize.lg,
     fontWeight: FontWeight.bold,
     color: Colors.text.primary,
-    marginTop: Spacing.xs,
-    marginBottom: Spacing.sm,
+    marginTop: 0,
+    marginBottom: Spacing.xs,
     textAlign: 'center',
   },
   timerContainer: {
     alignSelf: 'center',
     backgroundColor: Colors.primary,
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: Spacing.xl,
+    marginBottom: Spacing.md,
     ...Colors.shadow.large, // Soft & Modern: Timer mit prominentem Schatten
   },
   timerText: {
@@ -607,11 +607,11 @@ const styles = StyleSheet.create({
   },
   imagePlaceholder: {
     backgroundColor: Colors.surface,
-    padding: Spacing.xxl,
+    padding: Spacing.lg,
     borderRadius: BorderRadius.xxl, // xl → xxl (20px → 24px für große Cards)
     alignItems: 'center',
-    minWidth: 300,
-    minHeight: 300,
+    minWidth: 260,
+    minHeight: 260,
     justifyContent: 'center',
     ...Colors.shadow.large, // Soft & Modern: Cards mit prominentem Schatten
   },
@@ -627,11 +627,11 @@ const styles = StyleSheet.create({
   },
   canvasContainer: {
     flex: 1,
-    maxHeight: 320,
-    minHeight: 200,
+    maxHeight: 260,
+    minHeight: 160,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: Spacing.sm,
+    marginVertical: Spacing.xs,
   },
   colorPickerContainer: {
     marginBottom: Spacing.md,

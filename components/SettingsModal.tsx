@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, Linking, Share, ScrollView } from 'react-native';
+import Constants from 'expo-constants';
 import { t, getLanguage, setLanguage } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import storageManager from '@services/StorageManager';
@@ -160,7 +161,9 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             <Text style={[styles.modalLabel, { color: colors.text.light }]}>
               {currentLang === 'de' ? 'Version' : 'Version'}
             </Text>
-            <Text style={[styles.modalValue, { color: colors.text.primary }]}>1.1.1</Text>
+            <Text style={[styles.modalValue, { color: colors.text.primary }]}>
+              {Constants.expoConfig?.version ?? '–'}
+            </Text>
 
             <Text style={[styles.modalLabel, { color: colors.text.light, marginTop: Spacing.md }]}>
               {currentLang === 'de' ? 'Lizenz' : 'License'}
@@ -514,11 +517,11 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
-    marginTop: Spacing.md,
-    marginBottom: Spacing.sm,
+    marginTop: Spacing.sm,
+    marginBottom: Spacing.xs,
   },
   section: {
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.sm,
   },
   optionLabel: {
     fontSize: FontSize.sm,
@@ -531,7 +534,7 @@ const styles = StyleSheet.create({
   },
   optionButton: {
     flex: 1,
-    paddingVertical: Spacing.sm,
+    paddingVertical: Spacing.xs,
     paddingHorizontal: Spacing.sm,
     borderRadius: BorderRadius.md,
     borderWidth: 2,
@@ -550,12 +553,12 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    marginVertical: Spacing.md,
+    marginVertical: Spacing.sm,
   },
   dangerButton: {
     borderWidth: 2,
     borderRadius: BorderRadius.md,
-    paddingVertical: Spacing.sm,
+    paddingVertical: Spacing.xs,
     paddingHorizontal: Spacing.lg,
     alignItems: 'center',
     ...Colors.shadow.small,
