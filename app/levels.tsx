@@ -7,6 +7,7 @@ import { getAllLevels } from '@services/LevelManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 import { AnimatedCard } from '@components/AnimatedPrimitives';
+import { Badge } from '@components/Badge';
 
 // Default card width for SSR (will be recalculated on client)
 const DEFAULT_CARD_WIDTH = 150;
@@ -41,9 +42,12 @@ export default function LevelsScreen() {
           </View>
 
           {/* Schwierigkeit */}
-          <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyColor(item.difficulty) }]}>
-            <Text style={styles.difficultyText}>{difficultyText}</Text>
-          </View>
+          <Badge
+            label={difficultyText}
+            variant="difficulty"
+            difficulty={item.difficulty}
+            style={styles.difficultyBadge}
+          />
 
         </TouchableOpacity>
       </AnimatedCard>
@@ -74,25 +78,6 @@ export default function LevelsScreen() {
   );
 }
 
-/**
- * Gibt die Farbe für eine Schwierigkeitsstufe zurück
- */
-function getDifficultyColor(difficulty: number): string {
-  switch (difficulty) {
-    case 1:
-      return Colors.difficulty[1];
-    case 2:
-      return Colors.difficulty[2];
-    case 3:
-      return Colors.difficulty[3];
-    case 4:
-      return Colors.difficulty[4];
-    case 5:
-      return Colors.difficulty[5];
-    default:
-      return Colors.primary;
-  }
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -140,16 +125,6 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
   },
   difficultyBadge: {
-    paddingVertical: Spacing.xs,
-    paddingHorizontal: Spacing.sm,
-    borderRadius: BorderRadius.md, // sm → md (weicher)
-    alignSelf: 'flex-start',
     marginBottom: Spacing.sm,
-    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten für Badges
-  },
-  difficultyText: {
-    fontSize: FontSize.sm,
-    fontWeight: FontWeight.medium,
-    color: Colors.drawing.white,
   },
 });
