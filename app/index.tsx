@@ -6,6 +6,7 @@ import { useTheme } from '@services/ThemeContext';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 import SettingsModal from '@components/SettingsModal';
+import { AnimatedButton } from '@components/AnimatedPrimitives';
 
 /**
  * Home Screen - Startseite der App
@@ -36,30 +37,30 @@ export default function HomeScreen() {
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
-        <Pressable
+        <AnimatedButton
           style={[styles.button, styles.primaryButton, { backgroundColor: colors.primaryDark }]}
           onPress={() => router.push('/game')}
         >
           <Text style={[styles.buttonText, styles.primaryButtonText]}>{t('home.startButton')}</Text>
-        </Pressable>
+        </AnimatedButton>
 
-        <Pressable
+        <AnimatedButton
           style={[styles.button, styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary, ...Colors.shadow.small }]}
           onPress={() => router.push('/levels')}
         >
           <Text style={[styles.buttonText, styles.secondaryButtonText, { color: colors.primary }]}>
             {t('home.levelsButton')}
           </Text>
-        </Pressable>
+        </AnimatedButton>
 
-        <Pressable
+        <AnimatedButton
           style={[styles.button, styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary, ...Colors.shadow.small }]}
           onPress={() => router.push('/gallery')}
         >
           <Text style={[styles.buttonText, styles.secondaryButtonText, { color: colors.primary }]}>
             {t('home.galleryButton')}
           </Text>
-        </Pressable>
+        </AnimatedButton>
       </View>
 
       {/* Settings Modal */}

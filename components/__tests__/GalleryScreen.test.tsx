@@ -26,6 +26,25 @@ jest.mock('../../components/DrawingCanvas', () => {
   return () => <View testID="drawing-canvas" />;
 });
 
+jest.mock('../../components/SkeletonLoader', () => {
+  const { View } = require('react-native');
+  return {
+    GallerySkeleton: () => <View testID="gallery-skeleton" />,
+  };
+});
+
+jest.mock('../../components/AnimatedPrimitives', () => {
+  const { View } = require('react-native');
+  return {
+    AnimatedCard: ({ children, style }: any) => <View style={style}>{children}</View>,
+    AnimatedButton: ({ children, onPress, style, disabled }: any) => {
+      const { Pressable } = require('react-native');
+      return <Pressable onPress={onPress} style={style} disabled={disabled}>{children}</Pressable>;
+    },
+    AnimatedFeedback: ({ children, visible }: any) => visible ? <View>{children}</View> : null,
+  };
+});
+
 jest.mock('../../services/StorageManager', () => ({
   __esModule: true,
   default: {
