@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, StyleSheet, ViewStyle, TextStyle, ActivityIndicator } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Text, StyleSheet, ViewStyle, TextStyle, ActivityIndicator, AccessibilityInfo } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -109,16 +109,23 @@ export function Button({
   accessibilityLabel?: string;
 }) {
   const scale = useSharedValue(1);
+  const reduceMotion = useRef(false);
+
+  useEffect(() => {
+    AccessibilityInfo.isReduceMotionEnabled().then((v) => { reduceMotion.current = v; });
+  }, []);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
 
   const handlePressIn = () => {
+    if (reduceMotion.current) return;
     scale.value = withSpring(0.95, { damping: 15, stiffness: 300 });
   };
 
   const handlePressOut = () => {
+    if (reduceMotion.current) return;
     scale.value = withSpring(1, { damping: 15, stiffness: 300 });
   };
 
@@ -127,7 +134,7 @@ export function Button({
   const isDisabled = disabled || loading;
 
   return (
-    <Animated.View style={[animatedStyle, fullWidth && styles.fullWidth, style ?? {}]}>
+    <Animated.View style={[animatedStyle, fullWidth && styles.fullWidth]}>
       <Pressable
         onPress={onPress}
         onPressIn={handlePressIn}
@@ -142,6 +149,7 @@ export function Button({
           sizeStyle.container,
           isDisabled && styles.disabled,
           fullWidth && styles.fullWidth,
+          style ?? {},
         ]}
       >
         {loading ? (

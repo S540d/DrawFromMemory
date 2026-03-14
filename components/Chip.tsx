@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, StyleSheet, ViewStyle } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Text, StyleSheet, ViewStyle, AccessibilityInfo } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -34,16 +34,23 @@ export function Chip({
   style?: ViewStyle;
 }) {
   const scale = useSharedValue(1);
+  const reduceMotion = useRef(false);
+
+  useEffect(() => {
+    AccessibilityInfo.isReduceMotionEnabled().then((v) => { reduceMotion.current = v; });
+  }, []);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
 
   const handlePressIn = () => {
+    if (reduceMotion.current) return;
     scale.value = withSpring(0.94, { damping: 15, stiffness: 300 });
   };
 
   const handlePressOut = () => {
+    if (reduceMotion.current) return;
     scale.value = withSpring(1, { damping: 15, stiffness: 300 });
   };
 
@@ -67,7 +74,7 @@ export function Chip({
   const finalTextColor = isFilledSelected ? Colors.drawing.white : textColor;
 
   return (
-    <Animated.View style={[animatedStyle, style ?? {}]}>
+    <Animated.View style={animatedStyle}>
       <Pressable
         onPress={onPress}
         onPressIn={handlePressIn}
@@ -75,7 +82,7 @@ export function Chip({
         disabled={disabled}
         accessibilityRole="button"
         accessibilityState={{ selected, disabled }}
-        style={[styles.chip, containerStyle]}
+        style={[styles.chip, containerStyle, style ?? {}]}
       >
         <Text style={[styles.label, { color: finalTextColor }]}>{label}</Text>
       </Pressable>

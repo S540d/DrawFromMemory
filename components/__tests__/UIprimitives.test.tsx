@@ -84,8 +84,8 @@ describe('Chip', () => {
   it('calls onPress when tapped', () => {
     const onPress = jest.fn();
     const { UNSAFE_getAllByType } = render(<Chip label="Filter" onPress={onPress} />);
-    const texts = UNSAFE_getAllByType(Text);
-    fireEvent.press(texts[0]);
+    const { Pressable } = require('react-native');
+    fireEvent.press(UNSAFE_getAllByType(Pressable)[0]);
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
@@ -118,9 +118,9 @@ describe('ChipGroup', () => {
     const { UNSAFE_getAllByType } = render(
       <ChipGroup options={['Alle', 'Einfach']} selected="Alle" onSelect={onSelect} />
     );
-    // Second text element corresponds to 'Einfach'
-    const textNodes = UNSAFE_getAllByType(Text);
-    fireEvent.press(textNodes[1]);
+    // Second Pressable corresponds to 'Einfach'
+    const { Pressable } = require('react-native');
+    fireEvent.press(UNSAFE_getAllByType(Pressable)[1]);
     expect(onSelect).toHaveBeenCalledWith('Einfach');
   });
 });
@@ -137,7 +137,8 @@ describe('Button', () => {
   it('calls onPress when tapped', () => {
     const onPress = jest.fn();
     const { UNSAFE_getAllByType } = render(<Button label="Start" onPress={onPress} />);
-    fireEvent.press(UNSAFE_getAllByType(Text)[0]);
+    const { Pressable } = require('react-native');
+    fireEvent.press(UNSAFE_getAllByType(Pressable)[0]);
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
