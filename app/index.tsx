@@ -4,9 +4,9 @@ import { useRouter } from 'expo-router';
 import { t } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import Colors from '../constants/Colors';
-import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
+import { Spacing, FontSize, FontWeight } from '../constants/Layout';
 import SettingsModal from '@components/SettingsModal';
-import { AnimatedButton } from '@components/AnimatedPrimitives';
+import { Button } from '@components/Button';
 
 /**
  * Home Screen - Startseite der App
@@ -37,30 +37,29 @@ export default function HomeScreen() {
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
-        <AnimatedButton
-          style={[styles.button, styles.primaryButton, { backgroundColor: colors.primaryDark }]}
+        <Button
+          label={t('home.startButton')}
+          variant="primary"
+          size="lg"
+          fullWidth
           onPress={() => router.push('/game')}
-        >
-          <Text style={[styles.buttonText, styles.primaryButtonText]}>{t('home.startButton')}</Text>
-        </AnimatedButton>
+        />
 
-        <AnimatedButton
-          style={[styles.button, styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary, ...Colors.shadow.small }]}
+        <Button
+          label={t('home.levelsButton')}
+          variant="secondary"
+          size="lg"
+          fullWidth
           onPress={() => router.push('/levels')}
-        >
-          <Text style={[styles.buttonText, styles.secondaryButtonText, { color: colors.primary }]}>
-            {t('home.levelsButton')}
-          </Text>
-        </AnimatedButton>
+        />
 
-        <AnimatedButton
-          style={[styles.button, styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary, ...Colors.shadow.small }]}
+        <Button
+          label={t('home.galleryButton')}
+          variant="secondary"
+          size="lg"
+          fullWidth
           onPress={() => router.push('/gallery')}
-        >
-          <Text style={[styles.buttonText, styles.secondaryButtonText, { color: colors.primary }]}>
-            {t('home.galleryButton')}
-          </Text>
-        </AnimatedButton>
+        />
       </View>
 
       {/* Settings Modal */}
@@ -111,33 +110,5 @@ const styles = StyleSheet.create({
   buttonContainer: {
     gap: Spacing.md,
     paddingBottom: Spacing.xl,
-  },
-  button: {
-    paddingVertical: Spacing.lg,
-    paddingHorizontal: Spacing.xl,
-    borderRadius: BorderRadius.lg,
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 56,
-  },
-  primaryButton: {
-    ...Colors.shadow.large, // Soft & Modern: Prominenter Schatten für Primary Button
-    // backgroundColor wird dynamisch in JSX gesetzt
-  },
-  secondaryButton: {
-    backgroundColor: Colors.surface,
-    borderWidth: 2,
-    borderColor: Colors.primary,
-    ...Colors.shadow.small, // Sekundäre Buttons: Subtiler Schatten
-  },
-  buttonText: {
-    fontSize: FontSize.xl,
-    fontWeight: FontWeight.bold,
-  },
-  primaryButtonText: {
-    color: Colors.drawing.white,  // Weiß für besseren Kontrast auf Lila-Hintergrund
-  },
-  secondaryButtonText: {
-    color: Colors.primary,
   },
 });
