@@ -539,6 +539,8 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
     borderWidth: 2,
     alignItems: 'center',
+    minHeight: 44,
+    justifyContent: 'center',
     ...Colors.shadow.small,
   },
   optionButtonActive: {
@@ -561,6 +563,8 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.xs,
     paddingHorizontal: Spacing.lg,
     alignItems: 'center',
+    minHeight: 44,
+    justifyContent: 'center',
     ...Colors.shadow.small,
   },
   dangerButtonText: {
