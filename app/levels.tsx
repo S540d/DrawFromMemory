@@ -6,6 +6,7 @@ import { useTheme } from '@services/ThemeContext';
 import { getAllLevels } from '@services/LevelManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
+import { AnimatedCard } from '@components/AnimatedPrimitives';
 
 // Default card width for SSR (will be recalculated on client)
 const DEFAULT_CARD_WIDTH = 150;
@@ -22,28 +23,30 @@ export default function LevelsScreen() {
   const { width: screenWidth } = useWindowDimensions();
   const cardWidth = screenWidth > 0 ? (screenWidth - Spacing.lg * 3) / 2 : DEFAULT_CARD_WIDTH;
 
-  const renderLevelCard = ({ item }: { item: typeof levels[0] }) => {
+  const renderLevelCard = ({ item, index }: { item: typeof levels[0]; index: number }) => {
     const difficultyText = t(`difficulty.${item.difficulty}`);
 
     return (
-      <TouchableOpacity
-        style={[styles.levelCard, { width: cardWidth, backgroundColor: colors.surface, borderColor: colors.primary + '30' }]}
-        onPress={() => router.push(`/game?level=${item.number}`)}
-        activeOpacity={0.7}
-      >
-        {/* Level-Nummer */}
-        <View style={styles.levelHeader}>
-          <Text style={[styles.levelNumber, { color: colors.text.primary }]}>
-            {t('levels.level', { number: item.number })}
-          </Text>
-        </View>
+      <AnimatedCard index={index}>
+        <TouchableOpacity
+          style={[styles.levelCard, { width: cardWidth, backgroundColor: colors.surface, borderColor: colors.primary + '30' }]}
+          onPress={() => router.push(`/game?level=${item.number}`)}
+          activeOpacity={0.7}
+        >
+          {/* Level-Nummer */}
+          <View style={styles.levelHeader}>
+            <Text style={[styles.levelNumber, { color: colors.text.primary }]}>
+              {t('levels.level', { number: item.number })}
+            </Text>
+          </View>
 
-        {/* Schwierigkeit */}
-        <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyColor(item.difficulty) }]}>
-          <Text style={styles.difficultyText}>{difficultyText}</Text>
-        </View>
+          {/* Schwierigkeit */}
+          <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyColor(item.difficulty) }]}>
+            <Text style={styles.difficultyText}>{difficultyText}</Text>
+          </View>
 
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </AnimatedCard>
     );
   };
 

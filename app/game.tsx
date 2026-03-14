@@ -11,6 +11,7 @@ import LevelImageDisplay from '@components/LevelImageDisplay';
 import DrawingCanvas, { useDrawingCanvas } from '@components/DrawingCanvas';
 import SettingsModal from '@components/SettingsModal';
 import { ErrorBoundary } from '@components/ErrorBoundary';
+import { AnimatedFeedback } from '@components/AnimatedPrimitives';
 import SoundManager from '@services/SoundManager';
 import { useGamePhase } from '@services/useGamePhase';
 import type { DrawingPath } from '@components/DrawingCanvas';
@@ -264,12 +265,10 @@ export default function GameScreen() {
         {/* Sterne-Bewertung Interaktiv */}
         <View style={styles.starsContainer}>
           {renderStars(userRating, true)}
-          {userRating > 0 && (
-            <>
-              <Text style={styles.ratingText}>{userRating} Stern{userRating !== 1 ? 'e' : ''}!</Text>
-              <Text style={styles.feedbackText}>{getFeedbackText(userRating)}</Text>
-            </>
-          )}
+          <AnimatedFeedback visible={userRating > 0}>
+            <Text style={styles.ratingText}>{userRating} Stern{userRating !== 1 ? 'e' : ''}!</Text>
+            <Text style={styles.feedbackText}>{getFeedbackText(userRating)}</Text>
+          </AnimatedFeedback>
           {userRating === 0 && (
             <Text style={styles.feedbackText}>Tippe auf die Sterne, um dich zu bewerten!</Text>
           )}

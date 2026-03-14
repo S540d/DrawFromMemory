@@ -6,6 +6,7 @@ import { useTheme } from '@services/ThemeContext';
 import storageManager, { GalleryEntry } from '@services/StorageManager';
 import DrawingCanvas from '@components/DrawingCanvas';
 import { GallerySkeleton } from '@components/SkeletonLoader';
+import { AnimatedCard } from '@components/AnimatedPrimitives';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 
@@ -81,8 +82,8 @@ export default function GalleryScreen() {
 
         {/* Gallery Grid */}
         <View style={styles.grid}>
-          {entries.map((entry) => (
-            <View key={entry.id} style={[styles.card, { backgroundColor: colors.surface }]}>
+          {entries.map((entry, index) => (
+            <AnimatedCard key={entry.id} index={index} style={[styles.card, { backgroundColor: colors.surface }]}>
               <View style={styles.cardPreview}>
                 <DrawingCanvas
                   width={140}
@@ -110,7 +111,7 @@ export default function GalleryScreen() {
               >
                 <Text style={styles.deleteIcon}>✕</Text>
               </TouchableOpacity>
-            </View>
+            </AnimatedCard>
           ))}
         </View>
       </ScrollView>
