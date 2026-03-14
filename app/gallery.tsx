@@ -5,6 +5,7 @@ import { t } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import storageManager, { GalleryEntry } from '@services/StorageManager';
 import DrawingCanvas from '@components/DrawingCanvas';
+import { GallerySkeleton } from '@components/SkeletonLoader';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 
@@ -67,9 +68,7 @@ export default function GalleryScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {loading && (
-          <Text style={[styles.emptyText, { color: colors.text.secondary }]}>...</Text>
-        )}
+        {loading && <GallerySkeleton />}
 
         {!loading && entries.length === 0 && (
           <View style={styles.emptyContainer}>

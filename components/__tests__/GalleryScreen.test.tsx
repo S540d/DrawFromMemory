@@ -26,6 +26,13 @@ jest.mock('../../components/DrawingCanvas', () => {
   return () => <View testID="drawing-canvas" />;
 });
 
+jest.mock('../../components/SkeletonLoader', () => {
+  const { View } = require('react-native');
+  return {
+    GallerySkeleton: () => <View testID="gallery-skeleton" />,
+  };
+});
+
 jest.mock('../../services/StorageManager', () => ({
   __esModule: true,
   default: {
