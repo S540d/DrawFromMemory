@@ -11,7 +11,7 @@ export function useTimer({ phase, onExpire }: UseTimerOptions) {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const hasStartedRef = useRef(false);
   const onExpireRef = useRef(onExpire);
-  onExpireRef.current = onExpire;
+  useEffect(() => { onExpireRef.current = onExpire; }, [onExpire]);
 
   useEffect(() => {
     if (phase === 'memorize' && timeRemaining > 0) {

@@ -24,12 +24,16 @@
       "assets/**/*"
     ],
     "ios": {
+      "icon": "./assets/icons/app-icon.png",
       "supportsTablet": true,
       "bundleIdentifier": "com.s540d.merkeundmale",
       "buildNumber": "2",
       "appStoreUrl": "https://apps.apple.com/app/merke-und-male/id[TBD]",
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "CFBundleDisplayName": "Merke und Male"
       }
     },
     "android": {
@@ -47,7 +51,20 @@
     "web": {
       "favicon": "./assets/icons/favicon.png",
       "output": "single",
-      "baseUrl": "/DrawFromMemory/"
+      "baseUrl": "/DrawFromMemory/",
+      "name": "Merke und Male",
+      "shortName": "Merke & Male",
+      "description": "Gedächtnistraining für Kinder: Merken, Malen, Lernen!",
+      "themeColor": "#60D5FA",
+      "backgroundColor": "#60D5FA",
+      "lang": "de",
+      "icons": [
+        {
+          "src": "/DrawFromMemory/apple-touch-icon.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
     },
     "plugins": [
       "expo-router",
