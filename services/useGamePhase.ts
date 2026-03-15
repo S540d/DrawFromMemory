@@ -31,17 +31,18 @@ export function useGamePhase({
   const [replayPaths, setReplayPaths] = useState<DrawingPath[]>([]);
   const timerExpireTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const replayCompleteTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const currentImageRef = useRef<LevelImage | null>(null);
 
   const REPLAY_DURATION_MS = 3000;
   const REPLAY_FRAME_MS = 30;
 
   const handleTimerExpire = useCallback(() => {
-    if (currentImage) {
+    if (currentImageRef.current) {
       SoundManager.playPhaseTransition();
       if (timerExpireTimeoutRef.current) clearTimeout(timerExpireTimeoutRef.current);
       timerExpireTimeoutRef.current = setTimeout(() => setPhase('draw'), 500);
     }
-  }, [currentImage]);
+  }, []);
 
   const { timeRemaining, setTimeRemaining } = useTimer({
     phase,
@@ -53,6 +54,7 @@ export function useGamePhase({
     try {
       const level = getLevel(levelNumber);
       const image = getRandomImageForLevel(levelNumber);
+      currentImageRef.current = image;
       setCurrentImage(image);
       setTimeRemaining(level.displayDuration);
     } catch (error) {
@@ -185,6 +187,7 @@ export function useGamePhase({
     try {
       const image = getRandomImageForLevel(levelNumber);
       const level = getLevel(levelNumber);
+      currentImageRef.current = image;
       setCurrentImage(image);
       setTimeRemaining(level.displayDuration);
       setPhase('memorize');

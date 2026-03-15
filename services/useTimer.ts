@@ -10,6 +10,8 @@ interface UseTimerOptions {
 export function useTimer({ phase, onExpire }: UseTimerOptions) {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const hasStartedRef = useRef(false);
+  const onExpireRef = useRef(onExpire);
+  onExpireRef.current = onExpire;
 
   useEffect(() => {
     if (phase === 'memorize' && timeRemaining > 0) {
@@ -21,9 +23,9 @@ export function useTimer({ phase, onExpire }: UseTimerOptions) {
       return () => clearTimeout(timer);
     } else if (phase === 'memorize' && timeRemaining === 0 && hasStartedRef.current) {
       hasStartedRef.current = false;
-      onExpire();
+      onExpireRef.current();
     }
-  }, [phase, timeRemaining, onExpire]);
+  }, [phase, timeRemaining]);
 
   const setTimeRemainingWrapped = (value: number | ((prev: number) => number)) => {
     hasStartedRef.current = false;
