@@ -24,12 +24,16 @@
       "assets/**/*"
     ],
     "ios": {
+      "icon": "./assets/icons/app-icon.png",
       "supportsTablet": true,
       "bundleIdentifier": "com.s540d.merkeundmale",
       "buildNumber": "2",
       "appStoreUrl": "https://apps.apple.com/app/merke-und-male/id[TBD]",
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "CFBundleDisplayName": "Merke und Male"
       }
     },
     "android": {
