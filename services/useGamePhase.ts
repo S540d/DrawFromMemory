@@ -42,7 +42,7 @@ export function useGamePhase({
       if (timerExpireTimeoutRef.current) clearTimeout(timerExpireTimeoutRef.current);
       timerExpireTimeoutRef.current = setTimeout(() => setPhase('draw'), 500);
     }
-  }, []);
+  }, [currentImageRef, timerExpireTimeoutRef]);
 
   const { timeRemaining, setTimeRemaining } = useTimer({
     phase,

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import SoundManager from '@services/SoundManager';
 import type { GamePhase } from '../types';
 
@@ -27,10 +27,10 @@ export function useTimer({ phase, onExpire }: UseTimerOptions) {
     }
   }, [phase, timeRemaining]);
 
-  const setTimeRemainingWrapped = (value: number | ((prev: number) => number)) => {
+  const setTimeRemainingWrapped = useCallback((value: number | ((prev: number) => number)) => {
     hasStartedRef.current = false;
     setTimeRemaining(value);
-  };
+  }, []);
 
   return { timeRemaining, setTimeRemaining: setTimeRemainingWrapped };
 }
