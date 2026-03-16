@@ -27,7 +27,8 @@ export default function GameScreen() {
   const params = useLocalSearchParams();
   const { colors } = useTheme();
   // Use hook for responsive dimensions (SSR-safe)
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const isSmallScreen = screenHeight < 640;
   const [showSettings, setShowSettings] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showToolPicker, setShowToolPicker] = useState(false);
@@ -110,7 +111,7 @@ export default function GameScreen() {
       <Text style={styles.phaseTitle}>{t('game.draw.title')}</Text>
 
       {/* Zeichenfläche mit react-native-skia */}
-      <View style={styles.canvasContainer}>
+      <View style={[styles.canvasContainer, isSmallScreen && styles.canvasContainerSmall]}>
         <ErrorBoundary>
           <DrawingCanvas
             strokeColor={drawing.color}
@@ -123,10 +124,10 @@ export default function GameScreen() {
       </View>
 
       {/* Kompakte Toolbar */}
-      <View style={styles.compactToolbar}>
+      <View style={[styles.compactToolbar, isSmallScreen && styles.compactToolbarSmall]}>
         {/* Farbe */}
         <TouchableOpacity
-          style={styles.toolbarButton}
+          style={[styles.toolbarButton, isSmallScreen && styles.toolbarButtonSmall]}
           onPress={() => setShowColorPicker(true)}
           accessibilityLabel={t('game.draw.selectColor')}
           accessibilityRole="button"
@@ -137,7 +138,7 @@ export default function GameScreen() {
 
         {/* Werkzeug */}
         <TouchableOpacity
-          style={styles.toolbarButton}
+          style={[styles.toolbarButton, isSmallScreen && styles.toolbarButtonSmall]}
           onPress={() => setShowToolPicker(true)}
           accessibilityLabel={t('game.draw.tool')}
           accessibilityRole="button"
@@ -149,7 +150,7 @@ export default function GameScreen() {
         {/* Strichstärke (nur bei Brush) */}
         {drawing.tool === 'brush' && (
           <TouchableOpacity
-            style={styles.toolbarButton}
+            style={[styles.toolbarButton, isSmallScreen && styles.toolbarButtonSmall]}
             onPress={() => setShowStrokeWidthPicker(true)}
             accessibilityLabel={t('game.draw.strokeWidth')}
             accessibilityRole="button"
@@ -163,16 +164,16 @@ export default function GameScreen() {
       {/* Buttons */}
       <View style={styles.buttonRow}>
         <TouchableOpacity
-          style={styles.secondaryButton}
+          style={[styles.secondaryButton, isSmallScreen && styles.buttonSmall]}
           onPress={drawing.undo}
           disabled={drawing.paths.length === 0}
           accessibilityLabel={t('game.draw.undo')}
           accessibilityRole="button"
         >
-          <Text style={styles.secondaryButtonText}>Rückgängig</Text>
+          <Text style={[styles.secondaryButtonText, isSmallScreen && styles.buttonTextSmall]}>Rückgängig</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.secondaryButton, drawing.paths.length === 0 && styles.buttonDisabled]}
+          style={[styles.secondaryButton, isSmallScreen && styles.buttonSmall, drawing.paths.length === 0 && styles.buttonDisabled]}
           accessibilityLabel={t('game.draw.clear')}
           accessibilityRole="button"
           onPress={() => {
@@ -202,16 +203,16 @@ export default function GameScreen() {
           }}
           disabled={drawing.paths.length === 0}
         >
-          <Text style={styles.secondaryButtonText}>Löschen</Text>
+          <Text style={[styles.secondaryButtonText, isSmallScreen && styles.buttonTextSmall]}>Löschen</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.primaryButton}
+          style={[styles.primaryButton, isSmallScreen && styles.buttonSmall]}
           onPress={() => {
             SoundManager.playPhaseTransition();
             setPhase('result');
           }}
         >
-          <Text style={styles.primaryButtonText}>Fertig</Text>
+          <Text style={[styles.primaryButtonText, isSmallScreen && styles.buttonTextSmall]}>Fertig</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -378,7 +379,7 @@ export default function GameScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, isSmallScreen && styles.headerSmall]}>
         <TouchableOpacity
           onPress={() => router.back()}
           accessibilityLabel={t('common.back')}
@@ -1121,5 +1122,29 @@ const styles = StyleSheet.create({
   closeText: {
     fontSize: 24,
     color: Colors.text.secondary,
+  },
+  // Responsive Styles für kleine Geräte (< 640px Höhe)
+  headerSmall: {
+    padding: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+  },
+  canvasContainerSmall: {
+    maxHeight: 200,
+    minHeight: 120,
+    marginVertical: 2,
+  },
+  compactToolbarSmall: {
+    marginVertical: Spacing.xs,
+  },
+  toolbarButtonSmall: {
+    minHeight: 44,
+    paddingVertical: Spacing.xs,
+  },
+  buttonSmall: {
+    minHeight: 40,
+    paddingVertical: Spacing.sm,
+  },
+  buttonTextSmall: {
+    fontSize: FontSize.md,
   },
 });
