@@ -186,8 +186,8 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             <View style={[styles.featureTeaser, { backgroundColor: colors.primary + '15', borderColor: colors.primary }]}>
               <Text style={[styles.teaserText, { color: colors.text.primary }]}>
                 {currentLang === 'de'
-                  ? '🎨 Demnächst: Eigene Zeichnungen fotografieren und teilen!'
-                  : '🎨 Coming soon: Take photos of your drawings and share them!'}
+                  ? 'Demnächst: Eigene Zeichnungen fotografieren und teilen!'
+                  : 'Coming soon: Take photos of your drawings and share them!'}
               </Text>
             </View>
           </View>
@@ -209,7 +209,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
     <View>
       {/* APPEARANCE Section */}
       <Text style={[styles.sectionTitle, { color: colors.text.light }]}>
-        {currentLang === 'de' ? '⚙️ ERSCHEINUNGSBILD' : '⚙️ APPEARANCE'}
+        {currentLang === 'de' ? 'ERSCHEINUNGSBILD' : 'APPEARANCE'}
       </Text>
 
       {/* Theme */}
@@ -364,7 +364,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
 
       {/* DATA Section */}
       <Text style={[styles.sectionTitle, { color: colors.text.light }]}>
-        {currentLang === 'de' ? '📊 DATEN' : '📊 DATA'}
+        {currentLang === 'de' ? 'DATEN' : 'DATA'}
       </Text>
 
       <View style={styles.section}>
@@ -381,7 +381,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
 
       {/* ABOUT & SUPPORT Section - 2x2 Grid */}
       <Text style={[styles.sectionTitle, { color: colors.text.light }]}>
-        {currentLang === 'de' ? 'ℹ️ ÜBER & SUPPORT' : 'ℹ️ ABOUT & SUPPORT'}
+        {currentLang === 'de' ? 'ÜBER & SUPPORT' : 'ABOUT & SUPPORT'}
       </Text>
 
       <View style={styles.section}>
@@ -391,7 +391,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             onPress={handleSendFeedback}
           >
             <Text style={[styles.gridButtonText, { color: colors.primary }]}>
-              {currentLang === 'de' ? '💬 Feedback' : '💬 Feedback'}
+              {currentLang === 'de' ? 'Feedback' : 'Feedback'}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -399,7 +399,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             onPress={handleSupport}
           >
             <Text style={[styles.gridButtonText, { color: colors.primary }]}>
-              ☕ Support
+              Support
             </Text>
           </TouchableOpacity>
         </View>
@@ -409,7 +409,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             onPress={handleShareApp}
           >
             <Text style={[styles.gridButtonText, { color: colors.primary }]}>
-              {currentLang === 'de' ? '📤 Teilen' : '📤 Share'}
+              {currentLang === 'de' ? 'Teilen' : 'Share'}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -417,7 +417,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             onPress={() => setShowAboutModal(true)}
           >
             <Text style={[styles.gridButtonText, { color: colors.primary }]}>
-              {currentLang === 'de' ? 'ℹ️ Über' : 'ℹ️ About'}
+              {currentLang === 'de' ? 'Über' : 'About'}
             </Text>
           </TouchableOpacity>
         </View>
