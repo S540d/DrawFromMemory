@@ -16,11 +16,11 @@ const mockImage = {
   difficulty: 1,
 };
 
-jest.mock('@services/ImagePoolManager', () => ({
+jest.mock('../ImagePoolManager', () => ({
   getRandomImageForLevel: jest.fn(() => mockImage),
 }));
 
-jest.mock('@services/LevelManager', () => ({
+jest.mock('../LevelManager', () => ({
   getLevel: jest.fn((level: number) => ({
     number: level,
     difficulty: 1,
@@ -29,11 +29,11 @@ jest.mock('@services/LevelManager', () => ({
   getTotalLevels: jest.fn(() => 10),
 }));
 
-jest.mock('@components/LevelImageDisplay', () => ({
+jest.mock('../../components/LevelImageDisplay', () => ({
   getImageElementCount: jest.fn(() => 5),
 }));
 
-jest.mock('@services/StorageManager', () => ({
+jest.mock('../StorageManager', () => ({
   __esModule: true,
   default: {
     saveLevelProgress: jest.fn().mockResolvedValue(undefined),
@@ -41,7 +41,7 @@ jest.mock('@services/StorageManager', () => ({
   },
 }));
 
-jest.mock('@services/SoundManager', () => ({
+jest.mock('../SoundManager', () => ({
   __esModule: true,
   default: {
     playPhaseTransition: jest.fn(),
@@ -94,7 +94,7 @@ describe('useGamePhase', () => {
   });
 
   it('calls router.back on initialization error', () => {
-    const { getLevel } = require('@services/LevelManager');
+    const { getLevel } = require('../LevelManager');
     getLevel.mockImplementationOnce(() => {
       throw new Error('Invalid level');
     });
@@ -122,8 +122,8 @@ describe('useGamePhase', () => {
   // --- Rating ---
 
   it('handles rating submit', async () => {
-    const storageManager = require('@services/StorageManager').default;
-    const SoundManager = require('@services/SoundManager').default;
+    const storageManager = require('../StorageManager').default;
+    const SoundManager = require('../SoundManager').default;
     const { result } = renderGamePhase();
 
     await act(async () => {
@@ -136,7 +136,7 @@ describe('useGamePhase', () => {
   });
 
   it('handles rating save error gracefully', async () => {
-    const storageManager = require('@services/StorageManager').default;
+    const storageManager = require('../StorageManager').default;
     storageManager.saveLevelProgress.mockRejectedValueOnce(new Error('Save failed'));
     const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -154,8 +154,8 @@ describe('useGamePhase', () => {
   // --- Gallery ---
 
   it('saves to gallery', async () => {
-    const storageManager = require('@services/StorageManager').default;
-    const SoundManager = require('@services/SoundManager').default;
+    const storageManager = require('../StorageManager').default;
+    const SoundManager = require('../SoundManager').default;
     const paths: DrawingPath[] = [
       { points: [{ x: 0, y: 0 }], color: '#000', strokeWidth: 2 },
     ];
@@ -178,7 +178,7 @@ describe('useGamePhase', () => {
   });
 
   it('does not save to gallery with empty paths', async () => {
-    const storageManager = require('@services/StorageManager').default;
+    const storageManager = require('../StorageManager').default;
     const { result } = renderGamePhase({ drawingPaths: [] });
 
     await act(async () => {
@@ -189,7 +189,7 @@ describe('useGamePhase', () => {
   });
 
   it('handles gallery save error gracefully', async () => {
-    const storageManager = require('@services/StorageManager').default;
+    const storageManager = require('../StorageManager').default;
     storageManager.saveToGallery.mockRejectedValueOnce(new Error('Gallery error'));
     const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
     const paths: DrawingPath[] = [
