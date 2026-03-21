@@ -261,7 +261,7 @@ export default function GameScreen() {
 
     return (
       <ScrollView
-        style={styles.phaseContainer}
+        style={[styles.phaseContainer, { padding: 0 }]}
         contentContainerStyle={[styles.resultContent, { paddingBottom: Math.max(insets.bottom, Spacing.md) }]}
         showsVerticalScrollIndicator={false}
       >

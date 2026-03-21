@@ -15,7 +15,6 @@ let SkiaCanvas: any = null;
 let SkiaPath: any = null;
 let SkiaModule: any = null;
 let SkiaCircle: any = null;
-let SkiaRect: any = null;
 let skiaLoadError: Error | null = null;
 
 function tryLoadSkia(): boolean {
@@ -280,7 +279,7 @@ export default function DrawingCanvas({
         {/* Render fill paths first (behind strokes) with canvas-sized radius */}
         {nativePaths.map((pathData, index) => {
           if (pathData.type === 'fill' && pathData.points.length > 0) {
-            const fillRadius = Math.max(width, height);
+            const fillRadius = Math.hypot(width, height);
             return (
               <SkiaCircle
                 key={`fill-${index}`}
