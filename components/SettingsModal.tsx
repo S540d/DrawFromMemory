@@ -479,6 +479,7 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 400,
     maxHeight: '80%',
+    overflow: 'hidden',
     ...Colors.shadow.large,
   },
   settingsHeader: {
@@ -504,7 +505,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   settingsContent: {
-    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
   },
   settingsContentInner: {
     paddingHorizontal: Spacing.lg,

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, useWindowDimensions, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, useWindowDimensions, Platform, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getTotalLevels } from '@services/LevelManager';
 import { t, getCurrentLanguage } from '@services/i18n';
@@ -26,6 +27,7 @@ export default function GameScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
   // Use hook for responsive dimensions (SSR-safe)
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const isSmallScreen = screenHeight < 640;
@@ -108,8 +110,6 @@ export default function GameScreen() {
   // Render Draw Phase
   const renderDrawPhase = () => (
     <View style={styles.phaseContainer}>
-      <Text style={styles.phaseTitle}>{t('game.draw.title')}</Text>
-
       {/* Zeichenfläche mit react-native-skia */}
       <View style={[styles.canvasContainer, isSmallScreen && styles.canvasContainerSmall]}>
         <ErrorBoundary>
@@ -260,11 +260,15 @@ export default function GameScreen() {
     const imageSize = Math.min(Math.max(screenWidth * 0.4, 150), 250);
 
     return (
-      <View style={styles.phaseContainer}>
+      <ScrollView
+        style={styles.phaseContainer}
+        contentContainerStyle={[styles.resultContent, { paddingBottom: Math.max(insets.bottom, Spacing.md) }]}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.phaseTitle}>Ergebnis</Text>
 
         {/* Sterne-Bewertung Interaktiv */}
-        <View style={styles.starsContainer}>
+        <View style={[styles.starsContainer, isSmallScreen && styles.starsContainerSmall]}>
           {renderStars(userRating, true)}
           <AnimatedFeedback visible={userRating > 0}>
             <Text style={styles.ratingText}>{userRating} Stern{userRating !== 1 ? 'e' : ''}!</Text>
@@ -278,7 +282,6 @@ export default function GameScreen() {
         {/* Vergleich */}
         <View style={styles.comparisonContainer}>
           <View style={styles.comparisonBox}>
-            <Text style={styles.comparisonLabel}>Original</Text>
             <View style={[styles.comparisonImage, { width: imageSize, height: imageSize }]}>
               {currentImage && (
                 <LevelImageDisplay image={currentImage} size={imageSize} />
@@ -286,7 +289,6 @@ export default function GameScreen() {
             </View>
           </View>
           <View style={styles.comparisonBox}>
-            <Text style={styles.comparisonLabel}>{t('game.result.yourDrawing')}</Text>
             <View style={[styles.comparisonImage, { width: imageSize, height: imageSize }]}>
               <DrawingCanvas
                 width={imageSize}
@@ -372,7 +374,7 @@ export default function GameScreen() {
             <Text style={styles.secondaryButtonText}>Zum Menü</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     );
   };
 
@@ -850,9 +852,15 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.semibold,
     color: Colors.primary,
   },
+  resultContent: {
+    padding: Spacing.md,
+  },
   starsContainer: {
     alignItems: 'center',
-    marginBottom: Spacing.xxl,
+    marginBottom: Spacing.lg,
+  },
+  starsContainerSmall: {
+    marginBottom: Spacing.sm,
   },
   starsRow: {
     flexDirection: 'row',
@@ -897,7 +905,7 @@ const styles = StyleSheet.create({
   comparisonContainer: {
     flexDirection: 'row',
     gap: Spacing.md,
-    marginBottom: Spacing.xxl,
+    marginBottom: Spacing.md,
     justifyContent: 'center',
   },
   comparisonBox: {
