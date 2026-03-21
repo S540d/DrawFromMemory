@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import Head from 'expo-router/head';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider, useTheme } from '@services/ThemeContext';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import AnimatedSplashScreen from '@components/AnimatedSplashScreen';
 import { useCallback, useEffect, useState } from 'react';
@@ -60,9 +61,11 @@ function RootLayoutContent() {
 export default function RootLayout() {
   return (
     <ErrorBoundary>
-      <ThemeProvider>
-        <RootLayoutContent />
-      </ThemeProvider>
+      <SafeAreaProvider>
+        <ThemeProvider>
+          <RootLayoutContent />
+        </ThemeProvider>
+      </SafeAreaProvider>
     </ErrorBoundary>
   );
 }
