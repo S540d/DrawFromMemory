@@ -276,24 +276,31 @@ export default function DrawingCanvas({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
+        {/* Render fill paths first (behind strokes) with canvas-sized radius */}
         {nativePaths.map((pathData, index) => {
           if (pathData.type === 'fill' && pathData.points.length > 0) {
+            const fillRadius = Math.hypot(width, height);
             return (
               <SkiaCircle
-                key={index}
+                key={`fill-${index}`}
                 cx={pathData.points[0].x * scale + offsetX}
                 cy={pathData.points[0].y * scale + offsetY}
-                r={30}
+                r={fillRadius}
                 color={pathData.color}
               />
             );
           }
+          return null;
+        })}
+        {/* Render stroke paths on top of fills */}
+        {nativePaths.map((pathData, index) => {
+          if (pathData.type === 'fill') return null;
 
           const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth, scale, offsetX, offsetY);
           if (!skiaPath) return null;
           return (
             <SkiaPath
-              key={index}
+              key={`stroke-${index}`}
               path={skiaPath.path}
               color={skiaPath.color}
               style="stroke"
