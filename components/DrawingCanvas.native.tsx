@@ -4,6 +4,7 @@ import { t } from '@services/i18n';
 import { styles, DEFAULT_CANVAS_WIDTH } from './DrawingCanvas.shared';
 import type { DrawingPath } from './DrawingCanvas.shared';
 import { captureException } from '@services/SentryService';
+import { floodFillPixels, hexToRgb } from '@services/FloodFillService';
 
 // Re-export shared API so '@components/DrawingCanvas' provides a complete module on native
 export type { DrawingPath } from './DrawingCanvas.shared';
@@ -14,7 +15,12 @@ export { useDrawingCanvas } from './DrawingCanvas.hooks';
 let SkiaCanvas: any = null;
 let SkiaPath: any = null;
 let SkiaModule: any = null;
-let SkiaCircle: any = null;
+let SkiaImage: any = null;
+let SkiaAlphaType: any = null;
+let SkiaColorType: any = null;
+let SkiaPaintStyle: any = null;
+let SkiaStrokeCap: any = null;
+let SkiaStrokeJoin: any = null;
 let skiaLoadError: Error | null = null;
 
 function tryLoadSkia(): boolean {
@@ -27,7 +33,12 @@ function tryLoadSkia(): boolean {
     SkiaCanvas = skia.Canvas;
     SkiaPath = skia.Path;
     SkiaModule = skia.Skia;
-    SkiaCircle = skia.Circle;
+    SkiaImage = skia.Image;
+    SkiaAlphaType = skia.AlphaType;
+    SkiaColorType = skia.ColorType;
+    SkiaPaintStyle = skia.PaintStyle;
+    SkiaStrokeCap = skia.StrokeCap;
+    SkiaStrokeJoin = skia.StrokeJoin;
 
     // Verify that the native module is actually ready (not just exported)
     if (!SkiaModule?.Path?.Make) {
@@ -39,7 +50,12 @@ function tryLoadSkia(): boolean {
     SkiaCanvas = null;
     SkiaPath = null;
     SkiaModule = null;
-    SkiaCircle = null;
+    SkiaImage = null;
+    SkiaAlphaType = null;
+    SkiaColorType = null;
+    SkiaPaintStyle = null;
+    SkiaStrokeCap = null;
+    SkiaStrokeJoin = null;
     skiaLoadError = e instanceof Error ? e : new Error(String(e));
     console.error('[DrawingCanvas] Failed to load @shopify/react-native-skia:', {
       message: skiaLoadError.message,
@@ -57,6 +73,84 @@ function tryLoadSkia(): boolean {
 
 // Attempt initial load at module level
 tryLoadSkia();
+
+/**
+ * Renders all paths to an offscreen Skia surface and returns the resulting image.
+ * Fill paths are handled via pixel-level flood fill (same algorithm as web).
+ * Returns null if the surface cannot be created or Skia is unavailable.
+ */
+function computeCanvasImage(
+  paths: DrawingPath[],
+  w: number,
+  h: number,
+  scale: number,
+  offsetX: number,
+  offsetY: number
+): any | null {
+  if (!SkiaModule?.Surface?.MakeOffscreen) return null;
+
+  const surface = SkiaModule.Surface.MakeOffscreen(w, h);
+  if (!surface) return null;
+
+  const canvas = surface.getCanvas();
+
+  // White background
+  const bgPaint = SkiaModule.Paint();
+  bgPaint.setColor(SkiaModule.Color('#FFFFFF'));
+  canvas.drawRect(SkiaModule.XYWHRect(0, 0, w, h), bgPaint);
+
+  for (const path of paths) {
+    if (path.type === 'fill' && path.points.length > 0) {
+      // Flood fill: take snapshot, run fill algorithm, redraw
+      surface.flush();
+      const snapshot = surface.makeImageSnapshot();
+      const imageInfo = {
+        colorType: SkiaColorType?.RGBA_8888 ?? 4,
+        alphaType: SkiaAlphaType?.Unpremul ?? 3,
+        width: w,
+        height: h,
+      };
+      const pixels = snapshot.readPixels(0, 0, imageInfo);
+      if (pixels instanceof Uint8Array) {
+        const pixelData = new Uint8ClampedArray(pixels);
+        const fillX = path.points[0].x * scale + offsetX;
+        const fillY = path.points[0].y * scale + offsetY;
+        const changed = floodFillPixels(pixelData, w, h, fillX, fillY, hexToRgb(path.color));
+        if (changed) {
+          const skData = SkiaModule.Data.fromBytes(new Uint8Array(pixelData));
+          const filledImage = SkiaModule.Image.MakeImage(imageInfo, skData, w * 4);
+          if (filledImage) {
+            canvas.clear(SkiaModule.Color('transparent'));
+            canvas.drawImage(filledImage, 0, 0);
+          }
+        }
+      }
+    } else if (path.type !== 'fill' && path.points.length >= 2) {
+      const skiaPath = SkiaModule.Path.Make();
+      skiaPath.moveTo(
+        path.points[0].x * scale + offsetX,
+        path.points[0].y * scale + offsetY
+      );
+      for (let i = 1; i < path.points.length; i++) {
+        skiaPath.lineTo(
+          path.points[i].x * scale + offsetX,
+          path.points[i].y * scale + offsetY
+        );
+      }
+      const paint = SkiaModule.Paint();
+      paint.setColor(SkiaModule.Color(path.color));
+      paint.setStrokeWidth(path.strokeWidth * scale);
+      paint.setStyle(SkiaPaintStyle?.Stroke ?? 1);
+      paint.setStrokeCap(SkiaStrokeCap?.Round ?? 1);
+      paint.setStrokeJoin(SkiaStrokeJoin?.Round ?? 1);
+      paint.setAntiAlias(true);
+      canvas.drawPath(skiaPath, paint);
+    }
+  }
+
+  surface.flush();
+  return surface.makeImageSnapshot();
+}
 
 interface Props {
   width?: number;
@@ -171,6 +265,8 @@ export default function DrawingCanvas({
 
   const [nativePaths, setNativePaths] = useState(paths);
   const [currentNativePath, setCurrentNativePath] = useState<{ x: number; y: number }[]>([]);
+  // Pre-computed canvas image used when paths contain fill operations
+  const [canvasImage, setCanvasImage] = useState<any>(null);
 
   useEffect(() => {
     setNativePaths(paths);
@@ -210,10 +306,12 @@ export default function DrawingCanvas({
   };
 
   const getScaledPaths = () => {
-    if (nativePaths.length === 0) return { scale: 1, offsetX: 0, offsetY: 0 };
+    // Exclude fill paths from bounding box – they only have a single click point
+    const strokePaths = nativePaths.filter(p => p.type !== 'fill');
+    if (strokePaths.length === 0) return { scale: 1, offsetX: 0, offsetY: 0 };
 
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-    nativePaths.forEach(path => {
+    strokePaths.forEach(path => {
       path.points.forEach(point => {
         minX = Math.min(minX, point.x);
         minY = Math.min(minY, point.y);
@@ -258,6 +356,18 @@ export default function DrawingCanvas({
 
   const { scale, offsetX, offsetY } = !onDrawingChange ? getScaledPaths() : { scale: 1, offsetX: 0, offsetY: 0 };
 
+  const hasFillPaths = nativePaths.some(p => p.type === 'fill');
+
+  // Recompute the pre-rendered canvas image whenever paths that contain fills change
+  useEffect(() => {
+    if (!hasFillPaths) {
+      setCanvasImage(null);
+      return;
+    }
+    const image = computeCanvasImage(nativePaths, width, height, scale, offsetX, offsetY);
+    setCanvasImage(image);
+  }, [nativePaths, width, height, scale, offsetX, offsetY, hasFillPaths]);
+
   if (!SkiaCanvas || !SkiaModule) {
     return (
       <SkiaFallback
@@ -276,40 +386,36 @@ export default function DrawingCanvas({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Render fill paths first (behind strokes) with canvas-sized radius */}
-        {nativePaths.map((pathData, index) => {
-          if (pathData.type === 'fill' && pathData.points.length > 0) {
-            const fillRadius = Math.hypot(width, height);
+        {hasFillPaths ? (
+          // When fills are present, render the pre-computed canvas image (which contains
+          // correctly flood-filled areas bounded by strokes) as the base layer.
+          canvasImage && SkiaImage && (
+            <SkiaImage
+              image={canvasImage}
+              x={0}
+              y={0}
+              width={width}
+              height={height}
+            />
+          )
+        ) : (
+          // No fills – render stroke paths directly as Skia paths (faster, no CPU round-trip)
+          nativePaths.map((pathData, index) => {
+            const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth, scale, offsetX, offsetY);
+            if (!skiaPath) return null;
             return (
-              <SkiaCircle
-                key={`fill-${index}`}
-                cx={pathData.points[0].x * scale + offsetX}
-                cy={pathData.points[0].y * scale + offsetY}
-                r={fillRadius}
-                color={pathData.color}
+              <SkiaPath
+                key={`stroke-${index}`}
+                path={skiaPath.path}
+                color={skiaPath.color}
+                style="stroke"
+                strokeWidth={skiaPath.width}
+                strokeCap="round"
+                strokeJoin="round"
               />
             );
-          }
-          return null;
-        })}
-        {/* Render stroke paths on top of fills */}
-        {nativePaths.map((pathData, index) => {
-          if (pathData.type === 'fill') return null;
-
-          const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth, scale, offsetX, offsetY);
-          if (!skiaPath) return null;
-          return (
-            <SkiaPath
-              key={`stroke-${index}`}
-              path={skiaPath.path}
-              color={skiaPath.color}
-              style="stroke"
-              strokeWidth={skiaPath.width}
-              strokeCap="round"
-              strokeJoin="round"
-            />
-          );
-        })}
+          })
+        )}
 
         {onDrawingChange && currentNativePath.length > 1 && (() => {
           const skiaPath = createSkiaPath(currentNativePath, strokeColor, strokeWidth, 1, 0, 0);
