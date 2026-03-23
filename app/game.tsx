@@ -187,7 +187,7 @@ export default function GameScreen() {
           accessibilityLabel={t('game.draw.undo')}
           accessibilityRole="button"
         >
-          <Text style={[styles.secondaryButtonText, isSmall && styles.buttonTextSmall]}>Rückgängig</Text>
+          <Text style={[styles.secondaryButtonText, isSmall && styles.buttonTextSmall]}>{t('game.draw.undo')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.secondaryButton, dynButton, drawing.paths.length === 0 && styles.buttonDisabled]}
@@ -220,7 +220,7 @@ export default function GameScreen() {
           }}
           disabled={drawing.paths.length === 0}
         >
-          <Text style={[styles.secondaryButtonText, isSmall && styles.buttonTextSmall]}>Löschen</Text>
+          <Text style={[styles.secondaryButtonText, isSmall && styles.buttonTextSmall]}>{t('game.draw.clear')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.primaryButton, dynButton]}
@@ -229,7 +229,7 @@ export default function GameScreen() {
             setPhase('result');
           }}
         >
-          <Text style={[styles.primaryButtonText, isSmall && styles.buttonTextSmall]}>Fertig</Text>
+          <Text style={[styles.primaryButtonText, isSmall && styles.buttonTextSmall]}>{t('game.draw.done')}</Text>
         </TouchableOpacity>
       </View>
     </View>
