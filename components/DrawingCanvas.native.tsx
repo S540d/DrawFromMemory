@@ -112,12 +112,18 @@ function computeCanvasImage(
       };
       const pixels = snapshot.readPixels(0, 0, imageInfo);
       if (pixels instanceof Uint8Array) {
-        const pixelData = new Uint8ClampedArray(pixels);
+        // Create a clamped view over the existing pixel buffer (no copy)
+        const pixelData = new Uint8ClampedArray(
+          pixels.buffer,
+          pixels.byteOffset,
+          pixels.byteLength
+        );
         const fillX = path.points[0].x * scale + offsetX;
         const fillY = path.points[0].y * scale + offsetY;
         const changed = floodFillPixels(pixelData, w, h, fillX, fillY, hexToRgb(path.color));
         if (changed) {
-          const skData = SkiaModule.Data.fromBytes(new Uint8Array(pixelData));
+          // Reuse the original Uint8Array view; it reflects changes via pixelData
+          const skData = SkiaModule.Data.fromBytes(pixels);
           const filledImage = SkiaModule.Image.MakeImage(imageInfo, skData, w * 4);
           if (filledImage) {
             canvas.clear(SkiaModule.Color('transparent'));
@@ -387,17 +393,42 @@ export default function DrawingCanvas({
         onTouchEnd={handleTouchEnd}
       >
         {hasFillPaths ? (
-          // When fills are present, render the pre-computed canvas image (which contains
-          // correctly flood-filled areas bounded by strokes) as the base layer.
-          canvasImage && SkiaImage && (
-            <SkiaImage
-              image={canvasImage}
-              x={0}
-              y={0}
-              width={width}
-              height={height}
-            />
-          )
+          // When fills are present, render the pre-computed canvas image as the base layer.
+          // Additionally overlay any strokes that were added after the last fill path so
+          // they remain visible while canvasImage is being regenerated (avoids flicker).
+          <>
+            {canvasImage && SkiaImage && (
+              <SkiaImage
+                image={canvasImage}
+                x={0}
+                y={0}
+                width={width}
+                height={height}
+              />
+            )}
+            {(() => {
+              // Find strokes appended after the last fill entry
+              let lastFillIdx = -1;
+              for (let i = nativePaths.length - 1; i >= 0; i--) {
+                if (nativePaths[i].type === 'fill') { lastFillIdx = i; break; }
+              }
+              return nativePaths.slice(lastFillIdx + 1).map((pathData, idx) => {
+                const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth, scale, offsetX, offsetY);
+                if (!skiaPath) return null;
+                return (
+                  <SkiaPath
+                    key={`overlay-${idx}`}
+                    path={skiaPath.path}
+                    color={skiaPath.color}
+                    style="stroke"
+                    strokeWidth={skiaPath.width}
+                    strokeCap="round"
+                    strokeJoin="round"
+                  />
+                );
+              });
+            })()}
+          </>
         ) : (
           // No fills – render stroke paths directly as Skia paths (faster, no CPU round-trip)
           nativePaths.map((pathData, index) => {
