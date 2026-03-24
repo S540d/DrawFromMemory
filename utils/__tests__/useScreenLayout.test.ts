@@ -30,7 +30,7 @@ describe('useScreenLayout', () => {
   });
 
   describe('Größenklassen (size)', () => {
-    it('ist "lg" auf großen Geräten (safeHeight >= 768)', () => {
+    it('ist "md" für iPhone 14 Pro (safeHeight = 763, < 768)', () => {
       mockWindowDimensions = { width: 390, height: 844 };
       mockInsets = { top: 47, bottom: 34, left: 0, right: 0 };
       // safeHeight = 844 - 47 - 34 = 763 → md (< 768)

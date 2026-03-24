@@ -117,18 +117,25 @@ export function useScreenLayout(): ScreenLayout {
   // Schätzung des Platzes, der von festen Elementen verbraucht wird:
   //   Header + phaseContainer-Padding + Toolbar + Buttons + Gaps
   const headerHeight   = headerPaddingVertical * 2 + 44; // content ~44 px
-  const phasepadding   = (isXSmall ? 8 : 16) * 2;
+  const phasePadding   = (isXSmall ? 8 : 16) * 2;
   const toolbarHeight  = toolbarButtonMinHeight + toolbarMarginVertical * 2;
-  const buttonHeight   = buttonMinHeight;
+  const buttonHeight   = buttonMinHeight + buttonPaddingVertical * 2;
   const gapTotal       = isXSmall ? 8 : 16;
 
-  const reservedHeight = headerHeight + phasepadding + toolbarHeight + buttonHeight + gapTotal;
+  const reservedHeight = headerHeight + phasePadding + toolbarHeight + buttonHeight + gapTotal;
   const remainingHeight = Math.max(safeHeight - reservedHeight, 0);
 
-  // Canvas bekommt 95 % des verbleibenden Platzes, aber immer im Bereich [minH, maxH]
+  // Canvas bekommt 95 % des verbleibenden Platzes, aber immer im Bereich [minH, maxH].
+  // Min-Höhe und Obergrenze werden zusätzlich auf die tatsächlich verbleibende Höhe begrenzt,
+  // damit keine vertikale Überlappung auf sehr kleinen / Split-Screen-Layouts entsteht.
   const rawCanvasHeight = remainingHeight * 0.95;
-  const canvasMinHeight  = isXSmall ? 90  : isSmall ? 120 : 160;
-  const canvasMaxHeight  = Math.min(Math.max(rawCanvasHeight, canvasMinHeight), isLarge ? 400 : 320);
+  const baseCanvasMinHeight = isXSmall ? 90 : isSmall ? 120 : 160;
+  const canvasMinHeight = Math.min(baseCanvasMinHeight, remainingHeight);
+  const canvasUpperLimit = Math.min(isLarge ? 400 : 320, remainingHeight);
+  const canvasMaxHeight = Math.min(
+    Math.max(rawCanvasHeight, canvasMinHeight),
+    canvasUpperLimit,
+  );
   const canvasMarginVertical = isXSmall ? 2 : 4;
 
   // ── Merke-Phase ───────────────────────────────────────────────────

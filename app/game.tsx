@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, Platform, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useScreenLayout } from '@utils/useScreenLayout';
@@ -80,6 +80,27 @@ export default function GameScreen() {
     SoundManager.init();
   }, []);
 
+  // Memoized dynamic styles – stable across re-renders unless layout changes
+  const dynCanvasContainer = useMemo(() => ({
+    maxHeight: layout.canvasMaxHeight,
+    minHeight: layout.canvasMinHeight,
+    marginVertical: layout.canvasMarginVertical,
+  }), [layout.canvasMaxHeight, layout.canvasMinHeight, layout.canvasMarginVertical]);
+
+  const dynToolbar = useMemo(() => ({
+    marginVertical: layout.toolbarMarginVertical,
+  }), [layout.toolbarMarginVertical]);
+
+  const dynToolbarButton = useMemo(() => ({
+    minHeight: layout.toolbarButtonMinHeight,
+    paddingVertical: layout.toolbarButtonPaddingVertical,
+  }), [layout.toolbarButtonMinHeight, layout.toolbarButtonPaddingVertical]);
+
+  const dynButton = useMemo(() => ({
+    minHeight: layout.buttonMinHeight,
+    paddingVertical: layout.buttonPaddingVertical,
+  }), [layout.buttonMinHeight, layout.buttonPaddingVertical]);
+
   // Render Memorize Phase
   const renderMemorizePhase = () => (
     <View style={styles.phaseContainer}>
@@ -109,22 +130,6 @@ export default function GameScreen() {
 
   // Render Draw Phase
   const renderDrawPhase = () => {
-    // Dynamische Stile aus dem Layout-Hook
-    const dynCanvasContainer = {
-      maxHeight: layout.canvasMaxHeight,
-      minHeight: layout.canvasMinHeight,
-      marginVertical: layout.canvasMarginVertical,
-    };
-    const dynToolbar = { marginVertical: layout.toolbarMarginVertical };
-    const dynToolbarButton = {
-      minHeight: layout.toolbarButtonMinHeight,
-      paddingVertical: layout.toolbarButtonPaddingVertical,
-    };
-    const dynButton = {
-      minHeight: layout.buttonMinHeight,
-      paddingVertical: layout.buttonPaddingVertical,
-    };
-
     return (
     <View style={styles.phaseContainer}>
       {/* Zeichenfläche mit react-native-skia */}
@@ -283,7 +288,7 @@ export default function GameScreen() {
         contentContainerStyle={[styles.resultContent, { paddingBottom: Math.max(insets.bottom, Spacing.md) }]}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.phaseTitle}>Ergebnis</Text>
+        <Text style={styles.phaseTitle}>{t('game.result.title')}</Text>
 
         {/* Sterne-Bewertung Interaktiv */}
         <View style={[styles.starsContainer, isSmall && styles.starsContainerSmall]}>
