@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, useWindowDimensions, Platform, ScrollView } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, Platform, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useScreenLayout } from '@utils/useScreenLayout';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getTotalLevels } from '@services/LevelManager';
 import { t, getCurrentLanguage } from '@services/i18n';
@@ -28,9 +29,8 @@ export default function GameScreen() {
   const params = useLocalSearchParams();
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  // Use hook for responsive dimensions (SSR-safe)
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
-  const isSmallScreen = screenHeight < 640;
+  const layout = useScreenLayout();
+  const { screenWidth, isSmall } = layout;
   const [showSettings, setShowSettings] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showToolPicker, setShowToolPicker] = useState(false);
@@ -80,6 +80,27 @@ export default function GameScreen() {
     SoundManager.init();
   }, []);
 
+  // Memoized dynamic styles – stable across re-renders unless layout changes
+  const dynCanvasContainer = useMemo(() => ({
+    maxHeight: layout.canvasMaxHeight,
+    minHeight: layout.canvasMinHeight,
+    marginVertical: layout.canvasMarginVertical,
+  }), [layout.canvasMaxHeight, layout.canvasMinHeight, layout.canvasMarginVertical]);
+
+  const dynToolbar = useMemo(() => ({
+    marginVertical: layout.toolbarMarginVertical,
+  }), [layout.toolbarMarginVertical]);
+
+  const dynToolbarButton = useMemo(() => ({
+    minHeight: layout.toolbarButtonMinHeight,
+    paddingVertical: layout.toolbarButtonPaddingVertical,
+  }), [layout.toolbarButtonMinHeight, layout.toolbarButtonPaddingVertical]);
+
+  const dynButton = useMemo(() => ({
+    minHeight: layout.buttonMinHeight,
+    paddingVertical: layout.buttonPaddingVertical,
+  }), [layout.buttonMinHeight, layout.buttonPaddingVertical]);
+
   // Render Memorize Phase
   const renderMemorizePhase = () => (
     <View style={styles.phaseContainer}>
@@ -93,9 +114,9 @@ export default function GameScreen() {
       {/* Bild-Container */}
       <View style={styles.imageContainer}>
         {currentImage && (
-          <View style={styles.imagePlaceholder}>
+          <View style={[styles.imagePlaceholder, { minWidth: layout.imagePlaceholderMinSize, minHeight: layout.imagePlaceholderMinSize }]}>
             <ErrorBoundary>
-              <LevelImageDisplay image={currentImage} size={280} revealStep={revealStep} />
+              <LevelImageDisplay image={currentImage} size={layout.memorizeImageSize} revealStep={revealStep} />
             </ErrorBoundary>
             <Text style={styles.imageName}>{currentImage.displayName}</Text>
             <Text style={styles.imageInfo}>
@@ -108,10 +129,11 @@ export default function GameScreen() {
   );
 
   // Render Draw Phase
-  const renderDrawPhase = () => (
+  const renderDrawPhase = () => {
+    return (
     <View style={styles.phaseContainer}>
       {/* Zeichenfläche mit react-native-skia */}
-      <View style={[styles.canvasContainer, isSmallScreen && styles.canvasContainerSmall]}>
+      <View style={[styles.canvasContainer, dynCanvasContainer]}>
         <ErrorBoundary>
           <DrawingCanvas
             strokeColor={drawing.color}
@@ -124,10 +146,10 @@ export default function GameScreen() {
       </View>
 
       {/* Kompakte Toolbar */}
-      <View style={[styles.compactToolbar, isSmallScreen && styles.compactToolbarSmall]}>
+      <View style={[styles.compactToolbar, dynToolbar]}>
         {/* Farbe */}
         <TouchableOpacity
-          style={[styles.toolbarButton, isSmallScreen && styles.toolbarButtonSmall]}
+          style={[styles.toolbarButton, dynToolbarButton]}
           onPress={() => setShowColorPicker(true)}
           accessibilityLabel={t('game.draw.selectColor')}
           accessibilityRole="button"
@@ -138,7 +160,7 @@ export default function GameScreen() {
 
         {/* Werkzeug */}
         <TouchableOpacity
-          style={[styles.toolbarButton, isSmallScreen && styles.toolbarButtonSmall]}
+          style={[styles.toolbarButton, dynToolbarButton]}
           onPress={() => setShowToolPicker(true)}
           accessibilityLabel={t('game.draw.tool')}
           accessibilityRole="button"
@@ -150,7 +172,7 @@ export default function GameScreen() {
         {/* Strichstärke (nur bei Brush) */}
         {drawing.tool === 'brush' && (
           <TouchableOpacity
-            style={[styles.toolbarButton, isSmallScreen && styles.toolbarButtonSmall]}
+            style={[styles.toolbarButton, dynToolbarButton]}
             onPress={() => setShowStrokeWidthPicker(true)}
             accessibilityLabel={t('game.draw.strokeWidth')}
             accessibilityRole="button"
@@ -164,16 +186,16 @@ export default function GameScreen() {
       {/* Buttons */}
       <View style={styles.buttonRow}>
         <TouchableOpacity
-          style={[styles.secondaryButton, isSmallScreen && styles.buttonSmall]}
+          style={[styles.secondaryButton, dynButton]}
           onPress={drawing.undo}
           disabled={drawing.paths.length === 0}
           accessibilityLabel={t('game.draw.undo')}
           accessibilityRole="button"
         >
-          <Text style={[styles.secondaryButtonText, isSmallScreen && styles.buttonTextSmall]}>Rückgängig</Text>
+          <Text style={[styles.secondaryButtonText, isSmall && styles.buttonTextSmall]}>{t('game.draw.undo')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.secondaryButton, isSmallScreen && styles.buttonSmall, drawing.paths.length === 0 && styles.buttonDisabled]}
+          style={[styles.secondaryButton, dynButton, drawing.paths.length === 0 && styles.buttonDisabled]}
           accessibilityLabel={t('game.draw.clear')}
           accessibilityRole="button"
           onPress={() => {
@@ -203,20 +225,21 @@ export default function GameScreen() {
           }}
           disabled={drawing.paths.length === 0}
         >
-          <Text style={[styles.secondaryButtonText, isSmallScreen && styles.buttonTextSmall]}>Löschen</Text>
+          <Text style={[styles.secondaryButtonText, isSmall && styles.buttonTextSmall]}>{t('game.draw.clear')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.primaryButton, isSmallScreen && styles.buttonSmall]}
+          style={[styles.primaryButton, dynButton]}
           onPress={() => {
             SoundManager.playPhaseTransition();
             setPhase('result');
           }}
         >
-          <Text style={[styles.primaryButtonText, isSmallScreen && styles.buttonTextSmall]}>Fertig</Text>
+          <Text style={[styles.primaryButtonText, isSmall && styles.buttonTextSmall]}>{t('game.draw.done')}</Text>
         </TouchableOpacity>
       </View>
     </View>
-  );
+    );
+  };
 
   // Render Star Rating (Interactive)
   const renderStars = (rating: number, interactive: boolean = false) => {
@@ -265,10 +288,10 @@ export default function GameScreen() {
         contentContainerStyle={[styles.resultContent, { paddingBottom: Math.max(insets.bottom, Spacing.md) }]}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.phaseTitle}>Ergebnis</Text>
+        <Text style={styles.phaseTitle}>{t('game.result.title')}</Text>
 
         {/* Sterne-Bewertung Interaktiv */}
-        <View style={[styles.starsContainer, isSmallScreen && styles.starsContainerSmall]}>
+        <View style={[styles.starsContainer, isSmall && styles.starsContainerSmall]}>
           {renderStars(userRating, true)}
           <AnimatedFeedback visible={userRating > 0}>
             <Text style={styles.ratingText}>{userRating} Stern{userRating !== 1 ? 'e' : ''}!</Text>
@@ -381,7 +404,7 @@ export default function GameScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isSmallScreen && styles.headerSmall]}>
+      <View style={[styles.header, { paddingVertical: layout.headerPaddingVertical, paddingHorizontal: layout.headerPaddingHorizontal }]}>
         <TouchableOpacity
           onPress={() => router.back()}
           accessibilityLabel={t('common.back')}
@@ -549,7 +572,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: Spacing.lg,
     borderBottomWidth: 1,
     borderBottomColor: Colors.surface,
   },
@@ -613,8 +635,6 @@ const styles = StyleSheet.create({
     padding: Spacing.lg,
     borderRadius: BorderRadius.xxl, // xl → xxl (20px → 24px für große Cards)
     alignItems: 'center',
-    minWidth: 260,
-    minHeight: 260,
     justifyContent: 'center',
     ...Colors.shadow.large, // Soft & Modern: Cards mit prominentem Schatten
   },
@@ -630,11 +650,8 @@ const styles = StyleSheet.create({
   },
   canvasContainer: {
     flex: 1,
-    maxHeight: 260,
-    minHeight: 160,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: Spacing.xs,
   },
   colorPickerContainer: {
     marginBottom: Spacing.md,
@@ -1130,27 +1147,6 @@ const styles = StyleSheet.create({
   closeText: {
     fontSize: 24,
     color: Colors.text.secondary,
-  },
-  // Responsive Styles für kleine Geräte (< 640px Höhe)
-  headerSmall: {
-    padding: Spacing.sm,
-    paddingHorizontal: Spacing.md,
-  },
-  canvasContainerSmall: {
-    maxHeight: 200,
-    minHeight: 120,
-    marginVertical: 2,
-  },
-  compactToolbarSmall: {
-    marginVertical: Spacing.xs,
-  },
-  toolbarButtonSmall: {
-    minHeight: 44,
-    paddingVertical: Spacing.xs,
-  },
-  buttonSmall: {
-    minHeight: 40,
-    paddingVertical: Spacing.sm,
   },
   buttonTextSmall: {
     fontSize: FontSize.md,
