@@ -35,10 +35,8 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
     await setLanguage(lang);
     setCurrentLang(lang);
     Alert.alert(
-      lang === 'de' ? 'Sprache geändert' : 'Language changed',
-      lang === 'de'
-        ? 'Die Sprache wurde auf Deutsch geändert. Bitte starte die App neu, damit die Änderungen überall wirksam werden.'
-        : 'Language has been changed to English. Please restart the app for changes to take effect everywhere.'
+      t('settings.languageChanged'),
+      t('settings.languageChangedMessage')
     );
   };
 
@@ -50,9 +48,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   const handleResetProgress = () => {
     Alert.alert(
       t('settings.resetProgress'),
-      currentLang === 'de'
-        ? 'Möchtest du deinen Fortschritt wirklich zurücksetzen? Diese Aktion kann nicht rückgängig gemacht werden.'
-        : 'Do you really want to reset your progress? This action cannot be undone.',
+      t('settings.resetConfirmMessage'),
       [
         { text: t('common.cancel'), style: 'cancel' },
         {
@@ -62,10 +58,8 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             try {
               await storageManager.resetProgress();
               Alert.alert(
-                currentLang === 'de' ? 'Fortschritt gelöscht' : 'Progress reset',
-                currentLang === 'de'
-                  ? 'Dein Spielfortschritt wurde erfolgreich zurückgesetzt.'
-                  : 'Your game progress has been successfully reset.'
+                t('settings.resetSuccess'),
+                t('settings.resetSuccessMessage')
               );
             } catch (error) {
               console.error('Error resetting progress:', error);
@@ -77,12 +71,8 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   };
 
   const handleSendFeedback = async () => {
-    const subject = encodeURIComponent('Feedback: Merke und Male');
-    const body = encodeURIComponent(
-      currentLang === 'de'
-        ? 'Hallo,\n\nIch habe Feedback zu Merke und Male:\n\n'
-        : 'Hello,\n\nI have feedback about Remember & Draw:\n\n'
-    );
+    const subject = encodeURIComponent(t('settings.feedbackEmailSubject'));
+    const body = encodeURIComponent(t('settings.feedbackEmailBody'));
     const url = `mailto:devsven@posteo.de?subject=${subject}&body=${body}`;
 
     try {
@@ -90,20 +80,10 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
       if (supported) {
         await Linking.openURL(url);
       } else {
-        Alert.alert(
-          currentLang === 'de' ? 'Fehler' : 'Error',
-          currentLang === 'de'
-            ? 'E-Mail-Client konnte nicht geöffnet werden. Bitte sende dein Feedback an: devsven@posteo.de'
-            : 'Could not open email client. Please send your feedback to: devsven@posteo.de'
-        );
+        Alert.alert(t('settings.error'), t('settings.feedbackEmailError'));
       }
     } catch (error) {
-      Alert.alert(
-        currentLang === 'de' ? 'Fehler' : 'Error',
-        currentLang === 'de'
-          ? 'E-Mail-Client konnte nicht geöffnet werden. Bitte sende dein Feedback an: devsven@posteo.de'
-          : 'Could not open email client. Please send your feedback to: devsven@posteo.de'
-      );
+      Alert.alert(t('settings.error'), t('settings.feedbackEmailError'));
     }
   };
 
@@ -115,30 +95,16 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
       if (supported) {
         await Linking.openURL(url);
       } else {
-        Alert.alert(
-          currentLang === 'de' ? 'Fehler' : 'Error',
-          currentLang === 'de'
-            ? 'Browser konnte nicht geöffnet werden. Bitte besuche: https://ko-fi.com/s540d'
-            : 'Could not open browser. Please visit: https://ko-fi.com/s540d'
-        );
+        Alert.alert(t('settings.error'), t('settings.browserError'));
       }
     } catch (error) {
-      Alert.alert(
-        currentLang === 'de' ? 'Fehler' : 'Error',
-        currentLang === 'de'
-          ? 'Browser konnte nicht geöffnet werden. Bitte besuche: https://ko-fi.com/s540d'
-          : 'Could not open browser. Please visit: https://ko-fi.com/s540d'
-      );
+      Alert.alert(t('settings.error'), t('settings.browserError'));
     }
   };
 
   const handleShareApp = async () => {
     try {
-      await Share.share({
-        message: currentLang === 'de'
-          ? 'Schau dir diese coole Gedächtnistraining-App an: Merke und Male! https://github.com/S540d/DrawFromMemory'
-          : 'Check out this cool memory training app: Remember & Draw! https://github.com/S540d/DrawFromMemory',
-      });
+      await Share.share({ message: t('settings.shareMessage') });
     } catch (error) {
       // User cancelled share
     }
@@ -154,19 +120,19 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
       <View style={styles.modalOverlay}>
         <View style={[styles.aboutModalContent, { backgroundColor: colors.surface }]}>
           <Text style={[styles.modalTitle, { color: colors.text.primary }]}>
-            {currentLang === 'de' ? 'Über Merke und Male' : 'About Remember & Draw'}
+            {t('settings.aboutTitle')}
           </Text>
 
           <View style={styles.modalBody}>
             <Text style={[styles.modalLabel, { color: colors.text.light }]}>
-              {currentLang === 'de' ? 'Version' : 'Version'}
+              {t('settings.versionLabel')}
             </Text>
             <Text style={[styles.modalValue, { color: colors.text.primary }]}>
               {Constants.expoConfig?.version ?? '–'}
             </Text>
 
             <Text style={[styles.modalLabel, { color: colors.text.light, marginTop: Spacing.md }]}>
-              {currentLang === 'de' ? 'Lizenz' : 'License'}
+              {t('settings.licenseLabel')}
             </Text>
             <Text style={[styles.modalValue, { color: colors.text.primary }]}>Open Source • MIT</Text>
 
@@ -185,9 +151,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
 
             <View style={[styles.featureTeaser, { backgroundColor: colors.primary + '15', borderColor: colors.primary }]}>
               <Text style={[styles.teaserText, { color: colors.text.primary }]}>
-                {currentLang === 'de'
-                  ? 'Demnächst: Eigene Zeichnungen fotografieren und teilen!'
-                  : 'Coming soon: Take photos of your drawings and share them!'}
+                {t('settings.featureTeaser')}
               </Text>
             </View>
           </View>
@@ -197,7 +161,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             onPress={() => setShowAboutModal(false)}
           >
             <Text style={styles.modalCloseButtonText}>
-              {currentLang === 'de' ? 'Schließen' : 'Close'}
+              {t('common.close')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -209,13 +173,13 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
     <View>
       {/* APPEARANCE Section */}
       <Text style={[styles.sectionTitle, { color: colors.text.light }]}>
-        {currentLang === 'de' ? 'ERSCHEINUNGSBILD' : 'APPEARANCE'}
+        {t('settings.appearance')}
       </Text>
 
       {/* Theme */}
       <View style={styles.section}>
         <Text style={[styles.optionLabel, { color: colors.text.primary }]}>
-          {currentLang === 'de' ? 'Design' : 'Theme'}
+          {t('settings.theme')}
         </Text>
         <View style={styles.optionsRow}>
           <TouchableOpacity
@@ -231,7 +195,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               { color: colors.text.secondary },
               currentTheme === 'light' && [styles.optionTextActive, { color: colors.primary }]
             ]}>
-              {currentLang === 'de' ? 'Hell' : 'Light'}
+              {t('settings.themeLight')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -247,7 +211,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               { color: colors.text.secondary },
               currentTheme === 'dark' && [styles.optionTextActive, { color: colors.primary }]
             ]}>
-              {currentLang === 'de' ? 'Dunkel' : 'Dark'}
+              {t('settings.themeDark')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -263,7 +227,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               { color: colors.text.secondary },
               currentTheme === 'system' && [styles.optionTextActive, { color: colors.primary }]
             ]}>
-              System
+              {t('settings.themeSystem')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -272,7 +236,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
       {/* Language */}
       <View style={styles.section}>
         <Text style={[styles.optionLabel, { color: colors.text.primary }]}>
-          {currentLang === 'de' ? 'Sprache' : 'Language'}
+          {t('settings.language')}
         </Text>
         <View style={styles.optionsRow}>
           <TouchableOpacity
@@ -313,7 +277,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
       {/* Sound */}
       <View style={styles.section}>
         <Text style={[styles.optionLabel, { color: colors.text.primary }]}>
-          {currentLang === 'de' ? 'Sound-Effekte' : 'Sound Effects'}
+          {t('settings.sound')}
         </Text>
         <View style={styles.optionsRow}>
           <TouchableOpacity
@@ -333,7 +297,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               { color: colors.text.secondary },
               soundEnabled && [styles.optionTextActive, { color: colors.primary }]
             ]}>
-              {currentLang === 'de' ? 'An' : 'On'}
+              {t('settings.soundOn')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -353,7 +317,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               { color: colors.text.secondary },
               !soundEnabled && [styles.optionTextActive, { color: colors.primary }]
             ]}>
-              {currentLang === 'de' ? 'Aus' : 'Off'}
+              {t('settings.soundOff')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -364,7 +328,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
 
       {/* DATA Section */}
       <Text style={[styles.sectionTitle, { color: colors.text.light }]}>
-        {currentLang === 'de' ? 'DATEN' : 'DATA'}
+        {t('settings.dataSection')}
       </Text>
 
       <View style={styles.section}>
@@ -381,7 +345,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
 
       {/* ABOUT & SUPPORT Section - 2x2 Grid */}
       <Text style={[styles.sectionTitle, { color: colors.text.light }]}>
-        {currentLang === 'de' ? 'ÜBER & SUPPORT' : 'ABOUT & SUPPORT'}
+        {t('settings.aboutSupport')}
       </Text>
 
       <View style={styles.section}>
@@ -391,7 +355,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             onPress={handleSendFeedback}
           >
             <Text style={[styles.gridButtonText, { color: colors.primary }]}>
-              {currentLang === 'de' ? 'Feedback' : 'Feedback'}
+              {t('settings.feedback')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -399,7 +363,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             onPress={handleSupport}
           >
             <Text style={[styles.gridButtonText, { color: colors.primary }]}>
-              Support
+              {t('settings.support')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -409,7 +373,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             onPress={handleShareApp}
           >
             <Text style={[styles.gridButtonText, { color: colors.primary }]}>
-              {currentLang === 'de' ? 'Teilen' : 'Share'}
+              {t('settings.share')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -417,7 +381,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             onPress={() => setShowAboutModal(true)}
           >
             <Text style={[styles.gridButtonText, { color: colors.primary }]}>
-              {currentLang === 'de' ? 'Über' : 'About'}
+              {t('settings.aboutButton')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -441,7 +405,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             {/* Header */}
             <View style={styles.settingsHeader}>
               <Text style={[styles.settingsTitle, { color: colors.text.primary }]}>
-                {currentLang === 'de' ? 'Einstellungen' : 'Settings'}
+                {t('settings.title')}
               </Text>
               <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                 <Text style={[styles.closeText, { color: colors.text.secondary }]}>✕</Text>
