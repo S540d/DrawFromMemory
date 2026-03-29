@@ -169,222 +169,116 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
     </Modal>
   );
 
+  /** Segment-Auswahl: mehrere Optionen nebeneinander */
+  const renderSegment = (
+    options: { label: string; value: string }[],
+    current: string,
+    onSelect: (value: string) => void
+  ) => (
+    <View style={[styles.segment, { backgroundColor: colors.surfaceElevated }]}>
+      {options.map((opt) => {
+        const active = opt.value === current;
+        return (
+          <TouchableOpacity
+            key={opt.value}
+            style={[
+              styles.segmentItem,
+              active && { backgroundColor: colors.primary },
+            ]}
+            onPress={() => onSelect(opt.value)}
+          >
+            <Text style={[
+              styles.segmentText,
+              { color: active ? Colors.drawing.white : colors.text.secondary },
+              active && styles.segmentTextActive,
+            ]}>
+              {opt.label}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
+
+  /** Eine Einstellungs-Zeile mit Label + Inhalt */
+  const renderRow = (label: string, children: React.ReactNode) => (
+    <View style={[styles.row, { borderBottomColor: colors.border }]}>
+      <Text style={[styles.rowLabel, { color: colors.text.primary }]}>{label}</Text>
+      <View style={styles.rowControl}>{children}</View>
+    </View>
+  );
+
+  /** Tap-Zeile (für Aktionen wie Feedback, About …) */
+  const renderTapRow = (label: string, onPress: () => void, danger = false) => (
+    <TouchableOpacity
+      style={[styles.row, { borderBottomColor: colors.border }]}
+      onPress={onPress}
+    >
+      <Text style={[styles.rowLabel, { color: danger ? colors.error : colors.text.primary }]}>
+        {label}
+      </Text>
+      <Text style={[styles.rowChevron, { color: danger ? colors.error : colors.text.light }]}>
+        {danger ? '' : '›'}
+      </Text>
+    </TouchableOpacity>
+  );
+
   const renderContent = () => (
     <View>
-      {/* APPEARANCE Section */}
-      <Text style={[styles.sectionTitle, { color: colors.text.light }]}>
+      {/* DARSTELLUNG */}
+      <Text style={[styles.sectionHeader, { color: colors.text.light }]}>
         {t('settings.appearance')}
       </Text>
-
-      {/* Theme */}
-      <View style={styles.section}>
-        <Text style={[styles.optionLabel, { color: colors.text.primary }]}>
-          {t('settings.theme')}
-        </Text>
-        <View style={styles.optionsRow}>
-          <TouchableOpacity
-            style={[
-              styles.optionButton,
-              { backgroundColor: colors.surface, borderColor: colors.border },
-              currentTheme === 'light' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
-            ]}
-            onPress={() => handleThemeChange('light')}
-          >
-            <Text style={[
-              styles.optionText,
-              { color: colors.text.secondary },
-              currentTheme === 'light' && [styles.optionTextActive, { color: colors.primary }]
-            ]}>
-              {t('settings.themeLight')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.optionButton,
-              { backgroundColor: colors.surface, borderColor: colors.border },
-              currentTheme === 'dark' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
-            ]}
-            onPress={() => handleThemeChange('dark')}
-          >
-            <Text style={[
-              styles.optionText,
-              { color: colors.text.secondary },
-              currentTheme === 'dark' && [styles.optionTextActive, { color: colors.primary }]
-            ]}>
-              {t('settings.themeDark')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.optionButton,
-              { backgroundColor: colors.surface, borderColor: colors.border },
-              currentTheme === 'system' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
-            ]}
-            onPress={() => handleThemeChange('system')}
-          >
-            <Text style={[
-              styles.optionText,
-              { color: colors.text.secondary },
-              currentTheme === 'system' && [styles.optionTextActive, { color: colors.primary }]
-            ]}>
-              {t('settings.themeSystem')}
-            </Text>
-          </TouchableOpacity>
-        </View>
+      <View style={[styles.card, { backgroundColor: colors.surface }]}>
+        {renderRow(t('settings.theme'), renderSegment(
+          [
+            { label: t('settings.themeLight'), value: 'light' },
+            { label: t('settings.themeDark'),  value: 'dark'  },
+            { label: t('settings.themeSystem'), value: 'system' },
+          ],
+          currentTheme,
+          (v) => handleThemeChange(v as 'light' | 'dark' | 'system')
+        ))}
+        {renderRow(t('settings.language'), renderSegment(
+          [
+            { label: 'DE', value: 'de' },
+            { label: 'EN', value: 'en' },
+          ],
+          currentLang,
+          (v) => handleLanguageChange(v as 'de' | 'en')
+        ))}
+        {renderRow(t('settings.sound'), renderSegment(
+          [
+            { label: t('settings.soundOn'),  value: 'on'  },
+            { label: t('settings.soundOff'), value: 'off' },
+          ],
+          soundEnabled ? 'on' : 'off',
+          async (v) => {
+            const enabled = v === 'on';
+            setSoundEnabled(enabled);
+            SoundManager.setSoundEnabled(enabled);
+            await storageManager.setSetting('soundEnabled', enabled);
+          }
+        ))}
       </View>
 
-      {/* Language */}
-      <View style={styles.section}>
-        <Text style={[styles.optionLabel, { color: colors.text.primary }]}>
-          {t('settings.language')}
-        </Text>
-        <View style={styles.optionsRow}>
-          <TouchableOpacity
-            style={[
-              styles.optionButton,
-              { backgroundColor: colors.surface, borderColor: colors.border },
-              currentLang === 'de' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
-            ]}
-            onPress={() => handleLanguageChange('de')}
-          >
-            <Text style={[
-              styles.optionText,
-              { color: colors.text.secondary },
-              currentLang === 'de' && [styles.optionTextActive, { color: colors.primary }]
-            ]}>
-              Deutsch
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.optionButton,
-              { backgroundColor: colors.surface, borderColor: colors.border },
-              currentLang === 'en' && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
-            ]}
-            onPress={() => handleLanguageChange('en')}
-          >
-            <Text style={[
-              styles.optionText,
-              { color: colors.text.secondary },
-              currentLang === 'en' && [styles.optionTextActive, { color: colors.primary }]
-            ]}>
-              English
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Sound */}
-      <View style={styles.section}>
-        <Text style={[styles.optionLabel, { color: colors.text.primary }]}>
-          {t('settings.sound')}
-        </Text>
-        <View style={styles.optionsRow}>
-          <TouchableOpacity
-            style={[
-              styles.optionButton,
-              { backgroundColor: colors.surface, borderColor: colors.border },
-              soundEnabled && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
-            ]}
-            onPress={async () => {
-              setSoundEnabled(true);
-              SoundManager.setSoundEnabled(true);
-              await storageManager.setSetting('soundEnabled', true);
-            }}
-          >
-            <Text style={[
-              styles.optionText,
-              { color: colors.text.secondary },
-              soundEnabled && [styles.optionTextActive, { color: colors.primary }]
-            ]}>
-              {t('settings.soundOn')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.optionButton,
-              { backgroundColor: colors.surface, borderColor: colors.border },
-              !soundEnabled && [styles.optionButtonActive, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]
-            ]}
-            onPress={async () => {
-              setSoundEnabled(false);
-              SoundManager.setSoundEnabled(false);
-              await storageManager.setSetting('soundEnabled', false);
-            }}
-          >
-            <Text style={[
-              styles.optionText,
-              { color: colors.text.secondary },
-              !soundEnabled && [styles.optionTextActive, { color: colors.primary }]
-            ]}>
-              {t('settings.soundOff')}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Separator */}
-      <View style={[styles.separator, { backgroundColor: colors.border }]} />
-
-      {/* DATA Section */}
-      <Text style={[styles.sectionTitle, { color: colors.text.light }]}>
+      {/* DATEN */}
+      <Text style={[styles.sectionHeader, { color: colors.text.light }]}>
         {t('settings.dataSection')}
       </Text>
-
-      <View style={styles.section}>
-        <TouchableOpacity
-          style={[styles.dangerButton, { backgroundColor: colors.error + '15', borderColor: colors.error }]}
-          onPress={handleResetProgress}
-        >
-          <Text style={[styles.dangerButtonText, { color: colors.error }]}>{t('settings.resetProgress')}</Text>
-        </TouchableOpacity>
+      <View style={[styles.card, { backgroundColor: colors.surface }]}>
+        {renderTapRow(t('settings.resetProgress'), handleResetProgress, true)}
       </View>
 
-      {/* Separator */}
-      <View style={[styles.separator, { backgroundColor: colors.border }]} />
-
-      {/* ABOUT & SUPPORT Section - 2x2 Grid */}
-      <Text style={[styles.sectionTitle, { color: colors.text.light }]}>
+      {/* INFO & SUPPORT */}
+      <Text style={[styles.sectionHeader, { color: colors.text.light }]}>
         {t('settings.aboutSupport')}
       </Text>
-
-      <View style={styles.section}>
-        <View style={styles.gridRow}>
-          <TouchableOpacity
-            style={[styles.gridButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
-            onPress={handleSendFeedback}
-          >
-            <Text style={[styles.gridButtonText, { color: colors.primary }]}>
-              {t('settings.feedback')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.gridButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
-            onPress={handleSupport}
-          >
-            <Text style={[styles.gridButtonText, { color: colors.primary }]}>
-              {t('settings.support')}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.gridRow}>
-          <TouchableOpacity
-            style={[styles.gridButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
-            onPress={handleShareApp}
-          >
-            <Text style={[styles.gridButtonText, { color: colors.primary }]}>
-              {t('settings.share')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.gridButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
-            onPress={() => setShowAboutModal(true)}
-          >
-            <Text style={[styles.gridButtonText, { color: colors.primary }]}>
-              {t('settings.aboutButton')}
-            </Text>
-          </TouchableOpacity>
-        </View>
+      <View style={[styles.card, { backgroundColor: colors.surface }]}>
+        {renderTapRow(t('settings.feedback'), handleSendFeedback)}
+        {renderTapRow(t('settings.support'), handleSupport)}
+        {renderTapRow(t('settings.share'), handleShareApp)}
+        {renderTapRow(t('settings.aboutButton'), () => setShowAboutModal(true))}
       </View>
 
       {renderAboutModal()}
@@ -403,7 +297,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
         <View style={[styles.modalOverlay, { backgroundColor: colors.modalOverlay }]}>
           <View style={[styles.settingsModalContent, { backgroundColor: colors.background }]}>
             {/* Header */}
-            <View style={styles.settingsHeader}>
+            <View style={[styles.settingsHeader, { borderBottomColor: colors.border }]}>
               <Text style={[styles.settingsTitle, { color: colors.text.primary }]}>
                 {t('settings.title')}
               </Text>
@@ -412,7 +306,6 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               </TouchableOpacity>
             </View>
 
-            {/* Content – scrollable so all settings are reachable on small screens */}
             <ScrollView
               style={styles.settingsContent}
               showsVerticalScrollIndicator={true}
@@ -426,12 +319,11 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
     );
   }
 
-  // Embedded content only
   return <>{renderContent()}</>;
 }
 
 const styles = StyleSheet.create({
-  // Modal styles
+  // ── Modal wrapper ───────────────────────────────────────────────────────
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
@@ -442,7 +334,7 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.xxl,
     width: '100%',
     maxWidth: 400,
-    maxHeight: '80%',
+    maxHeight: '85%',
     overflow: 'hidden',
     ...Colors.shadow.large,
   },
@@ -451,12 +343,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.md,
+    paddingVertical: Spacing.sm,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
   },
   settingsTitle: {
-    fontSize: FontSize.lg,
+    fontSize: FontSize.lg,      // H3 – Modal-Titel
     fontWeight: FontWeight.semibold,
   },
   closeButton: {
@@ -466,100 +357,79 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   closeText: {
-    fontSize: 24,
+    fontSize: FontSize.md,
   },
   settingsContent: {
     flexGrow: 1,
     flexShrink: 1,
   },
   settingsContentInner: {
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.sm,
+    padding: Spacing.md,
   },
 
-  // Content styles
-  sectionTitle: {
-    fontSize: FontSize.xs,
+  // ── Abschnitts-Beschriftung ─────────────────────────────────────────────
+  sectionHeader: {
+    fontSize: FontSize.xs,      // Tiny – uppercase label
     fontWeight: FontWeight.semibold,
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginTop: Spacing.sm,
+    letterSpacing: 0.8,
+    marginTop: Spacing.md,
     marginBottom: Spacing.xs,
-  },
-  section: {
-    marginBottom: Spacing.sm,
-  },
-  optionLabel: {
-    fontSize: FontSize.sm,
-    fontWeight: FontWeight.medium,
-    marginBottom: Spacing.xs,
-  },
-  optionsRow: {
-    flexDirection: 'row',
-    gap: Spacing.sm,
-  },
-  optionButton: {
-    flex: 1,
-    paddingVertical: Spacing.xs,
-    paddingHorizontal: Spacing.sm,
-    borderRadius: BorderRadius.md,
-    borderWidth: 2,
-    alignItems: 'center',
-    minHeight: 44,
-    justifyContent: 'center',
-    ...Colors.shadow.small,
-  },
-  optionButtonActive: {
-    ...Colors.shadow.medium,
-  },
-  optionText: {
-    fontSize: FontSize.sm,
-    fontWeight: FontWeight.medium,
-  },
-  optionTextActive: {
-    fontWeight: FontWeight.bold,
-  },
-  separator: {
-    height: 1,
-    marginVertical: Spacing.sm,
-  },
-  dangerButton: {
-    borderWidth: 2,
-    borderRadius: BorderRadius.md,
-    paddingVertical: Spacing.xs,
-    paddingHorizontal: Spacing.lg,
-    alignItems: 'center',
-    minHeight: 44,
-    justifyContent: 'center',
-    ...Colors.shadow.small,
-  },
-  dangerButtonText: {
-    fontSize: FontSize.md,
-    fontWeight: FontWeight.bold,
+    paddingHorizontal: Spacing.xs,
   },
 
-  // Grid styles (2x2 for About & Support)
-  gridRow: {
-    flexDirection: 'row',
-    gap: Spacing.sm,
-    marginBottom: Spacing.sm,
+  // ── Card-Container pro Abschnitt ────────────────────────────────────────
+  card: {
+    borderRadius: BorderRadius.lg,
+    overflow: 'hidden',
+    ...Colors.shadow.small,
   },
-  gridButton: {
-    flex: 1,
+
+  // ── Einzel-Zeile ────────────────────────────────────────────────────────
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.sm,
-    borderRadius: BorderRadius.md,
-    borderWidth: 2,
-    alignItems: 'center',
-    ...Colors.shadow.small,
+    minHeight: 44,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  gridButtonText: {
-    fontSize: FontSize.sm,
-    fontWeight: FontWeight.bold,
-    textAlign: 'center',
+  rowLabel: {
+    fontSize: FontSize.sm,      // Body
+    fontWeight: FontWeight.medium,
+    flex: 1,
+  },
+  rowControl: {
+    marginLeft: Spacing.sm,
+  },
+  rowChevron: {
+    fontSize: FontSize.lg,
+    marginLeft: Spacing.sm,
   },
 
-  // About modal styles
+  // ── Segment-Control ─────────────────────────────────────────────────────
+  segment: {
+    flexDirection: 'row',
+    borderRadius: BorderRadius.md,
+    overflow: 'hidden',
+  },
+  segmentItem: {
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.sm,
+    minWidth: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  segmentText: {
+    fontSize: FontSize.xs,      // Tiny
+    fontWeight: FontWeight.medium,
+  },
+  segmentTextActive: {
+    fontWeight: FontWeight.bold,
+  },
+
+  // ── About-Modal ─────────────────────────────────────────────────────────
   aboutModalContent: {
     width: '100%',
     maxWidth: 400,
@@ -568,7 +438,7 @@ const styles = StyleSheet.create({
     ...Colors.shadow.large,
   },
   modalTitle: {
-    fontSize: FontSize.lg,
+    fontSize: FontSize.lg,      // H3
     fontWeight: FontWeight.bold,
     marginBottom: Spacing.lg,
     textAlign: 'center',
@@ -577,16 +447,16 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.lg,
   },
   modalLabel: {
-    fontSize: FontSize.sm,
+    fontSize: FontSize.xs,      // Caption
     fontWeight: FontWeight.medium,
     marginBottom: Spacing.xs,
   },
   modalValue: {
-    fontSize: FontSize.md,
+    fontSize: FontSize.sm,      // Body
     fontWeight: FontWeight.semibold,
   },
   modalLink: {
-    fontSize: FontSize.md,
+    fontSize: FontSize.sm,
     fontWeight: FontWeight.medium,
     textDecorationLine: 'underline',
   },
@@ -597,18 +467,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   teaserText: {
-    fontSize: FontSize.sm,
+    fontSize: FontSize.xs,
     textAlign: 'center',
   },
   modalCloseButton: {
-    paddingVertical: Spacing.md,
+    paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.lg,
     borderRadius: BorderRadius.md,
     alignItems: 'center',
   },
   modalCloseButtonText: {
     color: Colors.drawing.white,
-    fontSize: FontSize.md,
+    fontSize: FontSize.sm,
     fontWeight: FontWeight.bold,
   },
 });

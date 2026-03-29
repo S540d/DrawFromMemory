@@ -92,12 +92,12 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.surface,
   },
   backButton: {
-    fontSize: FontSize.lg,
+    fontSize: FontSize.md,
     color: Colors.primary,
     marginBottom: Spacing.sm,
   },
   title: {
-    fontSize: FontSize.xxl,
+    fontSize: FontSize.xl,
     fontWeight: FontWeight.bold,
     color: Colors.text.primary,
   },
