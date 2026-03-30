@@ -23,13 +23,13 @@ export const BorderRadius = {
 /**
  * Typografie-Hierarchie
  *
- * H1 – App-Titel (Home-Screen):        xxl  = 32 px  bold
- * H2 – Screen-/Modal-Titel:            xl   = 24 px  bold
- * H3 – Phase-/Abschnitts-Titel:        lg   = 20 px  semibold
- * Body / Labels:                        md   = 16 px  regular / medium
- * Small / Captions:                     sm   = 14 px  regular
- * Tiny / Abschnitts-Labels (uppercase): xs   = 12 px  semibold
- * Sonderfall Timer:                     huge = 48 px  bold  (nur Timer-Anzeige)
+ * H1 – App-Titel (Home-Screen):              xxl  = 32 px  bold
+ * H2 – Screen-Titel:                         xl   = 24 px  bold
+ * H3 – Modal-/Phase-/Abschnitts-Titel:       lg   = 20 px  semibold
+ * Body / Labels:                              md   = 16 px  regular / medium
+ * Small / Captions:                           sm   = 14 px  regular
+ * Tiny / Abschnitts-Labels (uppercase):       xs   = 12 px  semibold
+ * Sonderfall Timer:                           huge = 48 px  bold  (nur Timer-Anzeige)
  */
 export const FontSize = {
   xs: 12,

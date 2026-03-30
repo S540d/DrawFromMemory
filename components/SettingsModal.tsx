@@ -186,6 +186,9 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               active && { backgroundColor: colors.primary },
             ]}
             onPress={() => onSelect(opt.value)}
+            accessibilityRole="button"
+            accessibilityLabel={opt.label}
+            accessibilityState={{ selected: active }}
           >
             <Text style={[
               styles.segmentText,
@@ -217,9 +220,15 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
       <Text style={[styles.rowLabel, { color: danger ? colors.error : colors.text.primary }]}>
         {label}
       </Text>
-      <Text style={[styles.rowChevron, { color: danger ? colors.error : colors.text.light }]}>
-        {danger ? '' : '›'}
-      </Text>
+      {!danger && (
+        <Text
+          style={[styles.rowChevron, { color: colors.text.light }]}
+          accessible={false}
+          importantForAccessibility="no"
+        >
+          ›
+        </Text>
+      )}
     </TouchableOpacity>
   );
 
@@ -396,7 +405,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   rowLabel: {
-    fontSize: FontSize.sm,      // Body
+    fontSize: FontSize.sm,      // Small row label (not main body text)
     fontWeight: FontWeight.medium,
     flex: 1,
   },
