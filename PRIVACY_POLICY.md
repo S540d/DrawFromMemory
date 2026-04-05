@@ -1,6 +1,6 @@
 # Privacy Policy for Merke und Male
 
-**Effective Date:** [TBD]
+**Effective Date:** February 1, 2026
 
 ## Introduction
 
@@ -24,13 +24,17 @@ We do not collect:
 - Location data
 - Device identifiers
 - Usage analytics
-- Crash reports
 - Advertising data
-- Any data that leaves your device
+
+## Crash Reporting (Optional)
+
+The App optionally integrates **Sentry** for crash reporting. Sentry is **only active** when the environment variable `EXPO_PUBLIC_SENTRY_DSN` is set at build time. In standard releases published to the Play Store, this variable is **not set**, meaning Sentry is fully disabled and no crash data is transmitted.
+
+If a release is built with Sentry enabled, anonymous crash reports (stack traces, device OS version, app version) may be sent to Sentry, Inc. servers. No personal data, device identifiers, or user-generated content is included in these reports. You can review Sentry's privacy policy at https://sentry.io/privacy/.
 
 ## Third-Party Services
 
-Our App does not integrate any third-party services, analytics tools, or advertising networks.
+The App does not integrate any analytics, advertising, or social media SDKs. The only optional third-party integration is Sentry for crash reporting, as described above.
 
 ## Children's Privacy
 
@@ -87,5 +91,5 @@ This App complies with:
 
 ---
 
-**Last Updated:** [TBD]
+**Last Updated:** April 5, 2026
 **Version:** 1.0

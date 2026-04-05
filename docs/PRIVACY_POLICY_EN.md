@@ -12,7 +12,7 @@
 - ✅ **No Sharing**: No data is shared with third parties
 - ✅ **No Advertising**: The app contains no ads
 - ✅ **No In-App Purchases**: The app is completely free
-- ✅ **No Internet Required**: The app works fully offline
+- ✅ **No Internet Required**: The app works fully offline (Sentry only with explicit build flag)
 - ✅ **Open Source**: The complete source code is available on GitHub
 
 ---
@@ -30,7 +30,7 @@
 
 **No personal data.**
 
-The app does not collect any personal information. No data is transmitted over the internet.
+The app does not collect any personal information. In standard releases, no data is transmitted over the internet. See Section 7 for information on optional crash reporting.
 
 ### 2.1 Local Data Storage
 
@@ -119,14 +119,20 @@ Since no data is collected, there is no data we could provide information about.
 
 ## 7. Third-Party Services
 
-**The app does not use any third-party services.**
+The app does not use third-party services for advertising, analytics, or social media.
 
-Specifically:
+### 7.1 Optional Crash Reporting (Sentry)
+
+The app includes an optional integration of **Sentry** for crash reporting. Sentry is **only active** when the environment variable `EXPO_PUBLIC_SENTRY_DSN` is set at build time. In standard Play Store releases, this variable is **not set** — meaning Sentry is fully disabled and no data is transmitted.
+
+If a release is built with Sentry enabled, anonymous crash reports (stack traces, device OS version, app version) may be sent to Sentry, Inc. servers. These reports contain no personal data, device identifiers, or user-generated content. Sentry's privacy policy is available at https://sentry.io/privacy/.
+
+Specifically, the app contains:
 - ❌ No analytics tools (e.g., Google Analytics, Firebase Analytics)
-- ❌ No crash reporting services
 - ❌ No advertising networks
 - ❌ No social media SDKs
 - ❌ No cloud services
+- ⚙️ Optional crash reporting via Sentry (only when enabled via build variable)
 
 ---
 
