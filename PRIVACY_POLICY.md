@@ -1,6 +1,6 @@
 # Privacy Policy for Merke und Male
 
-**Effective Date:** February 1, 2026
+**Effective Date:** April 5, 2026
 
 ## Introduction
 
