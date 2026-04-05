@@ -125,5 +125,12 @@
     "close": "Close",
     "back": "Back",
     "settings": "Settings"
+  },
+  "parentalGate": {
+    "title": "Parental Gate",
+    "message": "This link leads outside the app. Please solve the challenge to continue:",
+    "placeholder": "Enter answer",
+    "confirm": "Open",
+    "wrongAnswer": "Wrong answer. Please try again."
   }
 }
