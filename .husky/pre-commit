@@ -62,9 +62,9 @@ if echo "$STAGED" | grep -qE "\.(keystore|jks)$"; then
   exit 1
 fi
 
-# Check: keine Keystore-Passwörter in staged files
+# Check: keine Keystore-Passwörter in staged files (only added lines, not removed)
 echo "Checking for hardcoded keystore passwords..."
-if git diff --cached | grep -Ei "keystorePassword\s*=\s*\S|keyPassword\s*=\s*\S|storePassword\s*=\s*\S"; then
+if git diff --cached | grep "^+" | grep -Eiq "keystorePassword[[:space:]]*=[[:space:]]*[^[:space:]]|keyPassword[[:space:]]*=[[:space:]]*[^[:space:]]|storePassword[[:space:]]*=[[:space:]]*[^[:space:]]"; then
   echo "❌ Commit blocked: Hardcoded keystore password detected!"
   exit 1
 fi

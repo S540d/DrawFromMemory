@@ -283,9 +283,9 @@ jobs:
 
       - name: Scan for hardcoded keystore passwords
         run: |
-          if grep -rEi "keystorePassword\s*=\s*\S|keyPassword\s*=\s*\S|storePassword\s*=\s*\S" . \
+          if grep -rEi "keystorePassword[[:space:]]*=[[:space:]]*[^[:space:]]|keyPassword[[:space:]]*=[[:space:]]*[^[:space:]]|storePassword[[:space:]]*=[[:space:]]*[^[:space:]]" . \
               --exclude-dir=node_modules --exclude-dir=.git \
-              --exclude="*.md" --exclude="*.example" 2>/dev/null; then
+              --exclude="*.md" --exclude="*.example" -l 2>/dev/null; then
             echo "❌ ERROR: Hardcoded keystore password found!"
             echo "Use environment variables or EAS Secrets instead."
             exit 1
@@ -294,7 +294,7 @@ jobs:
 
       - name: Scan for base64-encoded keystore
         run: |
-          if grep -rE "MIIF[A-Za-z0-9+/]{50,}" . \
+          if grep -rEl "MIIF[A-Za-z0-9+/]{50,}" . \
               --exclude-dir=node_modules --exclude-dir=.git \
               --exclude="*.md" 2>/dev/null; then
             echo "❌ WARNING: Possible base64-encoded keystore content found!"
