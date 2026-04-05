@@ -8,6 +8,7 @@ This document lists the open-source libraries used in DrawFromMemory (Merke und 
 
 ### React & React Native
 - **react** — MIT License — https://github.com/facebook/react
+- **react-dom** — MIT License — https://github.com/facebook/react
 - **react-native** — MIT License — https://github.com/facebook/react-native
 - **react-native-web** — MIT License — https://github.com/necolas/react-native-web
 
@@ -18,7 +19,6 @@ This document lists the open-source libraries used in DrawFromMemory (Merke und 
 - **expo-font** — MIT License — https://github.com/expo/expo
 - **expo-haptics** — MIT License — https://github.com/expo/expo
 - **expo-linear-gradient** — MIT License — https://github.com/expo/expo
-- **expo-linking** — MIT License — https://github.com/expo/expo
 - **expo-localization** — MIT License — https://github.com/expo/expo
 - **expo-router** — MIT License — https://github.com/expo/expo
 - **expo-status-bar** — MIT License — https://github.com/expo/expo
@@ -57,6 +57,7 @@ This document lists the open-source libraries used in DrawFromMemory (Merke und 
 
 ## Development Dependencies
 
+- **expo-linking** — MIT License — https://github.com/expo/expo
 - **jest** — MIT License — https://github.com/jestjs/jest
 - **jest-expo** — MIT License — https://github.com/expo/expo
 - **@testing-library/react-native** — MIT License — https://github.com/testing-library/react-native-testing-library
