@@ -172,7 +172,107 @@ jobs:
           fi
 
   # ============================================================================
-  # JOB 5: Release Readiness Report
+  # JOB 5: Docs Privacy Check
+  # ============================================================================
+  docs-privacy:
+    name: 🔐 Docs Privacy Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check .gitignore covers docs/private/
+        run: |
+          if ! grep -q "docs/private/" .gitignore; then
+            echo "❌ ERROR: docs/private/ is not in .gitignore!"
+            exit 1
+          fi
+          echo "✅ docs/private/ is gitignored"
+
+      - name: Check no private docs are committed
+        run: |
+          PRIVATE_FILES=$(git ls-files docs/private/ 2>/dev/null)
+          if [ -n "$PRIVATE_FILES" ]; then
+            echo "❌ ERROR: Private docs found in repository:"
+            echo "$PRIVATE_FILES"
+            exit 1
+          fi
+          echo "✅ No private docs committed"
+
+      - name: Check known sensitive filenames not in repo
+        run: |
+          SENSITIVE=(
+            "DEPLOYMENT_GUIDE.md"
+            "PLAY_STORE_METADATA.md"
+            "PLAY_STORE_METADATA_EN.md"
+            "STORE_ASSETS_TODO.md"
+            "BILDERPOOL.md"
+            "IMAGE_GUIDELINES.md"
+          )
+          FOUND=0
+          for f in "${SENSITIVE[@]}"; do
+            if git ls-files | grep -q "$f"; then
+              echo "❌ WARNING: Sensitive file committed: $f"
+              FOUND=1
+            fi
+          done
+          if [ $FOUND -eq 0 ]; then
+            echo "✅ No sensitive filenames found"
+          else
+            exit 1
+          fi
+
+  # ============================================================================
+  # JOB 6: Keystore & Credential Scan
+  # ============================================================================
+  keystore-secrets:
+    name: 🔑 Keystore & Credential Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check no keystore files are committed
+        run: |
+          FOUND=$(git ls-files | grep -E "\.(keystore|jks)$" || true)
+          if [ -n "$FOUND" ]; then
+            echo "❌ ERROR: Keystore file committed to repository!"
+            echo "$FOUND"
+            exit 1
+          fi
+          echo "✅ No keystore files found"
+
+      - name: Check .gitignore covers keystore patterns
+        run: |
+          if ! grep -q "\.keystore" .gitignore || ! grep -q "\.jks" .gitignore; then
+            echo "❌ ERROR: .gitignore does not cover *.keystore / *.jks!"
+            exit 1
+          fi
+          echo "✅ Keystore patterns are gitignored"
+
+      - name: Scan for hardcoded keystore passwords
+        run: |
+          if grep -rEi "keystorePassword\s*=\s*\S|keyPassword\s*=\s*\S|storePassword\s*=\s*\S" . \
+              --exclude-dir=node_modules --exclude-dir=.git \
+              --exclude="*.md" --exclude="*.example" 2>/dev/null; then
+            echo "❌ ERROR: Hardcoded keystore password found!"
+            echo "Use environment variables or EAS Secrets instead."
+            exit 1
+          fi
+          echo "✅ No hardcoded keystore passwords found"
+
+      - name: Scan for base64-encoded keystore
+        run: |
+          if grep -rE "MIIF[A-Za-z0-9+/]{50,}" . \
+              --exclude-dir=node_modules --exclude-dir=.git \
+              --exclude="*.md" 2>/dev/null; then
+            echo "❌ WARNING: Possible base64-encoded keystore content found!"
+            exit 1
+          fi
+          echo "✅ No encoded keystore content found"
+
+  # ============================================================================
+  # JOB 7: Release Readiness Report
   # ============================================================================
   release-checklist:
     name: 📋 Release Readiness Report
