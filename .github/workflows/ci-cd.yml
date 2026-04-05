@@ -2,9 +2,9 @@ name: CI/CD - Automated Quality Checks
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, staging, develop]
   pull_request:
-    branches: [main, develop]
+    branches: [main, staging, develop]
 
 # Security: Explicitly set minimal permissions
 permissions:
@@ -77,12 +77,43 @@ jobs:
         run: npx tsc --noEmit || true
 
   # ============================================================================
-  # JOB 2: Cross-Platform Build Tests
+  # JOB 2: Automated Tests
+  # ============================================================================
+  test:
+    name: 🧪 Automated Tests
+    runs-on: ubuntu-latest
+    needs: code-quality
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run tests with coverage
+        run: npm run test:ci
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  # ============================================================================
+  # JOB 3: Cross-Platform Build Tests
   # ============================================================================
   build-web:
     name: 🌐 Build Web
     runs-on: ubuntu-latest
-    needs: code-quality
+    needs: [code-quality, test]
 
     steps:
       - uses: actions/checkout@v4
@@ -115,7 +146,7 @@ jobs:
           retention-days: 7
 
   # ============================================================================
-  # JOB 3: Platform Compatibility Checks (Expo Managed)
+  # JOB 4: Platform Compatibility Checks (Expo Managed)
   # ============================================================================
   platform-checks:
     name: 🔧 Platform Compatibility
@@ -143,7 +174,7 @@ jobs:
           echo "✅ All versions are consistent"
 
   # ============================================================================
-  # JOB 4: Security & Dependencies
+  # JOB 5: Security & Dependencies
   # ============================================================================
   security:
     name: 🔒 Security Audit
@@ -172,12 +203,12 @@ jobs:
           fi
 
   # ============================================================================
-  # JOB 5: Release Readiness Report
+  # JOB 6: Release Readiness Report
   # ============================================================================
   release-checklist:
     name: 📋 Release Readiness Report
     runs-on: ubuntu-latest
-    needs: [code-quality, build-web, platform-checks]
+    needs: [code-quality, test, build-web, platform-checks]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
@@ -190,6 +221,7 @@ jobs:
           echo "## ✅ Automated Checks Passed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Code Quality & Linting" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Automated Tests" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Web Build Successful" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Platform Compatibility" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Version Consistency" >> $GITHUB_STEP_SUMMARY

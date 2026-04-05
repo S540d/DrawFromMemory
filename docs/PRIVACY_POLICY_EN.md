@@ -1,6 +1,6 @@
 # Privacy Policy - Remember and Draw
 
-**Last Updated:** February 1, 2026
+**Last Updated:** April 5, 2026
 
 ## Overview
 
@@ -8,11 +8,12 @@
 
 ## Summary
 
-- ✅ **No Data Collection**: We do not collect any personal data
-- ✅ **No Sharing**: No data is shared with third parties
+- ✅ **No Personal Data**: We do not collect any personal data
+- ✅ **No Sharing**: Personal data is not shared with third parties
 - ✅ **No Advertising**: The app contains no ads
 - ✅ **No In-App Purchases**: The app is completely free
 - ✅ **No Internet Required**: The app works fully offline
+- ⚠️ **Optional Crash Reporting**: The Android app may use Sentry for crash reports (technical data only, no personal information)
 - ✅ **Open Source**: The complete source code is available on GitHub
 
 ---
@@ -85,7 +86,8 @@ The app is specifically designed for children and meets the highest privacy stan
 ### 5.1 COPPA Compliance (USA)
 The app complies with the Children's Online Privacy Protection Act (COPPA):
 - ✅ No collection of personal data from children under 13
-- ✅ No sharing of information
+- ✅ No sharing of personal information
+- ✅ Optional Sentry crash reporting collects no personal data
 - ✅ No advertising
 - ✅ No in-app purchases
 
@@ -119,11 +121,27 @@ Since no data is collected, there is no data we could provide information about.
 
 ## 7. Third-Party Services
 
-**The app does not use any third-party services.**
+### 7.1 Crash Reporting (Sentry) — Optional
 
-Specifically:
+The Android app optionally uses **Sentry** (sentry.io) for crash reporting. Sentry is only active when a DSN is configured at build time (`EXPO_PUBLIC_SENTRY_DSN`).
+
+**What Sentry collects:**
+- Crash logs and stack traces (technical error information only)
+- Device type, OS version, and app version (non-identifying metadata)
+
+**What Sentry does NOT collect:**
+- Personal information
+- Game data or progress
+- Location data
+- Any data that could identify an individual user
+
+Sentry's privacy policy: https://sentry.io/privacy/
+
+The web version of the app does **not** use Sentry.
+
+### 7.2 Services Not Used
+
 - ❌ No analytics tools (e.g., Google Analytics, Firebase Analytics)
-- ❌ No crash reporting services
 - ❌ No advertising networks
 - ❌ No social media SDKs
 - ❌ No cloud services
@@ -182,6 +200,6 @@ Your children can use the app safely and privately.
 
 ---
 
-**Version:** 1.0
-**Effective Date:** February 1, 2026
+**Version:** 1.1
+**Effective Date:** April 5, 2026
 **Language:** English

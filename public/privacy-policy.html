@@ -120,16 +120,17 @@
 <body>
     <div class="container">
         <h1>Datenschutzerklärung</h1>
-        <p class="meta"><strong>Letzte Aktualisierung:</strong> 1. Februar 2026</p>
+        <p class="meta"><strong>Letzte Aktualisierung:</strong> 5. April 2026</p>
 
         <div class="summary">
             <div class="summary-title">Kurz zusammengefasst</div>
             <ul>
-                <li><span class="checkmark">✅</span> <strong>Keine Datensammlung</strong>: Wir sammeln keinerlei persönliche Daten</li>
-                <li><span class="checkmark">✅</span> <strong>Keine Weitergabe</strong>: Es werden keine Daten an Dritte weitergegeben</li>
+                <li><span class="checkmark">✅</span> <strong>Keine persönlichen Daten</strong>: Wir sammeln keinerlei persönliche Daten</li>
+                <li><span class="checkmark">✅</span> <strong>Keine Weitergabe</strong>: Persönliche Daten werden nicht weitergegeben</li>
                 <li><span class="checkmark">✅</span> <strong>Keine Werbung</strong>: Die App enthält keine Werbung</li>
                 <li><span class="checkmark">✅</span> <strong>Keine In-App-Käufe</strong>: Die App ist komplett kostenlos</li>
                 <li><span class="checkmark">✅</span> <strong>Kein Internet erforderlich</strong>: Die App funktioniert vollständig offline</li>
+                <li>⚠️ <strong>Optionales Crash-Reporting</strong>: Die Android-App kann Sentry für Absturzberichte nutzen (nur technische Daten, keine persönlichen Informationen)</li>
                 <li><span class="checkmark">✅</span> <strong>Open Source</strong>: Der komplette Quellcode ist auf GitHub einsehbar</li>
             </ul>
         </div>
@@ -176,29 +177,55 @@
             <li><span class="cross">❌</span> Keine Telefon-Berechtigung</li>
         </ul>
 
-        <h2>3. Datenweitergabe</h2>
-        <p><strong>Es werden keine Daten weitergegeben.</strong></p>
-        <p>Da die App keine Daten sammelt, können auch keine Daten an Dritte weitergegeben werden.</p>
+        <h2>3. Drittanbieter-Dienste</h2>
+
+        <h3>3.1 Crash-Reporting (Sentry) — Optional</h3>
+        <p>Die Android-App nutzt optional <strong>Sentry</strong> (sentry.io) für Absturzberichte. Sentry ist nur aktiv, wenn ein DSN zum Build-Zeitpunkt konfiguriert ist.</p>
+        <p><strong>Was Sentry sammelt:</strong></p>
+        <ul>
+            <li>Absturzprotokolle und Stack-Traces (ausschließlich technische Fehlerinformationen)</li>
+            <li>Gerätetyp, Betriebssystemversion und App-Version (nicht-identifizierende Metadaten)</li>
+        </ul>
+        <p><strong>Was Sentry NICHT sammelt:</strong></p>
+        <ul>
+            <li><span class="cross">❌</span> Keine persönlichen Informationen</li>
+            <li><span class="cross">❌</span> Keine Spieldaten</li>
+            <li><span class="cross">❌</span> Keine Standortdaten</li>
+        </ul>
+        <p>Datenschutzerklärung von Sentry: <a href="https://sentry.io/privacy/">https://sentry.io/privacy/</a></p>
+        <p>Die Web-Version der App nutzt Sentry <strong>nicht</strong>.</p>
+
+        <h3>3.2 Nicht verwendete Dienste</h3>
+        <ul>
+            <li><span class="cross">❌</span> Keine Analyse-Tools (z.B. Google Analytics, Firebase Analytics)</li>
+            <li><span class="cross">❌</span> Keine Werbe-Netzwerke</li>
+            <li><span class="cross">❌</span> Keine Social Media SDKs</li>
+            <li><span class="cross">❌</span> Keine Cloud-Dienste</li>
+        </ul>
+
+        <h2>4. Datenweitergabe</h2>
+        <p><strong>Persönliche Daten werden nicht weitergegeben.</strong></p>
+        <p>Da die App keine persönlichen Daten sammelt, können auch keine persönlichen Daten weitergegeben werden.</p>
         <ul>
             <li><span class="cross">❌</span> Keine Weitergabe an Werbenetzwerke</li>
             <li><span class="cross">❌</span> Keine Weitergabe an Analyse-Dienste</li>
             <li><span class="cross">❌</span> Keine Weitergabe an Social Media Plattformen</li>
-            <li><span class="cross">❌</span> Keine Weitergabe an den Entwickler</li>
         </ul>
 
-        <h2>4. Kinder-Datenschutz</h2>
+        <h2>5. Kinder-Datenschutz</h2>
         <p>Die App ist speziell für Kinder konzipiert und erfüllt die höchsten Datenschutzstandards:</p>
 
-        <h3>4.1 COPPA Konformität (USA)</h3>
+        <h3>5.1 COPPA Konformität (USA)</h3>
         <p>Die App entspricht dem Children's Online Privacy Protection Act (COPPA):</p>
         <ul>
             <li><span class="checkmark">✅</span> Keine Sammlung von persönlichen Daten von Kindern unter 13 Jahren</li>
-            <li><span class="checkmark">✅</span> Keine Weitergabe von Informationen</li>
+            <li><span class="checkmark">✅</span> Keine Weitergabe persönlicher Informationen</li>
+            <li><span class="checkmark">✅</span> Das optionale Sentry Crash-Reporting sammelt keine personenbezogenen Daten</li>
             <li><span class="checkmark">✅</span> Keine Werbung</li>
             <li><span class="checkmark">✅</span> Keine In-App-Käufe</li>
         </ul>
 
-        <h3>4.2 DSGVO/GDPR Konformität (EU)</h3>
+        <h3>5.2 DSGVO/GDPR Konformität (EU)</h3>
         <p>Die App entspricht der EU-Datenschutz-Grundverordnung (DSGVO):</p>
         <ul>
             <li><span class="checkmark">✅</span> Keine Verarbeitung personenbezogener Daten</li>
@@ -207,9 +234,9 @@
             <li><span class="checkmark">✅</span> Transparente Datenschutzerklärung</li>
         </ul>
 
-        <h2>5. Ihre Rechte</h2>
+        <h2>6. Ihre Rechte</h2>
 
-        <h3>5.1 Recht auf Löschung</h3>
+        <h3>6.1 Recht auf Löschung</h3>
         <p><strong>So löschen Sie alle App-Daten:</strong></p>
         <ol>
             <li><strong>Android:</strong> Einstellungen → Apps → Merke und Male → Speicher → Daten löschen</li>
@@ -217,18 +244,18 @@
         </ol>
         <p>Durch Deinstallation der App werden alle lokal gespeicherten Daten vollständig vom Gerät entfernt.</p>
 
-        <h2>6. Open Source</h2>
+        <h2>7. Open Source</h2>
         <p>Der komplette Quellcode der App ist auf GitHub verfügbar:</p>
         <p><strong>Repository:</strong> <a href="https://github.com/S540d/DrawFromMemory">https://github.com/S540d/DrawFromMemory</a></p>
         <p>Sie können den Code einsehen und überprüfen, dass tatsächlich keine Daten gesammelt werden.</p>
 
-        <h2>7. Kontakt</h2>
+        <h2>8. Kontakt</h2>
         <p>Bei Fragen zu dieser Datenschutzerklärung können Sie uns kontaktieren:</p>
         <p><strong>GitHub Issues:</strong> <a href="https://github.com/S540d/DrawFromMemory/issues">https://github.com/S540d/DrawFromMemory/issues</a><br>
         <strong>Website:</strong> <a href="https://s540d.github.io/DrawFromMemory/">https://s540d.github.io/DrawFromMemory/</a></p>
 
         <div class="footer">
-            <p><strong>Version:</strong> 1.0 | <strong>Gültig ab:</strong> 1. Februar 2026 | <strong>Sprache:</strong> Deutsch</p>
+            <p><strong>Version:</strong> 1.1 | <strong>Gültig ab:</strong> 5. April 2026 | <strong>Sprache:</strong> Deutsch</p>
             <p><a href="privacy-policy-en.html">English version</a></p>
         </div>
     </div>

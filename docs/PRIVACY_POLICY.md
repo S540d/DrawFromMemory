@@ -1,6 +1,6 @@
 # Datenschutzerklärung - Merke und Male
 
-**Letzte Aktualisierung:** 1. Februar 2026
+**Letzte Aktualisierung:** 5. April 2026
 
 ## Übersicht
 
@@ -8,11 +8,12 @@
 
 ## Kurz zusammengefasst
 
-- ✅ **Keine Datensammlung**: Wir sammeln keinerlei persönliche Daten
-- ✅ **Keine Weitergabe**: Es werden keine Daten an Dritte weitergegeben
+- ✅ **Keine persönlichen Daten**: Wir sammeln keinerlei persönliche Daten
+- ✅ **Keine Weitergabe**: Persönliche Daten werden nicht weitergegeben
 - ✅ **Keine Werbung**: Die App enthält keine Werbung
 - ✅ **Keine In-App-Käufe**: Die App ist komplett kostenlos
 - ✅ **Kein Internet erforderlich**: Die App funktioniert vollständig offline
+- ⚠️ **Optionales Crash-Reporting**: Die Android-App kann Sentry für Absturzberichte nutzen (nur technische Daten, keine persönlichen Informationen)
 - ✅ **Open Source**: Der komplette Quellcode ist auf GitHub einsehbar
 
 ---
@@ -85,7 +86,8 @@ Die App ist speziell für Kinder konzipiert und erfüllt die höchsten Datenschu
 ### 5.1 COPPA Konformität (USA)
 Die App entspricht dem Children's Online Privacy Protection Act (COPPA):
 - ✅ Keine Sammlung von persönlichen Daten von Kindern unter 13 Jahren
-- ✅ Keine Weitergabe von Informationen
+- ✅ Keine Weitergabe persönlicher Informationen
+- ✅ Das optionale Sentry Crash-Reporting sammelt keine personenbezogenen Daten
 - ✅ Keine Werbung
 - ✅ Keine In-App-Käufe
 
@@ -119,11 +121,27 @@ Da keine Daten gesammelt werden, gibt es keine Daten, über die wir Auskunft geb
 
 ## 7. Drittanbieter-Dienste
 
-**Die App nutzt keine Drittanbieter-Dienste.**
+### 7.1 Crash-Reporting (Sentry) — Optional
 
-Insbesondere:
+Die Android-App nutzt optional **Sentry** (sentry.io) für Absturzberichte. Sentry ist nur aktiv, wenn ein DSN zum Build-Zeitpunkt konfiguriert ist (`EXPO_PUBLIC_SENTRY_DSN`).
+
+**Was Sentry sammelt:**
+- Absturzprotokolle und Stack-Traces (ausschließlich technische Fehlerinformationen)
+- Gerätetyp, Betriebssystemversion und App-Version (nicht-identifizierende Metadaten)
+
+**Was Sentry NICHT sammelt:**
+- Persönliche Informationen
+- Spieldaten oder Spielfortschritt
+- Standortdaten
+- Daten, die eine Person identifizieren könnten
+
+Datenschutzerklärung von Sentry: https://sentry.io/privacy/
+
+Die Web-Version der App nutzt Sentry **nicht**.
+
+### 7.2 Nicht verwendete Dienste
+
 - ❌ Keine Analyse-Tools (z.B. Google Analytics, Firebase Analytics)
-- ❌ Keine Crash-Reporting-Dienste
 - ❌ Keine Werbe-Netzwerke
 - ❌ Keine Social Media SDKs
 - ❌ Keine Cloud-Dienste
@@ -182,6 +200,6 @@ Ihre Kinder können die App sicher und privat nutzen.
 
 ---
 
-**Version:** 1.0
-**Gültig ab:** 1. Februar 2026
+**Version:** 1.1
+**Gültig ab:** 5. April 2026
 **Sprache:** Deutsch

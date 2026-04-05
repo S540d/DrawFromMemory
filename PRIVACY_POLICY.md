@@ -1,6 +1,6 @@
 # Privacy Policy for Merke und Male
 
-**Effective Date:** [TBD]
+**Effective Date:** April 5, 2026
 
 ## Introduction
 
@@ -24,17 +24,32 @@ We do not collect:
 - Location data
 - Device identifiers
 - Usage analytics
-- Crash reports
 - Advertising data
-- Any data that leaves your device
 
 ## Third-Party Services
 
-Our App does not integrate any third-party services, analytics tools, or advertising networks.
+### Crash Reporting (Sentry) — Optional
+
+The Android app optionally uses **Sentry** (sentry.io) for crash reporting. Sentry is only active
+when a DSN is configured at build time (`EXPO_PUBLIC_SENTRY_DSN`).
+
+**What Sentry collects:**
+- Crash logs and stack traces (technical error information only)
+- Device type, OS version, and app version (non-identifying metadata)
+
+**What Sentry does NOT collect:**
+- Personal information
+- Game data or progress
+- Location data
+- Any data that could identify an individual user
+
+Sentry's privacy policy: https://sentry.io/privacy/
+
+The web version of the app does **not** use Sentry.
 
 ## Children's Privacy
 
-Merke und Male is suitable for children. Since we do not collect any personal information, we comply with children's privacy regulations including COPPA (Children's Online Privacy Protection Act).
+Merke und Male is suitable for children. We do not collect any personal information. The optional Sentry crash reporting collects only anonymous technical data (crash logs) and no personal information about children. We comply with children's privacy regulations including COPPA (Children's Online Privacy Protection Act).
 
 ## Data Security
 
@@ -87,5 +102,5 @@ This App complies with:
 
 ---
 
-**Last Updated:** [TBD]
-**Version:** 1.0
+**Last Updated:** April 5, 2026
+**Version:** 1.1
