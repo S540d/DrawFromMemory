@@ -7,6 +7,7 @@ import storageManager from '@services/StorageManager';
 import SoundManager from '@services/SoundManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
+import ParentalGate from './ParentalGate';
 
 interface SettingsModalProps {
   visible: boolean;
@@ -24,6 +25,8 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>(themeSetting);
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [parentalGateVisible, setParentalGateVisible] = useState(false);
+  const [pendingUrl, setPendingUrl] = useState<string | null>(null);
 
   useEffect(() => {
     setCurrentLang(getLanguage());
@@ -70,6 +73,33 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
     );
   };
 
+  const openExternalUrl = (url: string) => {
+    setPendingUrl(url);
+    setParentalGateVisible(true);
+  };
+
+  const handleParentalGateSuccess = async () => {
+    setParentalGateVisible(false);
+    if (!pendingUrl) return;
+    const url = pendingUrl;
+    setPendingUrl(null);
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert(t('settings.error'), t('settings.browserError'));
+      }
+    } catch {
+      Alert.alert(t('settings.error'), t('settings.browserError'));
+    }
+  };
+
+  const handleParentalGateCancel = () => {
+    setParentalGateVisible(false);
+    setPendingUrl(null);
+  };
+
   const handleSendFeedback = async () => {
     const subject = encodeURIComponent(t('settings.feedbackEmailSubject'));
     const body = encodeURIComponent(t('settings.feedbackEmailBody'));
@@ -87,19 +117,8 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
     }
   };
 
-  const handleSupport = async () => {
-    const url = 'https://ko-fi.com/s540d';
-
-    try {
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
-        await Linking.openURL(url);
-      } else {
-        Alert.alert(t('settings.error'), t('settings.browserError'));
-      }
-    } catch (error) {
-      Alert.alert(t('settings.error'), t('settings.browserError'));
-    }
+  const handleSupport = () => {
+    openExternalUrl('https://ko-fi.com/s540d');
   };
 
   const handleShareApp = async () => {
@@ -139,11 +158,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             <Text style={[styles.modalLabel, { color: colors.text.light, marginTop: Spacing.md }]}>
               GitHub
             </Text>
-            <TouchableOpacity onPress={() => {
-              Linking.openURL('https://github.com/S540d/DrawFromMemory').catch(() => {
-                // Silently ignore if URL cannot be opened
-              });
-            }}>
+            <TouchableOpacity onPress={() => openExternalUrl('https://github.com/S540d/DrawFromMemory')}>
               <Text style={[styles.modalLink, { color: colors.primary }]}>
                 S540d/DrawFromMemory ↗
               </Text>
@@ -394,7 +409,13 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   // Modal wrapper if not embedded
   if (!embedded) {
     return (
-      <Modal
+      <>
+        <ParentalGate
+          visible={parentalGateVisible}
+          onSuccess={handleParentalGateSuccess}
+          onCancel={handleParentalGateCancel}
+        />
+        <Modal
         visible={visible}
         transparent
         animationType="fade"
@@ -423,11 +444,21 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
           </View>
         </View>
       </Modal>
+      </>
     );
   }
 
-  // Embedded content only
-  return <>{renderContent()}</>;
+  // Embedded: ParentalGate lives outside the content fragment
+  return (
+    <>
+      <ParentalGate
+        visible={parentalGateVisible}
+        onSuccess={handleParentalGateSuccess}
+        onCancel={handleParentalGateCancel}
+      />
+      {renderContent()}
+    </>
+  );
 }
 
 const styles = StyleSheet.create({

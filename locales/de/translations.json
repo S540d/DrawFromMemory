@@ -125,5 +125,12 @@
     "close": "Schließen",
     "back": "Zurück",
     "settings": "Einstellungen"
+  },
+  "parentalGate": {
+    "title": "Elternkontrolle",
+    "message": "Dieser Link führt aus der App heraus. Bitte löse die Aufgabe, um fortzufahren:",
+    "placeholder": "Antwort eingeben",
+    "confirm": "Öffnen",
+    "wrongAnswer": "Falsche Antwort. Bitte versuche es erneut."
   }
 }
