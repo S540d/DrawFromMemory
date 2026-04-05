@@ -639,7 +639,7 @@ const styles = StyleSheet.create({
     ...Colors.shadow.large, // Soft & Modern: Cards mit prominentem Schatten
   },
   imageName: {
-    fontSize: FontSize.xl,
+    fontSize: FontSize.lg,
     fontWeight: FontWeight.bold,
     color: Colors.text.primary,
     marginBottom: Spacing.sm,
@@ -843,7 +843,7 @@ const styles = StyleSheet.create({
     ...Colors.shadow.medium, // Soft & Modern: Weiche Schatten
   },
   primaryButtonText: {
-    fontSize: FontSize.lg,
+    fontSize: FontSize.md,
     fontWeight: FontWeight.bold,
     color: Colors.background,
   },
@@ -865,7 +865,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.text.light,
   },
   secondaryButtonText: {
-    fontSize: FontSize.lg,
+    fontSize: FontSize.md,
     fontWeight: FontWeight.semibold,
     color: Colors.primary,
   },
@@ -908,7 +908,7 @@ const styles = StyleSheet.create({
     color: Colors.drawing.white,
   },
   ratingText: {
-    fontSize: FontSize.xxl,
+    fontSize: FontSize.xl,
     fontWeight: FontWeight.bold,
     color: Colors.success,
     marginBottom: Spacing.sm,
@@ -989,7 +989,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   navButtonText: {
-    fontSize: FontSize.md,
+    fontSize: FontSize.sm,
     fontWeight: FontWeight.semibold,
     color: Colors.primary,
   },

@@ -50,11 +50,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   backButton: {
-    fontSize: FontSize.lg,
+    fontSize: FontSize.md,
     marginBottom: Spacing.sm,
   },
   title: {
-    fontSize: FontSize.xxl,
+    fontSize: FontSize.xl,
     fontWeight: FontWeight.bold,
   },
   content: {
