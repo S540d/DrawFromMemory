@@ -165,12 +165,11 @@ background:    #FAFAFA  (Light) / #1a1a2e (Dark)
 | Branch | Zweck |
 |--------|-------|
 | `main` | Produktions-Branch, CI läuft |
-| `develop` | Feature-Integration |
-| `testing` | QA / Staging |
-| `staging` | Pre-Production |
+| `staging` | Pre-Production / Release-Kandidaten |
+| `testing` | QA (wird ggf. noch entfernt) |
 | `claude/...` | Claude-Feature-Branches (auto-generiert) |
 
-CI triggert bei Push auf `main`, `develop`, `testing` und bei PRs auf `main` und `develop`.
+CI triggert bei Push auf `main`, `staging`, `testing` und bei PRs auf `main`.
 
 ---
 

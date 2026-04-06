@@ -2,9 +2,9 @@ name: CI/CD - Automated Quality Checks
 
 on:
   push:
-    branches: [main, develop, testing]
+    branches: [main, staging, testing]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 # Security: Explicitly set minimal permissions
 permissions:
