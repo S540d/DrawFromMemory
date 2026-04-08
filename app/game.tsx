@@ -67,7 +67,6 @@ export default function GameScreen() {
     startReplay,
     restartCurrentLevel,
     startNextLevel,
-    startPreviousLevel,
     restartFromLevel1,
   } = useGamePhase({
     initialLevel,
@@ -325,6 +324,8 @@ export default function GameScreen() {
                   <TouchableOpacity
                     style={[styles.canvasIconButton, isReplaying && styles.canvasIconButtonActive]}
                     onPress={isReplaying ? () => setIsReplaying(false) : startReplay}
+                    accessibilityRole="button"
+                    accessibilityLabel={isReplaying ? t('game.result.replayStop') : t('game.result.replay')}
                   >
                     <Text style={[styles.canvasIconText, isReplaying && styles.canvasIconTextActive]}>
                       {isReplaying ? '⏹' : '▶'}
@@ -334,6 +335,9 @@ export default function GameScreen() {
                     style={[styles.canvasIconButton, savedToGallery && styles.canvasIconButtonSaved]}
                     onPress={saveToGallery}
                     disabled={savedToGallery}
+                    accessibilityRole="button"
+                    accessibilityLabel={savedToGallery ? t('gallery.saved') : t('gallery.save')}
+                    accessibilityState={{ disabled: savedToGallery }}
                   >
                     <Text style={[styles.canvasIconText, savedToGallery && styles.canvasIconTextSaved]}>
                       {savedToGallery ? '✓' : '💾'}
@@ -994,8 +998,8 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
   },
   canvasIconButton: {
-    width: 32,
-    height: 32,
+    width: 44,
+    height: 44,
     borderRadius: BorderRadius.sm,
     backgroundColor: Colors.surface,
     borderWidth: 1,
