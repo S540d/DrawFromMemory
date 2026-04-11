@@ -220,7 +220,16 @@ CI triggert bei Push auf `main`, `staging`, `testing` und bei PRs auf `main`.
 - **#122** – Play Store Vorbereitung: Privacy Policies aktualisiert, ParentalGate, CHANGELOG.md, THIRD_PARTY_LICENSES.md, CI Test-Job, Data Safety Docs
 - **#121** – CI: `docs-privacy` + `keystore-secrets` Jobs, Husky Pre-Commit Hooks
 
+### Offene PRs
+- **#125** – Ergebnis-Screen vereinfacht: Canvas-Icon-Overlays für Replay/Save, kompakte 3-Button-Reihe, kürzere Labels
+
+### Bekannte CI-Probleme
+- **`docs-privacy`-Job schlägt auf `main` und in PRs fehl**, weil `docs/DEPLOYMENT_GUIDE.md`, `docs/PLAY_STORE_METADATA.md`, `docs/PLAY_STORE_METADATA_EN.md` und `docs/STORE_ASSETS_TODO.md` committed sind, aber vom CI als sensitiv eingestuft werden. Fix-Optionen:
+  - Diese Dateien aus der Sensitive-Liste in `ci-cd.yml` entfernen (falls sie public bleiben sollen), **oder**
+  - In `docs/private/` verschieben + dort gitignoren (empfohlen laut ursprünglichem Intent)
+
 ### Nächste Schritte (offen)
+- **`docs-privacy` CI-Bug fixen** (siehe oben)
 - Data Safety Section in Play Console ausfüllen (Anleitung: `docs/PLAY_STORE_DATA_SAFETY.md`)
 - Variabler Timer (Schwierigkeits-abhängig)
 - Weitere Level (perspektivische Bilder, Schwierigkeit 4–5)
@@ -244,3 +253,4 @@ App ist technisch bereit. Noch ausstehend (manuell):
 - **i18next ist NICHT installiert** – kein `import i18next from 'i18next'`. Immer `t()` aus `services/i18n.ts`.
 - **ThemeContext** ist der einzige Weg auf das aktuelle Theme zuzugreifen – kein direktes Lesen von AsyncStorage für Theme.
 - **`develop`-Branch existiert auf GitHub**, wird aber nicht aktiv für Feature-Branches genutzt (Claude-Branches direkt von `main`).
+- **`docs-privacy` CI-Job schlägt fehl**, wenn `DEPLOYMENT_GUIDE.md`, `PLAY_STORE_METADATA.md` o.ä. in `docs/` committed sind – diese Dateien gelten als sensitiv laut CI, sind aber noch nicht nach `docs/private/` verschoben.
