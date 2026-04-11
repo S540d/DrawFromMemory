@@ -67,7 +67,6 @@ export default function GameScreen() {
     startReplay,
     restartCurrentLevel,
     startNextLevel,
-    startPreviousLevel,
     restartFromLevel1,
   } = useGamePhase({
     initialLevel,
@@ -320,17 +319,33 @@ export default function GameScreen() {
                 strokeColor={Colors.drawing.black}
                 strokeWidth={2}
               />
+              {drawing.paths.length > 0 && (
+                <View style={styles.canvasIconRow}>
+                  <TouchableOpacity
+                    style={[styles.canvasIconButton, isReplaying && styles.canvasIconButtonActive]}
+                    onPress={isReplaying ? () => setIsReplaying(false) : startReplay}
+                    accessibilityRole="button"
+                    accessibilityLabel={isReplaying ? t('game.result.replayStop') : t('game.result.replay')}
+                  >
+                    <Text style={[styles.canvasIconText, isReplaying && styles.canvasIconTextActive]}>
+                      {isReplaying ? '⏹' : '▶'}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.canvasIconButton, savedToGallery && styles.canvasIconButtonSaved]}
+                    onPress={saveToGallery}
+                    disabled={savedToGallery}
+                    accessibilityRole="button"
+                    accessibilityLabel={savedToGallery ? t('gallery.saved') : t('gallery.save')}
+                    accessibilityState={{ disabled: savedToGallery }}
+                  >
+                    <Text style={[styles.canvasIconText, savedToGallery && styles.canvasIconTextSaved]}>
+                      {savedToGallery ? '✓' : '💾'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
-            {drawing.paths.length > 0 && (
-              <TouchableOpacity
-                style={[styles.replayButton, isReplaying && styles.replayButtonActive]}
-                onPress={isReplaying ? () => setIsReplaying(false) : startReplay}
-              >
-                <Text style={[styles.replayButtonText, isReplaying && styles.replayButtonTextActive]}>
-                  {isReplaying ? t('game.result.replayStop') : t('game.result.replay')}
-                </Text>
-              </TouchableOpacity>
-            )}
           </View>
         </View>
 
@@ -342,59 +357,22 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* Save to Gallery */}
-        {drawing.paths.length > 0 && (
-          <TouchableOpacity
-            style={[styles.galleryButton, savedToGallery && styles.galleryButtonSaved]}
-            onPress={saveToGallery}
-            disabled={savedToGallery}
-          >
-            <Text style={[styles.galleryButtonText, savedToGallery && styles.galleryButtonTextSaved]}>
-              {savedToGallery ? t('gallery.saved') : t('gallery.save')}
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        {/* Level Navigation */}
-        <View style={styles.levelNavigation}>
-          <TouchableOpacity
-            style={[styles.navButton, levelNumber <= 1 && styles.navButtonDisabled]}
-            onPress={startPreviousLevel}
-            disabled={levelNumber <= 1}
-          >
-            <Text style={[styles.navButtonText, levelNumber <= 1 && styles.navButtonTextDisabled]}>← {t('common.back')}</Text>
+        {/* Action Buttons */}
+        <View style={styles.actionRow}>
+          <TouchableOpacity style={styles.actionButton} onPress={restartCurrentLevel}>
+            <Text style={styles.actionButtonText}>{t('game.result.retry')}</Text>
           </TouchableOpacity>
           {levelNumber < getTotalLevels() ? (
-            <TouchableOpacity
-              style={styles.navButton}
-              onPress={startNextLevel}
-            >
-              <Text style={styles.navButtonText}>{t('game.result.nextLevel')} →</Text>
+            <TouchableOpacity style={[styles.actionButton, styles.actionButtonPrimary]} onPress={startNextLevel}>
+              <Text style={[styles.actionButtonText, styles.actionButtonPrimaryText]}>{t('game.result.nextLevel')} →</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity
-              style={styles.navButton}
-              onPress={restartFromLevel1}
-            >
-              <Text style={styles.navButtonText}>{t('game.result.playAgain')}</Text>
+            <TouchableOpacity style={[styles.actionButton, styles.actionButtonPrimary]} onPress={restartFromLevel1}>
+              <Text style={[styles.actionButtonText, styles.actionButtonPrimaryText]}>{t('game.result.playAgain')}</Text>
             </TouchableOpacity>
           )}
-        </View>
-
-        {/* Buttons */}
-        <View style={styles.buttonColumn}>
-          <TouchableOpacity
-            style={styles.primaryButton}
-            onPress={restartCurrentLevel}
-          >
-            <Text style={styles.primaryButtonText}>{t('game.result.retry')}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.secondaryButton}
-            onPress={() => router.back()}
-          >
-            <Text style={styles.secondaryButtonText}>Zum Menü</Text>
+          <TouchableOpacity style={styles.actionButton} onPress={() => router.back()}>
+            <Text style={styles.actionButtonText}>{t('game.result.backToMenu')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -828,8 +806,35 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: Spacing.sm,
   },
-  buttonColumn: {
-    gap: Spacing.md,
+  actionRow: {
+    flexDirection: 'row',
+    gap: Spacing.sm,
+    marginTop: Spacing.sm,
+  },
+  actionButton: {
+    flex: 1,
+    backgroundColor: Colors.surface,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.xs,
+    borderRadius: BorderRadius.lg,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    minHeight: 48,
+    justifyContent: 'center',
+    ...Colors.shadow.small,
+  },
+  actionButtonPrimary: {
+    backgroundColor: Colors.primary,
+  },
+  actionButtonText: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
+    color: Colors.primary,
+    textAlign: 'center',
+  },
+  actionButtonPrimaryText: {
+    color: Colors.background,
   },
   primaryButton: {
     flex: 1,
@@ -964,38 +969,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: Spacing.lg,
   },
-  levelNavigation: {
-    flexDirection: 'row',
-    gap: Spacing.md,
-    marginBottom: Spacing.lg,
-    justifyContent: 'center',
-  },
-  navButton: {
-    flex: 1,
-    backgroundColor: Colors.surface,
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.lg,
-    borderRadius: BorderRadius.lg,
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: Colors.primary,
-    minHeight: 48,
-    justifyContent: 'center',
-    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten für Navigation
-  },
-  navButtonDisabled: {
-    backgroundColor: Colors.surface,
-    borderColor: Colors.text.light,
-    opacity: 0.5,
-  },
-  navButtonText: {
-    fontSize: FontSize.sm,
-    fontWeight: FontWeight.semibold,
-    color: Colors.primary,
-  },
-  navButtonTextDisabled: {
-    color: Colors.text.light,
-  },
   completionBanner: {
     backgroundColor: Colors.success + '15',
     borderWidth: 2,
@@ -1017,48 +990,41 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
     textAlign: 'center',
   },
-  galleryButton: {
-    alignSelf: 'center',
-    backgroundColor: Colors.surface,
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.lg,
-    borderRadius: BorderRadius.lg,
-    borderWidth: 2,
-    borderColor: Colors.secondary,
-    marginBottom: Spacing.md,
+  canvasIconRow: {
+    position: 'absolute',
+    bottom: Spacing.xs,
+    right: Spacing.xs,
+    flexDirection: 'row',
+    gap: Spacing.xs,
   },
-  galleryButtonSaved: {
-    borderColor: Colors.success,
-    backgroundColor: Colors.success + '15',
-  },
-  galleryButtonText: {
-    fontSize: FontSize.sm,
-    fontWeight: FontWeight.semibold,
-    color: Colors.secondary,
-  },
-  galleryButtonTextSaved: {
-    color: Colors.success,
-  },
-  replayButton: {
-    marginTop: Spacing.sm,
-    paddingVertical: Spacing.xs,
-    paddingHorizontal: Spacing.md,
-    borderRadius: BorderRadius.md,
+  canvasIconButton: {
+    width: 44,
+    height: 44,
+    borderRadius: BorderRadius.sm,
     backgroundColor: Colors.surface,
     borderWidth: 1,
     borderColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...Colors.shadow.small,
   },
-  replayButtonActive: {
+  canvasIconButtonActive: {
     backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
   },
-  replayButtonText: {
+  canvasIconButtonSaved: {
+    backgroundColor: Colors.success + '20',
+    borderColor: Colors.success,
+  },
+  canvasIconText: {
     fontSize: FontSize.xs,
-    fontWeight: FontWeight.semibold,
     color: Colors.primary,
-    textAlign: 'center',
   },
-  replayButtonTextActive: {
+  canvasIconTextActive: {
     color: Colors.background,
+  },
+  canvasIconTextSaved: {
+    color: Colors.success,
   },
   toolContainer: {
     marginBottom: Spacing.md,

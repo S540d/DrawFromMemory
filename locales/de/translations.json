@@ -47,12 +47,12 @@
       "yourDrawing": "Deine Zeichnung",
       "original": "Original",
       "rating": "Deine Bewertung",
-      "retry": "Nochmal versuchen",
-      "nextLevel": "Nächstes Level",
-      "backToMenu": "Zum Menü",
+      "retry": "Nochmal",
+      "nextLevel": "Weiter",
+      "backToMenu": "Menü",
       "allLevelsComplete": "Alle Level geschafft!",
       "allLevelsCompleteMessage": "Du hast alle 10 Level gemeistert. Du bist ein echtes Gedächtnis-Ass!",
-      "playAgain": "Nochmal von vorne",
+      "playAgain": "Von vorne",
       "replay": "▶ Abspielen",
       "replayStop": "⏹ Stopp"
     }
