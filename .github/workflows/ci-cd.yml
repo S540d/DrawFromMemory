@@ -232,13 +232,16 @@ jobs:
 
       - name: Check known sensitive filenames not in repo
         run: |
+          # Only flag files that could contain credentials or private access data.
+          # Public docs (DEPLOYMENT_GUIDE.md, PLAY_STORE_METADATA.md, BILDERPOOL.md, …)
+          # are intentionally committed and must NOT be listed here.
           SENSITIVE=(
-            "DEPLOYMENT_GUIDE.md"
-            "PLAY_STORE_METADATA.md"
-            "PLAY_STORE_METADATA_EN.md"
-            "STORE_ASSETS_TODO.md"
-            "BILDERPOOL.md"
-            "IMAGE_GUIDELINES.md"
+            "credentials.json"
+            "google-services.json"
+            "GoogleService-Info.plist"
+            "keystore.properties"
+            "release.keystore"
+            "upload-keystore.jks"
           )
           FOUND=0
           for f in "${SENSITIVE[@]}"; do
