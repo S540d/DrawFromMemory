@@ -109,7 +109,13 @@ function computeCanvasImage(
         const snapshot = surface.makeImageSnapshot();
         const imageInfo = {
           colorType: SkiaColorType?.RGBA_8888 ?? 4,
-          alphaType: SkiaAlphaType?.Unpremul ?? 3,
+          // Use Premul instead of Unpremul: on old Adreno GPUs (e.g. Nexus 6,
+          // Android 6) Skia's Unpremul conversion produces corrupt pixel data
+          // (all-black buffer) which causes canvas.clear() + drawImage() to
+          // wipe the drawing. Premul gives us the GPU's native pixel format
+          // directly. For fully-opaque pixels (white background, black strokes)
+          // Premul == Unpremul, so the flood-fill result is identical.
+          alphaType: SkiaAlphaType?.Premul ?? 2,
           width: w,
           height: h,
         };
@@ -121,6 +127,12 @@ function computeCanvasImage(
             pixels.byteOffset,
             pixels.byteLength
           );
+          // Sanity check: the top-left pixel should be near-white (background).
+          // If the buffer is all-black/transparent the GPU returned corrupt data —
+          // skip the fill rather than destroying the canvas with clear().
+          if (pixelData[0] < 200 || pixelData[1] < 200 || pixelData[2] < 200) {
+            continue;
+          }
           const fillX = path.points[0].x * scale + offsetX;
           const fillY = path.points[0].y * scale + offsetY;
           const changed = floodFillPixels(pixelData, w, h, fillX, fillY, hexToRgb(path.color));
