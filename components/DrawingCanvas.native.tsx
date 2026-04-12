@@ -106,16 +106,18 @@ function computeCanvasImage(
       // skips the fill gracefully instead of crashing the app.
       try {
         surface.flush();
-        const snapshot = surface.makeImageSnapshot();
+        const gpuSnapshot = surface.makeImageSnapshot();
+        // Convert GPU texture to a CPU-backed raster image before reading
+        // pixels. On old Adreno GPUs (Nexus 6, Android 6) readPixels on a
+        // GPU texture returns corrupt/empty data. makeNonTextureImage()
+        // copies the texture into CPU memory first, making readPixels
+        // reliable on all devices.
+        const snapshot = gpuSnapshot.makeNonTextureImage
+          ? gpuSnapshot.makeNonTextureImage()
+          : gpuSnapshot;
         const imageInfo = {
           colorType: SkiaColorType?.RGBA_8888 ?? 4,
-          // Use Premul instead of Unpremul: on old Adreno GPUs (e.g. Nexus 6,
-          // Android 6) Skia's Unpremul conversion produces corrupt pixel data
-          // (all-black buffer) which causes canvas.clear() + drawImage() to
-          // wipe the drawing. Premul gives us the GPU's native pixel format
-          // directly. For fully-opaque pixels (white background, black strokes)
-          // Premul == Unpremul, so the flood-fill result is identical.
-          alphaType: SkiaAlphaType?.Premul ?? 2,
+          alphaType: SkiaAlphaType?.Unpremul ?? 3,
           width: w,
           height: h,
         };
