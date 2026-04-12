@@ -65,6 +65,8 @@ function tryLoadSkia(): boolean {
 // Attempt initial load at module level
 tryLoadSkia();
 
+const MIN_BRUSH_RADIUS = 0.5;
+
 /**
  * Draws a filled circle into a pixel buffer (RGBA_8888).
  */
@@ -77,7 +79,7 @@ function drawCircleToPixelBuffer(
   radius: number,
   color: { r: number; g: number; b: number; a: number }
 ): void {
-  const r = Math.max(0.5, radius);
+  const r = Math.max(MIN_BRUSH_RADIUS, radius);
   const minX = Math.max(0, Math.floor(cx - r));
   const maxX = Math.min(w - 1, Math.ceil(cx + r));
   const minY = Math.max(0, Math.floor(cy - r));
@@ -86,9 +88,10 @@ function drawCircleToPixelBuffer(
 
   for (let y = minY; y <= maxY; y++) {
     const dy = y - cy;
+    const dy2 = dy * dy;
     for (let x = minX; x <= maxX; x++) {
       const dx = x - cx;
-      if (dx * dx + dy * dy <= rr) {
+      if (dx * dx + dy2 <= rr) {
         const p = (y * w + x) * 4;
         pixels[p] = color.r;
         pixels[p + 1] = color.g;
@@ -114,7 +117,7 @@ function rasterizeStrokeToPixelBuffer(
   if (path.points.length < 2) return;
 
   const color = hexToRgb(path.color);
-  const radius = Math.max(0.5, (path.strokeWidth * scale) / 2);
+  const radius = Math.max(MIN_BRUSH_RADIUS, (path.strokeWidth * scale) / 2);
 
   for (let i = 1; i < path.points.length; i++) {
     const p0 = path.points[i - 1];
@@ -127,7 +130,7 @@ function rasterizeStrokeToPixelBuffer(
     const dx = x1 - x0;
     const dy = y1 - y0;
     const distance = Math.hypot(dx, dy);
-    const steps = Math.max(1, Math.ceil(distance));
+    const steps = distance > 0 ? Math.ceil(distance) : 1;
 
     for (let step = 0; step <= steps; step++) {
       const t = step / steps;
@@ -159,24 +162,21 @@ function computeCanvasImage(
   if (!SkiaModule?.Data?.fromBytes || !SkiaModule?.Image?.MakeImage) return null;
 
   const pixels = new Uint8ClampedArray(w * h * 4);
-  for (let i = 0; i < pixels.length; i += 4) {
-    pixels[i] = 255;
-    pixels[i + 1] = 255;
-    pixels[i + 2] = 255;
-    pixels[i + 3] = 255;
-  }
+  pixels.fill(255);
 
   for (const path of paths) {
     if (path.type === 'fill' && path.points.length > 0) {
+      const fillX = path.points[0].x * scale + offsetX;
+      const fillY = path.points[0].y * scale + offsetY;
       try {
-        const fillX = path.points[0].x * scale + offsetX;
-        const fillY = path.points[0].y * scale + offsetY;
         floodFillPixels(pixels, w, h, fillX, fillY, hexToRgb(path.color));
       } catch (e) {
         captureException(e instanceof Error ? e : new Error(String(e)), {
           component: 'DrawingCanvas',
           operation: 'floodFill',
           canvasSize: `${w}x${h}`,
+          fillPoint: `${path.points[0].x},${path.points[0].y}`,
+          transformedFillPoint: `${fillX},${fillY}`,
         });
       }
     } else if (path.type !== 'fill' && path.points.length >= 2) {
@@ -190,7 +190,8 @@ function computeCanvasImage(
     width: w,
     height: h,
   };
-  const skData = SkiaModule.Data.fromBytes(new Uint8Array(pixels.buffer));
+  const byteView = new Uint8Array(pixels.buffer, pixels.byteOffset, pixels.byteLength);
+  const skData = SkiaModule.Data.fromBytes(byteView);
   return SkiaModule.Image.MakeImage(imageInfo, skData, w * 4);
 }
 
