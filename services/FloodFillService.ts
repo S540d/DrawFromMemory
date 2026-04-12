@@ -25,11 +25,13 @@ export function hexToRgb(hex: string): RGBAColor {
 
 // Bit-field helpers — store 1 bit per pixel in a Uint32Array.
 // For a 1392×400 canvas: 556 800 bits = ~68 KB instead of ~557 KB (Uint8Array).
+// >>> 0 forces an unsigned 32-bit interpretation, which matters for bit 31
+// where (1 << 31) would otherwise produce a negative signed value.
 function bfSet(bf: Uint32Array, idx: number): void {
-  bf[idx >>> 5] |= 1 << (idx & 31);
+  bf[idx >>> 5] |= (1 << (idx & 31)) >>> 0;
 }
 function bfGet(bf: Uint32Array, idx: number): boolean {
-  return (bf[idx >>> 5] & (1 << (idx & 31))) !== 0;
+  return (bf[idx >>> 5] & ((1 << (idx & 31)) >>> 0)) !== 0;
 }
 
 /**
@@ -110,13 +112,18 @@ export function floodFillPixels(
   if (!bfGet(matches, y0 * width + x0)) return false;
 
   // Step 2 — scanline flood-fill on the matches bit-field.
-  // filled tracks which pixels have been claimed by this fill.
+  // filled  — pixels that have been painted (result of fill).
+  // queued  — pixels that are on the stack or have been processed as seeds,
+  //           used to avoid pushing duplicate seeds. Separate from filled so
+  //           that seeded-but-not-yet-expanded pixels are not counted or
+  //           painted until their span is actually processed.
   const filled = new Uint32Array(bfWords);
+  const queued = new Uint32Array(bfWords);
 
   // Scanline stack: one [x, y] entry per horizontal segment seed.
   // Peak size O(height) instead of O(pixels).
   const stack: [number, number][] = [[x0, y0]];
-  bfSet(filled, y0 * width + x0);
+  bfSet(queued, y0 * width + x0);
   let filledCount = 0;
 
   while (stack.length > 0 && filledCount < MAX_FLOOD_FILL_PIXELS) {
@@ -127,37 +134,41 @@ export function floodFillPixels(
 
     // Expand left
     let left = seedX;
-    while (left > 0 && !bfGet(filled, rowStart + left - 1) && bfGet(matches, rowStart + left - 1)) {
+    while (left > 0 && !bfGet(queued, rowStart + left - 1) && bfGet(matches, rowStart + left - 1)) {
       left--;
     }
 
     // Expand right
     let right = seedX;
-    while (right < width - 1 && !bfGet(filled, rowStart + right + 1) && bfGet(matches, rowStart + right + 1)) {
+    while (right < width - 1 && !bfGet(queued, rowStart + right + 1) && bfGet(matches, rowStart + right + 1)) {
       right++;
     }
 
-    // Mark the span as filled
+    // Mark the span as filled (and queued to prevent re-seeding)
     for (let x = left; x <= right && filledCount < MAX_FLOOD_FILL_PIXELS; x++) {
       bfSet(filled, rowStart + x);
+      bfSet(queued, rowStart + x);
       filledCount++;
     }
 
-    // Seed rows above and below
-    for (const ny of [seedY - 1, seedY + 1]) {
-      if (ny < 0 || ny >= height) continue;
-      const nRowStart = ny * width;
-      let x = left;
-      while (x <= right) {
-        while (x <= right && (bfGet(filled, nRowStart + x) || !bfGet(matches, nRowStart + x))) {
+    // Seed rows above and below — skip entirely if the limit was already reached
+    // inside the span loop to avoid queuing pixels that will never be processed.
+    if (filledCount < MAX_FLOOD_FILL_PIXELS) {
+      for (const ny of [seedY - 1, seedY + 1]) {
+        if (ny < 0 || ny >= height) continue;
+        const nRowStart = ny * width;
+        let x = left;
+        while (x <= right) {
+          while (x <= right && (bfGet(queued, nRowStart + x) || !bfGet(matches, nRowStart + x))) {
+            x++;
+          }
+          if (x > right) break;
+          stack.push([x, ny]);
+          bfSet(queued, nRowStart + x);
           x++;
-        }
-        if (x > right) break;
-        stack.push([x, ny]);
-        bfSet(filled, nRowStart + x);
-        x++;
-        while (x <= right && !bfGet(filled, nRowStart + x) && bfGet(matches, nRowStart + x)) {
-          x++;
+          while (x <= right && !bfGet(queued, nRowStart + x) && bfGet(matches, nRowStart + x)) {
+            x++;
+          }
         }
       }
     }
@@ -165,8 +176,8 @@ export function floodFillPixels(
 
   if (filledCount === 0) return false;
 
-  // Step 3 — write targetColor to every filled pixel in the original buffer.
-  // Single linear pass, touches only the pixels that were actually filled.
+  // Step 3 — scan the buffer once and write targetColor to pixels marked as
+  // filled in the bitfield.
   for (let i = 0; i < totalPixels; i++) {
     if (bfGet(filled, i)) {
       const p = i * 4;

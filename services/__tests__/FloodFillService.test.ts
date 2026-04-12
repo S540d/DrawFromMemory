@@ -207,7 +207,6 @@ describe('floodFillPixels', () => {
 
   it('fills correctly on a very large canvas (1000×1000) up to pixel limit', () => {
     // 1000×1000 = 1M pixels — fill stops at MAX_FLOOD_FILL_PIXELS (150k).
-    // We only verify that the seed pixel and its immediate neighbors are filled.
     const W = 1000, H = 1000;
     const pixels = whiteCanvas(W, H);
 
@@ -217,5 +216,19 @@ describe('floodFillPixels', () => {
     expect(changed).toBe(true);
     // Seed pixel must always be filled
     expect(getPixel(pixels, W, 500, 500)).toEqual(red);
+
+    // Count painted pixels — must not exceed MAX_FLOOD_FILL_PIXELS
+    let paintedCount = 0;
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        const px = getPixel(pixels, W, x, y);
+        if (px.r === red.r && px.g === red.g && px.b === red.b) {
+          paintedCount++;
+        }
+      }
+    }
+    expect(paintedCount).toBeLessThanOrEqual(MAX_FLOOD_FILL_PIXELS);
+    // Limit was actually hit (not just incidentally under the limit)
+    expect(paintedCount).toBeGreaterThan(MAX_FLOOD_FILL_PIXELS * 0.9);
   });
 });
