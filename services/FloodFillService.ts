@@ -147,13 +147,18 @@ export function floodFillPixels(
           x++;
         }
         if (x > right) break;
-        // Found the start of a matching segment — push one seed
+        // Found the start of a matching segment — push one seed.
+        // Only mark the seed itself as visited; the rest of the segment will be
+        // visited when the seed is popped and its row is expanded left/right.
         stack.push([x, ny]);
         visited[nRowStart + x] = 1;
-        // Skip the rest of this matching segment
-        while (x <= right && !visited[nRowStart + x] &&
+        x++;
+        // Skip the rest of this matching segment so we don't push duplicate seeds.
+        // Do NOT mark these pixels as visited — the expand-left/right phase needs
+        // them unvisited to discover the full span.
+        while (x <= right &&
+               !visited[nRowStart + x] &&
                matchesStart(pixels, (nRowStart + x) * 4, startR, startG, startB, startA)) {
-          visited[nRowStart + x] = 1;
           x++;
         }
       }
