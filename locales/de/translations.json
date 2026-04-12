@@ -81,6 +81,7 @@
     "feedbackEmailBody": "Hallo,\n\nIch habe Feedback zu Merke und Male:\n\n",
     "feedbackEmailError": "E-Mail-Client konnte nicht geöffnet werden. Bitte sende dein Feedback an: devsven@posteo.de",
     "browserError": "Browser konnte nicht geöffnet werden. Bitte besuche: https://ko-fi.com/s540d",
+    "browserErrorGeneric": "Browser konnte nicht geöffnet werden.",
     "shareMessage": "Schau dir diese coole Gedächtnistraining-App an: Merke und Male! https://github.com/S540d/DrawFromMemory",
     "aboutSupport": "Über & Support",
     "feedback": "Feedback",

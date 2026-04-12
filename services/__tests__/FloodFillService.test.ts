@@ -116,6 +116,6 @@ describe('floodFillPixels', () => {
   });
 
   it('exports MAX_FLOOD_FILL_PIXELS constant', () => {
-    expect(MAX_FLOOD_FILL_PIXELS).toBe(500000);
+    expect(MAX_FLOOD_FILL_PIXELS).toBe(200000);
   });
 });

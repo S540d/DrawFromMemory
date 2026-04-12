@@ -1,6 +1,7 @@
 // Maximum pixels for flood-fill to limit runtime/memory usage and guard against
-// runaway fills (the fill may stop early when this limit is hit)
-export const MAX_FLOOD_FILL_PIXELS = 500000;
+// runaway fills (the fill may stop early when this limit is hit).
+// Reduced from 500 000 to 200 000 to prevent OOM on low-memory Android devices.
+export const MAX_FLOOD_FILL_PIXELS = 200000;
 
 export interface RGBAColor {
   r: number;
@@ -62,17 +63,22 @@ export function floodFillPixels(
     return false;
   }
 
-  const stack: { x: number; y: number }[] = [{ x: x0, y: y0 }];
-  const visited = new Set<number>();
+  // Use a flat Uint8Array as a visited bitmap – one byte per pixel index.
+  // This is ~8× smaller than a Set<number> and avoids GC pressure on old Android devices.
+  const totalPixels = width * height;
+  const visited = new Uint8Array(totalPixels);
 
-  while (stack.length > 0 && visited.size < MAX_FLOOD_FILL_PIXELS) {
-    const { x, y } = stack.pop()!;
+  // Use flat pixel indices (not byte offsets) throughout to keep the bitmap compact.
+  const stack: number[] = [y0 * width + x0];
+  visited[y0 * width + x0] = 1;
+  let filledCount = 0;
 
-    if (x < 0 || x >= width || y < 0 || y >= height) continue;
+  while (stack.length > 0 && filledCount < MAX_FLOOD_FILL_PIXELS) {
+    const idx = stack.pop()!;
+    const x = idx % width;
+    const y = (idx - x) / width;
 
-    const pos = (y * width + x) * 4;
-    if (visited.has(pos)) continue;
-
+    const pos = idx * 4;
     const r = pixels[pos];
     const g = pixels[pos + 1];
     const b = pixels[pos + 2];
@@ -88,17 +94,19 @@ export function floodFillPixels(
       continue;
     }
 
-    visited.add(pos);
     pixels[pos] = targetColor.r;
     pixels[pos + 1] = targetColor.g;
     pixels[pos + 2] = targetColor.b;
     pixels[pos + 3] = targetColor.a;
+    filledCount++;
 
-    stack.push({ x: x + 1, y });
-    stack.push({ x: x - 1, y });
-    stack.push({ x, y: y + 1 });
-    stack.push({ x, y: y - 1 });
+    // Push neighbours only if in-bounds and not yet visited.
+    // Checking before pushing keeps the stack small (avoids quadratic blowup).
+    if (x + 1 < width  && !visited[idx + 1])     { visited[idx + 1] = 1;     stack.push(idx + 1); }
+    if (x - 1 >= 0     && !visited[idx - 1])     { visited[idx - 1] = 1;     stack.push(idx - 1); }
+    if (y + 1 < height && !visited[idx + width]) { visited[idx + width] = 1; stack.push(idx + width); }
+    if (y - 1 >= 0     && !visited[idx - width]) { visited[idx - width] = 1; stack.push(idx - width); }
   }
 
-  return visited.size > 0;
+  return filledCount > 0;
 }

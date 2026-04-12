@@ -81,6 +81,7 @@
     "feedbackEmailBody": "Hello,\n\nI have feedback about Remember & Draw:\n\n",
     "feedbackEmailError": "Could not open email client. Please send your feedback to: devsven@posteo.de",
     "browserError": "Could not open browser. Please visit: https://ko-fi.com/s540d",
+    "browserErrorGeneric": "Could not open browser.",
     "shareMessage": "Check out this cool memory training app: Remember & Draw! https://github.com/S540d/DrawFromMemory",
     "aboutSupport": "About & Support",
     "feedback": "Feedback",

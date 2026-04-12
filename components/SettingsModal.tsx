@@ -83,15 +83,18 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
     if (!pendingUrl) return;
     const url = pendingUrl;
     setPendingUrl(null);
+    const errorMsg = url.includes('ko-fi.com')
+      ? t('settings.browserError')
+      : t('settings.browserErrorGeneric');
     try {
       const supported = await Linking.canOpenURL(url);
       if (supported) {
         await Linking.openURL(url);
       } else {
-        Alert.alert(t('settings.error'), t('settings.browserError'));
+        Alert.alert(t('settings.error'), errorMsg);
       }
     } catch {
-      Alert.alert(t('settings.error'), t('settings.browserError'));
+      Alert.alert(t('settings.error'), errorMsg);
     }
   };
 
