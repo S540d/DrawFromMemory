@@ -129,7 +129,7 @@
                 <li><span class="checkmark">✅</span> <strong>Keine Weitergabe</strong>: Es werden keine Daten an Dritte weitergegeben</li>
                 <li><span class="checkmark">✅</span> <strong>Keine Werbung</strong>: Die App enthält keine Werbung</li>
                 <li><span class="checkmark">✅</span> <strong>Keine In-App-Käufe</strong>: Die App ist komplett kostenlos</li>
-                <li><span class="checkmark">✅</span> <strong>Kein Internet erforderlich</strong>: Die App funktioniert vollständig offline</li>
+                <li><span class="checkmark">✅</span> <strong>Kein Internet erforderlich</strong>: Die App funktioniert vollständig offline (optionales Crash-Reporting via Sentry nur bei explizitem Build-Flag)</li>
                 <li><span class="checkmark">✅</span> <strong>Open Source</strong>: Der komplette Quellcode ist auf GitHub einsehbar</li>
             </ul>
         </div>
@@ -142,7 +142,7 @@
 
         <h2>2. Welche Daten werden gesammelt?</h2>
         <p><strong>Keine personenbezogenen Daten.</strong></p>
-        <p>Die App sammelt keinerlei persönliche Informationen. Es werden keine Daten über das Internet übertragen.</p>
+        <p>Die App sammelt keinerlei persönliche Informationen. In Standard-Releases werden keine Daten über das Internet übertragen. Siehe Abschnitt 7 für Informationen zum optionalen Crash-Reporting.</p>
 
         <h3>2.1 Lokale Datenspeicherung</h3>
         <p>Die folgenden Daten werden <strong>ausschließlich lokal</strong> auf Ihrem Gerät gespeichert:</p>
@@ -222,7 +222,12 @@
         <p><strong>Repository:</strong> <a href="https://github.com/S540d/DrawFromMemory">https://github.com/S540d/DrawFromMemory</a></p>
         <p>Sie können den Code einsehen und überprüfen, dass tatsächlich keine Daten gesammelt werden.</p>
 
-        <h2>7. Kontakt</h2>
+        <h2>7. Optionales Crash-Reporting (Sentry)</h2>
+        <p>Die App enthält eine optionale Integration von <strong>Sentry</strong> für Absturzberichte. Sentry ist <strong>ausschließlich dann aktiv</strong>, wenn die Umgebungsvariable <code>EXPO_PUBLIC_SENTRY_DSN</code> zum Zeitpunkt des Builds gesetzt ist. Bei Standard-Releases im Play Store ist diese Variable <strong>nicht gesetzt</strong> – Sentry ist damit vollständig deaktiviert und es werden keinerlei Daten übertragen.</p>
+        <p>Falls ein Release mit aktiviertem Sentry erstellt wird, können anonyme Absturzberichte (Stack Traces, Gerätebetriebssystem-Version, App-Version) an Server von Sentry, Inc. übermittelt werden. Diese Berichte enthalten keine personenbezogenen Daten, Gerätekennungen oder nutzergenerierte Inhalte.</p>
+        <p>Datenschutzerklärung von Sentry: <a href="https://sentry.io/privacy/">https://sentry.io/privacy/</a></p>
+
+        <h2>8. Kontakt</h2>
         <p>Bei Fragen zu dieser Datenschutzerklärung können Sie uns kontaktieren:</p>
         <p><strong>GitHub Issues:</strong> <a href="https://github.com/S540d/DrawFromMemory/issues">https://github.com/S540d/DrawFromMemory/issues</a><br>
         <strong>Website:</strong> <a href="https://s540d.github.io/DrawFromMemory/">https://s540d.github.io/DrawFromMemory/</a></p>

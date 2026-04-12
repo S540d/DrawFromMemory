@@ -95,14 +95,14 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.xxl,
   },
   title: {
-    fontSize: FontSize.huge,
+    fontSize: FontSize.xxl,
     fontWeight: FontWeight.bold,
     color: Colors.primary,
     marginBottom: Spacing.sm,
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: FontSize.lg,
+    fontSize: FontSize.md,
     fontWeight: FontWeight.medium,
     color: Colors.text.secondary,
     textAlign: 'center',

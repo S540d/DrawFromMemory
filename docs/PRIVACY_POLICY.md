@@ -12,7 +12,7 @@
 - ✅ **Keine Weitergabe**: Es werden keine Daten an Dritte weitergegeben
 - ✅ **Keine Werbung**: Die App enthält keine Werbung
 - ✅ **Keine In-App-Käufe**: Die App ist komplett kostenlos
-- ✅ **Kein Internet erforderlich**: Die App funktioniert vollständig offline
+- ✅ **Kein Internet erforderlich**: Die App funktioniert vollständig offline (Sentry nur bei explizitem Build-Flag)
 - ✅ **Open Source**: Der komplette Quellcode ist auf GitHub einsehbar
 
 ---
@@ -30,7 +30,7 @@
 
 **Keine personenbezogenen Daten.**
 
-Die App sammelt keinerlei persönliche Informationen. Es werden keine Daten über das Internet übertragen.
+Die App sammelt keinerlei persönliche Informationen. In Standard-Releases werden keine Daten über das Internet übertragen. Siehe Abschnitt 7 für Informationen zum optionalen Crash-Reporting.
 
 ### 2.1 Lokale Datenspeicherung
 
@@ -119,14 +119,20 @@ Da keine Daten gesammelt werden, gibt es keine Daten, über die wir Auskunft geb
 
 ## 7. Drittanbieter-Dienste
 
-**Die App nutzt keine Drittanbieter-Dienste.**
+Die App nutzt grundsätzlich keine Drittanbieter-Dienste für Werbung, Analyse oder Social Media.
 
-Insbesondere:
+### 7.1 Optionales Crash-Reporting (Sentry)
+
+Die App enthält eine optionale Integration von **Sentry** für Absturzberichte. Sentry ist **ausschließlich dann aktiv**, wenn die Umgebungsvariable `EXPO_PUBLIC_SENTRY_DSN` zum Zeitpunkt des Builds gesetzt ist. Bei Standard-Releases im Play Store ist diese Variable **nicht gesetzt** – Sentry ist damit vollständig deaktiviert und es werden keinerlei Daten übertragen.
+
+Falls ein Release mit aktiviertem Sentry erstellt wird, können anonyme Absturzberichte (Stack Traces, Gerätebetriebssystem-Version, App-Version) an Server von Sentry, Inc. übermittelt werden. Diese Berichte enthalten keine personenbezogenen Daten, Gerätekennungen oder nutzergenerierte Inhalte. Die Datenschutzerklärung von Sentry ist unter https://sentry.io/privacy/ einsehbar.
+
+Insbesondere enthält die App:
 - ❌ Keine Analyse-Tools (z.B. Google Analytics, Firebase Analytics)
-- ❌ Keine Crash-Reporting-Dienste
 - ❌ Keine Werbe-Netzwerke
 - ❌ Keine Social Media SDKs
 - ❌ Keine Cloud-Dienste
+- ⚙️ Optionales Crash-Reporting via Sentry (nur wenn per Build-Variable aktiviert)
 
 ---
 

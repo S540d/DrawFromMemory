@@ -47,12 +47,12 @@
       "yourDrawing": "Your Drawing",
       "original": "Original",
       "rating": "Your Rating",
-      "retry": "Try again",
-      "nextLevel": "Next Level",
-      "backToMenu": "Back to Menu",
+      "retry": "Again",
+      "nextLevel": "Next",
+      "backToMenu": "Menu",
       "allLevelsComplete": "All levels complete!",
       "allLevelsCompleteMessage": "You have mastered all 10 levels. You are a true memory champion!",
-      "playAgain": "Start over",
+      "playAgain": "Restart",
       "replay": "▶ Replay",
       "replayStop": "⏹ Stop"
     }
@@ -125,5 +125,12 @@
     "close": "Close",
     "back": "Back",
     "settings": "Settings"
+  },
+  "parentalGate": {
+    "title": "Parental Gate",
+    "message": "This link leads outside the app. Please solve the challenge to continue:",
+    "placeholder": "Enter answer",
+    "confirm": "Open",
+    "wrongAnswer": "Wrong answer. Please try again."
   }
 }

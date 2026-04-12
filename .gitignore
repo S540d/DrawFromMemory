@@ -31,6 +31,9 @@ yarn-error.log*
 # Claude Code (private instructions)
 .claude/
 
+# Private documentation (deployment guides, store metadata, etc.)
+docs/private/
+
 # Build
 build/
 *.apk

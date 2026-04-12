@@ -47,4 +47,26 @@ if git diff --cached --name-only | grep -E "(package\.json|app\.json|App\.tsx|bu
   fi
 fi
 
+# Check: keine privaten Docs committen
+echo "Checking for private docs..."
+STAGED=$(git diff --cached --name-only)
+if echo "$STAGED" | grep -q "^docs/private/"; then
+  echo "❌ Commit blocked: Files from docs/private/ cannot be committed."
+  exit 1
+fi
+
+# Check: keine Keystore-Dateien committen
+echo "Checking for keystore files..."
+if echo "$STAGED" | grep -qE "\.(keystore|jks)$"; then
+  echo "❌ Commit blocked: Keystore file detected in staged changes!"
+  exit 1
+fi
+
+# Check: keine Keystore-Passwörter in staged files (only added lines, not removed)
+echo "Checking for hardcoded keystore passwords..."
+if git diff --cached | grep "^+" | grep -Eiq "keystorePassword[[:space:]]*=[[:space:]]*[^[:space:]]|keyPassword[[:space:]]*=[[:space:]]*[^[:space:]]|storePassword[[:space:]]*=[[:space:]]*[^[:space:]]"; then
+  echo "❌ Commit blocked: Hardcoded keystore password detected!"
+  exit 1
+fi
+
 echo "✅ Pre-commit checks passed!"

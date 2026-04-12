@@ -65,12 +65,12 @@ const SIZE_STYLES: Record<ButtonSize, { container: ViewStyle; text: TextStyle }>
   },
   lg: {
     container: {
-      paddingVertical: Spacing.lg,
+      paddingVertical: Spacing.sm,
       paddingHorizontal: Spacing.xl,
-      minHeight: 56,
+      minHeight: 48,
       borderRadius: BorderRadius.lg,
     },
-    text: { fontSize: FontSize.xl },
+    text: { fontSize: FontSize.md },
   },
 };
 
