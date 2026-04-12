@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-04-11
+
+### Fixed
+- Flood-fill OOM crash on low-memory Android devices: replaced `Set<number>` visited structure with `Uint8Array` bitmap (~8× smaller), check neighbours before push to prevent stack blowup (#126)
+
+### Changed
+- Result screen: compact 3-button row, canvas icon overlays for Replay/Save, shorter labels (#125)
+- Standardized typography hierarchy and reduced button sizes (#116)
+- `docs/private/` pattern introduced for internal docs (gitignored) (#120)
+
+### Security
+- CI: fixed `docs-privacy` false positives; tightened sensitive-filename list to real credential files (#124)
+- Removed stale branches: `develop`, `testing`, all `claude/*` and `copilot/*` branches (#124)
+
 ## [1.2.6] - 2026-04-05
 
 ### Changed

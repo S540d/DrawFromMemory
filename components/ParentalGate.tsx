@@ -86,7 +86,7 @@ export default function ParentalGate({ visible, onSuccess, onCancel }: ParentalG
               styles.input,
               {
                 color: colors.text.primary,
-                borderColor: showError ? '#e53e3e' : colors.border,
+                borderColor: showError ? colors.error : colors.border,
                 backgroundColor: colors.background,
               },
             ]}
@@ -104,7 +104,7 @@ export default function ParentalGate({ visible, onSuccess, onCancel }: ParentalG
           />
 
           {showError && (
-            <Text style={styles.errorText}>
+            <Text style={[styles.errorText, { color: colors.error }]}>
               {t('parentalGate.wrongAnswer')}
             </Text>
           )}
@@ -176,8 +176,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   errorText: {
-    color: '#e53e3e',
-    fontSize: FontSize.xs ?? 12,
+    fontSize: FontSize.xs,
     textAlign: 'center',
   },
   buttons: {
