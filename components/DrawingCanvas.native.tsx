@@ -87,17 +87,9 @@ function computeCanvasImage(
   offsetX: number,
   offsetY: number
 ): any | null {
-  if (!SkiaModule?.Surface) return null;
+  if (!SkiaModule?.Surface?.MakeOffscreen) return null;
 
-  // Prefer a CPU-backed surface (Surface.Make) over GPU-backed (Surface.MakeOffscreen).
-  // On old Adreno GPUs (e.g. Nexus 6, Android 6) the GPU surface's readPixels returns
-  // a corrupt or all-white buffer, which causes the flood-fill to destroy the drawing.
-  // The CPU surface bypasses the GPU entirely so readPixels is always reliable.
-  // Fall back to MakeOffscreen if Make is unavailable (older Skia builds).
-  const makeSurface = SkiaModule.Surface.Make ?? SkiaModule.Surface.MakeOffscreen;
-  if (!makeSurface) return null;
-
-  const surface = makeSurface(w, h);
+  const surface = SkiaModule.Surface.MakeOffscreen(w, h);
   if (!surface) return null;
 
   const canvas = surface.getCanvas();
@@ -114,12 +106,17 @@ function computeCanvasImage(
       // skips the fill gracefully instead of crashing the app.
       try {
         surface.flush();
-        const snapshot = surface.makeImageSnapshot();
+        const gpuSnapshot = surface.makeImageSnapshot();
+        // Convert GPU texture to a CPU-backed raster image before reading
+        // pixels. On old Adreno GPUs (Nexus 6, Android 6) readPixels on a
+        // GPU texture returns corrupt/empty data. makeNonTextureImage()
+        // copies the texture into CPU memory first, making readPixels
+        // reliable on all devices.
+        const snapshot = gpuSnapshot.makeNonTextureImage
+          ? gpuSnapshot.makeNonTextureImage()
+          : gpuSnapshot;
         const imageInfo = {
           colorType: SkiaColorType?.RGBA_8888 ?? 4,
-          // CPU surface (Surface.Make) uses Unpremul natively — no GPU conversion,
-          // so readPixels is always reliable. The previous Premul workaround was
-          // needed for the GPU surface (MakeOffscreen) on old Adreno GPUs.
           alphaType: SkiaAlphaType?.Unpremul ?? 3,
           width: w,
           height: h,
