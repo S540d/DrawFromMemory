@@ -115,7 +115,109 @@ describe('floodFillPixels', () => {
     expect(getPixel(pixels, W, 1, 1)).toEqual({ r: 0, g: 0, b: 0, a: 255 });
   });
 
+  it('fills through a narrow vertical corridor (scanline regression)', () => {
+    // 5x5 canvas with a 1-pixel-wide corridor in column 2:
+    // B B W B B
+    // B B W B B
+    // B B W B B
+    // B B W B B
+    // B B W B B
+    // Filling at (2,0) should fill all 5 white pixels in the corridor.
+    const W = 5, H = 5;
+    const pixels = new Uint8ClampedArray(W * H * 4);
+    // All black
+    for (let i = 0; i < pixels.length; i += 4) {
+      pixels[i] = 0; pixels[i + 1] = 0; pixels[i + 2] = 0; pixels[i + 3] = 255;
+    }
+    // White corridor at x=2
+    for (let y = 0; y < H; y++) {
+      const pos = (y * W + 2) * 4;
+      pixels[pos] = 255; pixels[pos + 1] = 255; pixels[pos + 2] = 255; pixels[pos + 3] = 255;
+    }
+
+    const red = { r: 255, g: 0, b: 0, a: 255 };
+    const changed = floodFillPixels(pixels, W, H, 2, 0, red);
+
+    expect(changed).toBe(true);
+    for (let y = 0; y < H; y++) {
+      expect(getPixel(pixels, W, 2, y)).toEqual(red);
+      // Neighbors must stay black
+      expect(getPixel(pixels, W, 1, y)).toEqual({ r: 0, g: 0, b: 0, a: 255 });
+      expect(getPixel(pixels, W, 3, y)).toEqual({ r: 0, g: 0, b: 0, a: 255 });
+    }
+  });
+
+  it('fills an L-shaped region correctly', () => {
+    // 4x4 canvas: L-shape of white, rest black
+    // W B B B
+    // W B B B
+    // W W W B
+    // B B B B
+    const W = 4, H = 4;
+    const pixels = new Uint8ClampedArray(W * H * 4);
+    // All black
+    for (let i = 0; i < pixels.length; i += 4) {
+      pixels[i] = 0; pixels[i + 1] = 0; pixels[i + 2] = 0; pixels[i + 3] = 255;
+    }
+    // L-shape white pixels
+    const whitePositions = [[0,0],[0,1],[0,2],[1,2],[2,2]];
+    for (const [x,y] of whitePositions) {
+      const pos = (y * W + x) * 4;
+      pixels[pos] = 255; pixels[pos + 1] = 255; pixels[pos + 2] = 255; pixels[pos + 3] = 255;
+    }
+
+    const blue = { r: 0, g: 0, b: 255, a: 255 };
+    const changed = floodFillPixels(pixels, W, H, 0, 0, blue);
+
+    expect(changed).toBe(true);
+    for (const [x,y] of whitePositions) {
+      expect(getPixel(pixels, W, x, y)).toEqual(blue);
+    }
+    // Black pixels unchanged
+    expect(getPixel(pixels, W, 1, 0)).toEqual({ r: 0, g: 0, b: 0, a: 255 });
+    expect(getPixel(pixels, W, 3, 3)).toEqual({ r: 0, g: 0, b: 0, a: 255 });
+  });
+
   it('exports MAX_FLOOD_FILL_PIXELS constant', () => {
-    expect(MAX_FLOOD_FILL_PIXELS).toBe(200000);
+    expect(MAX_FLOOD_FILL_PIXELS).toBe(150000);
+  });
+
+  it('fills correctly on a large canvas that triggers downsampling', () => {
+    // 600×400 = 240 000 px → exceeds DOWNSAMPLE_PIXEL_THRESHOLD (200 000)
+    const W = 600, H = 400;
+    const pixels = whiteCanvas(W, H);
+
+    // Draw a black vertical line at x=300 to split the canvas
+    for (let y = 0; y < H; y++) {
+      const pos = (y * W + 300) * 4;
+      pixels[pos] = 0; pixels[pos + 1] = 0; pixels[pos + 2] = 0; pixels[pos + 3] = 255;
+    }
+
+    const red = { r: 255, g: 0, b: 0, a: 255 };
+    const changed = floodFillPixels(pixels, W, H, 0, 0, red);
+
+    expect(changed).toBe(true);
+    // Left side should be filled
+    expect(getPixel(pixels, W, 0, 0)).toEqual(red);
+    expect(getPixel(pixels, W, 150, 200)).toEqual(red);
+    // Boundary should be untouched
+    expect(getPixel(pixels, W, 300, 0)).toEqual({ r: 0, g: 0, b: 0, a: 255 });
+    // Right side should be untouched
+    expect(getPixel(pixels, W, 301, 0)).toEqual({ r: 255, g: 255, b: 255, a: 255 });
+  });
+
+  it('downsampling with factor 4 on very large canvas', () => {
+    // 1000×1000 = 1 000 000 px → factor 4 (> DOWNSAMPLE_PIXEL_THRESHOLD * 4)
+    const W = 1000, H = 1000;
+    const pixels = whiteCanvas(W, H);
+
+    const red = { r: 255, g: 0, b: 0, a: 255 };
+    const changed = floodFillPixels(pixels, W, H, 500, 500, red);
+
+    expect(changed).toBe(true);
+    // Sample a few points — they should all be filled
+    expect(getPixel(pixels, W, 0, 0)).toEqual(red);
+    expect(getPixel(pixels, W, 999, 999)).toEqual(red);
+    expect(getPixel(pixels, W, 500, 500)).toEqual(red);
   });
 });
