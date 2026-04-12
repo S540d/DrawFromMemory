@@ -66,7 +66,7 @@ function tryLoadSkia(): boolean {
 tryLoadSkia();
 
 /**
- * Stufe 3: render paths to a software pixel buffer first and convert that
+ * Stage 3: render paths to a software pixel buffer first and convert that
  * buffer to a Skia image. This avoids Skia readPixels roundtrips completely.
  */
 function computeCanvasImage(
@@ -86,7 +86,7 @@ function computeCanvasImage(
 
     const imageInfo = {
       colorType: SkiaColorType?.RGBA_8888 ?? 4,
-      alphaType: SkiaAlphaType?.Premul ?? 2,
+      alphaType: SkiaAlphaType?.Unpremul ?? 3,
       width: w,
       height: h,
     };
