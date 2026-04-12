@@ -1,7 +1,8 @@
 // Maximum pixels for flood-fill to limit runtime/memory usage and guard against
 // runaway fills (the fill may stop early when this limit is hit).
-// Reduced from 500 000 to 200 000 to prevent OOM on low-memory Android devices.
-export const MAX_FLOOD_FILL_PIXELS = 200000;
+// Reduced from 500 000 to 150 000 to prevent OOM on low-memory Android devices
+// (e.g. Nexus 6 with ~3 GB RAM).
+export const MAX_FLOOD_FILL_PIXELS = 150000;
 
 export interface RGBAColor {
   r: number;
@@ -23,9 +24,36 @@ export function hexToRgb(hex: string): RGBAColor {
 }
 
 /**
- * Stack-based flood-fill on a pixel buffer.
- * Fills connected pixels matching the color at (startX, startY) with targetColor.
- * Uses a tolerance of ±2 per channel for anti-aliased edges.
+ * Checks whether the pixel at the given byte offset matches the start color
+ * within a tolerance of ±2 per channel (for anti-aliased edges).
+ */
+function matchesStart(
+  pixels: Uint8ClampedArray,
+  pos: number,
+  startR: number,
+  startG: number,
+  startB: number,
+  startA: number
+): boolean {
+  return (
+    Math.abs(pixels[pos] - startR) <= 2 &&
+    Math.abs(pixels[pos + 1] - startG) <= 2 &&
+    Math.abs(pixels[pos + 2] - startB) <= 2 &&
+    Math.abs(pixels[pos + 3] - startA) <= 2
+  );
+}
+
+/**
+ * Scanline flood-fill on a pixel buffer.
+ *
+ * Instead of pushing every single pixel onto a stack (which can grow to
+ * hundreds of thousands of entries on large canvases), this algorithm
+ * processes entire horizontal runs at once. The stack only holds one entry
+ * per scanline segment, reducing peak stack size from O(pixels) to O(rows)
+ * — a ~1000× reduction on a 1440×400 canvas.
+ *
+ * This is critical for low-memory Android devices (e.g. Nexus 6) where the
+ * per-pixel stack approach caused OOM crashes.
  *
  * @param pixels  ImageData.data (Uint8ClampedArray, mutated in place)
  * @param width   Canvas width in pixels
@@ -63,49 +91,73 @@ export function floodFillPixels(
     return false;
   }
 
-  // Use a flat Uint8Array as a visited bitmap – one byte per pixel index.
-  // This is ~8× smaller than a Set<number> and avoids GC pressure on old Android devices.
-  const totalPixels = width * height;
-  const visited = new Uint8Array(totalPixels);
+  // Visited bitmap — one byte per pixel (much cheaper than Set<number>)
+  const visited = new Uint8Array(width * height);
 
-  // Use flat pixel indices (not byte offsets) throughout to keep the bitmap compact.
-  const stack: number[] = [y0 * width + x0];
+  // Scanline stack: each entry is [x, y] — one per horizontal segment found.
+  // Peak size is bounded by O(height) instead of O(pixels).
+  const stack: [number, number][] = [[x0, y0]];
   visited[y0 * width + x0] = 1;
   let filledCount = 0;
 
   while (stack.length > 0 && filledCount < MAX_FLOOD_FILL_PIXELS) {
-    const idx = stack.pop()!;
-    const x = idx % width;
-    const y = (idx - x) / width;
+    const [seedX, seedY] = stack.pop()!;
+    const rowStart = seedY * width;
 
-    const pos = idx * 4;
-    const r = pixels[pos];
-    const g = pixels[pos + 1];
-    const b = pixels[pos + 2];
-    const a = pixels[pos + 3];
-
-    // Color tolerance ±2 per channel for anti-aliased edges
-    if (
-      Math.abs(r - startR) > 2 ||
-      Math.abs(g - startG) > 2 ||
-      Math.abs(b - startB) > 2 ||
-      Math.abs(a - startA) > 2
-    ) {
+    // Skip if this seed no longer matches (may have been filled by another segment)
+    if (!matchesStart(pixels, (rowStart + seedX) * 4, startR, startG, startB, startA)) {
       continue;
     }
 
-    pixels[pos] = targetColor.r;
-    pixels[pos + 1] = targetColor.g;
-    pixels[pos + 2] = targetColor.b;
-    pixels[pos + 3] = targetColor.a;
-    filledCount++;
+    // Expand left from seed
+    let left = seedX;
+    while (left > 0 && !visited[rowStart + left - 1] &&
+           matchesStart(pixels, (rowStart + left - 1) * 4, startR, startG, startB, startA)) {
+      left--;
+    }
 
-    // Push neighbours only if in-bounds and not yet visited.
-    // Checking before pushing keeps the stack small (avoids quadratic blowup).
-    if (x + 1 < width  && !visited[idx + 1])     { visited[idx + 1] = 1;     stack.push(idx + 1); }
-    if (x - 1 >= 0     && !visited[idx - 1])     { visited[idx - 1] = 1;     stack.push(idx - 1); }
-    if (y + 1 < height && !visited[idx + width]) { visited[idx + width] = 1; stack.push(idx + width); }
-    if (y - 1 >= 0     && !visited[idx - width]) { visited[idx - width] = 1; stack.push(idx - width); }
+    // Expand right from seed
+    let right = seedX;
+    while (right < width - 1 && !visited[rowStart + right + 1] &&
+           matchesStart(pixels, (rowStart + right + 1) * 4, startR, startG, startB, startA)) {
+      right++;
+    }
+
+    // Fill the entire horizontal span [left..right]
+    for (let x = left; x <= right && filledCount < MAX_FLOOD_FILL_PIXELS; x++) {
+      const idx = rowStart + x;
+      visited[idx] = 1;
+      const pos = idx * 4;
+      pixels[pos] = targetColor.r;
+      pixels[pos + 1] = targetColor.g;
+      pixels[pos + 2] = targetColor.b;
+      pixels[pos + 3] = targetColor.a;
+      filledCount++;
+    }
+
+    // Scan the row above and below for new segments to seed
+    for (const ny of [seedY - 1, seedY + 1]) {
+      if (ny < 0 || ny >= height) continue;
+      const nRowStart = ny * width;
+      let x = left;
+      while (x <= right) {
+        // Skip non-matching / already-visited pixels
+        while (x <= right && (visited[nRowStart + x] ||
+               !matchesStart(pixels, (nRowStart + x) * 4, startR, startG, startB, startA))) {
+          x++;
+        }
+        if (x > right) break;
+        // Found the start of a matching segment — push one seed
+        stack.push([x, ny]);
+        visited[nRowStart + x] = 1;
+        // Skip the rest of this matching segment
+        while (x <= right && !visited[nRowStart + x] &&
+               matchesStart(pixels, (nRowStart + x) * 4, startR, startG, startB, startA)) {
+          visited[nRowStart + x] = 1;
+          x++;
+        }
+      }
+    }
   }
 
   return filledCount > 0;

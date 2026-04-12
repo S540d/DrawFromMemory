@@ -101,35 +101,46 @@ function computeCanvasImage(
 
   for (const path of paths) {
     if (path.type === 'fill' && path.points.length > 0) {
-      // Flood fill: take snapshot, run fill algorithm, redraw
-      surface.flush();
-      const snapshot = surface.makeImageSnapshot();
-      const imageInfo = {
-        colorType: SkiaColorType?.RGBA_8888 ?? 4,
-        alphaType: SkiaAlphaType?.Unpremul ?? 3,
-        width: w,
-        height: h,
-      };
-      const pixels = snapshot.readPixels(0, 0, imageInfo);
-      if (pixels instanceof Uint8Array) {
-        // Create a clamped view over the existing pixel buffer (no copy)
-        const pixelData = new Uint8ClampedArray(
-          pixels.buffer,
-          pixels.byteOffset,
-          pixels.byteLength
-        );
-        const fillX = path.points[0].x * scale + offsetX;
-        const fillY = path.points[0].y * scale + offsetY;
-        const changed = floodFillPixels(pixelData, w, h, fillX, fillY, hexToRgb(path.color));
-        if (changed) {
-          // Reuse the original Uint8Array view; it reflects changes via pixelData
-          const skData = SkiaModule.Data.fromBytes(pixels);
-          const filledImage = SkiaModule.Image.MakeImage(imageInfo, skData, w * 4);
-          if (filledImage) {
-            canvas.clear(SkiaModule.Color('transparent'));
-            canvas.drawImage(filledImage, 0, 0);
+      // Flood fill: take snapshot, run fill algorithm, redraw.
+      // Wrapped in try/catch so an OOM on low-memory devices
+      // skips the fill gracefully instead of crashing the app.
+      try {
+        surface.flush();
+        const snapshot = surface.makeImageSnapshot();
+        const imageInfo = {
+          colorType: SkiaColorType?.RGBA_8888 ?? 4,
+          alphaType: SkiaAlphaType?.Unpremul ?? 3,
+          width: w,
+          height: h,
+        };
+        const pixels = snapshot.readPixels(0, 0, imageInfo);
+        if (pixels instanceof Uint8Array) {
+          // Create a clamped view over the existing pixel buffer (no copy)
+          const pixelData = new Uint8ClampedArray(
+            pixels.buffer,
+            pixels.byteOffset,
+            pixels.byteLength
+          );
+          const fillX = path.points[0].x * scale + offsetX;
+          const fillY = path.points[0].y * scale + offsetY;
+          const changed = floodFillPixels(pixelData, w, h, fillX, fillY, hexToRgb(path.color));
+          if (changed) {
+            // Reuse the original Uint8Array view; it reflects changes via pixelData
+            const skData = SkiaModule.Data.fromBytes(pixels);
+            const filledImage = SkiaModule.Image.MakeImage(imageInfo, skData, w * 4);
+            if (filledImage) {
+              canvas.clear(SkiaModule.Color('transparent'));
+              canvas.drawImage(filledImage, 0, 0);
+            }
           }
         }
+      } catch (e) {
+        // OOM or other allocation failure — skip this fill silently
+        captureException(e instanceof Error ? e : new Error(String(e)), {
+          component: 'DrawingCanvas',
+          operation: 'floodFill',
+          canvasSize: `${w}x${h}`,
+        });
       }
     } else if (path.type !== 'fill' && path.points.length >= 2) {
       const skiaPath = SkiaModule.Path.Make();
