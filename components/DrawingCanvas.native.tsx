@@ -87,9 +87,17 @@ function computeCanvasImage(
   offsetX: number,
   offsetY: number
 ): any | null {
-  if (!SkiaModule?.Surface?.MakeOffscreen) return null;
+  if (!SkiaModule?.Surface) return null;
 
-  const surface = SkiaModule.Surface.MakeOffscreen(w, h);
+  // Prefer a CPU-backed surface (Surface.Make) over GPU-backed (Surface.MakeOffscreen).
+  // On old Adreno GPUs (e.g. Nexus 6, Android 6) the GPU surface's readPixels returns
+  // a corrupt or all-white buffer, which causes the flood-fill to destroy the drawing.
+  // The CPU surface bypasses the GPU entirely so readPixels is always reliable.
+  // Fall back to MakeOffscreen if Make is unavailable (older Skia builds).
+  const makeSurface = SkiaModule.Surface.Make ?? SkiaModule.Surface.MakeOffscreen;
+  if (!makeSurface) return null;
+
+  const surface = makeSurface(w, h);
   if (!surface) return null;
 
   const canvas = surface.getCanvas();
@@ -109,13 +117,10 @@ function computeCanvasImage(
         const snapshot = surface.makeImageSnapshot();
         const imageInfo = {
           colorType: SkiaColorType?.RGBA_8888 ?? 4,
-          // Use Premul instead of Unpremul: on old Adreno GPUs (e.g. Nexus 6,
-          // Android 6) Skia's Unpremul conversion produces corrupt pixel data
-          // (all-black buffer) which causes canvas.clear() + drawImage() to
-          // wipe the drawing. Premul gives us the GPU's native pixel format
-          // directly. For fully-opaque pixels (white background, black strokes)
-          // Premul == Unpremul, so the flood-fill result is identical.
-          alphaType: SkiaAlphaType?.Premul ?? 2,
+          // CPU surface (Surface.Make) uses Unpremul natively — no GPU conversion,
+          // so readPixels is always reliable. The previous Premul workaround was
+          // needed for the GPU surface (MakeOffscreen) on old Adreno GPUs.
+          alphaType: SkiaAlphaType?.Unpremul ?? 3,
           width: w,
           height: h,
         };
