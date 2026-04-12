@@ -4,7 +4,7 @@ import { t } from '@services/i18n';
 import { styles, DEFAULT_CANVAS_WIDTH } from './DrawingCanvas.shared';
 import type { DrawingPath } from './DrawingCanvas.shared';
 import { captureException } from '@services/SentryService';
-import { floodFillPixels, hexToRgb } from '@services/FloodFillService';
+import { renderPathsToPixelBuffer } from '@services/SoftwareCanvasRenderer';
 
 // Re-export shared API so '@components/DrawingCanvas' provides a complete module on native
 export type { DrawingPath } from './DrawingCanvas.shared';
@@ -18,9 +18,6 @@ let SkiaModule: any = null;
 let SkiaImage: any = null;
 let SkiaAlphaType: any = null;
 let SkiaColorType: any = null;
-let SkiaPaintStyle: any = null;
-let SkiaStrokeCap: any = null;
-let SkiaStrokeJoin: any = null;
 let skiaLoadError: Error | null = null;
 
 function tryLoadSkia(): boolean {
@@ -36,9 +33,6 @@ function tryLoadSkia(): boolean {
     SkiaImage = skia.Image;
     SkiaAlphaType = skia.AlphaType;
     SkiaColorType = skia.ColorType;
-    SkiaPaintStyle = skia.PaintStyle;
-    SkiaStrokeCap = skia.StrokeCap;
-    SkiaStrokeJoin = skia.StrokeJoin;
 
     // Verify that the native module is actually ready (not just exported)
     if (!SkiaModule?.Path?.Make) {
@@ -53,9 +47,6 @@ function tryLoadSkia(): boolean {
     SkiaImage = null;
     SkiaAlphaType = null;
     SkiaColorType = null;
-    SkiaPaintStyle = null;
-    SkiaStrokeCap = null;
-    SkiaStrokeJoin = null;
     skiaLoadError = e instanceof Error ? e : new Error(String(e));
     console.error('[DrawingCanvas] Failed to load @shopify/react-native-skia:', {
       message: skiaLoadError.message,
@@ -75,9 +66,8 @@ function tryLoadSkia(): boolean {
 tryLoadSkia();
 
 /**
- * Renders all paths to an offscreen Skia surface and returns the resulting image.
- * Fill paths are handled via pixel-level flood fill (same algorithm as web).
- * Returns null if the surface cannot be created or Skia is unavailable.
+ * Stufe 3: render paths to a software pixel buffer first and convert that
+ * buffer to a Skia image. This avoids Skia readPixels roundtrips completely.
  */
 function computeCanvasImage(
   paths: DrawingPath[],
@@ -87,100 +77,28 @@ function computeCanvasImage(
   offsetX: number,
   offsetY: number
 ): any | null {
-  if (!SkiaModule?.Surface?.MakeOffscreen) return null;
+  if (!SkiaModule?.Data?.fromBytes || !SkiaModule?.Image?.MakeImage) return null;
 
-  const surface = SkiaModule.Surface.MakeOffscreen(w, h);
-  if (!surface) return null;
+  try {
+    const pixels = renderPathsToPixelBuffer(paths, w, h, scale, offsetX, offsetY);
+    const skData = SkiaModule.Data.fromBytes(pixels);
+    if (!skData) return null;
 
-  const canvas = surface.getCanvas();
-
-  // White background
-  const bgPaint = SkiaModule.Paint();
-  bgPaint.setColor(SkiaModule.Color('#FFFFFF'));
-  canvas.drawRect(SkiaModule.XYWHRect(0, 0, w, h), bgPaint);
-
-  for (const path of paths) {
-    if (path.type === 'fill' && path.points.length > 0) {
-      // Flood fill: take snapshot, run fill algorithm, redraw.
-      // Wrapped in try/catch so an OOM on low-memory devices
-      // skips the fill gracefully instead of crashing the app.
-      try {
-        surface.flush();
-        const gpuSnapshot = surface.makeImageSnapshot();
-        // Convert GPU texture to a CPU-backed raster image before reading
-        // pixels. On old Adreno GPUs (Nexus 6, Android 6) readPixels on a
-        // GPU texture returns corrupt/empty data. makeNonTextureImage()
-        // copies the texture into CPU memory first, making readPixels
-        // reliable on all devices.
-        const snapshot = gpuSnapshot.makeNonTextureImage
-          ? gpuSnapshot.makeNonTextureImage()
-          : gpuSnapshot;
-        const imageInfo = {
-          colorType: SkiaColorType?.RGBA_8888 ?? 4,
-          alphaType: SkiaAlphaType?.Unpremul ?? 3,
-          width: w,
-          height: h,
-        };
-        const pixels = snapshot.readPixels(0, 0, imageInfo);
-        if (pixels instanceof Uint8Array) {
-          // Create a clamped view over the existing pixel buffer (no copy)
-          const pixelData = new Uint8ClampedArray(
-            pixels.buffer,
-            pixels.byteOffset,
-            pixels.byteLength
-          );
-          // Sanity check: the top-left pixel should be near-white (background).
-          // If the buffer is all-black/transparent the GPU returned corrupt data —
-          // skip the fill rather than destroying the canvas with clear().
-          if (pixelData[0] < 200 || pixelData[1] < 200 || pixelData[2] < 200) {
-            continue;
-          }
-          const fillX = path.points[0].x * scale + offsetX;
-          const fillY = path.points[0].y * scale + offsetY;
-          const changed = floodFillPixels(pixelData, w, h, fillX, fillY, hexToRgb(path.color));
-          if (changed) {
-            // Reuse the original Uint8Array view; it reflects changes via pixelData
-            const skData = SkiaModule.Data.fromBytes(pixels);
-            const filledImage = SkiaModule.Image.MakeImage(imageInfo, skData, w * 4);
-            if (filledImage) {
-              canvas.clear(SkiaModule.Color('transparent'));
-              canvas.drawImage(filledImage, 0, 0);
-            }
-          }
-        }
-      } catch (e) {
-        // OOM or other allocation failure — skip this fill silently
-        captureException(e instanceof Error ? e : new Error(String(e)), {
-          component: 'DrawingCanvas',
-          operation: 'floodFill',
-          canvasSize: `${w}x${h}`,
-        });
-      }
-    } else if (path.type !== 'fill' && path.points.length >= 2) {
-      const skiaPath = SkiaModule.Path.Make();
-      skiaPath.moveTo(
-        path.points[0].x * scale + offsetX,
-        path.points[0].y * scale + offsetY
-      );
-      for (let i = 1; i < path.points.length; i++) {
-        skiaPath.lineTo(
-          path.points[i].x * scale + offsetX,
-          path.points[i].y * scale + offsetY
-        );
-      }
-      const paint = SkiaModule.Paint();
-      paint.setColor(SkiaModule.Color(path.color));
-      paint.setStrokeWidth(path.strokeWidth * scale);
-      paint.setStyle(SkiaPaintStyle?.Stroke ?? 1);
-      paint.setStrokeCap(SkiaStrokeCap?.Round ?? 1);
-      paint.setStrokeJoin(SkiaStrokeJoin?.Round ?? 1);
-      paint.setAntiAlias(true);
-      canvas.drawPath(skiaPath, paint);
-    }
+    const imageInfo = {
+      colorType: SkiaColorType?.RGBA_8888 ?? 4,
+      alphaType: SkiaAlphaType?.Premul ?? 2,
+      width: w,
+      height: h,
+    };
+    return SkiaModule.Image.MakeImage(imageInfo, skData, w * 4);
+  } catch (e) {
+    captureException(e instanceof Error ? e : new Error(String(e)), {
+      component: 'DrawingCanvas',
+      operation: 'softwareRasterRender',
+      canvasSize: `${w}x${h}`,
+    });
+    return null;
   }
-
-  surface.flush();
-  return surface.makeImageSnapshot();
 }
 
 interface Props {
