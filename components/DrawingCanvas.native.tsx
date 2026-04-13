@@ -76,9 +76,21 @@ function tryLoadSkia(): boolean {
 tryLoadSkia();
 
 /**
- * Renders all paths to an offscreen Skia surface and returns the resulting image.
- * Fill paths are handled via pixel-level flood fill (same algorithm as web).
- * Returns null if the surface cannot be created or Skia is unavailable.
+ * Computes a canvas image with flood fills applied, using pure CPU rendering.
+ *
+ * Previous approach used a GPU offscreen surface (MakeOffscreen → readPixels →
+ * floodFill → canvas.clear → drawImage). This failed on old Adreno GPUs
+ * (Nexus 6, Android 6) because:
+ *   1. readPixels returned corrupt/white data
+ *   2. canvas.clear() destroyed strokes irrecoverably
+ *   3. drawImage/MakeImage on the GPU-backed surface silently failed
+ * No amount of readPixels fixes helped because the destructive canvas.clear()
+ * was the actual point of no return — see issue #132.
+ *
+ * New approach: build everything on CPU via SoftwareRasterizer, apply fills
+ * directly on the CPU buffer, and create a Skia image from the result.
+ * Strokes are always rendered separately as native <SkiaPath> components
+ * for visual quality — this image only provides the fill background.
  */
 function computeCanvasImage(
   paths: DrawingPath[],
@@ -88,159 +100,57 @@ function computeCanvasImage(
   offsetX: number,
   offsetY: number
 ): any | null {
-  if (!SkiaModule?.Surface?.MakeOffscreen) return null;
+  if (!SkiaModule) return null;
 
-  const surface = SkiaModule.Surface.MakeOffscreen(w, h);
-  if (!surface) return null;
+  try {
+    const firstFillIdx = paths.findIndex(p => p.type === 'fill');
+    if (firstFillIdx === -1) return null;
 
-  const canvas = surface.getCanvas();
+    // Rasterize all strokes before the first fill into a CPU buffer.
+    // This gives us stroke boundaries for the flood fill without any GPU
+    // involvement — completely avoids the broken readPixels pipeline.
+    const buffer = rasterizeStrokes(paths.slice(0, firstFillIdx), w, h, scale, offsetX, offsetY);
 
-  // White background
-  const bgPaint = SkiaModule.Paint();
-  bgPaint.setColor(SkiaModule.Color('#FFFFFF'));
-  canvas.drawRect(SkiaModule.XYWHRect(0, 0, w, h), bgPaint);
-
-  // CPU fallback buffer — lazily created when GPU readPixels returns corrupt data.
-  // Replays all preceding paths (strokes + fills) so multiple fills work correctly.
-  let cpuFallbackBuffer: Uint8ClampedArray | null = null;
-
-  for (let idx = 0; idx < paths.length; idx++) {
-    const path = paths[idx];
-    if (path.type === 'fill' && path.points.length > 0) {
-      // Flood fill: take snapshot, run fill algorithm, redraw.
-      // Wrapped in try/catch so an OOM on low-memory devices
-      // skips the fill gracefully instead of crashing the app.
-      try {
+    // Process remaining paths in order so fills see correct stroke boundaries
+    for (let idx = firstFillIdx; idx < paths.length; idx++) {
+      const path = paths[idx];
+      if (path.type === 'fill' && path.points.length > 0) {
         const fillX = path.points[0].x * scale + offsetX;
         const fillY = path.points[0].y * scale + offsetY;
-        const imageInfo = {
-          colorType: SkiaColorType?.RGBA_8888 ?? 4,
-          alphaType: SkiaAlphaType?.Unpremul ?? 3,
-          width: w,
-          height: h,
-        };
-
-        if (cpuFallbackBuffer) {
-          // Already in CPU fallback mode — apply fill directly on the CPU buffer
-          const cpuChanged = floodFillPixels(cpuFallbackBuffer, w, h, fillX, fillY, hexToRgb(path.color));
-          if (cpuChanged) {
-            const cpuPixels = new Uint8Array(cpuFallbackBuffer.buffer, cpuFallbackBuffer.byteOffset, cpuFallbackBuffer.byteLength);
-            const cpuData = SkiaModule.Data.fromBytes(cpuPixels);
-            const cpuImage = SkiaModule.Image.MakeImage(imageInfo, cpuData, w * 4);
-            if (cpuImage) {
-              canvas.clear(SkiaModule.Color('transparent'));
-              canvas.drawImage(cpuImage, 0, 0);
-            }
-          }
-          continue;
-        }
-
-        // Try GPU path first
-        surface.flush();
-        const gpuSnapshot = surface.makeImageSnapshot();
-        // Convert GPU texture to a CPU-backed raster image before reading
-        // pixels. On old Adreno GPUs (Nexus 6, Android 6) readPixels on a
-        // GPU texture returns corrupt/empty data. makeNonTextureImage()
-        // copies the texture into CPU memory first, making readPixels
-        // reliable on all devices.
-        const snapshot = gpuSnapshot.makeNonTextureImage
-          ? gpuSnapshot.makeNonTextureImage()
-          : gpuSnapshot;
-        const pixels = snapshot.readPixels(0, 0, imageInfo);
-        if (pixels instanceof Uint8Array) {
-          // Create a clamped view over the existing pixel buffer (no copy)
-          const pixelData = new Uint8ClampedArray(
-            pixels.buffer,
-            pixels.byteOffset,
-            pixels.byteLength
-          );
-          // Sanity check: the top-left pixel should be near-white (background).
-          // If the buffer is all-black/transparent the GPU returned corrupt data —
-          // fall back to CPU-side boundary detection instead of skipping.
-          if (pixelData[0] < 200 || pixelData[1] < 200 || pixelData[2] < 200) {
-            // GPU readPixels failed — rebuild canvas state on CPU by replaying
-            // all preceding paths (strokes + fills) so earlier fills are preserved.
-            cpuFallbackBuffer = rasterizeStrokes(paths.slice(0, idx), w, h, scale, offsetX, offsetY);
-            // Replay preceding fills onto the CPU buffer
-            for (let j = 0; j < idx; j++) {
-              const prev = paths[j];
-              if (prev.type === 'fill' && prev.points.length > 0) {
-                const prevFillX = prev.points[0].x * scale + offsetX;
-                const prevFillY = prev.points[0].y * scale + offsetY;
-                floodFillPixels(cpuFallbackBuffer, w, h, prevFillX, prevFillY, hexToRgb(prev.color));
-              }
-            }
-            // Now apply the current fill
-            const cpuChanged = floodFillPixels(cpuFallbackBuffer, w, h, fillX, fillY, hexToRgb(path.color));
-            if (cpuChanged) {
-              const cpuPixels = new Uint8Array(cpuFallbackBuffer.buffer, cpuFallbackBuffer.byteOffset, cpuFallbackBuffer.byteLength);
-              const cpuData = SkiaModule.Data.fromBytes(cpuPixels);
-              const cpuImage = SkiaModule.Image.MakeImage(imageInfo, cpuData, w * 4);
-              if (cpuImage) {
-                canvas.clear(SkiaModule.Color('transparent'));
-                canvas.drawImage(cpuImage, 0, 0);
-              }
-            }
-            continue;
-          }
-          const changed = floodFillPixels(pixelData, w, h, fillX, fillY, hexToRgb(path.color));
-          if (changed) {
-            // Reuse the original Uint8Array view; it reflects changes via pixelData
-            const skData = SkiaModule.Data.fromBytes(pixels);
-            const filledImage = SkiaModule.Image.MakeImage(imageInfo, skData, w * 4);
-            if (filledImage) {
-              canvas.clear(SkiaModule.Color('transparent'));
-              canvas.drawImage(filledImage, 0, 0);
-            }
-          }
-        }
-      } catch (e) {
-        // OOM or other allocation failure — skip this fill silently
-        captureException(e instanceof Error ? e : new Error(String(e)), {
-          component: 'DrawingCanvas',
-          operation: 'floodFill',
-          canvasSize: `${w}x${h}`,
-        });
-      }
-    } else if (path.type !== 'fill' && path.points.length >= 2) {
-      const skiaPath = SkiaModule.Path.Make();
-      skiaPath.moveTo(
-        path.points[0].x * scale + offsetX,
-        path.points[0].y * scale + offsetY
-      );
-      for (let i = 1; i < path.points.length; i++) {
-        skiaPath.lineTo(
-          path.points[i].x * scale + offsetX,
-          path.points[i].y * scale + offsetY
-        );
-      }
-      const paint = SkiaModule.Paint();
-      paint.setColor(SkiaModule.Color(path.color));
-      paint.setStrokeWidth(path.strokeWidth * scale);
-      paint.setStyle(SkiaPaintStyle?.Stroke ?? 1);
-      paint.setStrokeCap(SkiaStrokeCap?.Round ?? 1);
-      paint.setStrokeJoin(SkiaStrokeJoin?.Round ?? 1);
-      paint.setAntiAlias(true);
-      canvas.drawPath(skiaPath, paint);
-
-      // Keep CPU fallback buffer in sync when active
-      if (cpuFallbackBuffer) {
+        floodFillPixels(buffer, w, h, fillX, fillY, hexToRgb(path.color));
+      } else if (path.type !== 'fill' && path.points.length >= 2) {
+        // Stroke after a fill: composite onto the CPU buffer so subsequent
+        // fills see it as a boundary
         const strokeBuf = rasterizeStrokes([path], w, h, scale, offsetX, offsetY);
-        // Composite: overwrite non-white pixels from stroke onto fallback buffer
         for (let i = 0; i < strokeBuf.length; i += 4) {
           if (strokeBuf[i] < 255 || strokeBuf[i + 1] < 255 || strokeBuf[i + 2] < 255) {
-            cpuFallbackBuffer[i] = strokeBuf[i];
-            cpuFallbackBuffer[i + 1] = strokeBuf[i + 1];
-            cpuFallbackBuffer[i + 2] = strokeBuf[i + 2];
-            cpuFallbackBuffer[i + 3] = strokeBuf[i + 3];
+            buffer[i] = strokeBuf[i];
+            buffer[i + 1] = strokeBuf[i + 1];
+            buffer[i + 2] = strokeBuf[i + 2];
+            buffer[i + 3] = strokeBuf[i + 3];
           }
         }
       }
     }
-  }
 
-  surface.flush();
-  return surface.makeImageSnapshot();
+    // Create Skia image directly from CPU buffer — no offscreen surface needed
+    const imageInfo = {
+      colorType: SkiaColorType?.RGBA_8888 ?? 4,
+      alphaType: SkiaAlphaType?.Unpremul ?? 3,
+      width: w,
+      height: h,
+    };
+    const pixelBytes = new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+    const skData = SkiaModule.Data.fromBytes(pixelBytes);
+    return SkiaModule.Image.MakeImage(imageInfo, skData, w * 4);
+  } catch (e) {
+    captureException(e instanceof Error ? e : new Error(String(e)), {
+      component: 'DrawingCanvas',
+      operation: 'computeCanvasImage',
+      canvasSize: `${w}x${h}`,
+    });
+    return null;
+  }
 }
 
 interface Props {
@@ -477,61 +387,37 @@ export default function DrawingCanvas({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {hasFillPaths ? (
-          // When fills are present, render the pre-computed canvas image as the base layer.
-          // Additionally overlay any strokes that were added after the last fill path so
-          // they remain visible while canvasImage is being regenerated (avoids flicker).
-          <>
-            {canvasImage && SkiaImage && (
-              <SkiaImage
-                image={canvasImage}
-                x={0}
-                y={0}
-                width={width}
-                height={height}
-              />
-            )}
-            {(() => {
-              // Find strokes appended after the last fill entry
-              let lastFillIdx = -1;
-              for (let i = nativePaths.length - 1; i >= 0; i--) {
-                if (nativePaths[i].type === 'fill') { lastFillIdx = i; break; }
-              }
-              return nativePaths.slice(lastFillIdx + 1).map((pathData, idx) => {
-                const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth, scale, offsetX, offsetY);
-                if (!skiaPath) return null;
-                return (
-                  <SkiaPath
-                    key={`overlay-${idx}`}
-                    path={skiaPath.path}
-                    color={skiaPath.color}
-                    style="stroke"
-                    strokeWidth={skiaPath.width}
-                    strokeCap="round"
-                    strokeJoin="round"
-                  />
-                );
-              });
-            })()}
-          </>
-        ) : (
-          // No fills – render stroke paths directly as Skia paths (faster, no CPU round-trip)
-          nativePaths.map((pathData, index) => {
-            const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth, scale, offsetX, offsetY);
-            if (!skiaPath) return null;
-            return (
-              <SkiaPath
-                key={`stroke-${index}`}
-                path={skiaPath.path}
-                color={skiaPath.color}
-                style="stroke"
-                strokeWidth={skiaPath.width}
-                strokeCap="round"
-                strokeJoin="round"
-              />
-            );
-          })
+        {/* Fill result as background layer (CPU-rendered, GPU-independent).
+            Strokes are always rendered as native SkiaPath on top — so even if
+            this image fails to display on old GPUs, strokes remain visible
+            instead of the canvas going white (issue #132). */}
+        {canvasImage && SkiaImage && (
+          <SkiaImage
+            image={canvasImage}
+            x={0}
+            y={0}
+            width={width}
+            height={height}
+          />
         )}
+        {/* All strokes always rendered natively by Skia for quality.
+            No mode-switching — strokes never disappear, regardless of fill state. */}
+        {nativePaths.map((pathData, index) => {
+          if (pathData.type === 'fill') return null;
+          const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth, scale, offsetX, offsetY);
+          if (!skiaPath) return null;
+          return (
+            <SkiaPath
+              key={`stroke-${index}`}
+              path={skiaPath.path}
+              color={skiaPath.color}
+              style="stroke"
+              strokeWidth={skiaPath.width}
+              strokeCap="round"
+              strokeJoin="round"
+            />
+          );
+        })}
 
         {onDrawingChange && currentNativePath.length > 1 && (() => {
           const skiaPath = createSkiaPath(currentNativePath, strokeColor, strokeWidth, 1, 0, 0);
