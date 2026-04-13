@@ -5,6 +5,7 @@ import { styles, DEFAULT_CANVAS_WIDTH } from './DrawingCanvas.shared';
 import type { DrawingPath } from './DrawingCanvas.shared';
 import { captureException } from '@services/SentryService';
 import { floodFillPixels, hexToRgb } from '@services/FloodFillService';
+import { rasterizeStrokes } from '@services/SoftwareRasterizer';
 
 // Re-export shared API so '@components/DrawingCanvas' provides a complete module on native
 export type { DrawingPath } from './DrawingCanvas.shared';
@@ -99,12 +100,42 @@ function computeCanvasImage(
   bgPaint.setColor(SkiaModule.Color('#FFFFFF'));
   canvas.drawRect(SkiaModule.XYWHRect(0, 0, w, h), bgPaint);
 
-  for (const path of paths) {
+  // CPU fallback buffer — lazily created when GPU readPixels returns corrupt data.
+  // Replays all preceding paths (strokes + fills) so multiple fills work correctly.
+  let cpuFallbackBuffer: Uint8ClampedArray | null = null;
+
+  for (let idx = 0; idx < paths.length; idx++) {
+    const path = paths[idx];
     if (path.type === 'fill' && path.points.length > 0) {
       // Flood fill: take snapshot, run fill algorithm, redraw.
       // Wrapped in try/catch so an OOM on low-memory devices
       // skips the fill gracefully instead of crashing the app.
       try {
+        const fillX = path.points[0].x * scale + offsetX;
+        const fillY = path.points[0].y * scale + offsetY;
+        const imageInfo = {
+          colorType: SkiaColorType?.RGBA_8888 ?? 4,
+          alphaType: SkiaAlphaType?.Unpremul ?? 3,
+          width: w,
+          height: h,
+        };
+
+        if (cpuFallbackBuffer) {
+          // Already in CPU fallback mode — apply fill directly on the CPU buffer
+          const cpuChanged = floodFillPixels(cpuFallbackBuffer, w, h, fillX, fillY, hexToRgb(path.color));
+          if (cpuChanged) {
+            const cpuPixels = new Uint8Array(cpuFallbackBuffer.buffer, cpuFallbackBuffer.byteOffset, cpuFallbackBuffer.byteLength);
+            const cpuData = SkiaModule.Data.fromBytes(cpuPixels);
+            const cpuImage = SkiaModule.Image.MakeImage(imageInfo, cpuData, w * 4);
+            if (cpuImage) {
+              canvas.clear(SkiaModule.Color('transparent'));
+              canvas.drawImage(cpuImage, 0, 0);
+            }
+          }
+          continue;
+        }
+
+        // Try GPU path first
         surface.flush();
         const gpuSnapshot = surface.makeImageSnapshot();
         // Convert GPU texture to a CPU-backed raster image before reading
@@ -115,12 +146,6 @@ function computeCanvasImage(
         const snapshot = gpuSnapshot.makeNonTextureImage
           ? gpuSnapshot.makeNonTextureImage()
           : gpuSnapshot;
-        const imageInfo = {
-          colorType: SkiaColorType?.RGBA_8888 ?? 4,
-          alphaType: SkiaAlphaType?.Unpremul ?? 3,
-          width: w,
-          height: h,
-        };
         const pixels = snapshot.readPixels(0, 0, imageInfo);
         if (pixels instanceof Uint8Array) {
           // Create a clamped view over the existing pixel buffer (no copy)
@@ -131,12 +156,33 @@ function computeCanvasImage(
           );
           // Sanity check: the top-left pixel should be near-white (background).
           // If the buffer is all-black/transparent the GPU returned corrupt data —
-          // skip the fill rather than destroying the canvas with clear().
+          // fall back to CPU-side boundary detection instead of skipping.
           if (pixelData[0] < 200 || pixelData[1] < 200 || pixelData[2] < 200) {
+            // GPU readPixels failed — rebuild canvas state on CPU by replaying
+            // all preceding paths (strokes + fills) so earlier fills are preserved.
+            cpuFallbackBuffer = rasterizeStrokes(paths.slice(0, idx), w, h, scale, offsetX, offsetY);
+            // Replay preceding fills onto the CPU buffer
+            for (let j = 0; j < idx; j++) {
+              const prev = paths[j];
+              if (prev.type === 'fill' && prev.points.length > 0) {
+                const prevFillX = prev.points[0].x * scale + offsetX;
+                const prevFillY = prev.points[0].y * scale + offsetY;
+                floodFillPixels(cpuFallbackBuffer, w, h, prevFillX, prevFillY, hexToRgb(prev.color));
+              }
+            }
+            // Now apply the current fill
+            const cpuChanged = floodFillPixels(cpuFallbackBuffer, w, h, fillX, fillY, hexToRgb(path.color));
+            if (cpuChanged) {
+              const cpuPixels = new Uint8Array(cpuFallbackBuffer.buffer, cpuFallbackBuffer.byteOffset, cpuFallbackBuffer.byteLength);
+              const cpuData = SkiaModule.Data.fromBytes(cpuPixels);
+              const cpuImage = SkiaModule.Image.MakeImage(imageInfo, cpuData, w * 4);
+              if (cpuImage) {
+                canvas.clear(SkiaModule.Color('transparent'));
+                canvas.drawImage(cpuImage, 0, 0);
+              }
+            }
             continue;
           }
-          const fillX = path.points[0].x * scale + offsetX;
-          const fillY = path.points[0].y * scale + offsetY;
           const changed = floodFillPixels(pixelData, w, h, fillX, fillY, hexToRgb(path.color));
           if (changed) {
             // Reuse the original Uint8Array view; it reflects changes via pixelData
@@ -176,6 +222,20 @@ function computeCanvasImage(
       paint.setStrokeJoin(SkiaStrokeJoin?.Round ?? 1);
       paint.setAntiAlias(true);
       canvas.drawPath(skiaPath, paint);
+
+      // Keep CPU fallback buffer in sync when active
+      if (cpuFallbackBuffer) {
+        const strokeBuf = rasterizeStrokes([path], w, h, scale, offsetX, offsetY);
+        // Composite: overwrite non-white pixels from stroke onto fallback buffer
+        for (let i = 0; i < strokeBuf.length; i += 4) {
+          if (strokeBuf[i] < 255 || strokeBuf[i + 1] < 255 || strokeBuf[i + 2] < 255) {
+            cpuFallbackBuffer[i] = strokeBuf[i];
+            cpuFallbackBuffer[i + 1] = strokeBuf[i + 1];
+            cpuFallbackBuffer[i + 2] = strokeBuf[i + 2];
+            cpuFallbackBuffer[i + 3] = strokeBuf[i + 3];
+          }
+        }
+      }
     }
   }
 
