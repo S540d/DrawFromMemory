@@ -5,6 +5,7 @@ import { styles, DEFAULT_CANVAS_WIDTH } from './DrawingCanvas.shared';
 import type { DrawingPath } from './DrawingCanvas.shared';
 import { captureException } from '@services/SentryService';
 import { floodFillPixels, hexToRgb } from '@services/FloodFillService';
+import { rasterizeStrokes } from '@services/SoftwareRasterizer';
 
 // Re-export shared API so '@components/DrawingCanvas' provides a complete module on native
 export type { DrawingPath } from './DrawingCanvas.shared';
@@ -131,8 +132,25 @@ function computeCanvasImage(
           );
           // Sanity check: the top-left pixel should be near-white (background).
           // If the buffer is all-black/transparent the GPU returned corrupt data —
-          // skip the fill rather than destroying the canvas with clear().
+          // fall back to CPU-side boundary detection instead of skipping.
           if (pixelData[0] < 200 || pixelData[1] < 200 || pixelData[2] < 200) {
+            // GPU readPixels failed — use software rasterizer for boundary detection.
+            // Rasterize only the stroke paths that precede this fill so the
+            // flood-fill algorithm has accurate boundaries to work with.
+            const precedingPaths = paths.slice(0, paths.indexOf(path));
+            const cpuBuffer = rasterizeStrokes(precedingPaths, w, h, scale, offsetX, offsetY);
+            const cpuFillX = path.points[0].x * scale + offsetX;
+            const cpuFillY = path.points[0].y * scale + offsetY;
+            const cpuChanged = floodFillPixels(cpuBuffer, w, h, cpuFillX, cpuFillY, hexToRgb(path.color));
+            if (cpuChanged) {
+              const cpuPixels = new Uint8Array(cpuBuffer.buffer, cpuBuffer.byteOffset, cpuBuffer.byteLength);
+              const cpuData = SkiaModule.Data.fromBytes(cpuPixels);
+              const cpuImage = SkiaModule.Image.MakeImage(imageInfo, cpuData, w * 4);
+              if (cpuImage) {
+                canvas.clear(SkiaModule.Color('transparent'));
+                canvas.drawImage(cpuImage, 0, 0);
+              }
+            }
             continue;
           }
           const fillX = path.points[0].x * scale + offsetX;
