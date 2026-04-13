@@ -28,13 +28,8 @@ export function rasterizeStrokes(
 ): Uint8ClampedArray {
   const buffer = new Uint8ClampedArray(width * height * 4);
 
-  // White background
-  for (let i = 0; i < buffer.length; i += 4) {
-    buffer[i] = 255;     // R
-    buffer[i + 1] = 255; // G
-    buffer[i + 2] = 255; // B
-    buffer[i + 3] = 255; // A
-  }
+  // White background (all RGBA channels to 255)
+  buffer.fill(255);
 
   for (const path of paths) {
     if (path.type === 'fill') continue;
