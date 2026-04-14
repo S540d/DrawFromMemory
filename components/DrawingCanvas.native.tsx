@@ -271,7 +271,8 @@ export default function DrawingCanvas({
       return;
     }
     try {
-      setFillLayers(computeNativeFillLayers(nativePaths, width, height, scale, offsetX, offsetY));
+      const layers = computeNativeFillLayers(nativePaths, width, height, scale, offsetX, offsetY);
+      setFillLayers(layers);
     } catch (e) {
       captureException(e instanceof Error ? e : new Error(String(e)), {
         component: 'DrawingCanvas',
