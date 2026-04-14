@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, Platform, useWindowDimensions } from 'react-native';
 import { t } from '@services/i18n';
 import { styles, DEFAULT_CANVAS_WIDTH } from './DrawingCanvas.shared';
@@ -67,6 +67,12 @@ interface Props {
   tool?: 'brush' | 'fill';
   paths?: DrawingPath[];
   onDrawingChange?: (paths: DrawingPath[]) => void;
+}
+
+function serializePath(path: DrawingPath): string {
+  return `${path.type}:${path.color}:${path.strokeWidth}:${path.points
+    .map((point) => `${point.x},${point.y}`)
+    .join(';')}`;
 }
 
 /**
@@ -173,6 +179,7 @@ export default function DrawingCanvas({
   const [nativePaths, setNativePaths] = useState(paths);
   const [currentNativePath, setCurrentNativePath] = useState<{ x: number; y: number }[]>([]);
   const [fillLayers, setFillLayers] = useState<NativeFillLayer[]>([]);
+  const fillLayerComputationKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
     setNativePaths(paths);
@@ -262,25 +269,106 @@ export default function DrawingCanvas({
 
   const { scale, offsetX, offsetY } = !onDrawingChange ? getScaledPaths() : { scale: 1, offsetX: 0, offsetY: 0 };
 
-  const hasFillPaths = nativePaths.some(p => p.type === 'fill');
+  const strokePaths = useMemo(
+    () => nativePaths.filter((path) => path.type !== 'fill'),
+    [nativePaths]
+  );
 
-  // Recompute native fill layers whenever fill paths change.
+  const lastFillIndex = useMemo(() => {
+    for (let index = nativePaths.length - 1; index >= 0; index -= 1) {
+      if (nativePaths[index].type === 'fill') {
+        return index;
+      }
+    }
+
+    return -1;
+  }, [nativePaths]);
+
+  const hasFillPaths = lastFillIndex >= 0;
+
+  const fillReplaySignature = useMemo(() => {
+    if (!hasFillPaths) return '';
+
+    return nativePaths
+      .slice(0, lastFillIndex + 1)
+      .map(serializePath)
+      .join('|');
+  }, [nativePaths, hasFillPaths, lastFillIndex]);
+  const fillLayerComputationKey = `${width}:${height}:${scale}:${offsetX}:${offsetY}:${fillReplaySignature}`;
+  const isSkiaRectReady = Boolean(SkiaRect);
+  const isSkiaPathReady = Boolean(SkiaPath && SkiaModule);
+
+  // Recompute native fill layers only when replayed fill content or layout changes.
   useEffect(() => {
     if (!hasFillPaths) {
+      fillLayerComputationKeyRef.current = null;
       setFillLayers([]);
       return;
     }
+
+    if (fillLayerComputationKeyRef.current === fillLayerComputationKey) {
+      return;
+    }
+
+    fillLayerComputationKeyRef.current = fillLayerComputationKey;
+
     try {
-      setFillLayers(computeNativeFillLayers(nativePaths, width, height, scale, offsetX, offsetY));
+      setFillLayers(
+        computeNativeFillLayers(
+          nativePaths.slice(0, lastFillIndex + 1),
+          width,
+          height,
+          scale,
+          offsetX,
+          offsetY
+        )
+      );
     } catch (e) {
       captureException(e instanceof Error ? e : new Error(String(e)), {
         component: 'DrawingCanvas',
         operation: 'computeNativeFillLayers',
         canvasSize: `${width}x${height}`,
       });
+      fillLayerComputationKeyRef.current = null;
       setFillLayers([]);
     }
-  }, [nativePaths, width, height, scale, offsetX, offsetY, hasFillPaths]);
+  }, [nativePaths, width, height, scale, offsetX, offsetY, hasFillPaths, lastFillIndex, fillLayerComputationKey]);
+
+  const fillRectElements = useMemo(() => {
+    if (!isSkiaRectReady) return null;
+
+    return fillLayers.flatMap((layer, layerIndex) =>
+      layer.spans.map((span, spanIndex) => (
+        <SkiaRect
+          key={`fill-${layerIndex}-${span.y}-${span.x}-${spanIndex}`}
+          x={span.x}
+          y={span.y}
+          width={span.width}
+          height={1}
+          color={layer.color}
+        />
+      ))
+    );
+  }, [fillLayers, isSkiaRectReady]);
+
+  const strokeElements = useMemo(() => (
+    !isSkiaPathReady ? null :
+    strokePaths.map((pathData, index) => {
+      const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth, scale, offsetX, offsetY);
+      if (!skiaPath) return null;
+      return (
+        <SkiaPath
+          key={`stroke-${index}`}
+          path={skiaPath.path}
+          color={skiaPath.color}
+          style="stroke"
+          strokeWidth={skiaPath.width}
+          strokeCap="round"
+          strokeJoin="round"
+        />
+      );
+    })
+  ), [strokePaths, scale, offsetX, offsetY, isSkiaPathReady]);
 
   if (!SkiaCanvas || !SkiaModule) {
     return (
@@ -304,51 +392,12 @@ export default function DrawingCanvas({
           // On older Android GPUs, Skia image creation from CPU flood-fill buffers can
           // render invisibly. Render fills as rect spans instead, then draw strokes above.
           <>
-            {SkiaRect && fillLayers.flatMap((layer, layerIndex) =>
-              layer.spans.map((span, spanIndex) => (
-                <SkiaRect
-                  key={`fill-${layerIndex}-${span.y}-${span.x}-${spanIndex}`}
-                  x={span.x}
-                  y={span.y}
-                  width={span.width}
-                  height={1}
-                  color={layer.color}
-                />
-              ))
-            )}
-            {nativePaths.map((pathData, index) => {
-              const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth, scale, offsetX, offsetY);
-              if (!skiaPath) return null;
-              return (
-                <SkiaPath
-                  key={`stroke-${index}`}
-                  path={skiaPath.path}
-                  color={skiaPath.color}
-                  style="stroke"
-                  strokeWidth={skiaPath.width}
-                  strokeCap="round"
-                  strokeJoin="round"
-                />
-              );
-            })}
+            {fillRectElements}
+            {strokeElements}
           </>
         ) : (
           // No fills – render stroke paths directly as Skia paths (faster, no CPU round-trip)
-          nativePaths.map((pathData, index) => {
-            const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth, scale, offsetX, offsetY);
-            if (!skiaPath) return null;
-            return (
-              <SkiaPath
-                key={`stroke-${index}`}
-                path={skiaPath.path}
-                color={skiaPath.color}
-                style="stroke"
-                strokeWidth={skiaPath.width}
-                strokeCap="round"
-                strokeJoin="round"
-              />
-            );
-          })
+          strokeElements
         )}
 
         {onDrawingChange && currentNativePath.length > 1 && (() => {
