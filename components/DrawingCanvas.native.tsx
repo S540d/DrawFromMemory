@@ -180,6 +180,9 @@ export default function DrawingCanvas({
   const [currentNativePath, setCurrentNativePath] = useState<{ x: number; y: number }[]>([]);
   const [fillLayers, setFillLayers] = useState<NativeFillLayer[]>([]);
   const fillLayerComputationKeyRef = useRef<string | null>(null);
+  const fillReplaySignatureCacheRef = useRef<{ paths: DrawingPath[]; signature: string }>({ paths: [], signature: '' });
+  const pathRenderKeysRef = useRef(new WeakMap<DrawingPath, string>());
+  const nextPathRenderKeyRef = useRef(0);
 
   useEffect(() => {
     setNativePaths(paths);
@@ -286,14 +289,30 @@ export default function DrawingCanvas({
 
   const hasFillPaths = lastFillIndex >= 0;
 
-  const fillReplaySignature = useMemo(() => {
-    if (!hasFillPaths) return '';
+  const fillReplayPaths = useMemo(
+    () => (hasFillPaths ? nativePaths.slice(0, lastFillIndex + 1) : []),
+    [nativePaths, hasFillPaths, lastFillIndex]
+  );
 
-    return nativePaths
-      .slice(0, lastFillIndex + 1)
-      .map(serializePath)
-      .join('|');
-  }, [nativePaths, hasFillPaths, lastFillIndex]);
+  const fillReplaySignature = useMemo(() => {
+    if (!hasFillPaths) {
+      fillReplaySignatureCacheRef.current = { paths: [], signature: '' };
+      return '';
+    }
+
+    const cachedReplay = fillReplaySignatureCacheRef.current;
+    const replayPathsChanged = cachedReplay.paths.length !== fillReplayPaths.length
+      || cachedReplay.paths.some((path, index) => path !== fillReplayPaths[index]);
+
+    if (replayPathsChanged) {
+      fillReplaySignatureCacheRef.current = {
+        paths: fillReplayPaths,
+        signature: fillReplayPaths.map(serializePath).join('|'),
+      };
+    }
+
+    return fillReplaySignatureCacheRef.current.signature;
+  }, [fillReplayPaths, hasFillPaths]);
   const fillLayerComputationKey = `${width}:${height}:${scale}:${offsetX}:${offsetY}:${fillReplaySignature}`;
   const isSkiaRectReady = Boolean(SkiaRect);
   const isSkiaPathReady = Boolean(SkiaPath && SkiaModule);
@@ -340,7 +359,7 @@ export default function DrawingCanvas({
     return fillLayers.flatMap((layer, layerIndex) =>
       layer.spans.map((span, spanIndex) => (
         <SkiaRect
-          key={`fill-${layerIndex}-${span.y}-${span.x}-${span.width}-${spanIndex}`}
+          key={`fill-${layerIndex}-${layer.color}-${span.y}-${span.x}-${span.width}-${spanIndex}`}
           x={span.x}
           y={span.y}
           width={span.width}
@@ -357,14 +376,22 @@ export default function DrawingCanvas({
     const pathOccurrenceCounts = new Map<string, number>();
 
     return strokePaths.map((pathData) => {
-      const serializedPath = serializePath(pathData);
-      const occurrence = pathOccurrenceCounts.get(serializedPath) ?? 0;
-      pathOccurrenceCounts.set(serializedPath, occurrence + 1);
+      let pathRenderKey = pathRenderKeysRef.current.get(pathData);
+
+      if (!pathRenderKey) {
+        const serializedPath = serializePath(pathData);
+        const occurrence = pathOccurrenceCounts.get(serializedPath) ?? 0;
+        pathOccurrenceCounts.set(serializedPath, occurrence + 1);
+        pathRenderKey = `stroke-${serializedPath}-${occurrence}-${nextPathRenderKeyRef.current}`;
+        nextPathRenderKeyRef.current += 1;
+        pathRenderKeysRef.current.set(pathData, pathRenderKey);
+      }
+
       const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth, scale, offsetX, offsetY);
       if (!skiaPath) return null;
       return (
         <SkiaPath
-          key={`stroke-${serializedPath}-${occurrence}`}
+          key={pathRenderKey}
           path={skiaPath.path}
           color={skiaPath.color}
           style="stroke"
