@@ -340,7 +340,7 @@ export default function DrawingCanvas({
     return fillLayers.flatMap((layer, layerIndex) =>
       layer.spans.map((span, spanIndex) => (
         <SkiaRect
-          key={`fill-${layerIndex}-${span.y}-${span.x}-${spanIndex}`}
+          key={`fill-${layerIndex}-${span.y}-${span.x}-${span.width}-${spanIndex}`}
           x={span.x}
           y={span.y}
           width={span.width}
@@ -351,14 +351,20 @@ export default function DrawingCanvas({
     );
   }, [fillLayers, isSkiaRectReady]);
 
-  const strokeElements = useMemo(() => (
-    !isSkiaPathReady ? null :
-    strokePaths.map((pathData, index) => {
+  const strokeElements = useMemo(() => {
+    if (!isSkiaPathReady) return null;
+
+    const pathOccurrenceCounts = new Map<string, number>();
+
+    return strokePaths.map((pathData) => {
+      const serializedPath = serializePath(pathData);
+      const occurrence = pathOccurrenceCounts.get(serializedPath) ?? 0;
+      pathOccurrenceCounts.set(serializedPath, occurrence + 1);
       const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth, scale, offsetX, offsetY);
       if (!skiaPath) return null;
       return (
         <SkiaPath
-          key={`stroke-${index}`}
+          key={`stroke-${serializedPath}-${occurrence}`}
           path={skiaPath.path}
           color={skiaPath.color}
           style="stroke"
@@ -367,8 +373,8 @@ export default function DrawingCanvas({
           strokeJoin="round"
         />
       );
-    })
-  ), [strokePaths, scale, offsetX, offsetY, isSkiaPathReady]);
+    });
+  }, [strokePaths, scale, offsetX, offsetY, isSkiaPathReady]);
 
   if (!SkiaCanvas || !SkiaModule) {
     return (
