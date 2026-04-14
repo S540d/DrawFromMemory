@@ -313,7 +313,7 @@ export default function DrawingCanvas({
 
     return fillReplaySignatureCacheRef.current.signature;
   }, [fillReplayPaths, hasFillPaths]);
-  const fillLayerComputationKey = `${width}:${height}:${scale}:${offsetX}:${offsetY}:${fillReplaySignature}`;
+  const fillLayerComputationKey = JSON.stringify([width, height, scale, offsetX, offsetY, fillReplaySignature]);
   const isSkiaRectReady = Boolean(SkiaRect);
   const isSkiaPathReady = Boolean(SkiaPath && SkiaModule);
 
@@ -359,7 +359,7 @@ export default function DrawingCanvas({
     return fillLayers.flatMap((layer, layerIndex) =>
       layer.spans.map((span, spanIndex) => (
         <SkiaRect
-          key={`fill-${layerIndex}-${layer.color}-${span.y}-${span.x}-${span.width}-${spanIndex}`}
+          key={JSON.stringify(['fill', layerIndex, layer.color, span.y, span.x, span.width, spanIndex])}
           x={span.x}
           y={span.y}
           width={span.width}
@@ -373,16 +373,11 @@ export default function DrawingCanvas({
   const strokeElements = useMemo(() => {
     if (!isSkiaPathReady) return null;
 
-    const pathOccurrenceCounts = new Map<string, number>();
-
     return strokePaths.map((pathData) => {
       let pathRenderKey = pathRenderKeysRef.current.get(pathData);
 
       if (!pathRenderKey) {
-        const serializedPath = serializePath(pathData);
-        const occurrence = pathOccurrenceCounts.get(serializedPath) ?? 0;
-        pathOccurrenceCounts.set(serializedPath, occurrence + 1);
-        pathRenderKey = `stroke-${serializedPath}-${occurrence}-${nextPathRenderKeyRef.current}`;
+        pathRenderKey = `stroke-${nextPathRenderKeyRef.current}`;
         nextPathRenderKeyRef.current += 1;
         pathRenderKeysRef.current.set(pathData, pathRenderKey);
       }
