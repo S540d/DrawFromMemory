@@ -11,6 +11,12 @@ export interface RGBAColor {
   a: number;
 }
 
+export interface FloodFillSpan {
+  x: number;
+  y: number;
+  width: number;
+}
+
 export function hexToRgb(hex: string): RGBAColor {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
@@ -66,7 +72,8 @@ export function floodFillPixels(
   height: number,
   startX: number,
   startY: number,
-  targetColor: RGBAColor
+  targetColor: RGBAColor,
+  spans?: FloodFillSpan[]
 ): boolean {
   const x0 = Math.floor(startX);
   const y0 = Math.floor(startY);
@@ -176,15 +183,30 @@ export function floodFillPixels(
 
   if (filledCount === 0) return false;
 
-  // Step 3 — scan the buffer once and write targetColor to pixels marked as
-  // filled in the bitfield.
-  for (let i = 0; i < totalPixels; i++) {
-    if (bfGet(filled, i)) {
-      const p = i * 4;
-      pixels[p]     = targetColor.r;
-      pixels[p + 1] = targetColor.g;
-      pixels[p + 2] = targetColor.b;
-      pixels[p + 3] = targetColor.a;
+  // Step 3 — scan the buffer once, write targetColor to pixels marked as
+  // filled in the bitfield, and optionally compress them into horizontal spans
+  // for native rect-based rendering.
+  for (let y = 0; y < height; y++) {
+    const rowStart = y * width;
+    let x = 0;
+
+    while (x < width) {
+      if (!bfGet(filled, rowStart + x)) {
+        x++;
+        continue;
+      }
+
+      const spanStart = x;
+      while (x < width && bfGet(filled, rowStart + x)) {
+        const p = (rowStart + x) * 4;
+        pixels[p] = targetColor.r;
+        pixels[p + 1] = targetColor.g;
+        pixels[p + 2] = targetColor.b;
+        pixels[p + 3] = targetColor.a;
+        x++;
+      }
+
+      spans?.push({ x: spanStart, y, width: x - spanStart });
     }
   }
 

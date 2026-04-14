@@ -12,6 +12,42 @@
 import type { DrawingPath } from '@components/DrawingCanvas.shared';
 import { hexToRgb, type RGBAColor } from './FloodFillService';
 
+export function createWhitePixelBuffer(width: number, height: number): Uint8ClampedArray {
+  const buffer = new Uint8ClampedArray(width * height * 4);
+  buffer.fill(255);
+  return buffer;
+}
+
+export function rasterizePathIntoBuffer(
+  buffer: Uint8ClampedArray,
+  path: DrawingPath,
+  width: number,
+  height: number,
+  scale: number,
+  offsetX: number,
+  offsetY: number
+): void {
+  if (path.type === 'fill') return;
+  if (path.points.length < 2) return;
+
+  const color = hexToRgb(path.color);
+  const radius = Math.max(1, Math.round((path.strokeWidth * scale) / 2));
+
+  // Draw each segment
+  for (let i = 0; i < path.points.length - 1; i++) {
+    const x0 = Math.round(path.points[i].x * scale + offsetX);
+    const y0 = Math.round(path.points[i].y * scale + offsetY);
+    const x1 = Math.round(path.points[i + 1].x * scale + offsetX);
+    const y1 = Math.round(path.points[i + 1].y * scale + offsetY);
+    drawThickLine(buffer, width, height, x0, y0, x1, y1, radius, color);
+  }
+
+  // Draw round cap at the start point
+  const startX = Math.round(path.points[0].x * scale + offsetX);
+  const startY = Math.round(path.points[0].y * scale + offsetY);
+  fillCircle(buffer, width, height, startX, startY, radius, color);
+}
+
 /**
  * Rasterize stroke paths into a CPU pixel buffer.
  * Fill paths are skipped — they will be applied via floodFillPixels on this buffer.
@@ -26,31 +62,10 @@ export function rasterizeStrokes(
   offsetX: number,
   offsetY: number
 ): Uint8ClampedArray {
-  const buffer = new Uint8ClampedArray(width * height * 4);
-
-  // White background (all RGBA channels to 255)
-  buffer.fill(255);
+  const buffer = createWhitePixelBuffer(width, height);
 
   for (const path of paths) {
-    if (path.type === 'fill') continue;
-    if (path.points.length < 2) continue;
-
-    const color = hexToRgb(path.color);
-    const radius = Math.max(1, Math.round((path.strokeWidth * scale) / 2));
-
-    // Draw each segment
-    for (let i = 0; i < path.points.length - 1; i++) {
-      const x0 = Math.round(path.points[i].x * scale + offsetX);
-      const y0 = Math.round(path.points[i].y * scale + offsetY);
-      const x1 = Math.round(path.points[i + 1].x * scale + offsetX);
-      const y1 = Math.round(path.points[i + 1].y * scale + offsetY);
-      drawThickLine(buffer, width, height, x0, y0, x1, y1, radius, color);
-    }
-
-    // Draw round cap at the start point
-    const startX = Math.round(path.points[0].x * scale + offsetX);
-    const startY = Math.round(path.points[0].y * scale + offsetY);
-    fillCircle(buffer, width, height, startX, startY, radius, color);
+    rasterizePathIntoBuffer(buffer, path, width, height, scale, offsetX, offsetY);
   }
 
   return buffer;
