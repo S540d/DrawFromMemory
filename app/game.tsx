@@ -284,7 +284,7 @@ export default function GameScreen() {
     return (
       <ScrollView
         style={[styles.phaseContainer, { padding: 0 }]}
-        contentContainerStyle={[styles.resultContent, { paddingBottom: Math.max(insets.bottom, Spacing.md) }]}
+        contentContainerStyle={styles.resultContent}
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.phaseTitle}>{t('game.result.title')}</Text>
@@ -380,7 +380,7 @@ export default function GameScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingBottom: insets.bottom }]}>
       {/* Header */}
       <View style={[styles.header, { paddingVertical: layout.headerPaddingVertical, paddingHorizontal: layout.headerPaddingHorizontal }]}>
         <TouchableOpacity
