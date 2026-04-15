@@ -598,7 +598,7 @@ export default function LevelImageDisplay({ image, size = 300, revealStep }: Pro
 
   // Progressive reveal: only show children up to revealStep
   if (revealStep !== undefined) {
-    const children = React.Children.toArray(svgElement.props.children);
+    const children = React.Children.toArray((svgElement.props as { children?: React.ReactNode }).children);
     const visibleChildren = children.slice(0, revealStep + 1);
     const cloned = React.cloneElement(svgElement, {}, ...visibleChildren);
     return (

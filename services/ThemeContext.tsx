@@ -187,7 +187,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     let isMounted = true;
 
     // Set initial system theme after mount (client-side only)
-    setSystemTheme(Appearance.getColorScheme() || 'light');
+    const initialScheme = Appearance.getColorScheme();
+    setSystemTheme(initialScheme === 'dark' ? 'dark' : 'light');
 
     const initTheme = async () => {
       try {
@@ -204,7 +205,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     // Listen to system theme changes
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       if (isMounted) {
-        setSystemTheme(colorScheme || 'light');
+        setSystemTheme(colorScheme === 'dark' ? 'dark' : 'light');
       }
     });
 
