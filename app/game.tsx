@@ -284,7 +284,7 @@ export default function GameScreen() {
     return (
       <ScrollView
         style={[styles.phaseContainer, { padding: 0 }]}
-        contentContainerStyle={[styles.resultContent, { paddingBottom: Spacing.md }]}
+        contentContainerStyle={styles.resultContent}
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.phaseTitle}>{t('game.result.title')}</Text>

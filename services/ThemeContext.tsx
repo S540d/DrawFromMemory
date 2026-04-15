@@ -9,6 +9,11 @@ import storageManager from './StorageManager';
 
 export type Theme = 'light' | 'dark' | 'system';
 
+/** Maps ColorSchemeName (which can be null or "unspecified") to a concrete light/dark value. */
+function normalizeColorScheme(scheme: ReturnType<typeof Appearance.getColorScheme>): 'light' | 'dark' {
+  return scheme === 'dark' ? 'dark' : 'light';
+}
+
 export interface ThemeColors {
   // Primary
   primary: string;
@@ -187,8 +192,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     let isMounted = true;
 
     // Set initial system theme after mount (client-side only)
-    const initialScheme = Appearance.getColorScheme();
-    setSystemTheme(initialScheme === 'dark' ? 'dark' : 'light');
+    setSystemTheme(normalizeColorScheme(Appearance.getColorScheme()));
 
     const initTheme = async () => {
       try {
@@ -205,7 +209,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     // Listen to system theme changes
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       if (isMounted) {
-        setSystemTheme(colorScheme === 'dark' ? 'dark' : 'light');
+        setSystemTheme(normalizeColorScheme(colorScheme));
       }
     });
 
