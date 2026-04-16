@@ -189,7 +189,7 @@ jobs:
           node-version: '20'
 
       - name: Run npm audit
-        run: npm audit --audit-level=moderate || true
+        run: npm audit --audit-level=high
 
       - name: Check for sensitive data
         run: |
