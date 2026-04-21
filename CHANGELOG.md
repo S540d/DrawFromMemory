@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.4] - 2026-04-21
+
+### Fixed
+- Android navigation bar overlap: `paddingBottom: insets.bottom` auf äußersten Container gesetzt, gilt für alle 3 Phasen (#143)
+- TypeScript: `ColorSchemeName` Mapping in `ThemeContext.tsx`, `svgElement.props`-Cast in `LevelImageDisplay.tsx` (#133, #143)
+- Native flood-fill auf alten Android-Geräten (Nexus 6 / Adreno 420): vollständige Ersetzung des Skia-Pixel-Roundtrips durch Skia Rect-Span Rendering — Fills werden als horizontale Run-Length-Spans als `<Rect>`-Elemente gerendert (#132, #138, #141)
+- Scanline-Algorithmus für Flood-Fill (O(rows) statt O(pixels) Stack-Tiefe) (#130)
+- Flood-Fill Speicheroptimierung: 1-Bit-Palette statt RGBA-Buffer (~20× weniger RAM) (#131)
+
+### Security
+- CI: `npm audit --audit-level=high` statt `--audit-level=moderate || true` — Pipeline blockiert jetzt bei echten Bedrohungen (#110, #144)
+- Abhängigkeiten: handlebars (critical), lodash, node-forge, @xmldom/xmldom, picomatch (alle high) via `npm audit fix` behoben (#144)
+
 ## [1.3.0] - 2026-04-11
 
 ### Fixed
@@ -107,7 +120,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - App icon assets
 
-[Unreleased]: https://github.com/S540d/DrawFromMemory/compare/v1.2.6...HEAD
+[Unreleased]: https://github.com/S540d/DrawFromMemory/compare/v1.3.4...HEAD
+[1.3.4]: https://github.com/S540d/DrawFromMemory/compare/v1.3.0...v1.3.4
+[1.3.0]: https://github.com/S540d/DrawFromMemory/compare/v1.2.6...v1.3.0
 [1.2.6]: https://github.com/S540d/DrawFromMemory/compare/v1.2.5...v1.2.6
 [1.2.5]: https://github.com/S540d/DrawFromMemory/compare/v1.2.4...v1.2.5
 [1.2.4]: https://github.com/S540d/DrawFromMemory/compare/v1.2.3...v1.2.4
