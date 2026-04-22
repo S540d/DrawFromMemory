@@ -18,7 +18,15 @@ let isInitialized = false;
 const listeners: Set<LanguageChangeListener> = new Set();
 
 function notifyListeners(lang: Language): void {
-  listeners.forEach((fn) => fn(lang));
+  listeners.forEach((fn) => {
+    try {
+      fn(lang);
+    } catch (error) {
+      if (__DEV__) {
+        console.warn('Language change listener failed:', error);
+      }
+    }
+  });
 }
 
 export function addLanguageChangeListener(fn: LanguageChangeListener): () => void {
