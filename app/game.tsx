@@ -117,7 +117,7 @@ export default function GameScreen() {
             <ErrorBoundary>
               <LevelImageDisplay image={currentImage} size={layout.memorizeImageSize} revealStep={revealStep} />
             </ErrorBoundary>
-            <Text style={styles.imageName}>{currentImage.displayName}</Text>
+            <Text style={styles.imageName}>{currentLang === 'en' ? currentImage.displayNameEn : currentImage.displayName}</Text>
             <Text style={styles.imageInfo}>
               Level {levelNumber} • {currentImage.strokeCount} Striche
             </Text>

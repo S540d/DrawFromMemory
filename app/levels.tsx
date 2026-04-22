@@ -59,7 +59,7 @@ export default function LevelsScreen() {
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: colors.surface }]}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text style={[styles.backButton, { color: colors.primary }]}>← Zurück</Text>
+          <Text style={[styles.backButton, { color: colors.primary }]}>← {t('common.back')}</Text>
         </TouchableOpacity>
         <Text style={[styles.title, { color: colors.text.primary }]}>{t('levels.title')}</Text>
       </View>
