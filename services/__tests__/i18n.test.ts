@@ -21,13 +21,14 @@ describe('i18n Service', () => {
   let getLanguage: any;
   let initLanguage: any;
   let getDeviceLanguage: any;
+  let addLanguageChangeListener: any;
   let storageManager: any;
   let Localization: any;
 
   beforeEach(() => {
     // Reset the module to clear isInitialized flag
     jest.resetModules();
-    
+
     // Re-import modules
     storageManager = require('../StorageManager').default;
     Localization = require('expo-localization');
@@ -36,7 +37,8 @@ describe('i18n Service', () => {
     getLanguage = i18n.getLanguage;
     initLanguage = i18n.initLanguage;
     getDeviceLanguage = i18n.getDeviceLanguage;
-    
+    addLanguageChangeListener = i18n.addLanguageChangeListener;
+
     // Clear mock history
     jest.clearAllMocks();
   });
@@ -132,6 +134,47 @@ describe('i18n Service', () => {
       await initLanguage();
       
       expect(consoleWarnSpy).toHaveBeenCalledWith('Failed to load language from storage:', expect.any(Error));
+      expect(getLanguage()).toBe('en');
+      consoleWarnSpy.mockRestore();
+    });
+  });
+
+  describe('addLanguageChangeListener', () => {
+    it('should call listener after initLanguage resolves', async () => {
+      storageManager.getSetting.mockResolvedValueOnce('de');
+      const listener = jest.fn();
+      addLanguageChangeListener(listener);
+
+      await initLanguage();
+
+      expect(listener).toHaveBeenCalledWith('de');
+    });
+
+    it('should call listener after setLanguage', async () => {
+      const listener = jest.fn();
+      addLanguageChangeListener(listener);
+
+      await setLanguage('en');
+
+      expect(listener).toHaveBeenCalledWith('en');
+    });
+
+    it('should not call listener after unsubscribing', async () => {
+      const listener = jest.fn();
+      const unsubscribe = addLanguageChangeListener(listener);
+      unsubscribe();
+
+      await setLanguage('en');
+
+      expect(listener).not.toHaveBeenCalled();
+    });
+
+    it('should not break language init if a listener throws', async () => {
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      storageManager.getSetting.mockResolvedValueOnce('en');
+      addLanguageChangeListener(() => { throw new Error('listener error'); });
+
+      await expect(initLanguage()).resolves.toBeUndefined();
       expect(getLanguage()).toBe('en');
       consoleWarnSpy.mockRestore();
     });

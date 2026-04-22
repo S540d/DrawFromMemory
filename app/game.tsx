@@ -117,7 +117,7 @@ export default function GameScreen() {
             <ErrorBoundary>
               <LevelImageDisplay image={currentImage} size={layout.memorizeImageSize} revealStep={revealStep} />
             </ErrorBoundary>
-            <Text style={styles.imageName}>{currentImage.displayName}</Text>
+            <Text style={styles.imageName}>{currentLang === 'en' ? currentImage.displayNameEn : currentImage.displayName}</Text>
             <Text style={styles.imageInfo}>
               Level {levelNumber} • {currentImage.strokeCount} Striche
             </Text>
@@ -271,11 +271,11 @@ export default function GameScreen() {
   // Render Result Phase
   const renderResultPhase = () => {
     const getFeedbackText = (rating: number) => {
-      if (rating === 5) return 'Perfekt! Du bist ein Gedächtnis-Meister!';
-      if (rating === 4) return 'Sehr gut! Fast perfekt!';
-      if (rating === 3) return 'Gut gemacht! Weiter so!';
-      if (rating >= 1) return 'Das war schon besser als vorhin, willst du es trotzdem nochmal versuchen?';
-      return 'Wie viele Sterne gibst du dir?';
+      if (rating === 5) return t('game.result.feedback5');
+      if (rating === 4) return t('game.result.feedback4');
+      if (rating === 3) return t('game.result.feedback3');
+      if (rating >= 1) return t('game.result.feedback1');
+      return t('game.result.tapStars');
     };
 
     // Berechne responsive Bildgröße: 40% der Bildschirmbreite, min 150px, max 250px
@@ -297,7 +297,7 @@ export default function GameScreen() {
             <Text style={styles.feedbackText}>{getFeedbackText(userRating)}</Text>
           </AnimatedFeedback>
           {userRating === 0 && (
-            <Text style={styles.feedbackText}>Tippe auf die Sterne, um dich zu bewerten!</Text>
+            <Text style={styles.feedbackText}>{t('game.result.tapStars')}</Text>
           )}
         </View>
 
@@ -388,7 +388,7 @@ export default function GameScreen() {
           accessibilityLabel={t('common.back')}
           accessibilityRole="button"
         >
-          <Text style={styles.backButton}>← Zurück</Text>
+          <Text style={styles.backButton}>← {t('common.back')}</Text>
         </TouchableOpacity>
         <View style={styles.headerCenter}>
           <Text style={styles.levelBadge}>Level {levelNumber}</Text>

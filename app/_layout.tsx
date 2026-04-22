@@ -5,8 +5,8 @@ import { ThemeProvider, useTheme } from '@services/ThemeContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import AnimatedSplashScreen from '@components/AnimatedSplashScreen';
-import { useCallback, useEffect, useState } from 'react';
-import { initLanguage } from '@services/i18n';
+import { useCallback, useEffect, useState, useReducer } from 'react';
+import { initLanguage, addLanguageChangeListener } from '@services/i18n';
 import { initSentry } from '@services/SentryService';
 
 // Initialize Sentry as early as possible (no-op on web or without DSN)
@@ -19,12 +19,15 @@ function RootLayoutContent() {
   const { theme, colors } = useTheme();
   const [showSplash, setShowSplash] = useState(true);
   const handleSplashFinish = useCallback(() => setShowSplash(false), []);
+  const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
 
-  // Initialize language from storage
+  // Initialize language from storage, then re-render so all screens show the correct language
   useEffect(() => {
+    const unsubscribe = addLanguageChangeListener(() => forceUpdate());
     initLanguage().catch((error) => {
       console.error('Failed to initialize language:', error);
     });
+    return unsubscribe;
   }, []);
 
   return (
