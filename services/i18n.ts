@@ -10,10 +10,21 @@ import * as Localization from 'expo-localization';
 
 type Language = 'de' | 'en';
 type TranslationKey = string;
+type LanguageChangeListener = (lang: Language) => void;
 
 const translations = { de, en };
 let currentLanguage: Language = 'en';
 let isInitialized = false;
+const listeners: Set<LanguageChangeListener> = new Set();
+
+function notifyListeners(lang: Language): void {
+  listeners.forEach((fn) => fn(lang));
+}
+
+export function addLanguageChangeListener(fn: LanguageChangeListener): () => void {
+  listeners.add(fn);
+  return () => listeners.delete(fn);
+}
 
 /**
  * Detects the device's locale and returns a supported language
@@ -68,6 +79,7 @@ export async function initLanguage(): Promise<void> {
       await storageManager.setSetting('language', currentLanguage);
     }
     isInitialized = true;
+    notifyListeners(currentLanguage);
   } catch (error) {
     if (__DEV__) {
       console.warn('Failed to load language from storage:', error);
@@ -83,6 +95,7 @@ export async function initLanguage(): Promise<void> {
       }
     }
     isInitialized = true; // Mark as initialized even on error to avoid repeated attempts
+    notifyListeners(currentLanguage);
   }
 }
 
@@ -91,6 +104,7 @@ export async function initLanguage(): Promise<void> {
  */
 export async function setLanguage(lang: Language): Promise<void> {
   currentLanguage = lang;
+  notifyListeners(lang);
   try {
     await storageManager.setSetting('language', lang);
   } catch (error) {
@@ -156,4 +170,4 @@ export function useTranslation() {
   };
 }
 
-export default { t, setLanguage, getLanguage, useTranslation, initLanguage, getDeviceLanguage };
+export default { t, setLanguage, getLanguage, useTranslation, initLanguage, getDeviceLanguage, addLanguageChangeListener };
