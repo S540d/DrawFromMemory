@@ -44,6 +44,11 @@
     },
     "result": {
       "title": "Bewerte selbst:",
+      "tapStars": "Tippe auf die Sterne, um dich zu bewerten!",
+      "feedback5": "Perfekt! Du bist ein Gedächtnis-Meister!",
+      "feedback4": "Sehr gut! Fast perfekt!",
+      "feedback3": "Gut gemacht! Weiter so!",
+      "feedback1": "Das war schon besser als vorhin, willst du es trotzdem nochmal versuchen?",
       "yourDrawing": "Deine Zeichnung",
       "original": "Original",
       "rating": "Deine Bewertung",

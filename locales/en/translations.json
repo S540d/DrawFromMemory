@@ -44,6 +44,11 @@
     },
     "result": {
       "title": "Rate yourself:",
+      "tapStars": "Tap the stars to rate yourself!",
+      "feedback5": "Perfect! You are a memory master!",
+      "feedback4": "Very good! Almost perfect!",
+      "feedback3": "Well done! Keep it up!",
+      "feedback1": "That was already better than before, do you still want to try again?",
       "yourDrawing": "Your Drawing",
       "original": "Original",
       "rating": "Your Rating",
