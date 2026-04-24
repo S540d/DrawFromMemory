@@ -33,6 +33,8 @@ export default function GameScreen() {
   const { screenWidth, isSmall } = layout;
   const [showSettings, setShowSettings] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showHintModal, setShowHintModal] = useState(false);
+  const [hasUsedHint, setHasUsedHint] = useState(false);
 
   // Drawing Canvas Hook
   const drawing = useDrawingCanvas();
@@ -71,6 +73,22 @@ export default function GameScreen() {
     drawingPaths: drawing.paths,
     clearCanvas: drawing.clearCanvas,
   });
+
+  // Reset hint joker when level changes
+  const handleRestartCurrentLevel = () => {
+    setHasUsedHint(false);
+    restartCurrentLevel();
+  };
+
+  const handleStartNextLevel = () => {
+    setHasUsedHint(false);
+    startNextLevel();
+  };
+
+  const handleRestartFromLevel1 = () => {
+    setHasUsedHint(false);
+    restartFromLevel1();
+  };
 
   // Initialize sound manager
   useEffect(() => {
@@ -127,8 +145,37 @@ export default function GameScreen() {
 
   // Render Draw Phase
   const renderDrawPhase = () => {
+    const levelName = currentLang === 'en' ? currentImage?.displayNameEn : currentImage?.displayName;
     return (
     <View style={styles.phaseContainer}>
+      {/* Info-Streifen: Thumbnail + Aufgabe + Hint-Joker */}
+      <View style={styles.infoStrip}>
+        {currentImage && (
+          <View style={styles.infoThumbnail}>
+            <LevelImageDisplay image={currentImage} size={44} />
+          </View>
+        )}
+        <Text style={styles.infoStripText} numberOfLines={2}>
+          {t('game.draw.drawFromMemory')}{levelName ? ` — ${levelName}` : ''}
+        </Text>
+        <TouchableOpacity
+          style={[styles.hintButton, hasUsedHint && styles.hintButtonUsed]}
+          onPress={() => {
+            if (!hasUsedHint) {
+              setHasUsedHint(true);
+              setShowHintModal(true);
+            }
+          }}
+          disabled={hasUsedHint}
+          accessibilityLabel={hasUsedHint ? t('game.draw.hintUsed') : t('game.draw.hintButton')}
+          accessibilityRole="button"
+        >
+          <Text style={[styles.hintButtonText, hasUsedHint && styles.hintButtonTextUsed]}>
+            {hasUsedHint ? '👁 ✓' : t('game.draw.hintButton')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
       {/* Zeichenfläche mit react-native-skia */}
       <View style={[styles.canvasContainer, dynCanvasContainer]}>
         <ErrorBoundary>
@@ -382,15 +429,15 @@ export default function GameScreen() {
 
         {/* Action Buttons */}
         <View style={styles.actionRow}>
-          <TouchableOpacity style={styles.actionButton} onPress={restartCurrentLevel}>
+          <TouchableOpacity style={styles.actionButton} onPress={handleRestartCurrentLevel}>
             <Text style={styles.actionButtonText}>{t('game.result.retry')}</Text>
           </TouchableOpacity>
           {levelNumber < getTotalLevels() ? (
-            <TouchableOpacity style={[styles.actionButton, styles.actionButtonPrimary]} onPress={startNextLevel}>
+            <TouchableOpacity style={[styles.actionButton, styles.actionButtonPrimary]} onPress={handleStartNextLevel}>
               <Text style={[styles.actionButtonText, styles.actionButtonPrimaryText]}>{t('game.result.nextLevel')} →</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity style={[styles.actionButton, styles.actionButtonPrimary]} onPress={restartFromLevel1}>
+            <TouchableOpacity style={[styles.actionButton, styles.actionButtonPrimary]} onPress={handleRestartFromLevel1}>
               <Text style={[styles.actionButtonText, styles.actionButtonPrimaryText]}>{t('game.result.playAgain')}</Text>
             </TouchableOpacity>
           )}
@@ -472,6 +519,36 @@ export default function GameScreen() {
             </View>
           </View>
         </View>
+      </Modal>
+
+      {/* Hint Modal — Vorlage einmal ansehen */}
+      <Modal
+        visible={showHintModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowHintModal(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowHintModal(false)}
+          accessibilityRole="button"
+          accessibilityLabel={t('common.close')}
+        >
+          <View style={styles.hintModal}>
+            <View style={styles.hintModalHeader}>
+              <Text style={styles.hintModalTitle}>{t('game.draw.hintModalTitle')}</Text>
+              <TouchableOpacity onPress={() => setShowHintModal(false)} style={styles.closeButton}>
+                <Text style={styles.closeText}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            {currentImage && (
+              <ErrorBoundary>
+                <LevelImageDisplay image={currentImage} size={Math.min(screenWidth - 80, 300)} />
+              </ErrorBoundary>
+            )}
+          </View>
+        </TouchableOpacity>
       </Modal>
 
       {/* Phase Content */}
@@ -1032,6 +1109,76 @@ const styles = StyleSheet.create({
   },
   strokeWidthButtonTextActive: {
     color: Colors.background,
+  },
+  // Info-Streifen (Draw Phase)
+  infoStrip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.sm,
+    backgroundColor: Colors.surface,
+    borderRadius: BorderRadius.xl,
+    padding: Spacing.sm,
+    marginBottom: Spacing.xs,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    ...Colors.shadow.small,
+  },
+  infoThumbnail: {
+    width: 52,
+    height: 44,
+    borderRadius: BorderRadius.md,
+    overflow: 'hidden',
+    flexShrink: 0,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  infoStripText: {
+    flex: 1,
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
+    color: Colors.text.primary,
+  },
+  hintButton: {
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: Spacing.xs,
+    borderRadius: BorderRadius.md,
+    backgroundColor: Colors.primary,
+    flexShrink: 0,
+    ...Colors.shadow.small,
+  },
+  hintButtonUsed: {
+    backgroundColor: Colors.border,
+    opacity: 0.5,
+  },
+  hintButtonText: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.bold,
+    color: Colors.surface,
+  },
+  hintButtonTextUsed: {
+    color: Colors.text.secondary,
+  },
+  // Hint Modal
+  hintModal: {
+    backgroundColor: Colors.background,
+    borderRadius: BorderRadius.xxl,
+    padding: Spacing.lg,
+    width: '90%',
+    maxWidth: 380,
+    alignItems: 'center',
+    ...Colors.shadow.large,
+  },
+  hintModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: Spacing.md,
+  },
+  hintModalTitle: {
+    fontSize: FontSize.lg,
+    fontWeight: FontWeight.semibold,
+    color: Colors.text.primary,
   },
   closeButton: {
     width: 44,
