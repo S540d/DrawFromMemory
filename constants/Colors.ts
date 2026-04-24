@@ -1,7 +1,7 @@
 /**
  * Design Tokens - Merke und Male
- * "Soft & Modern" Design-System (Option 1)
- * Warme, sanfte Ästhetik mit subtiler Tiefe und Eleganz
+ * "Warm Paper" Design-System
+ * Warme, papiertexturartige Ästhetik mit klarem Layout
  */
 
 export const Colors = {
@@ -17,18 +17,20 @@ export const Colors = {
     primary: ['#667eea', '#764ba2'],     // Lila-Gradient
     secondary: ['#f093fb', '#f5576c'],   // Rosa-Gradient
     warm: ['#FFB84D', '#FF6B6B'],        // Warm-Gradient
+    cta: ['#667eea', '#f093fb'],         // CTA-Gradient für primäre Buttons
   },
 
-  // UI Farben - "Soft & Modern"
-  background: '#FAFAFA',   // Cremeweiß (nicht pures Weiß)
-  surface: '#F5F5F5',      // Hellgrau - Karten/Container
-  surfaceElevated: '#EFEFEF', // Dunklerer Surface für mehr Tiefe
-  border: '#DDDDDD',       // Standardrahmen
+  // UI Farben - "Warm Paper"
+  background: '#f7f2eb',   // Warmes Cremeweiß - Papierton
+  surface: '#ffffff',      // Rein weiß - Cards/Container
+  surfaceElevated: '#fdfaf5', // Leicht warmes Weiß für erhöhte Elemente
+  surfaceAlt: '#ede7dd',   // Warmes Graubeige - Toolbar-Gruppen, Tab-Switcher
+  border: '#e8e0d5',       // Warmes Graubeige - Rahmen
   modalOverlay: 'rgba(0, 0, 0, 0.5)', // Halbtransparenter Overlay
   text: {
-    primary: '#2C3E50',    // Dunkelgrau - Haupttext (WCAG AAA)
-    secondary: '#5D6D7E',  // Mittelgrau - Sekundärtext (WCAG AA compliant, darkened from #7F8C8D)
-    light: '#717171',      // Grau - Platzhalter (WCAG AA compliant, darkened from #95A5A6)
+    primary: '#2c2c2c',    // Fast Schwarz - Haupttext (WCAG AAA)
+    secondary: '#9c8b7a',  // Warmes Graubraun - Sekundärtext
+    light: '#717171',      // Grau - Platzhalter (WCAG AA compliant)
   },
 
   // Shadow-System (Soft & Modern)
