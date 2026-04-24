@@ -32,9 +32,8 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    // Log error details
     console.error('ErrorBoundary caught an error:', error);
-    if (__DEV__) {
+    if (typeof __DEV__ !== 'undefined' && __DEV__) {
       console.error('Error Info:', errorInfo);
     }
   }
@@ -57,7 +56,7 @@ export class ErrorBoundary extends Component<Props, State> {
               Die App ist auf ein Problem gestoßen und muss neu gestartet werden.
             </Text>
 
-            {__DEV__ && this.state.error && (
+            {typeof __DEV__ !== 'undefined' && __DEV__ && this.state.error && (
               <View style={styles.errorDetails}>
                 <Text style={styles.errorText}>
                   {this.state.error.toString()}

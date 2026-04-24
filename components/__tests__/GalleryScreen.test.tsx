@@ -8,6 +8,7 @@ jest.mock('expo-router', () => ({
 
 jest.mock('../../services/i18n', () => ({
   t: (key: string) => key,
+  useTranslation: () => ({ t: (key: string) => key }),
 }));
 
 jest.mock('../../services/ThemeContext', () => ({

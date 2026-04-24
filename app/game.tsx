@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, Platform, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, Platform, ScrollView, FlatList } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useScreenLayout } from '@utils/useScreenLayout';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getTotalLevels } from '@services/LevelManager';
-import { t, getCurrentLanguage } from '@services/i18n';
+import { useTranslation, getCurrentLanguage } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import { DrawingColors } from '../constants/Colors';
 import Colors from '../constants/Colors';
@@ -25,6 +25,7 @@ import type { DrawingPath } from '@components/DrawingCanvas';
  * Phase 3: Result (Bewertung - noch nicht implementiert)
  */
 export default function GameScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const params = useLocalSearchParams();
   const { colors } = useTheme();
@@ -32,7 +33,6 @@ export default function GameScreen() {
   const layout = useScreenLayout();
   const { screenWidth, isSmall } = layout;
   const [showSettings, setShowSettings] = useState(false);
-  const [showColorPicker, setShowColorPicker] = useState(false);
   const [showHintModal, setShowHintModal] = useState(false);
   const [hasUsedHint, setHasUsedHint] = useState(false);
 
@@ -155,9 +155,12 @@ export default function GameScreen() {
             <LevelImageDisplay image={currentImage} size={44} />
           </View>
         )}
-        <Text style={styles.infoStripText} numberOfLines={2}>
-          {t('game.draw.drawFromMemory')}{levelName ? ` — ${levelName}` : ''}
-        </Text>
+        <View style={styles.infoStripCenter}>
+          <Text style={styles.infoStripLabel}>{t('game.draw.referenceLabel')}</Text>
+          <Text style={styles.infoStripText} numberOfLines={2}>
+            {t('game.draw.drawFromMemory')}{levelName ? ` — ${levelName}` : ''}
+          </Text>
+        </View>
         <TouchableOpacity
           style={[styles.hintButton, hasUsedHint && styles.hintButtonUsed]}
           onPress={() => {
@@ -170,9 +173,7 @@ export default function GameScreen() {
           accessibilityLabel={hasUsedHint ? t('game.draw.hintUsed') : t('game.draw.hintButton')}
           accessibilityRole="button"
         >
-          <Text style={[styles.hintButtonText, hasUsedHint && styles.hintButtonTextUsed]}>
-            {hasUsedHint ? '👁 ✓' : t('game.draw.hintButton')}
-          </Text>
+          <Text style={styles.hintButtonIcon}>👁</Text>
         </TouchableOpacity>
       </View>
 
@@ -191,16 +192,31 @@ export default function GameScreen() {
 
       {/* Toolbar-Gruppe */}
       <View style={[styles.toolbarGroup, dynToolbar]}>
-        {/* Reihe 1: Farb-Button */}
-        <TouchableOpacity
-          style={[styles.colorButton, dynToolbarButton]}
-          onPress={() => setShowColorPicker(true)}
-          accessibilityLabel={t('game.draw.selectColor')}
-          accessibilityRole="button"
-        >
-          <View style={[styles.toolbarColorPreview, { backgroundColor: drawing.color }]} />
-          <Text style={styles.toolbarButtonText}>{t('game.draw.color')}</Text>
-        </TouchableOpacity>
+        {/* Reihe 1: Inline-Farbreihe */}
+        <FlatList
+          data={DrawingColors}
+          keyExtractor={(item) => item.hex}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.colorRowContent}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={[
+                styles.inlineColorSwatch,
+                item.border && { borderColor: item.border },
+                drawing.color === item.hex && styles.inlineColorSwatchActive,
+              ]}
+              onPress={() => drawing.setColor(item.hex)}
+              accessibilityLabel={currentLang === 'de' ? item.name : item.nameEn}
+              accessibilityRole="button"
+            >
+              <View style={[styles.inlineColorSwatchInner, { backgroundColor: item.hex }]} />
+              {drawing.color === item.hex && (
+                <Text style={styles.inlineColorCheckmark}>✓</Text>
+              )}
+            </TouchableOpacity>
+          )}
+        />
 
         {/* Trennlinie */}
         <View style={styles.toolbarDivider} />
@@ -248,7 +264,7 @@ export default function GameScreen() {
                   height: size === 2 ? 10 : size === 3 ? 16 : 22,
                   backgroundColor: drawing.strokeWidth === size && drawing.tool !== 'fill'
                     ? drawing.color
-                    : Colors.border,
+                    : Colors.text.secondary,
                 },
               ]} />
             </TouchableOpacity>
@@ -325,7 +341,7 @@ export default function GameScreen() {
 
     return (
       <ScrollView
-        style={[styles.phaseContainer, { padding: 0 }]}
+        style={styles.resultScrollView}
         contentContainerStyle={styles.resultContent}
         showsVerticalScrollIndicator={false}
       >
@@ -335,7 +351,7 @@ export default function GameScreen() {
           <View style={[styles.comparisonCard, { width: imageSize }]}>
             <View style={[styles.comparisonCardHeader, styles.comparisonCardHeaderTemplate]}>
               <Text style={[styles.comparisonCardLabel, { color: Colors.primary }]}>
-                {t('game.result.original').toUpperCase()}
+                {t('game.result.template').toUpperCase()}
               </Text>
             </View>
             <View style={[styles.comparisonImage, { width: imageSize, height: imageSize }]}>
@@ -360,27 +376,13 @@ export default function GameScreen() {
                 strokeColor={Colors.drawing.black}
                 strokeWidth={2}
               />
-              {drawing.paths.length > 0 && (
-                <View style={styles.canvasIconRow}>
-                  <TouchableOpacity
-                    style={[styles.canvasIconButton, isReplaying && styles.canvasIconButtonActive]}
-                    onPress={isReplaying ? () => setIsReplaying(false) : startReplay}
-                    accessibilityRole="button"
-                    accessibilityLabel={isReplaying ? t('game.result.replayStop') : t('game.result.replay')}
-                  >
-                    <Text style={[styles.canvasIconText, isReplaying && styles.canvasIconTextActive]}>
-                      {isReplaying ? '⏹' : '▶'}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
             </View>
           </View>
         </View>
 
         {/* 2. Sterne-Bewertung */}
         <View style={[styles.starsContainer, isSmall && styles.starsContainerSmall]}>
-          <Text style={styles.phaseTitle}>{t('game.result.title')}</Text>
+          <Text style={styles.starsTitle}>{t('game.result.howWell')}</Text>
           <View style={styles.starsRow}>
             {[1, 2, 3, 4, 5].map((star) => (
               <TouchableOpacity
@@ -396,12 +398,8 @@ export default function GameScreen() {
             ))}
           </View>
           <AnimatedFeedback visible={userRating > 0}>
-            <Text style={styles.ratingText}>{userRating} Stern{userRating !== 1 ? 'e' : ''}!</Text>
             <Text style={styles.feedbackText}>{getFeedbackText(userRating)}</Text>
           </AnimatedFeedback>
-          {userRating === 0 && (
-            <Text style={styles.feedbackText}>{t('game.result.tapStars')}</Text>
-          )}
         </View>
 
         {/* Completion banner for Level 10 */}
@@ -412,113 +410,112 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* 3. Aktions-Buttons */}
+        {/* 3. Aktions-Zeile: Zeitraffer | Galerie | Weiter */}
         <View style={styles.actionRow}>
-          <TouchableOpacity style={styles.actionButton} onPress={handleRestartCurrentLevel}>
-            <Text style={styles.actionButtonText}>{t('game.result.retry')}</Text>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={isReplaying ? () => setIsReplaying(false) : startReplay}
+            accessibilityRole="button"
+          >
+            <Text style={styles.actionButtonText}>
+              {isReplaying ? '⏹' : '🎬'}
+            </Text>
+            <Text style={styles.actionButtonLabel}>
+              {isReplaying ? t('game.result.replayStop') : t('game.result.replay')}
+            </Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.actionButton, savedToGallery && styles.actionButtonSaved]}
+            onPress={saveToGallery}
+            disabled={savedToGallery}
+            accessibilityRole="button"
+            accessibilityLabel={savedToGallery ? t('gallery.saved') : t('gallery.save')}
+            accessibilityState={{ disabled: savedToGallery }}
+          >
+            <Text style={styles.actionButtonText}>{savedToGallery ? '✓' : '🖼'}</Text>
+            <Text style={[styles.actionButtonLabel, savedToGallery && styles.actionButtonLabelSaved]}>
+              {savedToGallery ? t('gallery.saved') : t('gallery.save')}
+            </Text>
+          </TouchableOpacity>
+
           {levelNumber < getTotalLevels() ? (
             <TouchableOpacity style={[styles.actionButton, styles.actionButtonPrimary]} onPress={handleStartNextLevel}>
-              <Text style={[styles.actionButtonText, styles.actionButtonPrimaryText]}>{t('game.result.nextLevel')} →</Text>
+              <Text style={[styles.actionButtonText, styles.actionButtonPrimaryText]}>→</Text>
+              <Text style={[styles.actionButtonLabel, styles.actionButtonPrimaryText]}>{t('game.result.nextLevel')}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity style={[styles.actionButton, styles.actionButtonPrimary]} onPress={handleRestartFromLevel1}>
-              <Text style={[styles.actionButtonText, styles.actionButtonPrimaryText]}>{t('game.result.playAgain')}</Text>
+              <Text style={[styles.actionButtonText, styles.actionButtonPrimaryText]}>🔄</Text>
+              <Text style={[styles.actionButtonLabel, styles.actionButtonPrimaryText]}>{t('game.result.playAgain')}</Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity style={styles.actionButton} onPress={() => router.back()}>
-            <Text style={styles.actionButtonText}>{t('game.result.backToMenu')}</Text>
-          </TouchableOpacity>
         </View>
-
-        {/* 4. Galerie speichern */}
-        <TouchableOpacity
-          style={[styles.galleryButton, savedToGallery && styles.galleryButtonSaved]}
-          onPress={saveToGallery}
-          disabled={savedToGallery}
-          accessibilityRole="button"
-          accessibilityLabel={savedToGallery ? t('gallery.saved') : t('gallery.save')}
-          accessibilityState={{ disabled: savedToGallery }}
-        >
-          <Text style={[styles.galleryButtonText, savedToGallery && styles.galleryButtonTextSaved]}>
-            {savedToGallery ? `✓ ${t('gallery.saved')}` : `🖼 ${t('gallery.save')}`}
-          </Text>
-        </TouchableOpacity>
       </ScrollView>
     );
   };
 
+  const levelName = currentLang === 'en' ? currentImage?.displayNameEn : currentImage?.displayName;
+
   return (
     <View style={[styles.container, { paddingBottom: insets.bottom }]}>
-      {/* Header */}
-      <View style={[styles.header, { paddingVertical: layout.headerPaddingVertical, paddingHorizontal: layout.headerPaddingHorizontal }]}>
+      {/* Header — Referenz-Design: Titel + Level-Info links, Progress-Dots + Settings rechts */}
+      <View style={[styles.header, { paddingTop: insets.top + 8, paddingHorizontal: layout.headerPaddingHorizontal, paddingBottom: Spacing.sm }]}>
         <TouchableOpacity
+          style={styles.headerLeft}
           onPress={() => router.back()}
+          accessibilityRole="button"
           accessibilityLabel={t('common.back')}
-          accessibilityRole="button"
         >
-          <Text style={styles.backButton}>← {t('common.back')}</Text>
+          <Text style={styles.headerTitle}>Merke & Male</Text>
+          <Text style={styles.headerSub}>Level {levelNumber}{levelName ? ` · ${levelName}` : ''}</Text>
         </TouchableOpacity>
-        <View style={styles.headerCenter}>
-          <Text style={styles.levelBadge}>Level {levelNumber}</Text>
+        <View style={styles.headerRight}>
+          <View style={styles.progressDots}>
+            {Array.from({ length: Math.min(getTotalLevels(), 5) }).map((_, i) => (
+              <View
+                key={i}
+                style={[
+                  styles.progressDot,
+                  i < levelNumber - 1 && styles.progressDotDone,
+                  i === levelNumber - 1 && styles.progressDotCurrent,
+                ]}
+              />
+            ))}
+          </View>
+          <TouchableOpacity
+            onPress={() => setShowSettings(true)}
+            style={styles.settingsButton}
+            accessibilityLabel={t('common.settings')}
+            accessibilityRole="button"
+          >
+            <Text style={styles.settingsIcon}>⋮</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => setShowSettings(true)}
-          style={styles.settingsButton}
-          accessibilityLabel={t('common.settings')}
-          accessibilityRole="button"
-        >
-          <Text style={styles.settingsIcon}>⋮</Text>
-        </TouchableOpacity>
       </View>
+
+      {/* Pill-Tabs: ✏️ Zeichnen / 🎨 Ergebnis */}
+      {(phase === 'draw' || phase === 'result') && (
+        <View style={styles.tabBar}>
+          <TouchableOpacity
+            style={[styles.tab, phase === 'draw' && styles.tabActive]}
+            onPress={() => phase === 'result' && setPhase('draw')}
+            accessibilityRole="tab"
+          >
+            <Text style={[styles.tabText, phase === 'draw' && styles.tabTextActive]}>✏️ {t('game.tabs.draw')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.tab, phase === 'result' && styles.tabActive]}
+            onPress={() => phase === 'draw' && setPhase('result')}
+            accessibilityRole="tab"
+          >
+            <Text style={[styles.tabText, phase === 'result' && styles.tabTextActive]}>🎨 {t('game.tabs.result')}</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Settings Modal */}
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
-
-      {/* Color Picker Modal */}
-      <Modal
-        visible={showColorPicker}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowColorPicker(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.colorPickerModal}>
-            {/* Header */}
-            <View style={styles.colorPickerHeader}>
-              <Text style={styles.colorPickerTitle}>{t('game.draw.selectColor')}</Text>
-              <TouchableOpacity onPress={() => setShowColorPicker(false)} style={styles.closeButton}>
-                <Text style={styles.closeText}>✕</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Color Grid - Fixed 3x4 Layout */}
-            <View style={styles.colorGrid}>
-              {DrawingColors.map((colorItem) => (
-                <TouchableOpacity
-                  key={colorItem.hex}
-                  style={[
-                    styles.colorBoxLarge,
-                    { backgroundColor: colorItem.hex },
-                    colorItem.border && { borderColor: colorItem.border },
-                    drawing.color === colorItem.hex && styles.colorBoxLargeSelected,
-                  ]}
-                  onPress={() => {
-                    drawing.setColor(colorItem.hex);
-                    setShowColorPicker(false);
-                  }}
-                  accessibilityLabel={currentLang === 'de' ? colorItem.name : colorItem.nameEn}
-                  accessibilityRole="button"
-                >
-                  {drawing.color === colorItem.hex && (
-                    <Text style={styles.colorBoxCheckmark}>✓</Text>
-                  )}
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        </View>
-      </Modal>
 
       {/* Hint Modal — Vorlage einmal ansehen */}
       <Modal
@@ -567,29 +564,80 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.surface,
+    paddingHorizontal: Spacing.lg,
   },
-  headerCenter: {
+  headerLeft: {
     flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.sm,
   },
-  backButton: {
-    fontSize: FontSize.md,
-    color: Colors.primary,
-    fontWeight: FontWeight.semibold,
-    minWidth: 80,
-  },
-  levelBadge: {
-    fontSize: FontSize.md,
+  headerTitle: {
+    fontSize: FontSize.xl,
     fontWeight: FontWeight.bold,
     color: Colors.text.primary,
-    backgroundColor: Colors.surface,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
+    lineHeight: 26,
+  },
+  headerSub: {
+    fontSize: FontSize.xs,
+    fontWeight: FontWeight.semibold,
+    color: Colors.text.secondary,
+    marginTop: 2,
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.sm,
+  },
+  progressDots: {
+    flexDirection: 'row',
+    gap: 4,
+    alignItems: 'center',
+  },
+  progressDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#ddd5c8',
+  },
+  progressDotDone: {
+    backgroundColor: Colors.primary,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  progressDotCurrent: {
+    backgroundColor: Colors.secondary,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  tabBar: {
+    flexDirection: 'row',
+    marginHorizontal: Spacing.lg,
+    marginTop: Spacing.sm,
+    marginBottom: Spacing.xs,
+    backgroundColor: Colors.surfaceAlt,
     borderRadius: BorderRadius.lg,
-    ...Colors.shadow.small, // Soft & Modern: Subtiler Schatten für Badge
+    padding: 4,
+    gap: 0,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: Spacing.sm,
+    borderRadius: BorderRadius.md,
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  tabActive: {
+    backgroundColor: Colors.surface,
+    ...Colors.shadow.small,
+  },
+  tabText: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
+    color: Colors.text.secondary,
+  },
+  tabTextActive: {
+    fontWeight: FontWeight.bold,
+    color: Colors.text.primary,
   },
   phaseContainer: {
     flex: 1,
@@ -648,91 +696,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  colorPickerContainer: {
-    marginBottom: Spacing.md,
-    alignItems: 'center',
-  },
-  colorPickerLabel: {
-    fontSize: FontSize.sm,
-    fontWeight: FontWeight.semibold,
-    color: Colors.text.secondary,
-    marginBottom: Spacing.sm,
-  },
-  colorPickerButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.surface,
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.lg,
-    borderRadius: BorderRadius.lg,
-    borderWidth: 2,
-    borderColor: Colors.primary,
-    gap: Spacing.md,
-    minWidth: 200,
-    ...Colors.shadow.small,
-  },
-  selectedColorPreview: {
-    width: 32,
-    height: 32,
-    borderRadius: BorderRadius.md,
-    borderWidth: 2,
-    borderColor: Colors.border,
-  },
-  colorPickerButtonText: {
-    fontSize: FontSize.md,
-    fontWeight: FontWeight.semibold,
-    color: Colors.primary,
-  },
-  colorPickerModal: {
-    backgroundColor: Colors.background,
-    borderRadius: BorderRadius.xxl,
-    width: '100%',
-    maxWidth: 400,
-    padding: Spacing.lg,
-    ...Colors.shadow.large,
-  },
-  colorPickerHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: Spacing.lg,
-  },
-  colorPickerTitle: {
-    fontSize: FontSize.lg,
-    fontWeight: FontWeight.semibold,
-    color: Colors.text.primary,
-  },
-  colorGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: Spacing.sm,
-    justifyContent: 'center',
-    maxWidth: 280, // 3 Spalten: 3 * 70 + 2 * 12 (gaps)
-  },
-  colorBoxLarge: {
-    width: 70,
-    height: 70,
-    borderRadius: BorderRadius.lg,
-    borderWidth: 3,
-    borderColor: Colors.border,
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...Colors.shadow.small,
-  },
-  colorBoxLargeSelected: {
-    borderWidth: 4,
-    borderColor: Colors.primary,
-    transform: [{ scale: 1.05 }],
-    ...Colors.shadow.medium,
-  },
-  colorBoxCheckmark: {
-    fontSize: 32,
-    fontWeight: FontWeight.bold,
-    color: Colors.text.primary,
-    textShadowColor: Colors.background,
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 3,
-  },
   // Toolbar-Gruppe Styles
   toolbarGroup: {
     backgroundColor: Colors.surfaceAlt,
@@ -741,24 +704,37 @@ const styles = StyleSheet.create({
     marginVertical: Spacing.sm,
     gap: Spacing.xs,
   },
-  colorButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.sm,
-    paddingVertical: Spacing.xs,
+  colorRowContent: {
+    gap: Spacing.xs,
     paddingHorizontal: Spacing.xs,
+    paddingVertical: Spacing.xs,
+    alignItems: 'center',
   },
-  toolbarColorPreview: {
-    width: 28,
-    height: 28,
-    borderRadius: BorderRadius.sm,
+  inlineColorSwatch: {
+    width: 32,
+    height: 32,
+    borderRadius: BorderRadius.md,
     borderWidth: 2,
     borderColor: Colors.border,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
   },
-  toolbarButtonText: {
-    fontSize: FontSize.sm,
-    color: Colors.text.secondary,
-    fontWeight: FontWeight.semibold,
+  inlineColorSwatchActive: {
+    borderColor: Colors.primary,
+    borderWidth: 3,
+    transform: [{ scale: 1.15 }],
+  },
+  inlineColorSwatchInner: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  inlineColorCheckmark: {
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: Colors.text.primary,
+    textShadowColor: Colors.background,
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 3,
   },
   toolbarDivider: {
     height: 1,
@@ -819,24 +795,37 @@ const styles = StyleSheet.create({
   actionButton: {
     flex: 1,
     backgroundColor: Colors.surface,
-    paddingVertical: Spacing.md,
+    paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.xs,
     borderRadius: BorderRadius.lg,
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: Colors.primary,
-    minHeight: 48,
+    borderColor: Colors.border,
+    minHeight: 60,
     justifyContent: 'center',
+    gap: 2,
     ...Colors.shadow.small,
   },
   actionButtonPrimary: {
     backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
+  },
+  actionButtonSaved: {
+    borderColor: Colors.success,
+    backgroundColor: Colors.success + '10',
   },
   actionButtonText: {
-    fontSize: FontSize.sm,
-    fontWeight: FontWeight.semibold,
-    color: Colors.primary,
+    fontSize: 20,
     textAlign: 'center',
+  },
+  actionButtonLabel: {
+    fontSize: FontSize.xs,
+    fontWeight: FontWeight.semibold,
+    color: Colors.text.secondary,
+    textAlign: 'center',
+  },
+  actionButtonLabelSaved: {
+    color: Colors.success,
   },
   actionButtonPrimaryText: {
     color: Colors.background,
@@ -879,12 +868,27 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.semibold,
     color: Colors.primary,
   },
+  resultScrollView: {
+    flex: 1,
+  },
   resultContent: {
     padding: Spacing.md,
+    flexGrow: 1,
+  },
+  starsTitle: {
+    fontSize: FontSize.lg,
+    fontWeight: FontWeight.bold,
+    color: Colors.text.primary,
+    marginBottom: Spacing.md,
+    textAlign: 'center',
   },
   starsContainer: {
+    backgroundColor: Colors.surface,
+    borderRadius: BorderRadius.xl,
+    padding: Spacing.lg,
     alignItems: 'center',
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
+    ...Colors.shadow.small,
   },
   starsContainerSmall: {
     marginBottom: Spacing.sm,
@@ -992,29 +996,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.md,
     color: Colors.text.secondary,
     textAlign: 'center',
-  },
-  galleryButton: {
-    width: '100%',
-    paddingVertical: Spacing.md,
-    borderRadius: BorderRadius.lg,
-    backgroundColor: Colors.surface,
-    borderWidth: 2,
-    borderStyle: 'dashed',
-    borderColor: Colors.border,
-    alignItems: 'center',
-    marginTop: Spacing.xs,
-  },
-  galleryButtonSaved: {
-    borderColor: Colors.success,
-    backgroundColor: Colors.success + '10',
-  },
-  galleryButtonText: {
-    fontSize: FontSize.sm,
-    fontWeight: FontWeight.semibold,
-    color: Colors.text.secondary,
-  },
-  galleryButtonTextSaved: {
-    color: Colors.success,
   },
   canvasIconRow: {
     position: 'absolute',
@@ -1152,31 +1133,38 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  infoStripText: {
+  infoStripCenter: {
     flex: 1,
+  },
+  infoStripLabel: {
+    fontSize: FontSize.xs,
+    fontWeight: FontWeight.bold,
+    color: Colors.text.secondary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
+    marginBottom: 2,
+  },
+  infoStripText: {
     fontSize: FontSize.sm,
-    fontWeight: FontWeight.semibold,
+    fontWeight: FontWeight.bold,
     color: Colors.text.primary,
   },
   hintButton: {
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: Spacing.xs,
+    width: 40,
+    height: 40,
     borderRadius: BorderRadius.md,
     backgroundColor: Colors.primary,
     flexShrink: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
     ...Colors.shadow.small,
   },
   hintButtonUsed: {
     backgroundColor: Colors.border,
     opacity: 0.5,
   },
-  hintButtonText: {
-    fontSize: FontSize.sm,
-    fontWeight: FontWeight.bold,
-    color: Colors.surface,
-  },
-  hintButtonTextUsed: {
-    color: Colors.text.secondary,
+  hintButtonIcon: {
+    fontSize: 20,
   },
   // Hint Modal
   hintModal: {

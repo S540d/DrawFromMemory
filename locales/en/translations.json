@@ -44,11 +44,18 @@
       "hintButton": "👁 1x",
       "hintUsed": "Hint used",
       "hintModalTitle": "Reference",
-      "drawFromMemory": "Draw from memory"
+      "drawFromMemory": "Draw the",
+      "referenceLabel": "View reference"
+    },
+    "tabs": {
+      "draw": "Draw",
+      "result": "Result"
     },
     "result": {
       "title": "Rate yourself:",
+      "howWell": "How well did you do?",
       "tapStars": "Tap the stars to rate yourself!",
+      "template": "Reference",
       "feedback5": "Perfect! You are a memory master!",
       "feedback4": "Very good! Almost perfect!",
       "feedback3": "Well done! Keep it up!",

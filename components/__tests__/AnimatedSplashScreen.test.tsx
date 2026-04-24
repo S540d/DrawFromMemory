@@ -5,6 +5,7 @@ import AnimatedSplashScreen from '../AnimatedSplashScreen';
 // Mock i18n
 jest.mock('../../services/i18n', () => ({
   t: (key: string) => key,
+  useTranslation: () => ({ t: (key: string) => key }),
 }));
 
 // Mock Dimensions
