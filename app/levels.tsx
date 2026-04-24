@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
-import { t } from '@services/i18n';
+import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import { getAllLevels } from '@services/LevelManager';
 import Colors from '../constants/Colors';
@@ -17,6 +17,7 @@ const DEFAULT_CARD_WIDTH = 150;
  * Zeigt alle verfügbaren Level in einem Grid
  */
 export default function LevelsScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { colors } = useTheme();
   const levels = getAllLevels();

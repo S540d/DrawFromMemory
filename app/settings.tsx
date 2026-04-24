@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { t } from '@services/i18n';
+import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
@@ -12,6 +12,7 @@ import SettingsModal from '@components/SettingsModal';
  * Displays the embedded SettingsModal component
  */
 export default function SettingsScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { colors } = useTheme();
 

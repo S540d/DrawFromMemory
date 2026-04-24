@@ -167,15 +167,15 @@ export function t(key: TranslationKey, params?: Record<string, string | number>)
 }
 
 /**
- * Hook-ähnliche Funktion für React Components
- * Gibt t-Funktion und currentLanguage zurück
+ * React Hook — re-renders the component whenever the language changes.
+ * Use this in any screen that calls t() so translations stay in sync.
  */
 export function useTranslation() {
-  return {
-    t,
-    language: currentLanguage,
-    setLanguage,
-  };
+  // Import here to avoid circular deps at module load time
+  const { useReducer, useEffect } = require('react');
+  const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
+  useEffect(() => addLanguageChangeListener(() => forceUpdate()), []);
+  return { t, language: currentLanguage, setLanguage };
 }
 
 export default { t, setLanguage, getLanguage, useTranslation, initLanguage, getDeviceLanguage, addLanguageChangeListener };

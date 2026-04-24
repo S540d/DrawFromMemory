@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { t } from '@services/i18n';
+import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 
@@ -31,6 +31,7 @@ function generateChallenge(): { a: number; b: number; answer: number } {
  * Children are unlikely to solve it; adults can confirm in seconds.
  */
 export default function ParentalGate({ visible, onSuccess, onCancel }: ParentalGateProps) {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const [challenge, setChallenge] = useState(generateChallenge);
   const [input, setInput] = useState('');

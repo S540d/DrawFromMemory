@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, Linking, Share, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
-import { t, getLanguage, setLanguage } from '@services/i18n';
+import { useTranslation, getLanguage, setLanguage } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import storageManager from '@services/StorageManager';
 import SoundManager from '@services/SoundManager';
@@ -20,6 +20,7 @@ interface SettingsModalProps {
  * Can be used as a modal popup on home/game screens or embedded in a full settings screen
  */
 export default function SettingsModal({ visible, onClose, embedded = false }: SettingsModalProps) {
+  const { t } = useTranslation();
   const { colors, themeSetting, setTheme } = useTheme();
   const [currentLang, setCurrentLang] = useState(getLanguage());
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>(themeSetting);

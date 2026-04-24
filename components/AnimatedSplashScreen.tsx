@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Dimensions } from 'react-native';
 import Colors from '../constants/Colors';
 import { FontWeight } from '../constants/Layout';
-import { t } from '@services/i18n';
+import { useTranslation } from '@services/i18n';
 
 interface Props {
   onFinish: () => void;
@@ -13,6 +13,7 @@ interface Props {
  * Zeigt App-Titel und Untertitel, dann Übergang zum Home Screen.
  */
 export default function AnimatedSplashScreen({ onFinish }: Props) {
+  const { t } = useTranslation();
   const titleOpacity = useRef(new Animated.Value(0)).current;
   const titleScale = useRef(new Animated.Value(0.7)).current;
   const subtitleOpacity = useRef(new Animated.Value(0)).current;

@@ -44,11 +44,18 @@
       "hintButton": "👁 1x",
       "hintUsed": "Joker verbraucht",
       "hintModalTitle": "Vorlage",
-      "drawFromMemory": "Zeichne aus dem Gedächtnis"
+      "drawFromMemory": "Male das",
+      "referenceLabel": "Vorlage ansehen"
+    },
+    "tabs": {
+      "draw": "Zeichnen",
+      "result": "Ergebnis"
     },
     "result": {
       "title": "Bewerte selbst:",
+      "howWell": "Wie gut hast du's getroffen?",
       "tapStars": "Tippe auf die Sterne, um dich zu bewerten!",
+      "template": "Vorlage",
       "feedback5": "Perfekt! Du bist ein Gedächtnis-Meister!",
       "feedback4": "Sehr gut! Fast perfekt!",
       "feedback3": "Gut gemacht! Weiter so!",
