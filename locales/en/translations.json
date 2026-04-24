@@ -40,7 +40,11 @@
       "undo": "Undo",
       "clear": "Clear all",
       "clearConfirm": "Really clear everything?",
-      "done": "Done"
+      "done": "Done",
+      "hintButton": "👁 1x",
+      "hintUsed": "Hint used",
+      "hintModalTitle": "Reference",
+      "drawFromMemory": "Draw from memory"
     },
     "result": {
       "title": "Rate yourself:",
