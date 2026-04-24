@@ -310,34 +310,6 @@ export default function GameScreen() {
     );
   };
 
-  // Render Star Rating (Interactive)
-  const renderStars = (rating: number, interactive: boolean = false) => {
-    return (
-      <View style={styles.starsRow}>
-        {[1, 2, 3, 4, 5].map((star) => {
-          const StarComponent = interactive ? TouchableOpacity : View;
-          return (
-            <StarComponent
-              key={star}
-              style={[
-                styles.starBox,
-                star <= rating && styles.starBoxFilled,
-              ]}
-              onPress={interactive ? () => handleRatingSubmit(star) : undefined}
-            >
-              <Text style={[
-                styles.starText,
-                star <= rating && styles.starTextFilled,
-              ]}>
-                ★
-              </Text>
-            </StarComponent>
-          );
-        })}
-      </View>
-    );
-  };
-
   // Render Result Phase
   const renderResultPhase = () => {
     const getFeedbackText = (rating: number) => {
@@ -348,8 +320,8 @@ export default function GameScreen() {
       return t('game.result.tapStars');
     };
 
-    // Berechne responsive Bildgröße: 40% der Bildschirmbreite, min 150px, max 250px
-    const imageSize = Math.min(Math.max(screenWidth * 0.4, 150), 250);
+    // Bildgröße: 44% der Bildschirmbreite, min 140px, max 220px
+    const imageSize = Math.min(Math.max(screenWidth * 0.44, 140), 220);
 
     return (
       <ScrollView
@@ -357,30 +329,29 @@ export default function GameScreen() {
         contentContainerStyle={styles.resultContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.phaseTitle}>{t('game.result.title')}</Text>
-
-        {/* Sterne-Bewertung Interaktiv */}
-        <View style={[styles.starsContainer, isSmall && styles.starsContainerSmall]}>
-          {renderStars(userRating, true)}
-          <AnimatedFeedback visible={userRating > 0}>
-            <Text style={styles.ratingText}>{userRating} Stern{userRating !== 1 ? 'e' : ''}!</Text>
-            <Text style={styles.feedbackText}>{getFeedbackText(userRating)}</Text>
-          </AnimatedFeedback>
-          {userRating === 0 && (
-            <Text style={styles.feedbackText}>{t('game.result.tapStars')}</Text>
-          )}
-        </View>
-
-        {/* Vergleich */}
+        {/* 1. Side-by-side Vergleich */}
         <View style={styles.comparisonContainer}>
-          <View style={styles.comparisonBox}>
+          {/* Vorlage */}
+          <View style={[styles.comparisonCard, { width: imageSize }]}>
+            <View style={[styles.comparisonCardHeader, styles.comparisonCardHeaderTemplate]}>
+              <Text style={[styles.comparisonCardLabel, { color: Colors.primary }]}>
+                {t('game.result.original').toUpperCase()}
+              </Text>
+            </View>
             <View style={[styles.comparisonImage, { width: imageSize, height: imageSize }]}>
               {currentImage && (
                 <LevelImageDisplay image={currentImage} size={imageSize} />
               )}
             </View>
           </View>
-          <View style={styles.comparisonBox}>
+
+          {/* Deine Zeichnung */}
+          <View style={[styles.comparisonCard, { width: imageSize }]}>
+            <View style={[styles.comparisonCardHeader, styles.comparisonCardHeaderDrawing]}>
+              <Text style={[styles.comparisonCardLabel, { color: Colors.secondary }]}>
+                {t('game.result.yourDrawing').toUpperCase()}
+              </Text>
+            </View>
             <View style={[styles.comparisonImage, { width: imageSize, height: imageSize }]}>
               <DrawingCanvas
                 width={imageSize}
@@ -401,22 +372,36 @@ export default function GameScreen() {
                       {isReplaying ? '⏹' : '▶'}
                     </Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.canvasIconButton, savedToGallery && styles.canvasIconButtonSaved]}
-                    onPress={saveToGallery}
-                    disabled={savedToGallery}
-                    accessibilityRole="button"
-                    accessibilityLabel={savedToGallery ? t('gallery.saved') : t('gallery.save')}
-                    accessibilityState={{ disabled: savedToGallery }}
-                  >
-                    <Text style={[styles.canvasIconText, savedToGallery && styles.canvasIconTextSaved]}>
-                      {savedToGallery ? '✓' : '💾'}
-                    </Text>
-                  </TouchableOpacity>
                 </View>
               )}
             </View>
           </View>
+        </View>
+
+        {/* 2. Sterne-Bewertung */}
+        <View style={[styles.starsContainer, isSmall && styles.starsContainerSmall]}>
+          <Text style={styles.phaseTitle}>{t('game.result.title')}</Text>
+          <View style={styles.starsRow}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <TouchableOpacity
+                key={star}
+                onPress={() => handleRatingSubmit(star)}
+                accessibilityRole="button"
+                accessibilityLabel={`${star} Stern${star !== 1 ? 'e' : ''}`}
+              >
+                <Text style={[styles.starEmoji, star <= userRating && styles.starEmojiActive]}>
+                  ⭐
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <AnimatedFeedback visible={userRating > 0}>
+            <Text style={styles.ratingText}>{userRating} Stern{userRating !== 1 ? 'e' : ''}!</Text>
+            <Text style={styles.feedbackText}>{getFeedbackText(userRating)}</Text>
+          </AnimatedFeedback>
+          {userRating === 0 && (
+            <Text style={styles.feedbackText}>{t('game.result.tapStars')}</Text>
+          )}
         </View>
 
         {/* Completion banner for Level 10 */}
@@ -427,7 +412,7 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* Action Buttons */}
+        {/* 3. Aktions-Buttons */}
         <View style={styles.actionRow}>
           <TouchableOpacity style={styles.actionButton} onPress={handleRestartCurrentLevel}>
             <Text style={styles.actionButtonText}>{t('game.result.retry')}</Text>
@@ -445,6 +430,20 @@ export default function GameScreen() {
             <Text style={styles.actionButtonText}>{t('game.result.backToMenu')}</Text>
           </TouchableOpacity>
         </View>
+
+        {/* 4. Galerie speichern */}
+        <TouchableOpacity
+          style={[styles.galleryButton, savedToGallery && styles.galleryButtonSaved]}
+          onPress={saveToGallery}
+          disabled={savedToGallery}
+          accessibilityRole="button"
+          accessibilityLabel={savedToGallery ? t('gallery.saved') : t('gallery.save')}
+          accessibilityState={{ disabled: savedToGallery }}
+        >
+          <Text style={[styles.galleryButtonText, savedToGallery && styles.galleryButtonTextSaved]}>
+            {savedToGallery ? `✓ ${t('gallery.saved')}` : `🖼 ${t('gallery.save')}`}
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
     );
   };
@@ -895,28 +894,12 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
     marginBottom: Spacing.md,
   },
-  starBox: {
-    width: 48,
-    height: 48,
-    borderRadius: BorderRadius.md,
-    backgroundColor: Colors.surface,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: Colors.stars.empty,
-    ...Colors.shadow.small, // Soft & Modern: Subtile Schatten für Sterne
+  starEmoji: {
+    fontSize: 36,
+    opacity: 0.3,
   },
-  starBoxFilled: {
-    backgroundColor: Colors.stars.filled,
-    borderColor: Colors.stars.filled,
-    ...Colors.shadow.medium, // Gefüllte Sterne mit stärkerem Schatten
-  },
-  starText: {
-    fontSize: 28,
-    color: Colors.stars.empty,
-  },
-  starTextFilled: {
-    color: Colors.drawing.white,
+  starEmojiActive: {
+    opacity: 1,
   },
   ratingText: {
     fontSize: FontSize.xl,
@@ -932,26 +915,40 @@ const styles = StyleSheet.create({
   },
   comparisonContainer: {
     flexDirection: 'row',
-    gap: Spacing.md,
+    gap: Spacing.sm,
     marginBottom: Spacing.md,
     justifyContent: 'center',
   },
-  comparisonBox: {
-    alignItems: 'center',
+  comparisonCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: BorderRadius.xl,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: Colors.border,
+    ...Colors.shadow.medium,
   },
-  comparisonLabel: {
-    fontSize: FontSize.sm,
-    fontWeight: FontWeight.semibold,
-    color: Colors.text.secondary,
-    textAlign: 'center',
-    marginBottom: Spacing.sm,
+  comparisonCardHeader: {
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.sm,
+  },
+  comparisonCardHeaderTemplate: {
+    backgroundColor: Colors.primary + '18',
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.primary + '22',
+  },
+  comparisonCardHeaderDrawing: {
+    backgroundColor: Colors.secondary + '18',
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.secondary + '22',
+  },
+  comparisonCardLabel: {
+    fontSize: FontSize.xs,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 0.6,
   },
   comparisonImage: {
-    backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.xl, // lg → xl (16px → 20px für Cards)
     justifyContent: 'center',
     alignItems: 'center',
-    ...Colors.shadow.medium, // Soft & Modern: Weiche Schatten für Vergleichs-Container
   },
   placeholderText: {
     fontSize: FontSize.md,
@@ -995,6 +992,29 @@ const styles = StyleSheet.create({
     fontSize: FontSize.md,
     color: Colors.text.secondary,
     textAlign: 'center',
+  },
+  galleryButton: {
+    width: '100%',
+    paddingVertical: Spacing.md,
+    borderRadius: BorderRadius.lg,
+    backgroundColor: Colors.surface,
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    borderColor: Colors.border,
+    alignItems: 'center',
+    marginTop: Spacing.xs,
+  },
+  galleryButtonSaved: {
+    borderColor: Colors.success,
+    backgroundColor: Colors.success + '10',
+  },
+  galleryButtonText: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
+    color: Colors.text.secondary,
+  },
+  galleryButtonTextSaved: {
+    color: Colors.success,
   },
   canvasIconRow: {
     position: 'absolute',
