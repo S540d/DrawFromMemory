@@ -40,7 +40,11 @@
       "undo": "Rückgängig",
       "clear": "Alles löschen",
       "clearConfirm": "Wirklich alles löschen?",
-      "done": "Fertig"
+      "done": "Fertig",
+      "hintButton": "👁 1x",
+      "hintUsed": "Joker verbraucht",
+      "hintModalTitle": "Vorlage",
+      "drawFromMemory": "Zeichne aus dem Gedächtnis"
     },
     "result": {
       "title": "Bewerte selbst:",
