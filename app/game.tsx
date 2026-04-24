@@ -33,8 +33,6 @@ export default function GameScreen() {
   const { screenWidth, isSmall } = layout;
   const [showSettings, setShowSettings] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [showToolPicker, setShowToolPicker] = useState(false);
-  const [showStrokeWidthPicker, setShowStrokeWidthPicker] = useState(false);
 
   // Drawing Canvas Hook
   const drawing = useDrawingCanvas();
@@ -144,11 +142,11 @@ export default function GameScreen() {
         </ErrorBoundary>
       </View>
 
-      {/* Kompakte Toolbar */}
-      <View style={[styles.compactToolbar, dynToolbar]}>
-        {/* Farbe */}
+      {/* Toolbar-Gruppe */}
+      <View style={[styles.toolbarGroup, dynToolbar]}>
+        {/* Reihe 1: Farb-Button */}
         <TouchableOpacity
-          style={[styles.toolbarButton, dynToolbarButton]}
+          style={[styles.colorButton, dynToolbarButton]}
           onPress={() => setShowColorPicker(true)}
           accessibilityLabel={t('game.draw.selectColor')}
           accessibilityRole="button"
@@ -157,29 +155,58 @@ export default function GameScreen() {
           <Text style={styles.toolbarButtonText}>{t('game.draw.color')}</Text>
         </TouchableOpacity>
 
-        {/* Werkzeug */}
-        <TouchableOpacity
-          style={[styles.toolbarButton, dynToolbarButton]}
-          onPress={() => setShowToolPicker(true)}
-          accessibilityLabel={t('game.draw.tool')}
-          accessibilityRole="button"
-        >
-          <Text style={styles.toolbarIcon}>{drawing.tool === 'brush' ? '🖌️' : '🪣'}</Text>
-          <Text style={styles.toolbarButtonText}>{t('game.draw.tool')}</Text>
-        </TouchableOpacity>
+        {/* Trennlinie */}
+        <View style={styles.toolbarDivider} />
 
-        {/* Strichstärke (nur bei Brush) */}
-        {drawing.tool === 'brush' && (
+        {/* Reihe 2: Pen/Fill + Strichstärken in einer Zeile */}
+        <View style={styles.toolRow}>
+          {/* Pen/Fill Toggle */}
           <TouchableOpacity
-            style={[styles.toolbarButton, dynToolbarButton]}
-            onPress={() => setShowStrokeWidthPicker(true)}
-            accessibilityLabel={t('game.draw.strokeWidth')}
+            style={[styles.toolToggleButton, drawing.tool === 'brush' && styles.toolToggleButtonActive]}
+            onPress={() => drawing.setTool('brush')}
+            accessibilityLabel={t('game.draw.toolBrush')}
             accessibilityRole="button"
           >
-            <View style={[styles.toolbarStrokePreview, { height: drawing.strokeWidth }]} />
-            <Text style={styles.toolbarButtonText}>{t('game.draw.strokeWidth')}</Text>
+            <Text style={styles.toolToggleIcon}>🖌️</Text>
           </TouchableOpacity>
-        )}
+          <TouchableOpacity
+            style={[styles.toolToggleButton, drawing.tool === 'fill' && styles.toolToggleButtonActive]}
+            onPress={() => drawing.setTool('fill')}
+            accessibilityLabel={t('game.draw.toolFill')}
+            accessibilityRole="button"
+          >
+            <Text style={styles.toolToggleIcon}>🪣</Text>
+          </TouchableOpacity>
+
+          {/* Vertikaler Trenner */}
+          <View style={styles.toolRowSeparator} />
+
+          {/* Strichstärken-Circles */}
+          {([2, 3, 5] as const).map((size) => (
+            <TouchableOpacity
+              key={size}
+              style={[
+                styles.strokeCircleButton,
+                drawing.tool === 'fill' && styles.strokeCircleDisabled,
+              ]}
+              onPress={() => { if (drawing.tool !== 'fill') drawing.setStrokeWidth(size); }}
+              disabled={drawing.tool === 'fill'}
+              accessibilityLabel={`${t('game.draw.strokeWidth')} ${size}`}
+              accessibilityRole="button"
+            >
+              <View style={[
+                styles.strokeCircle,
+                {
+                  width: size === 2 ? 10 : size === 3 ? 16 : 22,
+                  height: size === 2 ? 10 : size === 3 ? 16 : 22,
+                  backgroundColor: drawing.strokeWidth === size && drawing.tool !== 'fill'
+                    ? drawing.color
+                    : Colors.border,
+                },
+              ]} />
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
 
       {/* Buttons */}
@@ -199,12 +226,10 @@ export default function GameScreen() {
           accessibilityRole="button"
           onPress={() => {
             if (Platform.OS === 'web') {
-              // Auf Web: Direktes Löschen ohne Alert (Alert funktioniert nicht zuverlässig)
               if (drawing.paths.length > 0 && window.confirm('Möchtest du wirklich die gesamte Zeichnung löschen?')) { // platform-safe
                 drawing.setPaths([]);
               }
             } else {
-              // Native: Alert Dialog
               if (drawing.paths.length === 0) return;
               Alert.alert(
                 'Alles löschen?',
@@ -214,9 +239,7 @@ export default function GameScreen() {
                   {
                     text: 'Löschen',
                     style: 'destructive',
-                    onPress: () => {
-                      drawing.setPaths([]);
-                    }
+                    onPress: () => { drawing.setPaths([]); },
                   },
                 ]
               );
@@ -451,88 +474,6 @@ export default function GameScreen() {
         </View>
       </Modal>
 
-      {/* Tool Picker Modal */}
-      <Modal
-        visible={showToolPicker}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowToolPicker(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.pickerModal}>
-            <Text style={styles.pickerTitle}>{t('game.draw.tool')}</Text>
-            <View style={styles.pickerOptions}>
-              <TouchableOpacity
-                style={[styles.pickerOption, drawing.tool === 'brush' && styles.pickerOptionActive]}
-                onPress={() => {
-                  drawing.setTool('brush');
-                  setShowToolPicker(false);
-                }}
-              >
-                <Text style={styles.pickerOptionIcon}>🖌️</Text>
-                <Text style={styles.pickerOptionText}>{t('game.draw.toolBrush')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.pickerOption, drawing.tool === 'fill' && styles.pickerOptionActive]}
-                onPress={() => {
-                  drawing.setTool('fill');
-                  setShowToolPicker(false);
-                }}
-              >
-                <Text style={styles.pickerOptionIcon}>🪣</Text>
-                <Text style={styles.pickerOptionText}>{t('game.draw.toolFill')}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Stroke Width Picker Modal */}
-      <Modal
-        visible={showStrokeWidthPicker}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowStrokeWidthPicker(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.pickerModal}>
-            <Text style={styles.pickerTitle}>{t('game.draw.strokeWidth')}</Text>
-            <View style={styles.pickerOptions}>
-              <TouchableOpacity
-                style={[styles.pickerOption, drawing.strokeWidth === 2 && styles.pickerOptionActive]}
-                onPress={() => {
-                  drawing.setStrokeWidth(2);
-                  setShowStrokeWidthPicker(false);
-                }}
-              >
-                <View style={[styles.strokePreviewLine, { height: 2 }]} />
-                <Text style={styles.pickerOptionText}>{t('game.draw.strokeWidthThin')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.pickerOption, drawing.strokeWidth === 3 && styles.pickerOptionActive]}
-                onPress={() => {
-                  drawing.setStrokeWidth(3);
-                  setShowStrokeWidthPicker(false);
-                }}
-              >
-                <View style={[styles.strokePreviewLine, { height: 3 }]} />
-                <Text style={styles.pickerOptionText}>{t('game.draw.strokeWidthNormal')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.pickerOption, drawing.strokeWidth === 5 && styles.pickerOptionActive]}
-                onPress={() => {
-                  drawing.setStrokeWidth(5);
-                  setShowStrokeWidthPicker(false);
-                }}
-              >
-                <View style={[styles.strokePreviewLine, { height: 5 }]} />
-                <Text style={styles.pickerOptionText}>{t('game.draw.strokeWidthThick')}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-
       {/* Phase Content */}
       {phase === 'memorize' && renderMemorizePhase()}
       {phase === 'draw' && renderDrawPhase()}
@@ -716,23 +657,20 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 3,
   },
-  // Kompakte Toolbar Styles
-  compactToolbar: {
-    flexDirection: 'row',
-    gap: Spacing.sm,
+  // Toolbar-Gruppe Styles
+  toolbarGroup: {
+    backgroundColor: Colors.surfaceAlt,
+    borderRadius: BorderRadius.xl,
+    padding: Spacing.sm,
     marginVertical: Spacing.sm,
+    gap: Spacing.xs,
   },
-  toolbarButton: {
-    flex: 1,
-    backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.md,
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.xs,
+  colorButton: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: Colors.border,
-    minHeight: 60,
+    gap: Spacing.sm,
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.xs,
   },
   toolbarColorPreview: {
     width: 28,
@@ -740,67 +678,58 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.sm,
     borderWidth: 2,
     borderColor: Colors.border,
-    marginBottom: 4,
-  },
-  toolbarIcon: {
-    fontSize: 24,
-    marginBottom: 2,
-  },
-  toolbarStrokePreview: {
-    width: 30,
-    backgroundColor: Colors.text.primary,
-    borderRadius: 2,
-    marginBottom: 4,
   },
   toolbarButtonText: {
-    fontSize: FontSize.xs,
+    fontSize: FontSize.sm,
     color: Colors.text.secondary,
-    textAlign: 'center',
-  },
-  // Picker Modal Styles
-  pickerModal: {
-    backgroundColor: Colors.background,
-    borderRadius: BorderRadius.xl,
-    padding: Spacing.lg,
-    width: '80%',
-    maxWidth: 300,
-  },
-  pickerTitle: {
-    fontSize: FontSize.lg,
     fontWeight: FontWeight.semibold,
-    color: Colors.text.primary,
-    marginBottom: Spacing.md,
-    textAlign: 'center',
   },
-  pickerOptions: {
-    gap: Spacing.sm,
+  toolbarDivider: {
+    height: 1,
+    backgroundColor: Colors.border,
+    marginHorizontal: Spacing.xs,
   },
-  pickerOption: {
+  toolRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.md,
-    padding: Spacing.md,
-    backgroundColor: Colors.surface,
+    gap: Spacing.sm,
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.xs,
+  },
+  toolToggleButton: {
+    width: 40,
+    height: 40,
     borderRadius: BorderRadius.md,
+    backgroundColor: Colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 2,
     borderColor: Colors.border,
   },
-  pickerOptionActive: {
+  toolToggleButtonActive: {
+    backgroundColor: Colors.primary,
     borderColor: Colors.primary,
-    backgroundColor: Colors.primaryLight + '20',
   },
-  pickerOptionIcon: {
-    fontSize: 32,
+  toolToggleIcon: {
+    fontSize: 20,
   },
-  pickerOptionText: {
-    fontSize: FontSize.md,
-    color: Colors.text.primary,
-    flex: 1,
+  toolRowSeparator: {
+    width: 1,
+    height: 28,
+    backgroundColor: Colors.border,
+    marginHorizontal: Spacing.xs,
   },
-  strokePreviewLine: {
-    width: 40,
-    backgroundColor: Colors.text.primary,
-    borderRadius: 2,
+  strokeCircleButton: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  strokeCircle: {
+    borderRadius: 999,
+  },
+  strokeCircleDisabled: {
+    opacity: 0.35,
   },
   buttonRow: {
     flexDirection: 'row',
