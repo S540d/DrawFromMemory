@@ -148,13 +148,8 @@ export default function GameScreen() {
     const levelName = currentLang === 'en' ? currentImage?.displayNameEn : currentImage?.displayName;
     return (
     <View style={styles.phaseContainer}>
-      {/* Info-Streifen: Thumbnail + Aufgabe + Hint-Joker */}
+      {/* Info-Streifen: Aufgabe + Hint-Joker */}
       <View style={styles.infoStrip}>
-        {currentImage && (
-          <View style={styles.infoThumbnail}>
-            <LevelImageDisplay image={currentImage} size={44} />
-          </View>
-        )}
         <View style={styles.infoStripCenter}>
           <Text style={styles.infoStripLabel}>{t('game.draw.referenceLabel')}</Text>
           <Text style={styles.infoStripText} numberOfLines={2}>
@@ -1123,15 +1118,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
     ...Colors.shadow.small,
-  },
-  infoThumbnail: {
-    width: 52,
-    height: 44,
-    borderRadius: BorderRadius.md,
-    overflow: 'hidden',
-    flexShrink: 0,
-    borderWidth: 1,
-    borderColor: Colors.border,
   },
   infoStripCenter: {
     flex: 1,
