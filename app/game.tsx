@@ -225,7 +225,7 @@ export default function GameScreen() {
             accessibilityLabel={t('game.draw.toolBrush')}
             accessibilityRole="button"
           >
-            <Text style={styles.toolToggleIcon}>🖌️</Text>
+            <Text style={styles.toolToggleIcon}>✏️</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.toolToggleButton, drawing.tool === 'fill' && styles.toolToggleButtonActive]}
@@ -758,7 +758,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
   },
   toolToggleIcon: {
-    fontSize: 20,
+    fontSize: 18,
   },
   toolRowSeparator: {
     width: 1,
@@ -895,7 +895,7 @@ const styles = StyleSheet.create({
   },
   starEmoji: {
     fontSize: 36,
-    opacity: 0.3,
+    opacity: 0.15,
   },
   starEmojiActive: {
     opacity: 1,
