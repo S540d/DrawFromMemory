@@ -2,7 +2,7 @@
   "expo": {
     "name": "Merke und Male",
     "slug": "merke-und-male",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "platforms": [
       "ios",
       "android",
@@ -43,7 +43,7 @@
       },
       "package": "com.s540d.merkeundmale",
       "permissions": [],
-      "versionCode": 53,
+      "versionCode": 54,
       "newArchEnabled": false,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.s540d.merkeundmale",
       "privacyPolicy": "https://s540d.github.io/DrawFromMemory/PRIVACY_POLICY.html"
