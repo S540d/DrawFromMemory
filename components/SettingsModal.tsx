@@ -38,10 +38,6 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   const handleLanguageChange = async (lang: 'de' | 'en') => {
     await setLanguage(lang);
     setCurrentLang(lang);
-    Alert.alert(
-      t('settings.languageChanged'),
-      t('settings.languageChangedMessage')
-    );
   };
 
   const handleThemeChange = async (newTheme: 'light' | 'dark' | 'system') => {
@@ -303,10 +299,28 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
         {t('settings.aboutSupport')}
       </Text>
       <View style={[styles.card, { backgroundColor: colors.surface }]}>
-        {renderTapRow(t('settings.feedback'), handleSendFeedback)}
-        {renderTapRow(t('settings.support'), handleSupport)}
-        {renderTapRow(t('settings.share'), handleShareApp)}
-        {renderTapRow(t('settings.aboutButton'), () => setShowAboutModal(true))}
+        <View style={styles.actionGrid}>
+          {([
+            { label: t('settings.feedback'), icon: '✉️', onPress: handleSendFeedback },
+            { label: t('settings.support'),  icon: '☕',  onPress: handleSupport },
+            { label: t('settings.share'),    icon: '↗',   onPress: handleShareApp },
+            { label: t('settings.aboutButton'), icon: 'ℹ', onPress: () => setShowAboutModal(true) },
+          ] as const).map(({ label, icon, onPress }, idx) => (
+            <TouchableOpacity
+              key={label}
+              style={[
+                styles.actionGridItem,
+                { borderColor: colors.border },
+                idx < 2 && styles.actionGridItemTop,
+                idx % 2 === 1 && styles.actionGridItemRight,
+              ]}
+              onPress={onPress}
+            >
+              <Text style={[styles.actionGridIcon, { color: colors.primary }]}>{icon}</Text>
+              <Text style={[styles.actionGridLabel, { color: colors.text.primary }]}>{label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
 
       {renderAboutModal()}
@@ -451,6 +465,34 @@ const styles = StyleSheet.create({
   rowChevron: {
     fontSize: FontSize.lg,
     marginLeft: Spacing.sm,
+  },
+
+  // ── Action Grid ─────────────────────────────────────────────────────────
+  actionGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  actionGridItem: {
+    width: '50%',
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.xs,
+    borderTopWidth: 1,
+  },
+  actionGridItemTop: {
+    borderTopWidth: 0,
+  },
+  actionGridItemRight: {
+    borderLeftWidth: 1,
+  },
+  actionGridIcon: {
+    fontSize: 22,
+  },
+  actionGridLabel: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.medium,
   },
 
   // ── Segment-Control ─────────────────────────────────────────────────────
