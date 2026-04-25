@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useScreenLayout } from '@utils/useScreenLayout';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getTotalLevels } from '@services/LevelManager';
-import { useTranslation, getCurrentLanguage } from '@services/i18n';
+import { useTranslation, getLanguage } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import { DrawingColors } from '../constants/Colors';
 import Colors from '../constants/Colors';
@@ -40,7 +40,7 @@ export default function GameScreen() {
   const drawing = useDrawingCanvas();
 
   // Get current language for accessibility
-  const currentLang = getCurrentLanguage();
+  const currentLang = getLanguage();
 
   // Level aus URL-Parameter auslesen, falls vorhanden, und validieren
   const parsedLevel = params.level ? parseInt(params.level as string, 10) : 1;
@@ -284,18 +284,18 @@ export default function GameScreen() {
           accessibilityRole="button"
           onPress={() => {
             if (Platform.OS === 'web') {
-              if (drawing.paths.length > 0 && window.confirm('Möchtest du wirklich die gesamte Zeichnung löschen?')) { // platform-safe
+              if (drawing.paths.length > 0 && window.confirm(t('game.draw.clearConfirm'))) { // platform-safe
                 drawing.setPaths([]);
               }
             } else {
               if (drawing.paths.length === 0) return;
               Alert.alert(
-                'Alles löschen?',
-                'Möchtest du wirklich die gesamte Zeichnung löschen?',
+                t('game.draw.clear'),
+                t('game.draw.clearConfirm'),
                 [
-                  { text: 'Abbrechen', style: 'cancel' },
+                  { text: t('common.cancel'), style: 'cancel' },
                   {
-                    text: 'Löschen',
+                    text: t('common.yes'),
                     style: 'destructive',
                     onPress: () => { drawing.setPaths([]); },
                   },
