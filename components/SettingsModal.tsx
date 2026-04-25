@@ -301,13 +301,13 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
       <View style={[styles.card, { backgroundColor: colors.surface }]}>
         <View style={styles.actionGrid}>
           {([
-            { label: t('settings.feedback'), icon: '✉️', onPress: handleSendFeedback },
-            { label: t('settings.support'),  icon: '☕',  onPress: handleSupport },
-            { label: t('settings.share'),    icon: '↗',   onPress: handleShareApp },
-            { label: t('settings.aboutButton'), icon: 'ℹ', onPress: () => setShowAboutModal(true) },
-          ] as const).map(({ label, icon, onPress }, idx) => (
+            { id: 'feedback', label: t('settings.feedback'), icon: '✉️', onPress: handleSendFeedback },
+            { id: 'support',  label: t('settings.support'),  icon: '☕',  onPress: handleSupport },
+            { id: 'share',    label: t('settings.share'),    icon: '↗',   onPress: handleShareApp },
+            { id: 'about',    label: t('settings.aboutButton'), icon: 'ℹ', onPress: () => setShowAboutModal(true) },
+          ] as const).map(({ id, label, icon, onPress }, idx) => (
             <TouchableOpacity
-              key={label}
+              key={id}
               style={[
                 styles.actionGridItem,
                 { borderColor: colors.border },
@@ -315,8 +315,14 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
                 idx % 2 === 1 && styles.actionGridItemRight,
               ]}
               onPress={onPress}
+              accessibilityRole="button"
+              accessibilityLabel={label}
             >
-              <Text style={[styles.actionGridIcon, { color: colors.primary }]}>{icon}</Text>
+              <Text
+                accessible={false}
+                importantForAccessibility="no"
+                style={[styles.actionGridIcon, { color: colors.primary }]}
+              >{icon}</Text>
               <Text style={[styles.actionGridLabel, { color: colors.text.primary }]}>{label}</Text>
             </TouchableOpacity>
           ))}
@@ -479,13 +485,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: Spacing.xs,
-    borderTopWidth: 1,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   actionGridItemTop: {
     borderTopWidth: 0,
   },
   actionGridItemRight: {
-    borderLeftWidth: 1,
+    borderLeftWidth: StyleSheet.hairlineWidth,
   },
   actionGridIcon: {
     fontSize: 22,
