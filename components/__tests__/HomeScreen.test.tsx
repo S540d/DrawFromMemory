@@ -48,11 +48,10 @@ import HomeScreen from '../../app/index';
 
 describe('HomeScreen', () => {
   it('renders the localized app name in the header', () => {
-    const { UNSAFE_getAllByType } = render(<HomeScreen />);
-    const { Text } = require('react-native');
-    const renderedTexts = UNSAFE_getAllByType(Text).map((node: any) => node.props.children).flat();
+    const { toJSON } = render(<HomeScreen />);
+    const renderedTree = JSON.stringify(toJSON());
 
-    expect(renderedTexts).toContain('Remember & Draw');
-    expect(renderedTexts).not.toContain('Merke & Male');
+    expect(renderedTree).toContain('Remember & Draw');
+    expect(renderedTree).not.toContain('Merke & Male');
   });
 });
