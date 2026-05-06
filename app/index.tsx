@@ -22,7 +22,7 @@ export default function HomeScreen() {
       {/* Top bar */}
       <View style={styles.topBar}>
         <View>
-          <Text style={[styles.appTitle, { color: colors.text.primary }]}>Merke & Male</Text>
+          <Text style={[styles.appTitle, { color: colors.text.primary }]}>{t('app.name')}</Text>
           <Text style={[styles.appTagline, { color: colors.text.secondary }]}>{t('home.subtitle')}</Text>
         </View>
         <Pressable

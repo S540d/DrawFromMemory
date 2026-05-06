@@ -462,7 +462,7 @@ export default function GameScreen() {
           accessibilityRole="button"
           accessibilityLabel={t('common.back')}
         >
-          <Text style={styles.headerTitle}>Merke & Male</Text>
+          <Text style={styles.headerTitle}>{t('app.name')}</Text>
           <Text style={styles.headerSub}>Level {levelNumber}{levelName ? ` · ${levelName}` : ''}</Text>
         </TouchableOpacity>
         <View style={styles.headerRight}>
