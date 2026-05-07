@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { render, act } from '@testing-library/react-native';
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({ back: jest.fn() }),
@@ -50,7 +50,8 @@ jest.mock('../../services/ThemeContext', () => ({
 }));
 
 jest.mock('../../components/LevelImageDisplay', () => {
-  return function LevelImageDisplay() { return null; };
+  const { View } = require('react-native');
+  return function LevelImageDisplay() { return <View />; };
 });
 
 jest.mock('../../components/DrawingCanvas', () => {
@@ -75,16 +76,23 @@ jest.mock('../../components/DrawingCanvas', () => {
 });
 
 jest.mock('../../components/SettingsModal', () => {
-  return function SettingsModal() { return null; };
+  const { View } = require('react-native');
+  return function SettingsModal() { return <View />; };
 });
 
 jest.mock('../../components/ErrorBoundary', () => ({
-  ErrorBoundary: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  ErrorBoundary: ({ children }: any) => {
+    const { View } = require('react-native');
+    return <View>{children}</View>;
+  },
 }));
 
-jest.mock('../../components/AnimatedPrimitives', () => ({
-  AnimatedFeedback: ({ children, visible }: any) => (visible ? <>{children}</> : null),
-}));
+jest.mock('../../components/AnimatedPrimitives', () => {
+  const { View } = require('react-native');
+  return {
+    AnimatedFeedback: ({ children, visible }: any) => visible ? <View>{children}</View> : null,
+  };
+});
 
 jest.mock('../../services/SoundManager', () => ({
   __esModule: true,
@@ -115,10 +123,17 @@ jest.mock('../../services/useGamePhase', () => ({
 
 import GameScreen from '../../app/game';
 
+const getAllTexts = (getAllByType: (type: any) => any[]) => {
+  const { Text } = require('react-native');
+  return getAllByType(Text).map((n: any) => n.props.children).flat();
+};
+
 describe('GameScreen', () => {
-  it('renders the app name via translation key, not hardcoded', () => {
-    const { getByText, queryByText } = render(<GameScreen />);
-    expect(getByText('app.name')).toBeTruthy();
-    expect(queryByText('Merke & Male')).toBeNull();
+  it('renders the app name via translation key, not hardcoded', async () => {
+    const { UNSAFE_getAllByType } = render(<GameScreen />);
+    await act(async () => {});
+    const texts = getAllTexts(UNSAFE_getAllByType);
+    expect(texts).toContain('app.name');
+    expect(texts).not.toContain('Merke & Male');
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { render, act } from '@testing-library/react-native';
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({ push: jest.fn() }),
@@ -17,7 +17,8 @@ jest.mock('expo-linear-gradient', () => {
 });
 
 jest.mock('../../components/SettingsModal', () => {
-  return function SettingsModal() { return null; };
+  const { View } = require('react-native');
+  return function SettingsModal() { return <View />; };
 });
 
 jest.mock('../../services/ThemeContext', () => ({
@@ -38,10 +39,17 @@ jest.mock('../../services/i18n', () => ({
 
 import HomeScreen from '../../app/index';
 
+const getAllTexts = (getAllByType: (type: any) => any[]) => {
+  const { Text } = require('react-native');
+  return getAllByType(Text).map((n: any) => n.props.children).flat();
+};
+
 describe('HomeScreen', () => {
-  it('renders the app name via translation key, not hardcoded', () => {
-    const { getByText, queryByText } = render(<HomeScreen />);
-    expect(getByText('app.name')).toBeTruthy();
-    expect(queryByText('Merke & Male')).toBeNull();
+  it('renders the app name via translation key, not hardcoded', async () => {
+    const { UNSAFE_getAllByType } = render(<HomeScreen />);
+    await act(async () => {});
+    const texts = getAllTexts(UNSAFE_getAllByType);
+    expect(texts).toContain('app.name');
+    expect(texts).not.toContain('Merke & Male');
   });
 });
