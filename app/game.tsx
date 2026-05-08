@@ -225,7 +225,7 @@ export default function GameScreen() {
             accessibilityLabel={t('game.draw.toolBrush')}
             accessibilityRole="button"
           >
-            <Text style={styles.toolToggleIcon}>🖌️</Text>
+            <Text style={styles.toolToggleIcon}>✏️</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.toolToggleButton, drawing.tool === 'fill' && styles.toolToggleButtonActive]}
@@ -462,7 +462,7 @@ export default function GameScreen() {
           accessibilityRole="button"
           accessibilityLabel={t('common.back')}
         >
-          <Text style={styles.headerTitle}>Merke & Male</Text>
+          <Text style={styles.headerTitle}>{t('app.name')}</Text>
           <Text style={styles.headerSub}>Level {levelNumber}{levelName ? ` · ${levelName}` : ''}</Text>
         </TouchableOpacity>
         <View style={styles.headerRight}>
@@ -758,7 +758,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
   },
   toolToggleIcon: {
-    fontSize: 20,
+    fontSize: 18,
   },
   toolRowSeparator: {
     width: 1,
@@ -895,7 +895,7 @@ const styles = StyleSheet.create({
   },
   starEmoji: {
     fontSize: 36,
-    opacity: 0.3,
+    opacity: 0.15,
   },
   starEmojiActive: {
     opacity: 1,
