@@ -6,6 +6,7 @@
 Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Ergebnis.
 
 - **Aktuell: v1.3.4** — Play-Store-ready, keine offenen Blocker
+- **In staging (seit 2026-05-08):** PR #164 — i18n-Fix: hardcodierte App-Titel in HomeScreen & GameScreen durch `t('app.name')` ersetzt
 - **Live Demo:** https://s540d.github.io/DrawFromMemory/
 - **Repo:** https://github.com/S540d/DrawFromMemory
 
@@ -65,7 +66,7 @@ npm run build:web  # Web-Build (gh-pages)
 npx tsc --noEmit   # TypeScript-Check
 ```
 
-**Branch-Strategie:** Feature-Branches → PR → direkt in `main`. Kein separater `staging`-Branch mehr nötig (seit v1.3.0 liegt `staging` hinter main).
+**Branch-Strategie:** Feature-Branches → PR → `staging` → `main`. Der `staging`-Branch wird aktiv als Integrations-Branch genutzt (wieder aktiv seit 2026-05-08).
 
 ---
 
