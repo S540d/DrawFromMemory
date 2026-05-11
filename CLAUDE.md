@@ -66,7 +66,7 @@ npm run build:web  # Web-Build (gh-pages)
 npx tsc --noEmit   # TypeScript-Check
 ```
 
-**Branch-Strategie:** Feature-Branches → PR → `staging` → `main`. Der `staging`-Branch wird aktiv als Integrations-Branch genutzt (wieder aktiv seit 2026-05-08).
+**Branch-Strategie:** Feature-Branches → PR → `testing` (QA) → `staging` (Pre-Production) → `main` (Produktion). Alle drei Branches (`main`, `staging`, `testing`) müssen immer existieren und dürfen nie gelöscht werden.
 
 ---
 
