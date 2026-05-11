@@ -34,7 +34,7 @@ jest.mock('../../services/LevelManager', () => ({
 
 jest.mock('../../services/i18n', () => ({
   t: (key: string) => key,
-  getCurrentLanguage: () => 'en',
+  getLanguage: () => 'en',
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
