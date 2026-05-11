@@ -4,6 +4,7 @@
  */
 
 import { LevelImage, Difficulty } from '../types';
+import { getDifficultyForLevel } from './LevelManager';
 
 /**
  * Bilderpool mit allen verfügbaren Bildern
@@ -193,23 +194,6 @@ const imagePool: LevelImage[] = [
  * um direkte Wiederholungen zu vermeiden
  */
 let lastShownImages: string[] = [];
-
-/**
- * Ermittelt die Schwierigkeit basierend auf der Level-Nummer
- * IMPORTANT: Must match LevelManager.ts getDifficultyForLevel()
- * Level 1: Difficulty 1
- * Level 2-3: Difficulty 2
- * Level 4-5: Difficulty 3
- * Level 6-7: Difficulty 4
- * Level 8-10: Difficulty 5
- */
-function getDifficultyForLevel(levelNumber: number): Difficulty {
-  if (levelNumber === 1) return 1;
-  if (levelNumber <= 3) return 2;
-  if (levelNumber <= 5) return 3;
-  if (levelNumber <= 7) return 4;
-  return 5;
-}
 
 /**
  * Wählt ein zufälliges Bild für ein Level aus
