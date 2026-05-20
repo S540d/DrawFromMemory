@@ -26,6 +26,7 @@ jest.mock('../LevelManager', () => ({
     difficulty: 1,
     displayDuration: 3,
   })),
+  getDisplayDuration: jest.fn(() => 3),
   getTotalLevels: jest.fn(() => 10),
 }));
 
@@ -38,6 +39,7 @@ jest.mock('../StorageManager', () => ({
   default: {
     saveLevelProgress: jest.fn().mockResolvedValue(undefined),
     saveToGallery: jest.fn().mockResolvedValue(undefined),
+    getSettings: jest.fn().mockResolvedValue({ extraTimeMode: false }),
   },
 }));
 
@@ -94,8 +96,8 @@ describe('useGamePhase', () => {
   });
 
   it('calls router.back on initialization error', () => {
-    const { getLevel } = require('../LevelManager');
-    getLevel.mockImplementationOnce(() => {
+    const { getDisplayDuration } = require('../LevelManager');
+    getDisplayDuration.mockImplementationOnce(() => {
       throw new Error('Invalid level');
     });
 

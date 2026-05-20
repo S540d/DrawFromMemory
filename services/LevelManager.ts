@@ -5,12 +5,22 @@
 
 import { Level, Difficulty } from '../types';
 
+const BASE_DURATIONS: Record<number, number> = {
+  1: 5,
+  2: 4,
+  3: 3,
+  4: 2,
+  5: 1.5,
+};
+
 /**
- * Berechnet die Anzeigedauer für ein Level
- * Alle Level: 3s
+ * Berechnet die Anzeigedauer für ein Level basierend auf der Schwierigkeit.
+ * extraTimeMode addiert +3 s auf jeden Basiswert.
  */
-export function getDisplayDuration(levelNumber: number): number {
-  return 3;
+export function getDisplayDuration(levelNumber: number, extraTimeMode = false): number {
+  const difficulty = getDifficultyForLevel(levelNumber);
+  const base = BASE_DURATIONS[difficulty] ?? 3;
+  return extraTimeMode ? base + 3 : base;
 }
 
 /**
