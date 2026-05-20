@@ -51,25 +51,31 @@ export function useGamePhase({
     onExpire: handleTimerExpire,
   });
 
-  // Load extraTimeMode setting once on mount
+  // Load extraTimeMode setting once on mount with unmount guard
   useEffect(() => {
+    let mounted = true;
     storageManager.getSettings().then(settings => {
-      setExtraTimeMode(settings.extraTimeMode);
+      if (mounted) setExtraTimeMode(settings.extraTimeMode);
     });
+    return () => { mounted = false; };
   }, []);
 
-  // Initialize level on mount and when levelNumber or extraTimeMode changes
+  // Initialize image on levelNumber change only — keeps image stable when extraTimeMode loads
   useEffect(() => {
     try {
       const image = getRandomImageForLevel(levelNumber);
       currentImageRef.current = image;
       setCurrentImage(image);
-      setTimeRemaining(getDisplayDuration(levelNumber, extraTimeMode));
     } catch (error) {
       console.error('Error initializing level:', error);
       router.back();
     }
-  }, [levelNumber, router, setTimeRemaining, extraTimeMode]);
+  }, [levelNumber, router]);
+
+  // Update timer when levelNumber or extraTimeMode changes (separate from image init)
+  useEffect(() => {
+    setTimeRemaining(getDisplayDuration(levelNumber, extraTimeMode));
+  }, [levelNumber, extraTimeMode, setTimeRemaining]);
 
   // Progressive reveal during memorize phase
   useEffect(() => {

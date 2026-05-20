@@ -96,8 +96,8 @@ describe('useGamePhase', () => {
   });
 
   it('calls router.back on initialization error', () => {
-    const { getDisplayDuration } = require('../LevelManager');
-    getDisplayDuration.mockImplementationOnce(() => {
+    const { getRandomImageForLevel } = require('../ImagePoolManager');
+    getRandomImageForLevel.mockImplementationOnce(() => {
       throw new Error('Invalid level');
     });
 
@@ -115,9 +115,9 @@ describe('useGamePhase', () => {
     expect(result.current.phase).toBe('draw');
   });
 
-  it('initializes timeRemaining from level displayDuration', () => {
+  it('initializes timeRemaining from getDisplayDuration', () => {
     const { result } = renderGamePhase();
-    // getLevel returns displayDuration: 3
+    // getDisplayDuration mock returns 3
     expect(result.current.timeRemaining).toBe(3);
   });
 

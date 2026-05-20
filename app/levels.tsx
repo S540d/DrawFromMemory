@@ -28,11 +28,15 @@ export default function LevelsScreen() {
   const cardWidth = screenWidth > 0 ? (screenWidth - Spacing.lg * 3) / 2 : DEFAULT_CARD_WIDTH;
 
   useEffect(() => {
+    let mounted = true;
     Promise.all(
       levels.map(level =>
         storageManager.getLevelRating(level.number).then(r => [level.number, r] as [number, number | null])
       )
-    ).then(entries => setRatings(Object.fromEntries(entries)));
+    ).then(entries => {
+      if (mounted) setRatings(Object.fromEntries(entries));
+    });
+    return () => { mounted = false; };
   }, []);
 
   const renderStars = (rating: number | null, levelNumber: number) => {
