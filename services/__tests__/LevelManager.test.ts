@@ -74,6 +74,28 @@ describe('LevelManager', () => {
         expect(getDisplayDuration(i)).toBeGreaterThan(0);
       }
     });
+
+    it('should return difficulty-based durations without extraTimeMode', () => {
+      expect(getDisplayDuration(1)).toBe(5);   // difficulty 1
+      expect(getDisplayDuration(2)).toBe(4);   // difficulty 2
+      expect(getDisplayDuration(4)).toBe(3);   // difficulty 3
+      expect(getDisplayDuration(6)).toBe(2);   // difficulty 4
+      expect(getDisplayDuration(8)).toBe(1.5); // difficulty 5
+    });
+
+    it('should add exactly +3 s with extraTimeMode for each difficulty', () => {
+      expect(getDisplayDuration(1, true)).toBe(8);   // 5 + 3
+      expect(getDisplayDuration(2, true)).toBe(7);   // 4 + 3
+      expect(getDisplayDuration(4, true)).toBe(6);   // 3 + 3
+      expect(getDisplayDuration(6, true)).toBe(5);   // 2 + 3
+      expect(getDisplayDuration(8, true)).toBe(4.5); // 1.5 + 3
+    });
+
+    it('should return same value as without extraTimeMode when extraTimeMode is false', () => {
+      for (let i = 1; i <= getTotalLevels(); i++) {
+        expect(getDisplayDuration(i, false)).toBe(getDisplayDuration(i));
+      }
+    });
   });
 
   describe('isValidLevel', () => {

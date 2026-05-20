@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import { getAllLevels } from '@services/LevelManager';
+import storageManager from '@services/StorageManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 import { AnimatedCard } from '@components/AnimatedPrimitives';
@@ -21,9 +22,39 @@ export default function LevelsScreen() {
   const router = useRouter();
   const { colors } = useTheme();
   const levels = getAllLevels();
+  const [ratings, setRatings] = useState<Record<number, number | null>>({});
   // Use hook for responsive dimensions (SSR-safe)
   const { width: screenWidth } = useWindowDimensions();
   const cardWidth = screenWidth > 0 ? (screenWidth - Spacing.lg * 3) / 2 : DEFAULT_CARD_WIDTH;
+
+  useEffect(() => {
+    let mounted = true;
+    Promise.all(
+      levels.map(level =>
+        storageManager.getLevelRating(level.number).then(r => [level.number, r] as [number, number | null])
+      )
+    ).then(entries => {
+      if (mounted) setRatings(Object.fromEntries(entries));
+    });
+    return () => { mounted = false; };
+  }, []);
+
+  const renderStars = (rating: number | null, levelNumber: number) => {
+    const filled = rating === null ? 0 : Math.ceil(rating / 2);
+    return (
+      <View style={styles.starsRow} testID={`stars-level-${levelNumber}`}>
+        {Array.from({ length: 3 }, (_, i) => (
+          <Text
+            key={i}
+            testID={i < filled ? 'star-filled' : 'star-empty'}
+            style={[styles.star, { color: i < filled ? colors.stars.filled : colors.stars.empty }]}
+          >
+            {i < filled ? '★' : '☆'}
+          </Text>
+        ))}
+      </View>
+    );
+  };
 
   const renderLevelCard = ({ item, index }: { item: typeof levels[0]; index: number }) => {
     const difficultyText = t(`difficulty.${item.difficulty}`);
@@ -49,6 +80,9 @@ export default function LevelsScreen() {
             difficulty={item.difficulty}
             style={styles.difficultyBadge}
           />
+
+          {/* Sterne-Bewertung */}
+          {renderStars(ratings[item.number] ?? null, item.number)}
 
         </TouchableOpacity>
       </AnimatedCard>
@@ -127,5 +161,12 @@ const styles = StyleSheet.create({
   },
   difficultyBadge: {
     marginBottom: Spacing.sm,
+  },
+  starsRow: {
+    flexDirection: 'row',
+    marginTop: Spacing.xs,
+  },
+  star: {
+    fontSize: FontSize.lg,
   },
 });
