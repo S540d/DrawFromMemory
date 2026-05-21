@@ -5,8 +5,8 @@
 **Merke und Male** — Gedächtnistraining-App für Kinder (React Native / Expo).
 Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Ergebnis.
 
-- **Aktuell: v1.3.4** — Play-Store-ready, keine offenen Blocker
-- **In staging (seit 2026-05-08):** PR #164 — i18n-Fix: hardcodierte App-Titel in HomeScreen & GameScreen durch `t('app.name')` ersetzt
+- **Aktuell: v1.4.2** — Play-Store-ready, keine offenen Blocker
+- **Mindestanforderung Android: API 26 (Android 8.0 Oreo)** — Nexus 6 (max. API 25) wird nicht mehr unterstützt (Issue #172)
 - **Live Demo:** https://s540d.github.io/DrawFromMemory/
 - **Repo:** https://github.com/S540d/DrawFromMemory
 
@@ -107,5 +107,5 @@ Das größte technische Thema der letzten Entwicklungsphase war die Flood-Fill a
 ## Offene Issues / Bekannte Einschränkungen
 
 - **jest-expo → @tootallnate/once** (low severity): Fix erfordert `jest-expo@47` — breaking change, noch nicht gemacht
-- **Nexus 6 Flood-Fill**: Implementierung fertig, aber kein Gerät für manuelle Tests vorhanden
+- **Nexus 6**: EOL — ab React Native 0.83.x / Skia 2.x ist `minSdkVersion` ≥ 26; Nexus 6 endet bei API 25 (geschlossen via Issue #172)
 - **iOS**: Nicht primär getestet (Fokus auf Web + Android)
