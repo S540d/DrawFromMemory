@@ -7,7 +7,7 @@ Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Er
 
 - **Aktuell: v1.3.4** — Play-Store-ready, keine offenen Blocker
 - **In staging (seit 2026-05-08):** PR #164 — i18n-Fix: hardcodierte App-Titel in HomeScreen & GameScreen durch `t('app.name')` ersetzt
-- **In testing (seit 2026-05-20):** PR #169 — Issue #167 Punkte 1.1 + 1.2: variabler Memorize-Timer (schwierigkeitsbasiert + extraTimeMode) & Sterne-Bewertung im Levels-Screen
+- **In testing (seit 2026-05-21):** PR #169 + PR #170 — Issue #167 Punkte 1.1–1.3: variabler Memorize-Timer, Sterne-Bewertung, Level 11–20 (20 Level total, `LevelImage.minLevel`-Guard)
 - **Live Demo:** https://s540d.github.io/DrawFromMemory/
 - **Repo:** https://github.com/S540d/DrawFromMemory
 
