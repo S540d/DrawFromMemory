@@ -57,10 +57,8 @@ describe('LevelManager', () => {
       expect(getDifficultyForLevel(1)).toBe(1);
     });
 
-    it('should return increasing difficulty for higher levels', () => {
-      const diff1 = getDifficultyForLevel(1);
-      const diff10 = getDifficultyForLevel(10);
-      expect(diff10).toBeGreaterThanOrEqual(diff1);
+    it('should return difficulty 5 for level 10 (Ende Phase 1)', () => {
+      expect(getDifficultyForLevel(10)).toBe(5);
     });
 
     it('should return valid difficulty range (1-5)', () => {
