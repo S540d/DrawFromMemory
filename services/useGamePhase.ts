@@ -4,6 +4,7 @@ import { getRandomImageForLevel } from '@services/ImagePoolManager';
 import { getLevel, getTotalLevels } from '@services/LevelManager';
 import { getImageElementCount } from '@components/LevelImageDisplay';
 import storageManager from '@services/StorageManager';
+import { markTodayCompleted } from '@services/DailyChallengeManager';
 import SoundManager from '@services/SoundManager';
 import { useTimer } from '@services/useTimer';
 import type { DrawingPath } from '@components/DrawingCanvas';
@@ -13,12 +14,14 @@ interface UseGamePhaseOptions {
   initialLevel: number;
   drawingPaths: DrawingPath[];
   clearCanvas: () => void;
+  isDailyChallenge?: boolean;
 }
 
 export function useGamePhase({
   initialLevel,
   drawingPaths,
   clearCanvas,
+  isDailyChallenge = false,
 }: UseGamePhaseOptions) {
   const router = useRouter();
   const [phase, setPhase] = useState<GamePhase>('memorize');
@@ -150,6 +153,9 @@ export function useGamePhase({
       SoundManager.playStarTap(rating);
       setUserRating(rating);
       await storageManager.saveLevelProgress(levelNumber, rating);
+      if (isDailyChallenge) {
+        await markTodayCompleted();
+      }
     } catch (error) {
       console.error('Error saving rating:', error);
     }
@@ -164,6 +170,7 @@ export function useGamePhase({
         imageName: currentImage.displayName,
         paths: drawingPaths,
         rating: userRating,
+        isDailyChallenge: isDailyChallenge || undefined,
       });
       SoundManager.playSuccess();
       setSavedToGallery(true);

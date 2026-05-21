@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFocusEffect } from 'expo-router';
+import { useCallback } from 'react';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
+import {
+  getDailyChallengeLevel,
+  getSecondsUntilMidnight,
+  isTodayCompleted,
+} from '@services/DailyChallengeManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 import SettingsModal from '@components/SettingsModal';
@@ -15,6 +22,25 @@ export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [showSettings, setShowSettings] = useState(false);
+  const [dailyCompleted, setDailyCompleted] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(() => getSecondsUntilMidnight());
+  const dailyLevel = getDailyChallengeLevel();
+
+  // Reload completion state whenever screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      isTodayCompleted().then(setDailyCompleted);
+    }, [])
+  );
+
+  // Update countdown every 60 seconds
+  useEffect(() => {
+    const id = setInterval(() => setSecondsLeft(getSecondsUntilMidnight()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const countdownHours = Math.floor(secondsLeft / 3600);
+  const countdownMinutes = Math.floor((secondsLeft % 3600) / 60);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top + Spacing.sm, paddingBottom: insets.bottom + Spacing.lg }]}>
@@ -56,6 +82,30 @@ export default function HomeScreen() {
           >
             <Text style={styles.gradientButtonText}>{t('home.startButton')}</Text>
           </LinearGradient>
+        </TouchableOpacity>
+
+        {/* Daily Challenge */}
+        <TouchableOpacity
+          style={[
+            styles.dailyChallengeButton,
+            { backgroundColor: colors.surface, borderColor: dailyCompleted ? colors.text.light : '#F59E0B' },
+            dailyCompleted && styles.dailyChallengeCompleted,
+          ]}
+          onPress={() => !dailyCompleted && router.push(`/game?level=${dailyLevel}&daily=1`)}
+          accessibilityRole="button"
+          disabled={dailyCompleted}
+        >
+          <Text style={styles.dailyChallengeEmoji}>📅</Text>
+          <View style={styles.dailyChallengeInfo}>
+            <Text style={[styles.dailyChallengeTitle, { color: dailyCompleted ? colors.text.secondary : '#D97706' }]}>
+              {t('dailyChallenge.title')}
+            </Text>
+            <Text style={[styles.dailyChallengeMeta, { color: colors.text.secondary }]}>
+              {dailyCompleted
+                ? t('dailyChallenge.completed')
+                : `${t('dailyChallenge.level', { number: String(dailyLevel) })} · ${t('dailyChallenge.countdown', { hours: String(countdownHours), minutes: String(countdownMinutes) })}`}
+            </Text>
+          </View>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -158,5 +208,33 @@ const styles = StyleSheet.create({
   secondaryButtonText: {
     fontSize: FontSize.md,
     fontWeight: FontWeight.semibold,
+  },
+  dailyChallengeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.lg,
+    borderWidth: 2,
+    minHeight: 52,
+    gap: Spacing.sm,
+    ...Colors.shadow.small,
+  },
+  dailyChallengeCompleted: {
+    opacity: 0.6,
+  },
+  dailyChallengeEmoji: {
+    fontSize: 24,
+  },
+  dailyChallengeInfo: {
+    flex: 1,
+  },
+  dailyChallengeTitle: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.bold,
+  },
+  dailyChallengeMeta: {
+    fontSize: FontSize.xs,
+    marginTop: 1,
   },
 });

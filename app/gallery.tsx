@@ -95,6 +95,11 @@ export default function GalleryScreen() {
                 />
               </View>
               <View style={styles.cardInfo}>
+                {entry.isDailyChallenge && (
+                  <View style={styles.dailyBadge}>
+                    <Text style={styles.dailyBadgeText}>{t('gallery.dailyChallengeLabel')}</Text>
+                  </View>
+                )}
                 <Text style={[styles.cardTitle, { color: colors.text.primary }]}>
                   {entry.imageName}
                 </Text>
@@ -214,6 +219,19 @@ const styles = StyleSheet.create({
   deleteIcon: {
     color: '#FFFFFF',
     fontSize: 14,
+    fontWeight: FontWeight.bold,
+  },
+  dailyBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#F59E0B',
+    borderRadius: BorderRadius.sm,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    marginBottom: 4,
+  },
+  dailyBadgeText: {
+    color: '#fff',
+    fontSize: 10,
     fontWeight: FontWeight.bold,
   },
 });
