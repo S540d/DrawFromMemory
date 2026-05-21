@@ -17,6 +17,10 @@ describe('LevelManager', () => {
     it('should return a positive number', () => {
       expect(getTotalLevels()).toBeGreaterThan(0);
     });
+
+    it('should return 20', () => {
+      expect(getTotalLevels()).toBe(20);
+    });
   });
 
   describe('getLevel', () => {
@@ -53,10 +57,8 @@ describe('LevelManager', () => {
       expect(getDifficultyForLevel(1)).toBe(1);
     });
 
-    it('should return increasing difficulty for higher levels', () => {
-      const diff1 = getDifficultyForLevel(1);
-      const diff10 = getDifficultyForLevel(10);
-      expect(diff10).toBeGreaterThanOrEqual(diff1);
+    it('should return difficulty 5 for level 10 (Ende Phase 1)', () => {
+      expect(getDifficultyForLevel(10)).toBe(5);
     });
 
     it('should return valid difficulty range (1-5)', () => {
@@ -65,6 +67,25 @@ describe('LevelManager', () => {
         expect(diff).toBeGreaterThanOrEqual(1);
         expect(diff).toBeLessThanOrEqual(5);
       }
+    });
+
+    it('should return difficulty 3 for levels 11–13 (Tiere)', () => {
+      expect(getDifficultyForLevel(11)).toBe(3);
+      expect(getDifficultyForLevel(12)).toBe(3);
+      expect(getDifficultyForLevel(13)).toBe(3);
+    });
+
+    it('should return difficulty 4 for levels 14–16 (Fahrzeuge)', () => {
+      expect(getDifficultyForLevel(14)).toBe(4);
+      expect(getDifficultyForLevel(15)).toBe(4);
+      expect(getDifficultyForLevel(16)).toBe(4);
+    });
+
+    it('should return difficulty 5 for levels 17–20 (Natur)', () => {
+      expect(getDifficultyForLevel(17)).toBe(5);
+      expect(getDifficultyForLevel(18)).toBe(5);
+      expect(getDifficultyForLevel(19)).toBe(5);
+      expect(getDifficultyForLevel(20)).toBe(5);
     });
   });
 
