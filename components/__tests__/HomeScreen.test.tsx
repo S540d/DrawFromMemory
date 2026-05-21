@@ -3,7 +3,13 @@ import { render, act } from '@testing-library/react-native';
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({ push: jest.fn() }),
-  useFocusEffect: (cb: () => void) => { cb(); },
+  useFocusEffect: (cb: () => (() => void) | void) => {
+    const { useEffect } = require('react');
+    useEffect(() => {
+      const cleanup = cb();
+      return typeof cleanup === 'function' ? cleanup : undefined;
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  },
 }));
 
 jest.mock('../../services/DailyChallengeManager', () => ({

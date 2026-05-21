@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useFocusEffect } from 'expo-router';
-import { useCallback } from 'react';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import {
@@ -24,20 +22,24 @@ export default function HomeScreen() {
   const [showSettings, setShowSettings] = useState(false);
   const [dailyCompleted, setDailyCompleted] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(() => getSecondsUntilMidnight());
-  const dailyLevel = getDailyChallengeLevel();
+  const [dailyLevel, setDailyLevel] = useState(() => getDailyChallengeLevel());
 
-  // Reload completion state whenever screen is focused
+  // On focus: refresh all daily state and start countdown interval.
+  // Interval also re-checks state every minute to handle midnight rollover
+  // without requiring the user to navigate away and back.
   useFocusEffect(
     useCallback(() => {
-      isTodayCompleted().then(setDailyCompleted);
+      const refresh = async () => {
+        setSecondsLeft(getSecondsUntilMidnight());
+        setDailyLevel(getDailyChallengeLevel());
+        setDailyCompleted(await isTodayCompleted());
+      };
+      refresh();
+
+      const id = setInterval(refresh, 60_000);
+      return () => clearInterval(id);
     }, [])
   );
-
-  // Update countdown every 60 seconds
-  useEffect(() => {
-    const id = setInterval(() => setSecondsLeft(getSecondsUntilMidnight()), 60_000);
-    return () => clearInterval(id);
-  }, []);
 
   const countdownHours = Math.floor(secondsLeft / 3600);
   const countdownMinutes = Math.floor((secondsLeft % 3600) / 60);

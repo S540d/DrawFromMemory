@@ -24,6 +24,9 @@ export function useGamePhase({
   isDailyChallenge = false,
 }: UseGamePhaseOptions) {
   const router = useRouter();
+  // dailyChallengeLevel is fixed at mount; only the initial level counts as the
+  // daily challenge — subsequent levels (if the user continues) must not be tagged.
+  const dailyChallengeLevel = isDailyChallenge ? initialLevel : null;
   const [phase, setPhase] = useState<GamePhase>('memorize');
   const [levelNumber, setLevelNumber] = useState(initialLevel);
   const [currentImage, setCurrentImage] = useState<LevelImage | null>(null);
@@ -153,7 +156,7 @@ export function useGamePhase({
       SoundManager.playStarTap(rating);
       setUserRating(rating);
       await storageManager.saveLevelProgress(levelNumber, rating);
-      if (isDailyChallenge) {
+      if (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) {
         await markTodayCompleted();
       }
     } catch (error) {
@@ -170,7 +173,7 @@ export function useGamePhase({
         imageName: currentImage.displayName,
         paths: drawingPaths,
         rating: userRating,
-        isDailyChallenge: isDailyChallenge || undefined,
+        isDailyChallenge: (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) || undefined,
       });
       SoundManager.playSuccess();
       setSavedToGallery(true);

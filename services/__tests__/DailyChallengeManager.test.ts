@@ -3,6 +3,7 @@
  * Prüft Determinismus, Countdown und Completion-Tracking
  */
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   getDailyChallengeKey,
   getDailyChallengeLevel,
@@ -104,9 +105,8 @@ describe('DailyChallengeManager', () => {
   });
 
   describe('isTodayCompleted / markTodayCompleted', () => {
-    beforeEach(() => {
-      jest.resetModules();
-      // Reset module-level MEMORY between tests by re-importing
+    beforeEach(async () => {
+      await AsyncStorage.clear();
     });
 
     it('returns false when no challenge has been completed', async () => {
