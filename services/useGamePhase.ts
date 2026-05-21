@@ -4,6 +4,7 @@ import { getRandomImageForLevel } from '@services/ImagePoolManager';
 import { getDisplayDuration, getTotalLevels } from '@services/LevelManager';
 import { getImageElementCount } from '@components/LevelImageDisplay';
 import storageManager from '@services/StorageManager';
+import { markTodayCompleted } from '@services/DailyChallengeManager';
 import SoundManager from '@services/SoundManager';
 import { useTimer } from '@services/useTimer';
 import type { DrawingPath } from '@components/DrawingCanvas';
@@ -13,14 +14,19 @@ interface UseGamePhaseOptions {
   initialLevel: number;
   drawingPaths: DrawingPath[];
   clearCanvas: () => void;
+  isDailyChallenge?: boolean;
 }
 
 export function useGamePhase({
   initialLevel,
   drawingPaths,
   clearCanvas,
+  isDailyChallenge = false,
 }: UseGamePhaseOptions) {
   const router = useRouter();
+  // dailyChallengeLevel is fixed at mount; only the initial level counts as the
+  // daily challenge — subsequent levels (if the user continues) must not be tagged.
+  const dailyChallengeLevel = isDailyChallenge ? initialLevel : null;
   const [phase, setPhase] = useState<GamePhase>('memorize');
   const [levelNumber, setLevelNumber] = useState(initialLevel);
   const [currentImage, setCurrentImage] = useState<LevelImage | null>(null);
@@ -163,6 +169,9 @@ export function useGamePhase({
       SoundManager.playStarTap(rating);
       setUserRating(rating);
       await storageManager.saveLevelProgress(levelNumber, rating);
+      if (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) {
+        await markTodayCompleted();
+      }
     } catch (error) {
       console.error('Error saving rating:', error);
     }
@@ -177,6 +186,7 @@ export function useGamePhase({
         imageName: currentImage.displayName,
         paths: drawingPaths,
         rating: userRating,
+        isDailyChallenge: (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) || undefined,
       });
       SoundManager.playSuccess();
       setSavedToGallery(true);
