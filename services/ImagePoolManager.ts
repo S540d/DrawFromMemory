@@ -146,6 +146,92 @@ const imagePool: LevelImage[] = [
     colors: ['#000000', '#3498DB', '#FFD700', '#FFA500']
   },
 
+  // Tiere – Difficulty 3 (Level 11–13)
+  {
+    filename: 'level-11-cat-simple.svg',
+    difficulty: 3,
+    displayName: 'Katze',
+    displayNameEn: 'Cat',
+    strokeCount: 11,
+    colors: ['#000000', '#FFA500', '#FFB6C1']
+  },
+  {
+    filename: 'level-12-dog-simple.svg',
+    difficulty: 3,
+    displayName: 'Hund',
+    displayNameEn: 'Dog',
+    strokeCount: 9,
+    colors: ['#000000', '#D2691E', '#CD853F']
+  },
+  {
+    filename: 'level-13-bird-simple.svg',
+    difficulty: 3,
+    displayName: 'Vogel',
+    displayNameEn: 'Bird',
+    strokeCount: 8,
+    colors: ['#000000', '#1E90FF', '#FFD700']
+  },
+
+  // Fahrzeuge – Difficulty 4 (Level 14–16)
+  {
+    filename: 'level-14-car-v2.svg',
+    difficulty: 4,
+    displayName: 'Auto',
+    displayNameEn: 'Car',
+    strokeCount: 17,
+    colors: ['#000000', '#2ECC71', '#87CEEB', '#FFD700', '#333333']
+  },
+  {
+    filename: 'level-15-train.svg',
+    difficulty: 4,
+    displayName: 'Zug',
+    displayNameEn: 'Train',
+    strokeCount: 16,
+    colors: ['#000000', '#E74C3C', '#87CEEB', '#FFD700', '#333333']
+  },
+  {
+    filename: 'level-16-bicycle.svg',
+    difficulty: 4,
+    displayName: 'Fahrrad',
+    displayNameEn: 'Bicycle',
+    strokeCount: 18,
+    colors: ['#000000', '#E74C3C', '#333333', '#FFD700']
+  },
+
+  // Natur – Difficulty 5 (Level 17–20)
+  {
+    filename: 'level-17-tree-detailed.svg',
+    difficulty: 5,
+    displayName: 'Baum',
+    displayNameEn: 'Tree',
+    strokeCount: 14,
+    colors: ['#000000', '#8B4513', '#27AE60', '#2ECC71', '#90EE90']
+  },
+  {
+    filename: 'level-18-flower-detailed.svg',
+    difficulty: 5,
+    displayName: 'Blume',
+    displayNameEn: 'Flower',
+    strokeCount: 16,
+    colors: ['#000000', '#27AE60', '#FF69B4', '#FFD700', '#FF1493', '#8B4513']
+  },
+  {
+    filename: 'level-19-fish-tropical.svg',
+    difficulty: 5,
+    displayName: 'Tropenfisch',
+    displayNameEn: 'Tropical Fish',
+    strokeCount: 18,
+    colors: ['#000000', '#FF6347', '#FFD700', '#FFFFFF', '#87CEEB']
+  },
+  {
+    filename: 'level-20-house-detailed.svg',
+    difficulty: 5,
+    displayName: 'Haus mit Garten',
+    displayNameEn: 'House with Garden',
+    strokeCount: 22,
+    colors: ['#000000', '#E74C3C', '#8B4513', '#87CEEB', '#27AE60', '#FFD700', '#654321']
+  },
+
   // Schwierig (Schwierigkeit 5)
   {
     filename: 'level-09-fish.svg',
