@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from '@services/i18n';
@@ -21,7 +21,7 @@ export default function LevelsScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { colors } = useTheme();
-  const levels = getAllLevels();
+  const levels = useMemo(() => getAllLevels(), []);
   const [ratings, setRatings] = useState<Record<number, number | null>>({});
   // Use hook for responsive dimensions (SSR-safe)
   const { width: screenWidth } = useWindowDimensions();
@@ -37,9 +37,7 @@ export default function LevelsScreen() {
       if (mounted) setRatings(Object.fromEntries(entries));
     });
     return () => { mounted = false; };
-    // levels is derived from getAllLevels() which is static — no re-fetch needed
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [levels]);
 
   const renderStars = (rating: number | null, levelNumber: number) => {
     const filled = rating === null ? 0 : Math.ceil(rating / 2);
