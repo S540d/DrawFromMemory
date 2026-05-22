@@ -126,7 +126,16 @@
     "saved": "Gespeichert!",
     "delete": "Löschen",
     "deleteTitle": "Zeichnung löschen",
-    "deleteConfirm": "Möchtest du diese Zeichnung wirklich löschen?"
+    "deleteConfirm": "Möchtest du diese Zeichnung wirklich löschen?",
+    "dailyChallengeLabel": "Daily Challenge"
+  },
+  "dailyChallenge": {
+    "title": "Tägliche Challenge",
+    "subtitle": "Bild des Tages",
+    "start": "Challenge starten",
+    "completed": "Heute erledigt ✓",
+    "countdown": "Neu in {{hours}}h {{minutes}}m",
+    "level": "Level {{number}}"
   },
   "errors": {
     "skiaUnavailableTitle": "Zeichenfläche nicht verfügbar",

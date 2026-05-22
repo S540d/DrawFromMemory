@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'expo-router';
 import { getRandomImageForLevel } from '@services/ImagePoolManager';
-import { getLevel, getTotalLevels } from '@services/LevelManager';
+import { getDisplayDuration, getTotalLevels } from '@services/LevelManager';
 import { getImageElementCount } from '@components/LevelImageDisplay';
 import storageManager from '@services/StorageManager';
+import { markTodayCompleted } from '@services/DailyChallengeManager';
 import SoundManager from '@services/SoundManager';
 import { useTimer } from '@services/useTimer';
 import type { DrawingPath } from '@components/DrawingCanvas';
@@ -13,14 +14,19 @@ interface UseGamePhaseOptions {
   initialLevel: number;
   drawingPaths: DrawingPath[];
   clearCanvas: () => void;
+  isDailyChallenge?: boolean;
 }
 
 export function useGamePhase({
   initialLevel,
   drawingPaths,
   clearCanvas,
+  isDailyChallenge = false,
 }: UseGamePhaseOptions) {
   const router = useRouter();
+  // dailyChallengeLevel is fixed at mount; only the initial level counts as the
+  // daily challenge — subsequent levels (if the user continues) must not be tagged.
+  const dailyChallengeLevel = isDailyChallenge ? initialLevel : null;
   const [phase, setPhase] = useState<GamePhase>('memorize');
   const [levelNumber, setLevelNumber] = useState(initialLevel);
   const [currentImage, setCurrentImage] = useState<LevelImage | null>(null);
@@ -32,6 +38,8 @@ export function useGamePhase({
   const timerExpireTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const replayCompleteTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentImageRef = useRef<LevelImage | null>(null);
+
+  const [extraTimeMode, setExtraTimeMode] = useState(false);
 
   const REPLAY_DURATION_MS = 3000;
   const REPLAY_FRAME_MS = 30;
@@ -49,27 +57,38 @@ export function useGamePhase({
     onExpire: handleTimerExpire,
   });
 
-  // Initialize level on mount and when levelNumber changes
+  // Load extraTimeMode setting once on mount with unmount guard
+  useEffect(() => {
+    let mounted = true;
+    storageManager.getSettings().then(settings => {
+      if (mounted) setExtraTimeMode(settings.extraTimeMode);
+    });
+    return () => { mounted = false; };
+  }, []);
+
+  // Initialize image on levelNumber change only — keeps image stable when extraTimeMode loads
   useEffect(() => {
     try {
-      const level = getLevel(levelNumber);
       const image = getRandomImageForLevel(levelNumber);
       currentImageRef.current = image;
       setCurrentImage(image);
-      setTimeRemaining(level.displayDuration);
     } catch (error) {
       console.error('Error initializing level:', error);
       router.back();
     }
-  }, [levelNumber, router, setTimeRemaining]);
+  }, [levelNumber, router]);
+
+  // Update timer when levelNumber or extraTimeMode changes (separate from image init)
+  useEffect(() => {
+    setTimeRemaining(getDisplayDuration(levelNumber, extraTimeMode));
+  }, [levelNumber, extraTimeMode, setTimeRemaining]);
 
   // Progressive reveal during memorize phase
   useEffect(() => {
     if (phase !== 'memorize' || !currentImage) return;
 
     const totalElements = getImageElementCount(currentImage);
-    const level = getLevel(levelNumber);
-    const revealDurationMs = level.displayDuration * 800;
+    const revealDurationMs = getDisplayDuration(levelNumber, extraTimeMode) * 800;
     const stepInterval = revealDurationMs / totalElements;
 
     setRevealStep(0);
@@ -86,7 +105,7 @@ export function useGamePhase({
     }, stepInterval);
 
     return () => clearInterval(interval);
-  }, [phase, currentImage, levelNumber]);
+  }, [phase, currentImage, levelNumber, extraTimeMode]);
 
   // Replay animation
   useEffect(() => {
@@ -150,6 +169,9 @@ export function useGamePhase({
       SoundManager.playStarTap(rating);
       setUserRating(rating);
       await storageManager.saveLevelProgress(levelNumber, rating);
+      if (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) {
+        await markTodayCompleted();
+      }
     } catch (error) {
       console.error('Error saving rating:', error);
     }
@@ -164,6 +186,7 @@ export function useGamePhase({
         imageName: currentImage.displayName,
         paths: drawingPaths,
         rating: userRating,
+        isDailyChallenge: (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) || undefined,
       });
       SoundManager.playSuccess();
       setSavedToGallery(true);
@@ -186,10 +209,9 @@ export function useGamePhase({
     // (levelNumber doesn't change, so we init manually here)
     try {
       const image = getRandomImageForLevel(levelNumber);
-      const level = getLevel(levelNumber);
       currentImageRef.current = image;
       setCurrentImage(image);
-      setTimeRemaining(level.displayDuration);
+      setTimeRemaining(getDisplayDuration(levelNumber, extraTimeMode));
       setPhase('memorize');
     } catch (error) {
       console.error('Error restarting level:', error);

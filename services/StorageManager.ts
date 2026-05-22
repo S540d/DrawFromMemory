@@ -107,6 +107,7 @@ export interface GalleryEntry {
   paths: { points: { x: number; y: number }[]; color: string; strokeWidth: number; type?: 'stroke' | 'fill' }[];
   rating: number;
   savedAt: string; // ISO timestamp
+  isDailyChallenge?: boolean;
 }
 
 class StorageManager {

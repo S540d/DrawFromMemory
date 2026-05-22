@@ -7,6 +7,7 @@ Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Er
 
 - **Aktuell: v1.3.4** — Play-Store-ready, keine offenen Blocker
 - **In staging (seit 2026-05-08):** PR #164 — i18n-Fix: hardcodierte App-Titel in HomeScreen & GameScreen durch `t('app.name')` ersetzt
+- **In testing (seit 2026-05-21):** PR #169 + PR #170 — Issue #167 Punkte 1.1–1.3: variabler Memorize-Timer, Sterne-Bewertung, Level 11–20 (20 Level total, `LevelImage.minLevel`-Guard)
 - **Live Demo:** https://s540d.github.io/DrawFromMemory/
 - **Repo:** https://github.com/S540d/DrawFromMemory
 
@@ -22,7 +23,7 @@ Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Er
 | Web Drawing | Canvas API (`DrawingCanvas.web.tsx`) |
 | State | React Hooks + AsyncStorage |
 | i18n | custom `services/i18n.ts` (de/en) |
-| Tests | Jest + jest-expo (241 Tests) |
+| Tests | Jest + jest-expo (255 Tests) |
 | CI | GitHub Actions (`ci-cd.yml`) |
 | Crash Reporting | Sentry (optional via `EXPO_PUBLIC_SENTRY_DSN`) |
 
@@ -66,7 +67,7 @@ npm run build:web  # Web-Build (gh-pages)
 npx tsc --noEmit   # TypeScript-Check
 ```
 
-**Branch-Strategie:** Feature-Branches → PR → `staging` → `main`. Der `staging`-Branch wird aktiv als Integrations-Branch genutzt (wieder aktiv seit 2026-05-08).
+**Branch-Strategie:** Feature-Branches → PR → `testing` (QA) → `staging` (Pre-Production) → `main` (Produktion). Alle drei Branches (`main`, `staging`, `testing`) müssen immer existieren und dürfen nie gelöscht werden.
 
 ---
 
