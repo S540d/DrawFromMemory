@@ -37,6 +37,8 @@ export default function LevelsScreen() {
       if (mounted) setRatings(Object.fromEntries(entries));
     });
     return () => { mounted = false; };
+    // levels is derived from getAllLevels() which is static — no re-fetch needed
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderStars = (rating: number | null, levelNumber: number) => {
