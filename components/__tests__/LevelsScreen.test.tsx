@@ -7,7 +7,7 @@ jest.mock('expo-router', () => ({
 
 jest.mock('../../services/i18n', () => ({
   useTranslation: () => ({
-    t: (key: string, opts?: any) => (opts?.number != null ? `Level ${opts.number}` : key),
+    t: (key: string, opts?: any) => (opts?.number !== null && opts?.number !== undefined ? `Level ${opts.number}` : key),
   }),
 }));
 
