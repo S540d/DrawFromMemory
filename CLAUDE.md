@@ -108,7 +108,7 @@ assets/images/levels-{1-5}/  # Level-sortierte Kopien der gleichen SVGs
 "@utils/*"      → "./utils/*"
 ```
 
-Imports in der Codebasis verwenden diese Aliase (`@services/LevelManager`, nicht `../services/LevelManager`).
+App- und Produktionscode verwendet diese Aliase (`@services/LevelManager`, nicht `../services/LevelManager`). Testdateien in `__tests__/` nutzen weiterhin relative Imports, da Jest die Babel-Aliase nicht auflöst.
 
 ---
 
@@ -146,13 +146,14 @@ Läuft auf `push` und `pull_request` gegen `main` und `staging`.
 
 | Job | Name | Inhalt |
 |---|---|---|
-| 1 | Code Quality & Linting | ESLint, kein `console.log` in `app/`/`components/`, Web-API-Guards prüfen, AsyncStorage-Usage, `validate:svg-counts`, TypeScript-Check |
+| 1 | Code Quality & Linting | ESLint, kein `console.log` in `app/`/`components/`, Web-API-Guards prüfen, AsyncStorage-Usage, `validate:svg-counts`, TypeScript-Check (`npx tsc --noEmit \|\| true`, non-blocking) |
 | 2 | Unit Tests & Coverage | `npm run test:ci` (Coverage-Artefakt wird hochgeladen) |
 | 3 | Build Web | `expo export --platform web` |
-| 4 | Platform Checks | React Native Kompatibilitätsprüfung |
-| 5 | Docs Privacy Check | `docs/private/` darf nicht committed sein |
-| 6 | Keystore & Credential Scan | Keine `.keystore`/`.jks` Dateien, keine hardcodierten Passwörter |
-| 7 | Release Readiness Report | Nur bei Push auf `main`; generiert manuelles Checklist-Summary |
+| 4 | Platform Checks | Versionskonsistenz: `package.json` vs. `app.json` müssen identische Version haben |
+| 5 | Security Audit | `npm audit --audit-level=high` — blockiert bei high/critical |
+| 6 | Docs Privacy Check | `docs/private/` darf nicht committed sein |
+| 7 | Keystore & Credential Scan | Keine `.keystore`/`.jks` Dateien, keine hardcodierten Passwörter |
+| 8 | Release Readiness Report | Nur bei Push auf `main`; generiert manuelles Checklist-Summary |
 
 **Coverage-Schwellenwerte (jest.config.js):** branches 15 %, functions 25 %, lines 25 %, statements 25 %.
 
@@ -256,14 +257,14 @@ Web-APIs über `utils/platform.ts` absichern (`safeWebAPI`, `isWeb`-Guard). Für
 ## Security
 
 - `npm audit --audit-level=high` in CI — Pipeline blockiert bei high/critical
-- Verbleibende 5 low-Findings: `@tootallnate/once` via jest-expo-Chain — Fix erfordert `jest-expo@47` (breaking), intentionally excluded
+- Verbleibende 5 low-Findings: `@tootallnate/once` via jest-expo-Chain — Fix würde ein Breaking-Major-Upgrade von jest-expo erfordern (aktuell `~55.0.9`), intentionally excluded
 - Alle high/critical Vulnerabilities zuletzt gefixt: 2026-04-21 via PR #144
 
 ---
 
 ## Offene Issues / Bekannte Einschränkungen
 
-- **jest-expo → @tootallnate/once** (low severity): Fix erfordert `jest-expo@47` — breaking change, noch nicht gemacht
+- **jest-expo → @tootallnate/once** (low severity): Fix würde Breaking-Major-Upgrade von jest-expo erfordern (aktuell `~55.0.9`) — noch nicht gemacht
 - **Nexus 6**: EOL — `minSdkVersion` = 26; Nexus 6 endet bei API 25 (geschlossen via Issue #172)
 - **iOS**: Nicht primär getestet (Fokus auf Web + Android)
 - **iOS App Store**: Bundle ID `com.s540d.merkeundmale`, App Store URL noch TBD
