@@ -6,18 +6,20 @@
 
 export const Colors = {
   // Primärfarben - Gradient-ready
-  primary: '#667eea',      // Lila/Blau - Kreativität & Spielfreude
-  primaryLight: '#8599f3', // Hellere Variante
-  primaryDark: '#4c63d2',  // Dunklere Variante
-  secondary: '#f093fb',    // Rosa - Spielerisch & Warm
-  accent: '#A8E6CF',       // Mint - Zusätzlicher Akzent
+  primary: '#7C5CFF',      // Vivid Purple - kräftiger, kinderfreundlicher (Issue #176)
+  primaryLight: '#9E84FF', // Hellere Variante
+  primaryDark: '#5A3FE0',  // Dunklere Variante
+  secondary: '#F093FB',    // Rosa - Spielerisch & Warm
+  accent: '#4ECDC4',       // Mint-Teal - frischer Akzent
+  accentWarm: '#FFB547',   // Apricot - spielerisch warm
 
   // Gradient-Kombinationen (für LinearGradient)
   gradient: {
-    primary: ['#667eea', '#764ba2'],     // Lila-Gradient
-    secondary: ['#f093fb', '#f5576c'],   // Rosa-Gradient
-    warm: ['#FFB84D', '#FF6B6B'],        // Warm-Gradient
-    cta: ['#667eea', '#f093fb'],         // CTA-Gradient für primäre Buttons
+    primary: ['#7C5CFF', '#F093FB'],     // Primary Gradient (Vivid Purple → Rosa)
+    secondary: ['#F093FB', '#f5576c'],   // Rosa-Gradient
+    warm: ['#FFB547', '#FF6B6B'],        // Apricot-Gradient
+    cta: ['#7C5CFF', '#F093FB'],         // CTA-Gradient mit neuem Primary
+    teal: ['#4ECDC4', '#44CF6C'],        // Teal-Gradient
   },
 
   // UI Farben - "Warm Paper"

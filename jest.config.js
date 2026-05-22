@@ -32,7 +32,7 @@ module.exports = {
   },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|expo|@expo|@shopify/react-native-skia)/)',
+    'node_modules/(?!(react-native|@react-native|expo|@expo|@expo-google-fonts|@shopify/react-native-skia)/)',
   ],
   globals: {
     __DEV__: true,

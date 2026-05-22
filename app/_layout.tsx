@@ -8,6 +8,13 @@ import AnimatedSplashScreen from '@components/AnimatedSplashScreen';
 import { useCallback, useEffect, useState, useReducer } from 'react';
 import { initLanguage, addLanguageChangeListener } from '@services/i18n';
 import { initSentry } from '@services/SentryService';
+import { useFonts } from 'expo-font';
+import {
+  Nunito_400Regular,
+  Nunito_600SemiBold,
+  Nunito_700Bold,
+  Nunito_800ExtraBold,
+} from '@expo-google-fonts/nunito';
 
 // Initialize Sentry as early as possible (no-op on web or without DSN)
 initSentry();
@@ -20,6 +27,13 @@ function RootLayoutContent() {
   const [showSplash, setShowSplash] = useState(true);
   const handleSplashFinish = useCallback(() => setShowSplash(false), []);
   const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
+
+  useFonts({
+    Nunito_400Regular,
+    Nunito_600SemiBold,
+    Nunito_700Bold,
+    Nunito_800ExtraBold,
+  });
 
   // Initialize language from storage, then re-render so all screens show the correct language
   useEffect(() => {

@@ -6,7 +6,7 @@ import { useTheme } from '@services/ThemeContext';
 import { getAllLevels } from '@services/LevelManager';
 import storageManager from '@services/StorageManager';
 import Colors from '../constants/Colors';
-import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
+import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../constants/Layout';
 import { AnimatedCard } from '@components/AnimatedPrimitives';
 import { Badge } from '@components/Badge';
 
@@ -122,26 +122,29 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: Spacing.lg,
     paddingTop: Spacing.xl,
-    paddingBottom: Spacing.md,
+    paddingBottom: Spacing.lg,
     borderBottomWidth: 1,
     borderBottomColor: Colors.surface,
   },
   backButton: {
     fontSize: FontSize.md,
+    fontFamily: FontFamily.semibold,
     color: Colors.primary,
     marginBottom: Spacing.sm,
   },
   title: {
-    fontSize: FontSize.xl,
+    fontSize: FontSize.xxl,
     fontWeight: FontWeight.bold,
+    fontFamily: FontFamily.extraBold,
     color: Colors.text.primary,
   },
   listContent: {
     padding: Spacing.lg,
+    paddingBottom: Spacing.xxl,
   },
   row: {
     justifyContent: 'space-between',
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.lg,
   },
   levelCard: {
     backgroundColor: Colors.surface,
