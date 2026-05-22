@@ -5,12 +5,22 @@
 
 import { Level, Difficulty } from '../types';
 
+const BASE_DURATIONS: Record<number, number> = {
+  1: 5,
+  2: 4,
+  3: 3,
+  4: 2,
+  5: 1.5,
+};
+
 /**
- * Berechnet die Anzeigedauer für ein Level
- * Alle Level: 3s
+ * Berechnet die Anzeigedauer für ein Level basierend auf der Schwierigkeit.
+ * extraTimeMode addiert +3 s auf jeden Basiswert.
  */
-export function getDisplayDuration(levelNumber: number): number {
-  return 3;
+export function getDisplayDuration(levelNumber: number, extraTimeMode = false): number {
+  const difficulty = getDifficultyForLevel(levelNumber);
+  const base = BASE_DURATIONS[difficulty] ?? 3;
+  return extraTimeMode ? base + 3 : base;
 }
 
 /**
@@ -20,12 +30,18 @@ export function getDisplayDuration(levelNumber: number): number {
  * Level 4-5: Difficulty 3
  * Level 6-7: Difficulty 4
  * Level 8-10: Difficulty 5
+ * Level 11-13: Difficulty 3 (Tiere)
+ * Level 14-16: Difficulty 4 (Fahrzeuge)
+ * Level 17-20: Difficulty 5 (Natur)
  */
 export function getDifficultyForLevel(levelNumber: number): Difficulty {
   if (levelNumber === 1) return 1;
   if (levelNumber <= 3) return 2;
   if (levelNumber <= 5) return 3;
   if (levelNumber <= 7) return 4;
+  if (levelNumber <= 10) return 5;
+  if (levelNumber <= 13) return 3;
+  if (levelNumber <= 16) return 4;
   return 5;
 }
 
@@ -44,7 +60,7 @@ export function getLevel(levelNumber: number): Level {
  * Gibt die Gesamtanzahl der Level zurück
  */
 export function getTotalLevels(): number {
-  return 10;
+  return 20;
 }
 
 /**

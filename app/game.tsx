@@ -50,6 +50,8 @@ export default function GameScreen() {
       ? parsedLevel
       : 1;
 
+  const isDailyChallenge = params.daily === '1';
+
   const {
     phase,
     setPhase,
@@ -72,6 +74,7 @@ export default function GameScreen() {
     initialLevel,
     drawingPaths: drawing.paths,
     clearCanvas: drawing.clearCanvas,
+    isDailyChallenge,
   });
 
   // Reset hint joker when level changes

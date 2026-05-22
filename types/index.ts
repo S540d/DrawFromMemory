@@ -17,6 +17,7 @@ export interface LevelImage {
   displayNameEn: string;
   strokeCount: number;
   colors: string[]; // Array von Hex-Farben für dieses Bild
+  minLevel?: number; // Wenn gesetzt, nur ab dieser Level-Nummer im Pool
 }
 
 /**

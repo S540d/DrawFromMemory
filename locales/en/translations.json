@@ -126,7 +126,16 @@
     "saved": "Saved!",
     "delete": "Delete",
     "deleteTitle": "Delete drawing",
-    "deleteConfirm": "Do you really want to delete this drawing?"
+    "deleteConfirm": "Do you really want to delete this drawing?",
+    "dailyChallengeLabel": "Daily Challenge"
+  },
+  "dailyChallenge": {
+    "title": "Daily Challenge",
+    "subtitle": "Picture of the Day",
+    "start": "Start Challenge",
+    "completed": "Done for today ✓",
+    "countdown": "New in {{hours}}h {{minutes}}m",
+    "level": "Level {{number}}"
   },
   "errors": {
     "skiaUnavailableTitle": "Drawing surface unavailable",
