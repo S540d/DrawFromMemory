@@ -140,6 +140,8 @@ npm run deploy:ghpages             # Deployment auf GitHub Pages
 **Branch-Strategie:** Feature-Branches → PR → `testing` (QA) → `staging` (Pre-Production) → `main` (Produktion).
 Die drei Branches `main`, `staging`, `testing` müssen immer existieren und dürfen nie gelöscht werden.
 
+> **⚠️ REGEL FÜR AI-ASSISTENTEN:** Merges auf `main` sind VERBOTEN ohne explizite schriftliche Freigabe durch den Nutzer in der aktuellen Konversation. Das gilt auch für `staging → main`. Immer nach `testing → staging` stoppen und auf Freigabe warten. `main` ist production — nur der Nutzer entscheidet, wann etwas dort landet.
+
 ---
 
 ## CI/CD (`.github/workflows/ci-cd.yml`)
