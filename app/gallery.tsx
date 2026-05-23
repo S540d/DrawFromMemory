@@ -6,14 +6,17 @@ import { useTheme } from '@services/ThemeContext';
 import storageManager, { GalleryEntry } from '@services/StorageManager';
 import DrawingCanvas from '@components/DrawingCanvas';
 import { GallerySkeleton } from '@components/SkeletonLoader';
-import { AnimatedCard } from '@components/AnimatedPrimitives';
+import { GlassCard } from '@components/AnimatedPrimitives';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 
 export default function GalleryScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
+  const glassSurface = theme === 'dark' ? Colors.glass.darkSurface : Colors.glass.lightSurface;
+  const glassBorder = theme === 'dark' ? Colors.glass.darkBorder : Colors.glass.lightBorder;
+  const glassShadow = theme === 'dark' ? Colors.glass.darkShadow : Colors.glass.lightShadow;
   const [entries, setEntries] = useState<GalleryEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -84,7 +87,7 @@ export default function GalleryScreen() {
         {/* Gallery Grid */}
         <View style={styles.grid}>
           {entries.map((entry, index) => (
-            <AnimatedCard key={entry.id} index={index} style={[styles.card, { backgroundColor: colors.surface }]}>
+            <GlassCard key={entry.id} index={index} style={[styles.card, { backgroundColor: glassSurface, borderColor: glassBorder }, glassShadow]}>
               <View style={styles.cardPreview}>
                 <DrawingCanvas
                   width={140}
@@ -117,7 +120,7 @@ export default function GalleryScreen() {
               >
                 <Text style={styles.deleteIcon}>✕</Text>
               </TouchableOpacity>
-            </AnimatedCard>
+            </GlassCard>
           ))}
         </View>
       </ScrollView>
@@ -176,9 +179,9 @@ const styles = StyleSheet.create({
   },
   card: {
     width: 170,
-    borderRadius: BorderRadius.xl,
+    borderRadius: BorderRadius.xxl,
     overflow: 'hidden',
-    ...Colors.shadow.medium,
+    borderWidth: 1.5,
   },
   cardPreview: {
     width: 170,

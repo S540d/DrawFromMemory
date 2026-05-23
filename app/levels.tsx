@@ -7,7 +7,7 @@ import { getAllLevels } from '@services/LevelManager';
 import storageManager from '@services/StorageManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../constants/Layout';
-import { AnimatedCard } from '@components/AnimatedPrimitives';
+import { GlassCard } from '@components/AnimatedPrimitives';
 import { Badge } from '@components/Badge';
 
 // Default card width for SSR (will be recalculated on client)
@@ -20,12 +20,16 @@ const DEFAULT_CARD_WIDTH = 150;
 export default function LevelsScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const levels = useMemo(() => getAllLevels(), []);
   const [ratings, setRatings] = useState<Record<number, number | null>>({});
   // Use hook for responsive dimensions (SSR-safe)
   const { width: screenWidth } = useWindowDimensions();
   const cardWidth = screenWidth > 0 ? (screenWidth - Spacing.lg * 3) / 2 : DEFAULT_CARD_WIDTH;
+
+  const glassSurface = theme === 'dark' ? Colors.glass.darkSurface : Colors.glass.lightSurface;
+  const glassBorder = theme === 'dark' ? Colors.glass.darkBorder : Colors.glass.lightBorder;
+  const glassShadow = theme === 'dark' ? Colors.glass.darkShadow : Colors.glass.lightShadow;
 
   useEffect(() => {
     let mounted = true;
@@ -60,32 +64,35 @@ export default function LevelsScreen() {
     const difficultyText = t(`difficulty.${item.difficulty}`);
 
     return (
-      <AnimatedCard index={index}>
-        <TouchableOpacity
-          style={[styles.levelCard, { width: cardWidth, backgroundColor: colors.surface, borderColor: colors.primary + '30' }]}
-          onPress={() => router.push(`/game?level=${item.number}`)}
-          activeOpacity={0.7}
-        >
-          {/* Level-Nummer */}
-          <View style={styles.levelHeader}>
-            <Text style={[styles.levelNumber, { color: colors.text.primary }]}>
-              {t('levels.level', { number: item.number })}
-            </Text>
-          </View>
+      <GlassCard
+        index={index}
+        onPress={() => router.push(`/game?level=${item.number}`)}
+        accessibilityLabel={`${t('levels.level', { number: item.number })} — ${difficultyText}`}
+        style={[
+          styles.levelCard,
+          { width: cardWidth, backgroundColor: glassSurface, borderColor: glassBorder },
+          glassShadow,
+        ]}
+      >
+        {/* Level-Nummer */}
+        <View style={styles.levelHeader}>
+          <Text style={[styles.levelNumber, { color: colors.text.primary }]}>
+            {t('levels.level', { number: item.number })}
+          </Text>
+        </View>
 
-          {/* Schwierigkeit */}
-          <Badge
-            label={difficultyText}
-            variant="difficulty"
-            difficulty={item.difficulty}
-            style={styles.difficultyBadge}
-          />
+        {/* Schwierigkeit */}
+        <Badge
+          label={difficultyText}
+          variant="difficulty"
+          difficulty={item.difficulty}
+          style={styles.difficultyBadge}
+        />
 
-          {/* Sterne-Bewertung */}
-          {renderStars(ratings[item.number] ?? null, item.number)}
+        {/* Sterne-Bewertung */}
+        {renderStars(ratings[item.number] ?? null, item.number)}
 
-        </TouchableOpacity>
-      </AnimatedCard>
+      </GlassCard>
     );
   };
 
@@ -147,12 +154,9 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.lg,
   },
   levelCard: {
-    backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.xl, // lg → xl (16px → 20px für Cards)
+    borderRadius: BorderRadius.xxl,
     padding: Spacing.md,
-    borderWidth: 2,
-    borderColor: Colors.primary + '30', // 30 = opacity
-    ...Colors.shadow.medium, // Soft & Modern: Weiche Schatten für Level-Cards
+    borderWidth: 1.5,
   },
   levelHeader: {
     marginBottom: Spacing.sm,

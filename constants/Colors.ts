@@ -49,6 +49,26 @@ export const Colors = {
       boxShadow: '0 8px 24px rgba(0, 0, 0, 0.18)',
       elevation: 8,
     },
+    buttonPrimary: {
+      boxShadow: '0 4px 20px rgba(124, 92, 255, 0.40)',
+      elevation: 6,
+    },
+  },
+
+  // Glassmorphism-Tokens (für GlassCard in Levels/Gallery)
+  glass: {
+    lightSurface: 'rgba(255, 255, 255, 0.88)',
+    darkSurface:  'rgba(42, 35, 64, 0.88)',
+    lightBorder:  'rgba(255, 255, 255, 0.70)',
+    darkBorder:   'rgba(255, 255, 255, 0.10)',
+    lightShadow: {
+      boxShadow: '0 6px 24px rgba(124, 92, 255, 0.14)',
+      elevation: 5,
+    },
+    darkShadow: {
+      boxShadow: '0 6px 24px rgba(0, 0, 0, 0.45)',
+      elevation: 6,
+    },
   },
 
   // Feedback Farben
