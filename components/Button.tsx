@@ -17,8 +17,7 @@ const VARIANT_STYLES: Record<ButtonVariant, { container: ViewStyle; text: TextSt
   primary: {
     container: {
       overflow: 'hidden',
-      boxShadow: '0 4px 20px rgba(124, 92, 255, 0.4)',
-      elevation: 6,
+      ...Colors.shadow.buttonPrimary,
     } as ViewStyle,
     text: { color: Colors.drawing.white },
   },

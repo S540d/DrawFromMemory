@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { AccessibilityInfo, Pressable, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
+import { AccessibilityInfo, Pressable, Text, TextStyle, ViewStyle } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,10 +7,8 @@ import Animated, {
   withSpring,
   withDelay,
   Easing,
-  runOnJS,
 } from 'react-native-reanimated';
 import Colors from '../constants/Colors';
-import { BorderRadius } from '../constants/Layout';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -67,6 +65,7 @@ export function AnimatedCard({
  * Glassmorphism card with entrance animation and optional press-lift.
  * Stagger via `index` prop (50ms per item).
  * Pass `onPress` to enable the spring-lift interaction.
+ * Respects prefers-reduced-motion for both entrance and press animations.
  */
 export function GlassCard({
   index = 0,
@@ -84,12 +83,14 @@ export function GlassCard({
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(20);
   const scale = useSharedValue(1);
+  const reduceMotion = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
-    AccessibilityInfo.isReduceMotionEnabled().then((reduceMotion) => {
+    AccessibilityInfo.isReduceMotionEnabled().then((rm) => {
       if (cancelled) return;
-      if (reduceMotion) {
+      reduceMotion.current = rm;
+      if (rm) {
         opacity.value = 1;
         translateY.value = 0;
       } else {
@@ -107,10 +108,12 @@ export function GlassCard({
   }, [opacity, translateY, index]);
 
   const handlePressIn = () => {
+    if (reduceMotion.current) return;
     scale.value = withSpring(0.97, { damping: 15, stiffness: 300 });
   };
 
   const handlePressOut = () => {
+    if (reduceMotion.current) return;
     scale.value = withSpring(1, { damping: 12, stiffness: 200 });
   };
 
@@ -243,6 +246,7 @@ export function AnimatedFeedback({
 /**
  * Animated star for rating UI.
  * Spring-bounce pop on fill, stagger via `index`, golden glow when filled.
+ * Respects prefers-reduced-motion.
  */
 export function AnimatedStar({
   filled,
@@ -314,5 +318,3 @@ export function AnimatedStar({
     </Animated.View>
   );
 }
-
-const styles = StyleSheet.create({});

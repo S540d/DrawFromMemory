@@ -14,6 +14,9 @@ export default function GalleryScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { colors, theme } = useTheme();
+  const glassSurface = theme === 'dark' ? Colors.glass.darkSurface : Colors.glass.lightSurface;
+  const glassBorder = theme === 'dark' ? Colors.glass.darkBorder : Colors.glass.lightBorder;
+  const glassShadow = theme === 'dark' ? Colors.glass.darkShadow : Colors.glass.lightShadow;
   const [entries, setEntries] = useState<GalleryEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -83,13 +86,7 @@ export default function GalleryScreen() {
 
         {/* Gallery Grid */}
         <View style={styles.grid}>
-          {entries.map((entry, index) => {
-            const glassSurface = theme === 'dark' ? 'rgba(42, 35, 64, 0.88)' : 'rgba(255, 255, 255, 0.90)';
-            const glassBorder = theme === 'dark' ? 'rgba(255, 255, 255, 0.10)' : 'rgba(255, 255, 255, 0.70)';
-            const glassShadow = theme === 'dark'
-              ? { boxShadow: '0 6px 24px rgba(0, 0, 0, 0.45)', elevation: 6 }
-              : { boxShadow: '0 6px 24px rgba(124, 92, 255, 0.14)', elevation: 5 };
-            return (
+          {entries.map((entry, index) => (
             <GlassCard key={entry.id} index={index} style={[styles.card, { backgroundColor: glassSurface, borderColor: glassBorder }, glassShadow]}>
               <View style={styles.cardPreview}>
                 <DrawingCanvas
@@ -124,8 +121,7 @@ export default function GalleryScreen() {
                 <Text style={styles.deleteIcon}>✕</Text>
               </TouchableOpacity>
             </GlassCard>
-            );
-          })}
+          ))}
         </View>
       </ScrollView>
     </View>

@@ -27,11 +27,9 @@ export default function LevelsScreen() {
   const { width: screenWidth } = useWindowDimensions();
   const cardWidth = screenWidth > 0 ? (screenWidth - Spacing.lg * 3) / 2 : DEFAULT_CARD_WIDTH;
 
-  const glassSurface = theme === 'dark' ? 'rgba(42, 35, 64, 0.88)' : 'rgba(255, 255, 255, 0.88)';
-  const glassBorder = theme === 'dark' ? 'rgba(255, 255, 255, 0.10)' : 'rgba(255, 255, 255, 0.70)';
-  const glassShadow = theme === 'dark'
-    ? { boxShadow: '0 6px 24px rgba(0, 0, 0, 0.45)', elevation: 6 }
-    : { boxShadow: '0 6px 24px rgba(124, 92, 255, 0.14)', elevation: 5 };
+  const glassSurface = theme === 'dark' ? Colors.glass.darkSurface : Colors.glass.lightSurface;
+  const glassBorder = theme === 'dark' ? Colors.glass.darkBorder : Colors.glass.lightBorder;
+  const glassShadow = theme === 'dark' ? Colors.glass.darkShadow : Colors.glass.lightShadow;
 
   useEffect(() => {
     let mounted = true;
