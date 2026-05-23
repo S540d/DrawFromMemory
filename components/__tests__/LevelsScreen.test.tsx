@@ -52,6 +52,11 @@ jest.mock('../../components/Badge', () => {
   return { Badge: () => <View /> };
 });
 
+jest.mock('../../components/FloatingStars', () => {
+  const { View } = require('react-native');
+  return { FloatingStars: () => <View testID="floating-stars" /> };
+});
+
 import LevelsScreen from '../../app/levels';
 
 const getStarNodes = (UNSAFE_getAllByProps: (props: any) => any[], testID: string) => {

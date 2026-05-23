@@ -34,6 +34,16 @@ jest.mock('../../components/SettingsModal', () => {
   return function SettingsModal() { return <View />; };
 });
 
+jest.mock('../../components/FloatingStars', () => {
+  const { View } = require('react-native');
+  return { FloatingStars: () => <View testID="floating-stars" /> };
+});
+
+jest.mock('../../components/AnimatedHero', () => {
+  const { View } = require('react-native');
+  return { AnimatedHero: () => <View testID="animated-hero" /> };
+});
+
 jest.mock('../../services/ThemeContext', () => ({
   useTheme: () => ({
     colors: {
