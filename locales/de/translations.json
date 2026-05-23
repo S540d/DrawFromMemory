@@ -9,7 +9,15 @@
     "continueButton": "Weiterspielen",
     "levelsButton": "Level auswählen",
     "galleryButton": "Meine Galerie",
-    "settingsButton": "Einstellungen"
+    "settingsButton": "Einstellungen",
+    "streakBadge": "🔥 {{count}}",
+    "stats": {
+      "stars": "Sterne",
+      "streak": "Streak",
+      "levels": "Level",
+      "streakDays": "Tage",
+      "levelOf": "von {{total}}"
+    }
   },
   "levels": {
     "title": "Level auswählen",

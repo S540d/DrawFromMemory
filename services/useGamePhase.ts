@@ -5,6 +5,7 @@ import { getDisplayDuration, getTotalLevels } from '@services/LevelManager';
 import { getImageElementCount } from '@components/LevelImageDisplay';
 import storageManager from '@services/StorageManager';
 import { markTodayCompleted } from '@services/DailyChallengeManager';
+import { updateStreakAfterGame } from '@services/StreakManager';
 import SoundManager from '@services/SoundManager';
 import { useTimer } from '@services/useTimer';
 import type { DrawingPath } from '@components/DrawingCanvas';
@@ -169,6 +170,7 @@ export function useGamePhase({
       SoundManager.playStarTap(rating);
       setUserRating(rating);
       await storageManager.saveLevelProgress(levelNumber, rating);
+      await updateStreakAfterGame();
       if (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) {
         await markTodayCompleted();
       }
