@@ -59,7 +59,7 @@ components/
   AnimatedSplashScreen.tsx   # Animierter Splash Screen
   Badge.tsx                  # UI-Primitiv: Badge
   Chip.tsx                   # UI-Primitiv: Chip
-  Button.tsx                 # UI-Primitiv: Button (primary = LinearGradient cta, anderen Varianten flat)
+  Button.tsx                 # UI-Primitiv: Button (primary = LinearGradient cta, secondary = outlined, ghost = transparent, danger = solid)
   SkeletonLoader.tsx         # Skeleton Placeholder
 
 services/
@@ -109,6 +109,8 @@ assets/images/levels-{1-5}/  # Level-sortierte Kopien der gleichen SVGs
 ```
 
 App- und Produktionscode verwendet diese Aliase (`@services/LevelManager`, nicht `../services/LevelManager`). Testdateien in `__tests__/` nutzen weiterhin relative Imports, da Jest die Babel-Aliase nicht auflöst.
+
+> **Hinweis:** `constants/` hat kein Alias — dort immer relative Imports verwenden (`../constants/Colors`, `../constants/Layout`).
 
 ---
 
