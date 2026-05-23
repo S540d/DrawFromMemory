@@ -6,6 +6,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { Pressable } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 
@@ -15,9 +16,9 @@ type ButtonSize = 'sm' | 'md' | 'lg';
 const VARIANT_STYLES: Record<ButtonVariant, { container: ViewStyle; text: TextStyle }> = {
   primary: {
     container: {
-      backgroundColor: Colors.primaryDark,
-      ...Colors.shadow.large,
-    },
+      overflow: 'hidden',
+      ...Colors.shadow.buttonPrimary,
+    } as ViewStyle,
     text: { color: Colors.drawing.white },
   },
   secondary: {
@@ -121,7 +122,7 @@ export function Button({
 
   const handlePressIn = () => {
     if (reduceMotion.current) return;
-    scale.value = withSpring(0.95, { damping: 15, stiffness: 300 });
+    scale.value = withSpring(0.96, { damping: 15, stiffness: 300 });
   };
 
   const handlePressOut = () => {
@@ -152,6 +153,14 @@ export function Button({
           style ?? {},
         ]}
       >
+        {variant === 'primary' && (
+          <LinearGradient
+            colors={Colors.gradient.cta as [string, ...string[]]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={StyleSheet.absoluteFillObject}
+          />
+        )}
         {loading ? (
           <ActivityIndicator
             color={variant === 'primary' || variant === 'danger' ? Colors.drawing.white : Colors.primary}

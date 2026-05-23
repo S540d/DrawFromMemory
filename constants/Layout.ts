@@ -23,7 +23,8 @@ export const BorderRadius = {
 /**
  * Typografie-Hierarchie
  *
- * H1 – App-Titel (Home-Screen):              xxl  = 32 px  bold
+ * Display – Hero-Headline (Home):            display = 40 px  extraBold
+ * H1 – App-Titel / Screen-Headlines:         xxl  = 32 px  bold
  * H2 – Screen-Titel:                         xl   = 24 px  bold
  * H3 – Modal-/Phase-/Abschnitts-Titel:       lg   = 20 px  semibold
  * Body / Labels:                              md   = 16 px  regular / medium
@@ -38,6 +39,7 @@ export const FontSize = {
   lg: 20,
   xl: 24,
   xxl: 32,
+  display: 40,
   huge: 48,
 };
 
@@ -48,9 +50,21 @@ export const FontWeight = {
   bold: '700' as const,
 };
 
+/**
+ * Schriftfamilien — Nunito (via @expo-google-fonts/nunito)
+ * Fallback auf System-Font bis Fonts geladen sind.
+ */
+export const FontFamily = {
+  regular: 'Nunito_400Regular',
+  semibold: 'Nunito_600SemiBold',
+  bold: 'Nunito_700Bold',
+  extraBold: 'Nunito_800ExtraBold',
+};
+
 export default {
   Spacing,
   BorderRadius,
   FontSize,
   FontWeight,
+  FontFamily,
 };

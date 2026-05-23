@@ -13,7 +13,7 @@ import LevelImageDisplay from '@components/LevelImageDisplay';
 import DrawingCanvas, { useDrawingCanvas } from '@components/DrawingCanvas';
 import SettingsModal from '@components/SettingsModal';
 import { ErrorBoundary } from '@components/ErrorBoundary';
-import { AnimatedFeedback } from '@components/AnimatedPrimitives';
+import { AnimatedFeedback, AnimatedStar } from '@components/AnimatedPrimitives';
 import SoundManager from '@services/SoundManager';
 import { useGamePhase } from '@services/useGamePhase';
 import type { DrawingPath } from '@components/DrawingCanvas';
@@ -383,16 +383,13 @@ export default function GameScreen() {
           <Text style={styles.starsTitle}>{t('game.result.howWell')}</Text>
           <View style={styles.starsRow}>
             {[1, 2, 3, 4, 5].map((star) => (
-              <TouchableOpacity
+              <AnimatedStar
                 key={star}
+                filled={star <= userRating}
+                index={star - 1}
                 onPress={() => handleRatingSubmit(star)}
-                accessibilityRole="button"
                 accessibilityLabel={`${star} Stern${star !== 1 ? 'e' : ''}`}
-              >
-                <Text style={[styles.starEmoji, star <= userRating && styles.starEmojiActive]}>
-                  ⭐
-                </Text>
-              </TouchableOpacity>
+              />
             ))}
           </View>
           <AnimatedFeedback visible={userRating > 0}>
@@ -882,11 +879,11 @@ const styles = StyleSheet.create({
   },
   starsContainer: {
     backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.xl,
+    borderRadius: BorderRadius.xxl,
     padding: Spacing.lg,
     alignItems: 'center',
     marginBottom: Spacing.md,
-    ...Colors.shadow.small,
+    ...Colors.shadow.medium,
   },
   starsContainerSmall: {
     marginBottom: Spacing.sm,
@@ -895,13 +892,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: Spacing.sm,
     marginBottom: Spacing.md,
-  },
-  starEmoji: {
-    fontSize: 36,
-    opacity: 0.15,
-  },
-  starEmojiActive: {
-    opacity: 1,
   },
   ratingText: {
     fontSize: FontSize.xl,

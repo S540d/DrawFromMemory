@@ -61,7 +61,7 @@ describe('ThemeContext', () => {
     await waitFor(() => {
       expect(result.current.theme).toBe('dark');
     });
-    expect(result.current.colors.background).toBe('#0F1419');
+    expect(result.current.colors.background).toBe('#1F1B2E');
   });
 
   it('follows system theme when setting is system', async () => {
