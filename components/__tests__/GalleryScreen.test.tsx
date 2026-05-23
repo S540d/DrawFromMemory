@@ -13,6 +13,7 @@ jest.mock('../../services/i18n', () => ({
 
 jest.mock('../../services/ThemeContext', () => ({
   useTheme: () => ({
+    theme: 'light',
     colors: {
       background: '#fff',
       surface: '#f0f0f0',
@@ -38,6 +39,7 @@ jest.mock('../../components/AnimatedPrimitives', () => {
   const { View } = require('react-native');
   return {
     AnimatedCard: ({ children, style }: any) => <View style={style}>{children}</View>,
+    GlassCard: ({ children, style }: any) => <View style={style}>{children}</View>,
     AnimatedButton: ({ children, onPress, style, disabled }: any) => {
       const { Pressable } = require('react-native');
       return <Pressable onPress={onPress} style={style} disabled={disabled}>{children}</Pressable>;

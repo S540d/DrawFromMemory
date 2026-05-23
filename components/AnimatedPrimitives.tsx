@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { AccessibilityInfo, Pressable, StyleSheet, ViewStyle } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { AccessibilityInfo, Pressable, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -9,6 +9,8 @@ import Animated, {
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
+import Colors from '../constants/Colors';
+import { BorderRadius } from '../constants/Layout';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -53,6 +55,84 @@ export function AnimatedCard({
     opacity: opacity.value,
     transform: [{ translateY: translateY.value }],
   }));
+
+  return (
+    <Animated.View style={[animatedStyle, style]}>
+      {children}
+    </Animated.View>
+  );
+}
+
+/**
+ * Glassmorphism card with entrance animation and optional press-lift.
+ * Stagger via `index` prop (50ms per item).
+ * Pass `onPress` to enable the spring-lift interaction.
+ */
+export function GlassCard({
+  index = 0,
+  onPress,
+  style,
+  children,
+  accessibilityLabel,
+}: {
+  index?: number;
+  onPress?: () => void;
+  style?: ViewStyle | ViewStyle[];
+  children: React.ReactNode;
+  accessibilityLabel?: string;
+}) {
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(20);
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    let cancelled = false;
+    AccessibilityInfo.isReduceMotionEnabled().then((reduceMotion) => {
+      if (cancelled) return;
+      if (reduceMotion) {
+        opacity.value = 1;
+        translateY.value = 0;
+      } else {
+        opacity.value = withDelay(
+          index * 50,
+          withTiming(1, { duration: 350, easing: Easing.out(Easing.ease) })
+        );
+        translateY.value = withDelay(
+          index * 50,
+          withTiming(0, { duration: 350, easing: Easing.out(Easing.ease) })
+        );
+      }
+    });
+    return () => { cancelled = true; };
+  }, [opacity, translateY, index]);
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.97, { damping: 15, stiffness: 300 });
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 12, stiffness: 200 });
+  };
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }, { scale: scale.value }],
+  }));
+
+  if (onPress) {
+    return (
+      <AnimatedPressable
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={[animatedStyle, style]}
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel}
+      >
+        {children}
+      </AnimatedPressable>
+    );
+  }
 
   return (
     <Animated.View style={[animatedStyle, style]}>
@@ -159,3 +239,80 @@ export function AnimatedFeedback({
     </Animated.View>
   );
 }
+
+/**
+ * Animated star for rating UI.
+ * Spring-bounce pop on fill, stagger via `index`, golden glow when filled.
+ */
+export function AnimatedStar({
+  filled,
+  index = 0,
+  onPress,
+  accessibilityLabel,
+}: {
+  filled: boolean;
+  index?: number;
+  onPress?: () => void;
+  accessibilityLabel?: string;
+}) {
+  const scale = useSharedValue(filled ? 1 : 0.7);
+  const prevFilledRef = useRef(filled);
+
+  useEffect(() => {
+    let cancelled = false;
+    AccessibilityInfo.isReduceMotionEnabled().then((reduceMotion) => {
+      if (cancelled) return;
+      const wasEmpty = !prevFilledRef.current;
+      prevFilledRef.current = filled;
+
+      if (filled && wasEmpty) {
+        if (reduceMotion) {
+          scale.value = 1;
+        } else {
+          scale.value = withDelay(
+            index * 80,
+            withSpring(1, { damping: 5, stiffness: 200, mass: 0.8 })
+          );
+        }
+      } else if (filled) {
+        scale.value = withSpring(1, { damping: 10, stiffness: 200 });
+      } else {
+        scale.value = withTiming(0.7, { duration: 200 });
+      }
+    });
+    return () => { cancelled = true; };
+  }, [filled, index, scale]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const textStyle: TextStyle = {
+    fontSize: 38,
+    color: filled ? Colors.stars.filled : Colors.stars.empty,
+    textShadowColor: filled ? 'rgba(255, 200, 0, 0.65)' : 'transparent',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: filled ? 10 : 0,
+  };
+
+  if (onPress) {
+    return (
+      <AnimatedPressable
+        onPress={onPress}
+        style={animatedStyle}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="button"
+      >
+        <Text style={textStyle}>★</Text>
+      </AnimatedPressable>
+    );
+  }
+
+  return (
+    <Animated.View style={animatedStyle}>
+      <Text style={textStyle}>★</Text>
+    </Animated.View>
+  );
+}
+
+const styles = StyleSheet.create({});

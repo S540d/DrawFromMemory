@@ -6,14 +6,14 @@ import { useTheme } from '@services/ThemeContext';
 import storageManager, { GalleryEntry } from '@services/StorageManager';
 import DrawingCanvas from '@components/DrawingCanvas';
 import { GallerySkeleton } from '@components/SkeletonLoader';
-import { AnimatedCard } from '@components/AnimatedPrimitives';
+import { GlassCard } from '@components/AnimatedPrimitives';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 
 export default function GalleryScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const [entries, setEntries] = useState<GalleryEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -83,8 +83,14 @@ export default function GalleryScreen() {
 
         {/* Gallery Grid */}
         <View style={styles.grid}>
-          {entries.map((entry, index) => (
-            <AnimatedCard key={entry.id} index={index} style={[styles.card, { backgroundColor: colors.surface }]}>
+          {entries.map((entry, index) => {
+            const glassSurface = theme === 'dark' ? 'rgba(42, 35, 64, 0.88)' : 'rgba(255, 255, 255, 0.90)';
+            const glassBorder = theme === 'dark' ? 'rgba(255, 255, 255, 0.10)' : 'rgba(255, 255, 255, 0.70)';
+            const glassShadow = theme === 'dark'
+              ? { boxShadow: '0 6px 24px rgba(0, 0, 0, 0.45)', elevation: 6 }
+              : { boxShadow: '0 6px 24px rgba(124, 92, 255, 0.14)', elevation: 5 };
+            return (
+            <GlassCard key={entry.id} index={index} style={[styles.card, { backgroundColor: glassSurface, borderColor: glassBorder }, glassShadow]}>
               <View style={styles.cardPreview}>
                 <DrawingCanvas
                   width={140}
@@ -117,8 +123,9 @@ export default function GalleryScreen() {
               >
                 <Text style={styles.deleteIcon}>✕</Text>
               </TouchableOpacity>
-            </AnimatedCard>
-          ))}
+            </GlassCard>
+            );
+          })}
         </View>
       </ScrollView>
     </View>
@@ -176,9 +183,9 @@ const styles = StyleSheet.create({
   },
   card: {
     width: 170,
-    borderRadius: BorderRadius.xl,
+    borderRadius: BorderRadius.xxl,
     overflow: 'hidden',
-    ...Colors.shadow.medium,
+    borderWidth: 1.5,
   },
   cardPreview: {
     width: 170,
