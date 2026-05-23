@@ -11,7 +11,7 @@ import {
   isTodayCompleted,
 } from '@services/DailyChallengeManager';
 import Colors from '../constants/Colors';
-import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
+import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../constants/Layout';
 import SettingsModal from '@components/SettingsModal';
 
 export default function HomeScreen() {
@@ -146,11 +146,13 @@ const styles = StyleSheet.create({
   appTitle: {
     fontSize: FontSize.xl,
     fontWeight: FontWeight.bold,
+    fontFamily: FontFamily.bold,
     lineHeight: 28,
   },
   appTagline: {
     fontSize: FontSize.xs,
     fontWeight: FontWeight.semibold,
+    fontFamily: FontFamily.semibold,
     marginTop: 2,
   },
   settingsButton: {
@@ -166,15 +168,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: Spacing.md,
+    gap: Spacing.lg,
   },
   heroEmoji: {
-    fontSize: 64,
+    fontSize: 72,
   },
   heroTitle: {
-    fontSize: FontSize.xxl,
+    fontSize: FontSize.display,
     fontWeight: FontWeight.bold,
+    fontFamily: FontFamily.extraBold,
     textAlign: 'center',
+    lineHeight: 48,
   },
   buttonContainer: {
     gap: Spacing.md,

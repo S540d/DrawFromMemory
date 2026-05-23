@@ -2,6 +2,11 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { Text, ActivityIndicator } from 'react-native';
 
+jest.mock('expo-linear-gradient', () => {
+  const { View } = require('react-native');
+  return { LinearGradient: ({ children, style }: any) => <View style={style}>{children}</View> };
+});
+
 jest.mock('react-native-reanimated', () => {
   const { View, Text: RNText } = require('react-native');
   return {
