@@ -55,11 +55,11 @@ components/
   ParentalGate.tsx           # Eltern-Sperre für Einstellungen
   SettingsModal.tsx          # Einstellungen-Modal (In-Game)
   ErrorBoundary.tsx          # Fehlerbehandlung für Render-Fehler
-  AnimatedPrimitives.tsx     # AnimatedFeedback, AnimatedNumber, etc.
+  AnimatedPrimitives.tsx     # AnimatedCard, GlassCard, AnimatedButton, AnimatedFeedback, AnimatedStar
   AnimatedSplashScreen.tsx   # Animierter Splash Screen
   Badge.tsx                  # UI-Primitiv: Badge
   Chip.tsx                   # UI-Primitiv: Chip
-  Button.tsx                 # UI-Primitiv: Button
+  Button.tsx                 # UI-Primitiv: Button (primary = LinearGradient cta, secondary = outlined, ghost = transparent, danger = solid)
   SkeletonLoader.tsx         # Skeleton Placeholder
 
 services/
@@ -78,7 +78,7 @@ services/
   useTimer.ts                # Timer-Hook (Countdown, pause/resume via phase)
 
 constants/
-  Colors.ts                  # Design-Tokens: Primärfarben, Gradienten, Drawing-Farben
+  Colors.ts                  # Design-Tokens: Primärfarben, Gradienten, shadow.*, glass.*, Drawing-Farben
   Layout.ts                  # Spacing, FontSize, FontWeight, BorderRadius
   WebAccessibility.ts        # Web-spezifische Accessibility-Konstanten
 
@@ -109,6 +109,8 @@ assets/images/levels-{1-5}/  # Level-sortierte Kopien der gleichen SVGs
 ```
 
 App- und Produktionscode verwendet diese Aliase (`@services/LevelManager`, nicht `../services/LevelManager`). Testdateien in `__tests__/` nutzen weiterhin relative Imports, da Jest die Babel-Aliase nicht auflöst.
+
+> **Hinweis:** `constants/` hat kein Alias — dort immer relative Imports verwenden (`../constants/Colors`, `../constants/Layout`).
 
 ---
 
@@ -227,6 +229,63 @@ AsyncStorage-Wrapper mit In-Memory-Fallback für Web (GitHub Pages).
 Storage-Keys beginnen mit `@merke_male:`.
 
 Gespeicherte Felder: `progress`, `theme`, `language`, `sound_enabled`, `music_enabled`, `extra_time_mode`, `gallery`.
+
+---
+
+## UI/UX Design System (Issue #176)
+
+Stand `testing`: Phase A + B abgeschlossen.
+
+### Phase-Übersicht
+| Phase | Status | Branch/PR |
+|---|---|---|
+| **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie | ✅ in `testing` | PR merged |
+| **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in `testing` | PR #178 merged |
+| **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh | 🔲 offen | — |
+| **D: Delight** — Lottie, Konfetti, Mikro-Sounds | 🔲 offen | — |
+| **E: Onboarding** — First-Run-Tour | 🔲 offen | — |
+
+### Neue Primitiven (Phase B)
+
+**`AnimatedPrimitives.tsx`** exportiert:
+| Komponente | Zweck |
+|---|---|
+| `AnimatedCard` | Fade-in + Slide-up Eingangs-Animation mit Stagger (50 ms/Item) |
+| `GlassCard` | Glassmorphism + Eingangs-Animation + optionaler Press-Lift (scale 0.97, Spring) — `prefers-reduced-motion`-aware |
+| `AnimatedButton` | Scale-Spring bei Press |
+| `AnimatedFeedback` | Scale + Fade beim Erscheinen (z.B. Feedback-Text) |
+| `AnimatedStar` | Spring-Bounce-Pop beim Füllen, Stagger 80 ms/Stern, goldener Textglow — `prefers-reduced-motion`-aware |
+
+**`GlassCard` verwenden:**
+```tsx
+import { GlassCard } from '@components/AnimatedPrimitives';
+import Colors from '../constants/Colors';
+
+const { theme } = useTheme();
+const glassSurface = theme === 'dark' ? Colors.glass.darkSurface : Colors.glass.lightSurface;
+const glassBorder  = theme === 'dark' ? Colors.glass.darkBorder  : Colors.glass.lightBorder;
+const glassShadow  = theme === 'dark' ? Colors.glass.darkShadow  : Colors.glass.lightShadow;
+
+<GlassCard
+  index={index}
+  onPress={...}       // optional — aktiviert Press-Lift
+  style={[{ backgroundColor: glassSurface, borderColor: glassBorder, borderWidth: 1.5 }, glassShadow]}
+>
+  {children}
+</GlassCard>
+```
+
+**`Colors.glass`-Tokens:**
+```ts
+Colors.glass.lightSurface  // 'rgba(255,255,255,0.88)'
+Colors.glass.darkSurface   // 'rgba(42,35,64,0.88)'
+Colors.glass.lightBorder   // 'rgba(255,255,255,0.70)'
+Colors.glass.darkBorder    // 'rgba(255,255,255,0.10)'
+Colors.glass.lightShadow   // { boxShadow, elevation } — lila Tönung
+Colors.glass.darkShadow    // { boxShadow, elevation } — dunkel
+```
+
+**`Colors.shadow.buttonPrimary`** — lila-getönter Schatten für primäre CTAs (`Button` variant=`primary` verwendet ihn intern).
 
 ---
 
