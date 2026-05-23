@@ -21,11 +21,13 @@ export interface ThemeColors {
   primaryDark: string;
   secondary: string;
   accent: string;
+  accentWarm: string;
 
   // Background & Surface
   background: string;
   surface: string;
   surfaceElevated: string;
+  surfaceAlt: string;
   border: string;
   modalOverlay: string;
 
@@ -70,15 +72,17 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Light theme colors
 const LIGHT_COLORS: ThemeColors = {
-  primary: '#667eea',
-  primaryLight: '#8599f3',
-  primaryDark: '#4c63d2',
-  secondary: '#f093fb',
-  accent: '#A8E6CF',
+  primary: '#7C5CFF',
+  primaryLight: '#9E84FF',
+  primaryDark: '#5A3FE0',
+  secondary: '#F093FB',
+  accent: '#4ECDC4',
+  accentWarm: '#FFB547',
 
   background: '#FAFAFA',
   surface: '#F5F5F5',
   surfaceElevated: '#EFEFEF',
+  surfaceAlt: '#EDE8F5',
   border: '#DDDDDD',
   modalOverlay: 'rgba(0, 0, 0, 0.5)',
 
@@ -123,18 +127,20 @@ const LIGHT_COLORS: ThemeColors = {
   },
 };
 
-// Dark theme colors
+// Dark theme colors — wärmere, leicht lila getönte Töne (Issue #176 §1.2)
 const DARK_COLORS: ThemeColors = {
-  primary: '#8599f3',
-  primaryLight: '#a8b9f7',
-  primaryDark: '#667eea',
-  secondary: '#f5b3fc',
-  accent: '#7FD8B8',
+  primary: '#9E84FF',
+  primaryLight: '#B8A3FF',
+  primaryDark: '#7C5CFF',
+  secondary: '#F5B3FC',
+  accent: '#4ECDC4',
+  accentWarm: '#FFB547',
 
-  background: '#0F1419',
-  surface: '#1A1F2E',
-  surfaceElevated: '#242B3E',
-  border: '#3A4556',
+  background: '#1F1B2E',
+  surface: '#2A2340',
+  surfaceElevated: '#352B4D',
+  surfaceAlt: '#302848',
+  border: '#4A3F60',
   modalOverlay: 'rgba(0, 0, 0, 0.7)',
 
   text: {
