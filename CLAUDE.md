@@ -27,7 +27,7 @@ Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Er
 | Theming | ThemeContext (light / dark / system) |
 | Sound | Web Audio API (web) + `expo-haptics` (native) |
 | i18n | Custom `services/i18n.ts` (de/en), Locales in `locales/` |
-| Tests | Jest 29 + jest-expo ~55 (241 Tests, jsdom-Environment) |
+| Tests | Jest 29 + jest-expo ~55 (272 Tests, jsdom-Environment) |
 | CI | GitHub Actions (`.github/workflows/ci-cd.yml`) |
 | Build (Native) | EAS Build (`eas.json`) |
 | Crash Reporting | Sentry via `EXPO_PUBLIC_SENTRY_DSN` (optional, no-op on Web) |
