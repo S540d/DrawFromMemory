@@ -1,6 +1,8 @@
 import React from 'react';
 import { render, act } from '@testing-library/react-native';
 
+const withRepeatMock = jest.fn((v: any) => v);
+
 jest.mock('react-native-reanimated', () => {
   const { View } = require('react-native');
   return {
@@ -12,7 +14,7 @@ jest.mock('react-native-reanimated', () => {
     useSharedValue: (v: any) => ({ value: v }),
     useAnimatedStyle: (_fn: any) => ({}),
     withTiming: (v: any) => v,
-    withRepeat: (v: any) => v,
+    withRepeat: withRepeatMock,
     withSequence: (...args: any[]) => args[args.length - 1],
     Easing: {
       ease: (t: number) => t,
@@ -29,6 +31,10 @@ const getAllTexts = (getAllByType: (t: any) => any[]) =>
   getAllByType(Text).map((n: any) => n.props.children).flat().map(String);
 
 describe('AnimatedHero', () => {
+  beforeEach(() => {
+    withRepeatMock.mockClear();
+  });
+
   it('renders without crashing', async () => {
     expect(() => render(<AnimatedHero />)).not.toThrow();
     await act(async () => {});
@@ -46,5 +52,22 @@ describe('AnimatedHero', () => {
     const texts = getAllTexts(UNSAFE_getAllByType);
     expect(texts).toContain('🧠');
     expect(texts).toContain('✏️');
+  });
+
+  it('does not start animations when prefers-reduced-motion is enabled', async () => {
+    const { AccessibilityInfo } = require('react-native');
+    jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValueOnce(true);
+
+    render(<AnimatedHero />);
+    await act(async () => {});
+
+    expect(withRepeatMock).not.toHaveBeenCalled();
+  });
+
+  it('is hidden from screen readers', async () => {
+    const { getByTestId } = render(<AnimatedHero />);
+    await act(async () => {});
+    const hero = getByTestId('animated-hero');
+    expect(hero.props.importantForAccessibility).toBe('no-hide-descendants');
   });
 });

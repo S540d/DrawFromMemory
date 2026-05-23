@@ -60,13 +60,15 @@ function DecorElement({ item, animate }: { item: DecorItem; animate: boolean }) 
     <Animated.View
       style={[
         styles.item,
-        { top: item.top as any, left: item.left as any, opacity: item.opacity },
+        { top: item.top, left: item.left, opacity: item.opacity },
         animStyle,
       ]}
       pointerEvents="none"
       testID="floating-decor-item"
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
     >
-      <Text style={{ fontSize: item.size, color: item.color }} accessibilityElementsHidden>
+      <Text style={{ fontSize: item.size, color: item.color }} accessible={false}>
         {item.char}
       </Text>
     </Animated.View>

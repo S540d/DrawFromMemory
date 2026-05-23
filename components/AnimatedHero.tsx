@@ -18,7 +18,7 @@ export function AnimatedHero() {
   const brainScale       = useSharedValue(1);
   const pencilRotate     = useSharedValue(0);
   const pencilTranslateX = useSharedValue(0);
-  const sparkleOpacity   = useSharedValue(0);
+  const sparkleOpacity   = useSharedValue(0.2);
 
   useEffect(() => {
     let cancelled = false;
@@ -80,7 +80,12 @@ export function AnimatedHero() {
   }));
 
   return (
-    <View style={styles.container} testID="animated-hero">
+    <View
+      style={styles.container}
+      testID="animated-hero"
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+    >
       <View style={styles.row}>
         <Animated.View style={brainAnimStyle}>
           <Text style={styles.emoji}>🧠</Text>
