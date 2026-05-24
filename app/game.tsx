@@ -14,8 +14,16 @@ import DrawingCanvas, { useDrawingCanvas } from '@components/DrawingCanvas';
 import SettingsModal from '@components/SettingsModal';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { AnimatedFeedback, AnimatedStar } from '@components/AnimatedPrimitives';
+import ConfettiBurst from '@components/ConfettiBurst';
+import BadgeUnlockToast from '@components/BadgeUnlockToast';
 import SoundManager from '@services/SoundManager';
 import { useGamePhase } from '@services/useGamePhase';
+import {
+  checkAndUnlock,
+  type AchievementDef,
+} from '@services/AchievementManager';
+import { getStreakData } from '@services/StreakManager';
+import storageManager from '@services/StorageManager';
 import type { DrawingPath } from '@components/DrawingCanvas';
 
 /**
@@ -35,6 +43,9 @@ export default function GameScreen() {
   const [showSettings, setShowSettings] = useState(false);
   const [showHintModal, setShowHintModal] = useState(false);
   const [hasUsedHint, setHasUsedHint] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [unlockedBadge, setUnlockedBadge] = useState<AchievementDef | null>(null);
+  const lastCheckedRatingRef = React.useRef<number>(0);
 
   // Drawing Canvas Hook
   const drawing = useDrawingCanvas();
@@ -97,6 +108,40 @@ export default function GameScreen() {
   useEffect(() => {
     SoundManager.init();
   }, []);
+
+  // Trigger confetti + achievement check on each new rating (run once per rating value)
+  useEffect(() => {
+    if (userRating === 0 || userRating === lastCheckedRatingRef.current) return;
+    lastCheckedRatingRef.current = userRating;
+
+    if (userRating === 5) {
+      setShowConfetti(true);
+      const t = setTimeout(() => setShowConfetti(false), 2700);
+      // not awaited — best-effort
+      checkAchievements(userRating);
+      return () => clearTimeout(t);
+    }
+    checkAchievements(userRating);
+  }, [userRating]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const checkAchievements = async (rating: number) => {
+    try {
+      const [gallery, progress, streak] = await Promise.all([
+        storageManager.getGallery(),
+        storageManager.getProgress(),
+        getStreakData(),
+      ]);
+      const newly = await checkAndUnlock({
+        stars: rating,
+        galleryCount: gallery.length,
+        currentStreak: streak.currentStreak,
+        levelsCompleted: progress.totalLevelsCompleted ?? 0,
+      });
+      if (newly.length > 0) setUnlockedBadge(newly[0]);
+    } catch {
+      // best-effort
+    }
+  };
 
   // Memoized dynamic styles – stable across re-renders unless layout changes
   const dynCanvasContainer = useMemo(() => ({
@@ -546,6 +591,14 @@ export default function GameScreen() {
       {phase === 'memorize' && renderMemorizePhase()}
       {phase === 'draw' && renderDrawPhase()}
       {phase === 'result' && renderResultPhase()}
+
+      {/* Delight overlays (Sprint C) */}
+      {phase === 'result' && (
+        <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+          <ConfettiBurst width={screenWidth} height={layout.canvasMaxHeight + 200} active={showConfetti} />
+        </View>
+      )}
+      <BadgeUnlockToast achievement={unlockedBadge} onHide={() => setUnlockedBadge(null)} />
     </View>
   );
 }

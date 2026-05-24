@@ -167,5 +167,17 @@
     "placeholder": "Antwort eingeben",
     "confirm": "Öffnen",
     "wrongAnswer": "Falsche Antwort. Bitte versuche es erneut."
+  },
+  "achievements": {
+    "title": "Trophäen",
+    "menuLabel": "Trophäen anzeigen",
+    "unlocked": "Neue Trophäe!",
+    "progress": "{{unlocked}} von {{total}} freigeschaltet",
+    "first_5_stars":    { "title": "Erste 5 Sterne",     "desc": "Erreiche zum ersten Mal 5 Sterne in einem Level." },
+    "gallery_10":       { "title": "Galerie-Künstler",   "desc": "Speichere 10 Zeichnungen in deiner Galerie." },
+    "streak_7":         { "title": "7-Tage-Streak",      "desc": "Spiele 7 Tage hintereinander." },
+    "all_levels_done":  { "title": "Alle Level",         "desc": "Schließe alle 10 Basis-Level ab." },
+    "daily_5":          { "title": "Daily-Champion",     "desc": "Bestehe 5× die tägliche Herausforderung." },
+    "all_difficulties": { "title": "Allrounder",         "desc": "Spiele jede Schwierigkeitsstufe mindestens einmal." }
   }
 }
