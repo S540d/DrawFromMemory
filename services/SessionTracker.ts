@@ -8,9 +8,8 @@
  * nächsten Zugriff entfernt. Daten verlassen das Gerät nicht.
  */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createPersistedJson } from './storage/persistedJson';
 
-const STORAGE_KEY = '@merke_male:sessions';
 export const FOUR_WEEKS_MS = 28 * 24 * 60 * 60 * 1000;
 const MAX_ENTRIES = 1000; // hard cap, defensiv
 
@@ -29,49 +28,11 @@ export interface SessionStats {
   dailyBreakdown: { date: string; sessions: number; totalDurationMs: number; avgStars: number }[];
 }
 
-const MEMORY: Record<string, string> = {};
-
-function safeParse(raw: string | null | undefined): SessionRecord[] | null {
-  if (!raw) return null;
-  try {
-    const v = JSON.parse(raw);
-    return Array.isArray(v) ? v : null;
-  } catch {
-    return null;
-  }
-}
-
-async function loadRaw(): Promise<SessionRecord[]> {
-  let raw: string | null = null;
-  try {
-    raw = await AsyncStorage.getItem(STORAGE_KEY);
-  } catch {
-    // fall through to in-memory
-  }
-  const fromRaw = safeParse(raw);
-  if (fromRaw) {
-    MEMORY[STORAGE_KEY] = raw as string;
-    return fromRaw;
-  }
-  // raw is missing or corrupt
-  const fromMemory = safeParse(MEMORY[STORAGE_KEY]);
-  if (raw !== null && raw !== undefined) {
-    // Self-heal: corrupt storage value — drop it so we stop reading garbage
-    try { await AsyncStorage.removeItem(STORAGE_KEY); } catch { /* best-effort */ }
-    if (!fromMemory) delete MEMORY[STORAGE_KEY];
-  }
-  return fromMemory ?? [];
-}
-
-async function saveRaw(records: SessionRecord[]): Promise<void> {
-  const raw = JSON.stringify(records);
-  MEMORY[STORAGE_KEY] = raw;
-  try {
-    await AsyncStorage.setItem(STORAGE_KEY, raw);
-  } catch {
-    // in-memory fallback
-  }
-}
+const store = createPersistedJson<SessionRecord[]>({
+  key: '@merke_male:sessions',
+  defaultValue: [],
+  isValid: (v): v is SessionRecord[] => Array.isArray(v),
+});
 
 function pruneOld(records: SessionRecord[], now: number = Date.now()): SessionRecord[] {
   const cutoff = now - FOUR_WEEKS_MS;
@@ -85,7 +46,7 @@ function pruneOld(records: SessionRecord[], now: number = Date.now()): SessionRe
 
 export async function recordSession(record: Omit<SessionRecord, 'date'> & { date?: string }): Promise<void> {
   try {
-    const records = await loadRaw();
+    const records = await store.load();
     const next: SessionRecord = {
       date: record.date ?? new Date().toISOString(),
       durationMs: Math.max(0, Math.floor(record.durationMs)),
@@ -93,7 +54,7 @@ export async function recordSession(record: Omit<SessionRecord, 'date'> & { date
       levelId: Math.max(0, Math.floor(record.levelId)),
     };
     const pruned = pruneOld([...records, next]);
-    await saveRaw(pruned);
+    await store.save(pruned);
   } catch {
     // best-effort
   }
@@ -101,11 +62,11 @@ export async function recordSession(record: Omit<SessionRecord, 'date'> & { date
 
 export async function getSessions(now: number = Date.now()): Promise<SessionRecord[]> {
   try {
-    const records = await loadRaw();
+    const records = await store.load();
     const pruned = pruneOld(records, now);
     if (pruned.length !== records.length) {
       // persistiere Cleanup
-      await saveRaw(pruned);
+      await store.save(pruned);
     }
     return pruned;
   } catch {
@@ -114,12 +75,7 @@ export async function getSessions(now: number = Date.now()): Promise<SessionReco
 }
 
 export async function clearSessions(): Promise<void> {
-  delete MEMORY[STORAGE_KEY];
-  try {
-    await AsyncStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // best-effort
-  }
+  await store.reset();
 }
 
 function localDateKey(iso: string): string {
