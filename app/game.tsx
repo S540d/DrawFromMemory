@@ -182,7 +182,7 @@ export default function GameScreen() {
       </View>
 
       {/* Pill-Tabs: Zeichnen / Ergebnis */}
-      {(phase === 'draw' || phase === 'result') && (
+      {FeatureFlags.ENABLE_GAME_PHASE_TABS && (phase === 'draw' || phase === 'result') && (
         <View style={styles.tabBar}>
           <TouchableOpacity
             style={[styles.tab, phase === 'draw' && styles.tabActive]}

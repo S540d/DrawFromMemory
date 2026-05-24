@@ -60,6 +60,7 @@ export default function HomeScreen() {
     }, [])
   );
 
+
   const countdownHours = Math.floor(secondsLeft / 3600);
   const countdownMinutes = Math.floor((secondsLeft % 3600) / 60);
 
