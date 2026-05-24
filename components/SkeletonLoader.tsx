@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
+  cancelAnimation,
   useSharedValue,
   useAnimatedStyle,
   withRepeat,
@@ -25,7 +26,11 @@ export function Skeleton({ width, height, borderRadius = 8, style }: SkeletonPro
   const reduceMotion = useReduceMotion();
 
   useEffect(() => {
-    if (reduceMotion) return;
+    if (reduceMotion) {
+      cancelAnimation(translateX);
+      translateX.value = -width;
+      return;
+    }
     translateX.value = withRepeat(
       withTiming(width, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
       -1,

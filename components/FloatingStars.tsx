@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
+  cancelAnimation,
   Easing,
   useAnimatedStyle,
   useSharedValue,
@@ -39,7 +40,11 @@ function DecorElement({ item, animate }: { item: DecorItem; animate: boolean }) 
   const translateY = useSharedValue(0);
 
   useEffect(() => {
-    if (!animate) return;
+    if (!animate) {
+      cancelAnimation(translateY);
+      translateY.value = 0;
+      return;
+    }
     translateY.value = withDelay(
       item.delay,
       withRepeat(

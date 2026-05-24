@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
+  cancelAnimation,
   Easing,
   useAnimatedStyle,
   useSharedValue,
@@ -24,7 +25,17 @@ export function AnimatedHero() {
   const reduceMotion = useReduceMotion();
 
   useEffect(() => {
-    if (reduceMotion) return;
+    if (reduceMotion) {
+      cancelAnimation(brainScale);
+      cancelAnimation(pencilRotate);
+      cancelAnimation(pencilTranslateX);
+      cancelAnimation(sparkleOpacity);
+      brainScale.value = 1;
+      pencilRotate.value = 0;
+      pencilTranslateX.value = 0;
+      sparkleOpacity.value = 0.2;
+      return;
+    }
 
     brainScale.value = withRepeat(
         withSequence(

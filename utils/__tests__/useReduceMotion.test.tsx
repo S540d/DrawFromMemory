@@ -31,13 +31,26 @@ describe('useReduceMotion', () => {
     expect(text).toBe('reduce');
   });
 
-  it('subscribes to reduceMotionChanged event', async () => {
+  it('subscribes to reduceMotionChanged event and updates state on toggle', async () => {
     jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValue(false);
-    const addListener = jest.spyOn(AccessibilityInfo, 'addEventListener')
-      .mockReturnValue({ remove: jest.fn() } as any);
-    render(<Probe />);
+    let capturedHandler: ((rm: boolean) => void) | undefined;
+    jest.spyOn(AccessibilityInfo, 'addEventListener').mockImplementation((_event, handler) => {
+      capturedHandler = handler as (rm: boolean) => void;
+      return { remove: jest.fn() } as any;
+    });
+
+    const { UNSAFE_getAllByType } = render(<Probe />);
     await act(async () => {});
-    expect(addListener).toHaveBeenCalledWith('reduceMotionChanged', expect.any(Function));
+
+    expect(UNSAFE_getAllByType(Text)[0].props.children).toBe('animate');
+
+    // Simulate live toggle ON
+    await act(async () => { capturedHandler?.(true); });
+    expect(UNSAFE_getAllByType(Text)[0].props.children).toBe('reduce');
+
+    // Simulate live toggle OFF
+    await act(async () => { capturedHandler?.(false); });
+    expect(UNSAFE_getAllByType(Text)[0].props.children).toBe('animate');
   });
 
   it('cleans up subscription on unmount', async () => {
