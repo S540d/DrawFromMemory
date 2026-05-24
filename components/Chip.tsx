@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import { Text, StyleSheet, ViewStyle, AccessibilityInfo } from 'react-native';
+import React from 'react';
+import { Text, StyleSheet, ViewStyle } from 'react-native';
+import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -34,11 +35,7 @@ export function Chip({
   style?: ViewStyle;
 }) {
   const scale = useSharedValue(1);
-  const reduceMotion = useRef(false);
-
-  useEffect(() => {
-    AccessibilityInfo.isReduceMotionEnabled().then((v) => { reduceMotion.current = v; });
-  }, []);
+  const reduceMotion = useReduceMotion();
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],

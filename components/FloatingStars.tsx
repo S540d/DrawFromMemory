@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { AccessibilityInfo, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
+  cancelAnimation,
   Easing,
   useAnimatedStyle,
   useSharedValue,
@@ -38,7 +40,11 @@ function DecorElement({ item, animate }: { item: DecorItem; animate: boolean }) 
   const translateY = useSharedValue(0);
 
   useEffect(() => {
-    if (!animate) return;
+    if (!animate) {
+      cancelAnimation(translateY);
+      translateY.value = 0;
+      return;
+    }
     translateY.value = withDelay(
       item.delay,
       withRepeat(
@@ -76,15 +82,7 @@ function DecorElement({ item, animate }: { item: DecorItem; animate: boolean }) 
 }
 
 export function FloatingStars() {
-  const [animate, setAnimate] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    AccessibilityInfo.isReduceMotionEnabled().then((rm) => {
-      if (!cancelled) setAnimate(!rm);
-    });
-    return () => { cancelled = true; };
-  }, []);
+  const animate = !useReduceMotion();
 
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none" testID="floating-stars">

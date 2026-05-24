@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  AccessibilityInfo,
   Dimensions,
   Modal,
   Pressable,
@@ -9,6 +8,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
   cancelAnimation,
   Easing,
@@ -74,18 +74,12 @@ export default function OnboardingModal({ visible, onClose }: Props) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const [stepIndex, setStepIndex] = useState(0);
-  const [animate, setAnimate] = useState(true);
+  const animate = !useReduceMotion();
   const { width } = Dimensions.get('window');
   const scrollRef = React.useRef<ScrollView>(null);
 
   useEffect(() => {
-    if (!visible) return;
-    let cancelled = false;
-    setStepIndex(0);
-    AccessibilityInfo.isReduceMotionEnabled().then((rm) => {
-      if (!cancelled) setAnimate(!rm);
-    });
-    return () => { cancelled = true; };
+    if (visible) setStepIndex(0);
   }, [visible]);
 
   const handleNext = async () => {
