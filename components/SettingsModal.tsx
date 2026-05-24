@@ -8,6 +8,7 @@ import SoundManager from '@services/SoundManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 import ParentalGate from './ParentalGate';
+import BadgesModal from './BadgesModal';
 
 interface SettingsModalProps {
   visible: boolean;
@@ -25,6 +26,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   const [currentLang, setCurrentLang] = useState(getLanguage());
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>(themeSetting);
   const [showAboutModal, setShowAboutModal] = useState(false);
+  const [showBadgesModal, setShowBadgesModal] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [parentalGateVisible, setParentalGateVisible] = useState(false);
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
@@ -301,6 +303,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
       <View style={[styles.card, { backgroundColor: colors.surface }]}>
         <View style={styles.actionGrid}>
           {([
+            { id: 'trophies', label: t('achievements.menuLabel'), icon: '🏆', onPress: () => setShowBadgesModal(true) },
             { id: 'feedback', label: t('settings.feedback'), icon: '✉️', onPress: handleSendFeedback },
             { id: 'support',  label: t('settings.support'),  icon: '☕',  onPress: handleSupport },
             { id: 'share',    label: t('settings.share'),    icon: '↗',   onPress: handleShareApp },
@@ -330,6 +333,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
       </View>
 
       {renderAboutModal()}
+      <BadgesModal visible={showBadgesModal} onClose={() => setShowBadgesModal(false)} />
     </View>
   );
 
