@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter, useFocusEffect } from 'expo-router';
@@ -10,9 +10,15 @@ import {
   getSecondsUntilMidnight,
   isTodayCompleted,
 } from '@services/DailyChallengeManager';
+import { getStreakData } from '@services/StreakManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../constants/Layout';
 import SettingsModal from '@components/SettingsModal';
+import QuickStatsCards from '@components/QuickStatsCards';
+import { FloatingStars } from '@components/FloatingStars';
+import { AnimatedHero } from '@components/AnimatedHero';
+import OnboardingModal from '@components/OnboardingModal';
+import { isOnboardingDone } from '@services/OnboardingManager';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -20,9 +26,17 @@ export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [showSettings, setShowSettings] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [dailyCompleted, setDailyCompleted] = useState(false);
+
+  useEffect(() => {
+    isOnboardingDone().then((done) => {
+      if (!done) setShowOnboarding(true);
+    });
+  }, []);
   const [secondsLeft, setSecondsLeft] = useState(() => getSecondsUntilMidnight());
   const [dailyLevel, setDailyLevel] = useState(() => getDailyChallengeLevel());
+  const [currentStreak, setCurrentStreak] = useState(0);
 
   // On focus: refresh all daily state and start countdown interval.
   // Interval also re-checks state every minute to handle midnight rollover
@@ -32,7 +46,12 @@ export default function HomeScreen() {
       const refresh = async () => {
         setSecondsLeft(getSecondsUntilMidnight());
         setDailyLevel(getDailyChallengeLevel());
-        setDailyCompleted(await isTodayCompleted());
+        const [completed, streakData] = await Promise.all([
+          isTodayCompleted(),
+          getStreakData(),
+        ]);
+        setDailyCompleted(completed);
+        setCurrentStreak(streakData.currentStreak);
       };
       refresh();
 
@@ -46,6 +65,7 @@ export default function HomeScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top + Spacing.sm, paddingBottom: insets.bottom + Spacing.lg }]}>
+      <FloatingStars />
 
       {/* Top bar */}
       <View style={styles.topBar}>
@@ -53,20 +73,30 @@ export default function HomeScreen() {
           <Text style={[styles.appTitle, { color: colors.text.primary }]}>{t('app.name')}</Text>
           <Text style={[styles.appTagline, { color: colors.text.secondary }]}>{t('home.subtitle')}</Text>
         </View>
-        <Pressable
-          onPress={() => setShowSettings(true)}
-          style={styles.settingsButton}
-          aria-label="Settings"
-        >
-          <Text style={[styles.settingsIcon, { color: colors.text.primary }]}>⋮</Text>
-        </Pressable>
+        <View style={styles.topBarRight}>
+          {currentStreak >= 2 && (
+            <View style={styles.streakBadge}>
+              <Text style={styles.streakBadgeText}>{t('home.streakBadge', { count: String(currentStreak) })}</Text>
+            </View>
+          )}
+          <Pressable
+            onPress={() => setShowSettings(true)}
+            style={styles.settingsButton}
+            aria-label="Settings"
+          >
+            <Text style={[styles.settingsIcon, { color: colors.text.primary }]}>⋮</Text>
+          </Pressable>
+        </View>
       </View>
 
       {/* Center hero */}
       <View style={styles.hero}>
-        <Text style={styles.heroEmoji}>🧠✏️</Text>
+        <AnimatedHero />
         <Text style={[styles.heroTitle, { color: colors.text.primary }]}>{t('home.title')}</Text>
       </View>
+
+      {/* Quick Stats */}
+      <QuickStatsCards />
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
@@ -128,6 +158,7 @@ export default function HomeScreen() {
       </View>
 
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
+      <OnboardingModal visible={showOnboarding} onClose={() => setShowOnboarding(false)} />
     </View>
   );
 }
@@ -142,6 +173,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
+  },
+  topBarRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xs,
+  },
+  streakBadge: {
+    backgroundColor: '#FF6B35',
+    borderRadius: BorderRadius.round,
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: 3,
+  },
+  streakBadgeText: {
+    color: '#fff',
+    fontSize: FontSize.xs,
+    fontWeight: FontWeight.bold,
+    fontFamily: FontFamily.bold,
   },
   appTitle: {
     fontSize: FontSize.xl,
@@ -169,9 +217,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: Spacing.lg,
-  },
-  heroEmoji: {
-    fontSize: 72,
   },
   heroTitle: {
     fontSize: FontSize.display,

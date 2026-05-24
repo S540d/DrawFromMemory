@@ -18,6 +18,15 @@ jest.mock('../../services/DailyChallengeManager', () => ({
   isTodayCompleted: () => Promise.resolve(false),
 }));
 
+jest.mock('../../services/StreakManager', () => ({
+  getStreakData: () => Promise.resolve({ currentStreak: 0, longestStreak: 0, lastPlayedDate: null }),
+}));
+
+jest.mock('../../components/QuickStatsCards', () => {
+  const { View } = require('react-native');
+  return function QuickStatsCards() { return <View />; };
+});
+
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
 }));
@@ -33,6 +42,26 @@ jest.mock('../../components/SettingsModal', () => {
   const { View } = require('react-native');
   return function SettingsModal() { return <View />; };
 });
+
+jest.mock('../../components/FloatingStars', () => {
+  const { View } = require('react-native');
+  return { FloatingStars: () => <View testID="floating-stars" /> };
+});
+
+jest.mock('../../components/AnimatedHero', () => {
+  const { View } = require('react-native');
+  return { AnimatedHero: () => <View testID="animated-hero" /> };
+});
+
+jest.mock('../../components/OnboardingModal', () => {
+  const { View } = require('react-native');
+  return { __esModule: true, default: () => <View testID="onboarding-modal" /> };
+});
+
+jest.mock('../../services/OnboardingManager', () => ({
+  isOnboardingDone: jest.fn(async () => true),
+  markOnboardingDone: jest.fn(async () => {}),
+}));
 
 jest.mock('../../services/ThemeContext', () => ({
   useTheme: () => ({

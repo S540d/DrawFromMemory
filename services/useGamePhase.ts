@@ -5,6 +5,8 @@ import { getDisplayDuration, getTotalLevels } from '@services/LevelManager';
 import { getImageElementCount } from '@components/LevelImageDisplay';
 import storageManager from '@services/StorageManager';
 import { markTodayCompleted } from '@services/DailyChallengeManager';
+import { updateStreakAfterGame } from '@services/StreakManager';
+import { recordSession } from '@services/SessionTracker';
 import SoundManager from '@services/SoundManager';
 import { useTimer } from '@services/useTimer';
 import type { DrawingPath } from '@components/DrawingCanvas';
@@ -38,6 +40,7 @@ export function useGamePhase({
   const timerExpireTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const replayCompleteTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentImageRef = useRef<LevelImage | null>(null);
+  const levelStartedAtRef = useRef<number>(Date.now());
 
   const [extraTimeMode, setExtraTimeMode] = useState(false);
 
@@ -72,6 +75,7 @@ export function useGamePhase({
       const image = getRandomImageForLevel(levelNumber);
       currentImageRef.current = image;
       setCurrentImage(image);
+      levelStartedAtRef.current = Date.now();
     } catch (error) {
       console.error('Error initializing level:', error);
       router.back();
@@ -169,6 +173,12 @@ export function useGamePhase({
       SoundManager.playStarTap(rating);
       setUserRating(rating);
       await storageManager.saveLevelProgress(levelNumber, rating);
+      await updateStreakAfterGame();
+      await recordSession({
+        durationMs: Date.now() - levelStartedAtRef.current,
+        stars: rating,
+        levelId: levelNumber,
+      });
       if (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) {
         await markTodayCompleted();
       }
@@ -212,6 +222,7 @@ export function useGamePhase({
       currentImageRef.current = image;
       setCurrentImage(image);
       setTimeRemaining(getDisplayDuration(levelNumber, extraTimeMode));
+      levelStartedAtRef.current = Date.now();
       setPhase('memorize');
     } catch (error) {
       console.error('Error restarting level:', error);

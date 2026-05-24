@@ -99,6 +99,33 @@ jest.mock('../../services/SoundManager', () => ({
   default: { init: jest.fn(), playPhaseTransition: jest.fn() },
 }));
 
+jest.mock('../../components/ConfettiBurst', () => {
+  const { View } = require('react-native');
+  return { __esModule: true, default: () => <View testID="confetti-burst" /> };
+});
+
+jest.mock('../../components/BadgeUnlockToast', () => {
+  const { View } = require('react-native');
+  return { __esModule: true, default: () => <View testID="badge-unlock-toast" /> };
+});
+
+jest.mock('../../services/AchievementManager', () => ({
+  checkAndUnlock: jest.fn(async () => []),
+  ACHIEVEMENTS: [],
+}));
+
+jest.mock('../../services/StreakManager', () => ({
+  getStreakData: jest.fn(async () => ({ currentStreak: 0, longestStreak: 0, lastPlayedDate: null })),
+}));
+
+jest.mock('../../services/StorageManager', () => ({
+  __esModule: true,
+  default: {
+    getGallery: jest.fn(async () => []),
+    getProgress: jest.fn(async () => ({ levels: {}, totalLevelsCompleted: 0, averageRating: 0 })),
+  },
+}));
+
 jest.mock('../../services/useGamePhase', () => ({
   useGamePhase: () => ({
     phase: 'memorize',

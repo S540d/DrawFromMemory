@@ -40,8 +40,10 @@ Die folgenden Daten werden **ausschließlich lokal** auf Ihrem Gerät gespeicher
 |----------|-------|-------------|
 | Spielfortschritt | Speichern von freigeschalteten Leveln | Gerätespeicher |
 | Einstellungen | Sprache, Theme, Pinselgröße | Gerätespeicher |
+| Spielsessions | Datum, Dauer, Sterne, Level — für Eltern-Dashboard. Automatische Löschung nach 28 Tagen. | Gerätespeicher |
+| Onboarding-Flag | Merken, ob die Erst-Start-Tour abgeschlossen wurde | Gerätespeicher |
 
-**Wichtig:** Diese Daten verlassen niemals Ihr Gerät und werden nur zur Funktion der App verwendet.
+**Wichtig:** Diese Daten verlassen niemals Ihr Gerät und werden nur zur Funktion der App verwendet. Das Eltern-Dashboard (hinter Eltern-Sperre erreichbar) zeigt diese lokal gespeicherten Statistiken — es findet keine Übertragung statt.
 
 ### 2.2 Keine Berechtigungen erforderlich
 

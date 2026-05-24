@@ -9,7 +9,16 @@
     "continueButton": "Weiterspielen",
     "levelsButton": "Level auswählen",
     "galleryButton": "Meine Galerie",
-    "settingsButton": "Einstellungen"
+    "settingsButton": "Einstellungen",
+    "streakBadge": "🔥 {{count}}",
+    "stats": {
+      "stars": "Sterne",
+      "streak": "Streak",
+      "levels": "Level",
+      "streakDay": "Tag",
+      "streakDays": "Tage",
+      "levelOf": "von {{total}}"
+    }
   },
   "levels": {
     "title": "Level auswählen",
@@ -158,5 +167,40 @@
     "placeholder": "Antwort eingeben",
     "confirm": "Öffnen",
     "wrongAnswer": "Falsche Antwort. Bitte versuche es erneut."
+  },
+  "onboarding": {
+    "skip": "Überspringen",
+    "next": "Weiter",
+    "start": "Los geht's!",
+    "step1": { "title": "Merken",   "desc": "Schau dir das Bild ein paar Sekunden gut an." },
+    "step2": { "title": "Zeichnen", "desc": "Versuche, es aus dem Gedächtnis nachzumalen." },
+    "step3": { "title": "Sterne",   "desc": "Vergleiche dein Werk und bekomme Sterne." }
+  },
+  "parentDashboard": {
+    "menuLabel": "Eltern-Bereich",
+    "title": "Eltern-Dashboard",
+    "subtitle": "Spielnutzung der letzten 4 Wochen",
+    "privacyHint": "Alle Daten bleiben lokal auf diesem Gerät.",
+    "loading": "Lade Statistiken…",
+    "empty": "Noch keine Spielsessions aufgezeichnet.",
+    "totalSessions": "Sessions",
+    "totalTime": "Gesamtzeit",
+    "avgStars": "Ø Sterne",
+    "streak": "Streak (akt./best.)",
+    "favoriteLevels": "Lieblings-Level",
+    "dailyBreakdown": "Pro Tag (letzte 14)",
+    "levelLine": "Level {{level}} · {{count}}× gespielt"
+  },
+  "achievements": {
+    "title": "Trophäen",
+    "menuLabel": "Trophäen anzeigen",
+    "unlocked": "Neue Trophäe!",
+    "progress": "{{unlocked}} von {{total}} freigeschaltet",
+    "first_5_stars":    { "title": "Erste 5 Sterne",     "desc": "Erreiche zum ersten Mal 5 Sterne in einem Level." },
+    "gallery_10":       { "title": "Galerie-Künstler",   "desc": "Speichere 10 Zeichnungen in deiner Galerie." },
+    "streak_7":         { "title": "7-Tage-Streak",      "desc": "Spiele 7 Tage hintereinander." },
+    "all_levels_done":  { "title": "Alle Level",         "desc": "Schließe alle 10 Basis-Level ab." },
+    "daily_5":          { "title": "Daily-Champion",     "desc": "Bestehe 5× die tägliche Herausforderung." },
+    "all_difficulties": { "title": "Allrounder",         "desc": "Spiele jede Schwierigkeitsstufe mindestens einmal." }
   }
 }
