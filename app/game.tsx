@@ -9,6 +9,7 @@ import { useTheme } from '@services/ThemeContext';
 import { DrawingColors } from '../constants/Colors';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
+import { FeatureFlags } from '../constants/featureFlags';
 import LevelImageDisplay from '@components/LevelImageDisplay';
 import DrawingCanvas, { useDrawingCanvas } from '@components/DrawingCanvas';
 import SettingsModal from '@components/SettingsModal';
@@ -114,7 +115,7 @@ export default function GameScreen() {
     if (userRating === 0 || userRating === lastCheckedRatingRef.current) return;
     lastCheckedRatingRef.current = userRating;
 
-    if (userRating === 5) {
+    if (userRating === 5 && FeatureFlags.ENABLE_CONFETTI) {
       setShowConfetti(true);
       const t = setTimeout(() => setShowConfetti(false), 2700);
       // not awaited — best-effort
