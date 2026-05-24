@@ -60,22 +60,6 @@ export default function HomeScreen() {
     }, [])
   );
 
-  // Fallback: update daily level on every render to ensure correct date
-  // This ensures the calendar always shows today's date, even if the user
-  // hasn't navigated away/back after midnight.
-  useEffect(() => {
-    const today = new Date();
-    const nextMidnight = new Date(today);
-    nextMidnight.setHours(24, 0, 0, 0);
-    const msUntilMidnight = nextMidnight.getTime() - today.getTime();
-
-    if (msUntilMidnight > 0) {
-      const timer = setTimeout(() => {
-        setDailyLevel(getDailyChallengeLevel());
-      }, msUntilMidnight);
-      return () => clearTimeout(timer);
-    }
-  }, []);
 
   const countdownHours = Math.floor(secondsLeft / 3600);
   const countdownMinutes = Math.floor((secondsLeft % 3600) / 60);

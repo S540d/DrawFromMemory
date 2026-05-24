@@ -4,6 +4,8 @@
  *
  * Konvention: ENABLE_* defaultet auf `true`. Auf `false` setzen, um
  * das Feature ohne Code-Removal kurzfristig zu deaktivieren.
+ * Ausnahme: Neue Features in Entwicklung können mit `false` starten
+ * und werden auf `true` gesetzt, sobald sie bereit sind.
  */
 
 export const FeatureFlags = {
