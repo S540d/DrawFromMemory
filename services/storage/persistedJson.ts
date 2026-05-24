@@ -51,7 +51,7 @@ export function createPersistedJson<T>(opts: CreateOptions<T>): PersistedJsonSto
   // Callers treat null as "missing/corrupt". This means `T` must not include
   // JSON `null` as a valid value — document this constraint at call sites.
   function safeParse(raw: string | undefined | null): T | null {
-    if (raw == null) return null; // null/undefined → missing (not corrupt)
+    if (raw === null || raw === undefined) return null; // missing → not corrupt
     try {
       const v = JSON.parse(raw) as unknown;
       if (isValid && !isValid(v)) return null;
@@ -75,7 +75,7 @@ export function createPersistedJson<T>(opts: CreateOptions<T>): PersistedJsonSto
       return parsed;
     }
 
-    if (raw != null) {
+    if (raw !== null && raw !== undefined) {
       // value stored but unparseable — drop it so future loads don't keep tripping
       memory = undefined;
       try { await AsyncStorage.removeItem(key); } catch { /* best-effort */ }
