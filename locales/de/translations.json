@@ -32,7 +32,8 @@
   "game": {
     "memorize": {
       "title": "Merke dir das Bild!",
-      "timeLeft": "{{seconds}}s"
+      "timeLeft": "{{seconds}}s",
+      "imageInfo": "Level {{level}} • {{strokeCount}} Striche"
     },
     "draw": {
       "title": "Male das Bild nach!",
@@ -64,6 +65,7 @@
       "title": "Bewerte selbst:",
       "howWell": "Wie gut hast du's getroffen?",
       "tapStars": "Tippe auf die Sterne, um dich zu bewerten!",
+      "starAccessibilityLabel": "{{rating}} Stern{{plural}}",
       "template": "Vorlage",
       "feedback5": "Perfekt! Du bist ein Gedächtnis-Meister!",
       "feedback4": "Sehr gut! Fast perfekt!",
