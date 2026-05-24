@@ -15,6 +15,8 @@ import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../constants/Layout';
 import SettingsModal from '@components/SettingsModal';
 import QuickStatsCards from '@components/QuickStatsCards';
+import { FloatingStars } from '@components/FloatingStars';
+import { AnimatedHero } from '@components/AnimatedHero';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -54,6 +56,7 @@ export default function HomeScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top + Spacing.sm, paddingBottom: insets.bottom + Spacing.lg }]}>
+      <FloatingStars />
 
       {/* Top bar */}
       <View style={styles.topBar}>
@@ -79,7 +82,7 @@ export default function HomeScreen() {
 
       {/* Center hero */}
       <View style={styles.hero}>
-        <Text style={styles.heroEmoji}>🧠✏️</Text>
+        <AnimatedHero />
         <Text style={[styles.heroTitle, { color: colors.text.primary }]}>{t('home.title')}</Text>
       </View>
 
@@ -204,9 +207,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: Spacing.lg,
-  },
-  heroEmoji: {
-    fontSize: 72,
   },
   heroTitle: {
     fontSize: FontSize.display,

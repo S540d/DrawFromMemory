@@ -15,6 +15,7 @@
       "stars": "Sterne",
       "streak": "Streak",
       "levels": "Level",
+      "streakDay": "Tag",
       "streakDays": "Tage",
       "levelOf": "von {{total}}"
     }

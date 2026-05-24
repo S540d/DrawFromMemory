@@ -16,18 +16,37 @@ export interface StreakData {
 
 const MEMORY: Record<string, string> = {};
 
-async function loadState(): Promise<StreakData> {
+const DEFAULT_STATE: StreakData = { currentStreak: 0, longestStreak: 0, lastPlayedDate: null };
+
+function safeParse(raw: string | undefined | null): StreakData | null {
+  if (!raw) return null;
   try {
-    const raw = await AsyncStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      MEMORY[STORAGE_KEY] = raw;
-      return JSON.parse(raw);
-    }
+    return JSON.parse(raw) as StreakData;
   } catch {
-    const raw = MEMORY[STORAGE_KEY];
-    if (raw) return JSON.parse(raw);
+    return null;
   }
-  return { currentStreak: 0, longestStreak: 0, lastPlayedDate: null };
+}
+
+async function loadState(): Promise<StreakData> {
+  let raw: string | null = null;
+  try {
+    raw = await AsyncStorage.getItem(STORAGE_KEY);
+  } catch {
+    // AsyncStorage unavailable — fall through to in-memory
+  }
+
+  const parsed = safeParse(raw) ?? safeParse(MEMORY[STORAGE_KEY]);
+  if (parsed) {
+    if (raw) MEMORY[STORAGE_KEY] = raw;
+    return parsed;
+  }
+
+  if (raw) {
+    // corrupt value stored — drop it so it can't keep crashing future loads
+    delete MEMORY[STORAGE_KEY];
+    try { await AsyncStorage.removeItem(STORAGE_KEY); } catch { /* best-effort */ }
+  }
+  return { ...DEFAULT_STATE };
 }
 
 async function saveState(state: StreakData): Promise<void> {
@@ -54,7 +73,11 @@ export function getLocalDateKey(date: Date = new Date()): string {
  * Lädt die aktuellen Streak-Daten.
  */
 export async function getStreakData(): Promise<StreakData> {
-  return loadState();
+  try {
+    return await loadState();
+  } catch {
+    return { ...DEFAULT_STATE };
+  }
 }
 
 /**

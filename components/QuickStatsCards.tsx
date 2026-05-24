@@ -75,7 +75,9 @@ export default function QuickStatsCards() {
       emoji: '🔥',
       label: t('home.stats.streak'),
       value: String(stats.currentStreak),
-      sub: stats.currentStreak > 0 ? t('home.stats.streakDays') : null,
+      sub: stats.currentStreak > 0
+        ? t(stats.currentStreak === 1 ? 'home.stats.streakDay' : 'home.stats.streakDays')
+        : null,
       onPress: () => router.push('/levels'),
       index: 1,
     },
