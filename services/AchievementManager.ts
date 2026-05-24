@@ -64,12 +64,22 @@ async function loadUnlocked(): Promise<UnlockedAchievement[]> {
   } catch {
     // fall through
   }
-  const parsed = safeParse(raw) ?? safeParse(MEMORY[STORAGE_KEY]);
-  if (parsed) {
-    if (raw) MEMORY[STORAGE_KEY] = raw;
-    return parsed;
+  const fromRaw = safeParse(raw);
+  if (fromRaw) {
+    MEMORY[STORAGE_KEY] = raw as string;
+    return fromRaw;
   }
-  if (raw) {
+  // raw is missing or corrupt — try MEMORY cache
+  const fromMemory = safeParse(MEMORY[STORAGE_KEY]);
+  if (fromMemory) {
+    if (raw !== null && raw !== undefined) {
+      // storage was corrupt; clear it but keep valid in-memory cache
+      try { await AsyncStorage.removeItem(STORAGE_KEY); } catch { /* best-effort */ }
+    }
+    return fromMemory;
+  }
+  // nothing valid anywhere
+  if (raw !== null && raw !== undefined) {
     delete MEMORY[STORAGE_KEY];
     try { await AsyncStorage.removeItem(STORAGE_KEY); } catch { /* best-effort */ }
   }

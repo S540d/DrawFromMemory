@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, Platform, ScrollView, FlatList } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useScreenLayout } from '@utils/useScreenLayout';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { getTotalLevels } from '@services/LevelManager';
+import { getTotalLevels, getDifficultyForLevel } from '@services/LevelManager';
 import { useTranslation, getLanguage } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import { DrawingColors } from '../constants/Colors';
@@ -47,6 +47,7 @@ export default function GameScreen() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [unlockedBadge, setUnlockedBadge] = useState<AchievementDef | null>(null);
   const lastCheckedRatingRef = React.useRef<number>(0);
+  const handleBadgeToastHide = useCallback(() => setUnlockedBadge(null), []);
 
   // Drawing Canvas Hook
   const drawing = useDrawingCanvas();
@@ -132,11 +133,24 @@ export default function GameScreen() {
         storageManager.getProgress(),
         getStreakData(),
       ]);
+      // Derive daily-challenge count from gallery (saved daily entries are flagged)
+      const dailyChallengesCompleted = gallery.filter((g) => g.isDailyChallenge).length;
+      // Derive distinct difficulties played from completed levels
+      const difficultiesPlayed = Array.from(
+        new Set(
+          Object.keys(progress.levels ?? {})
+            .map((n) => parseInt(n, 10))
+            .filter((n) => !isNaN(n))
+            .map((n) => getDifficultyForLevel(n)),
+        ),
+      );
       const newly = await checkAndUnlock({
         stars: rating,
         galleryCount: gallery.length,
         currentStreak: streak.currentStreak,
         levelsCompleted: progress.totalLevelsCompleted ?? 0,
+        dailyChallengesCompleted,
+        difficultiesPlayed,
       });
       if (newly.length > 0) setUnlockedBadge(newly[0]);
     } catch {
@@ -599,7 +613,7 @@ export default function GameScreen() {
           <ConfettiBurst width={screenWidth} height={layout.canvasMaxHeight + 200} active={showConfetti} />
         </View>
       )}
-      <BadgeUnlockToast achievement={unlockedBadge} onHide={() => setUnlockedBadge(null)} />
+      <BadgeUnlockToast achievement={unlockedBadge} onHide={handleBadgeToastHide} />
     </View>
   );
 }
