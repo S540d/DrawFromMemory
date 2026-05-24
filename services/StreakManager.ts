@@ -14,10 +14,15 @@ export interface StreakData {
 
 const DEFAULT_STATE: StreakData = { currentStreak: 0, longestStreak: 0, lastPlayedDate: null };
 
-const isStreakData = (v: unknown): v is StreakData =>
-  typeof v === 'object' && v !== null &&
-  typeof (v as StreakData).currentStreak === 'number' &&
-  typeof (v as StreakData).longestStreak === 'number';
+const isStreakData = (v: unknown): v is StreakData => {
+  if (typeof v !== 'object' || v === null) return false;
+  const s = v as Record<string, unknown>;
+  return (
+    typeof s.currentStreak === 'number' &&
+    typeof s.longestStreak === 'number' &&
+    (s.lastPlayedDate === null || typeof s.lastPlayedDate === 'string')
+  );
+};
 
 const store = createPersistedJson<StreakData>({
   key: '@merke_male:streak',

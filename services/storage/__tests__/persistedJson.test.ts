@@ -82,6 +82,24 @@ describe('createPersistedJson', () => {
     expect(await store.load()).toEqual({ n: 0 });
   });
 
+  it('returns a fresh copy of defaultValue on each load — mutations do not persist', async () => {
+    const store = createPersistedJson<{ items: string[] }>({
+      key: '@test:arr',
+      defaultValue: { items: [] },
+    });
+    const first = await store.load();
+    first.items.push('mutated');
+    const second = await store.load();
+    expect(second.items).toHaveLength(0);
+  });
+
+  it('treats empty-string storage value as corrupt and clears it', async () => {
+    const store = makeStore();
+    mockStorage.getItem.mockResolvedValueOnce('');
+    expect(await store.load()).toEqual({ n: 0 });
+    expect(mockStorage.removeItem).toHaveBeenCalledWith('@test:foo');
+  });
+
   it('isolates state across different stores', async () => {
     const a = createPersistedJson<Foo>({ key: '@a', defaultValue: { n: 0 }, isValid: isFoo });
     const b = createPersistedJson<Foo>({ key: '@b', defaultValue: { n: 0 }, isValid: isFoo });

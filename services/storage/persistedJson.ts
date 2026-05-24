@@ -47,8 +47,11 @@ export function createPersistedJson<T>(opts: CreateOptions<T>): PersistedJsonSto
   const { key, defaultValue, isValid } = opts;
   let memory: string | undefined;
 
+  // Returns null both on parse failure and on validation failure.
+  // Callers treat null as "missing/corrupt". This means `T` must not include
+  // JSON `null` as a valid value — document this constraint at call sites.
   function safeParse(raw: string | undefined | null): T | null {
-    if (!raw) return null;
+    if (raw == null) return null; // null/undefined → missing (not corrupt)
     try {
       const v = JSON.parse(raw) as unknown;
       if (isValid && !isValid(v)) return null;
@@ -72,12 +75,13 @@ export function createPersistedJson<T>(opts: CreateOptions<T>): PersistedJsonSto
       return parsed;
     }
 
-    if (raw) {
+    if (raw != null) {
       // value stored but unparseable — drop it so future loads don't keep tripping
       memory = undefined;
       try { await AsyncStorage.removeItem(key); } catch { /* best-effort */ }
     }
-    return defaultValue;
+    // Return a deep copy so callers cannot mutate the shared defaultValue reference.
+    return JSON.parse(JSON.stringify(defaultValue)) as T;
   }
 
   async function save(value: T): Promise<void> {
