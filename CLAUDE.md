@@ -5,7 +5,7 @@
 **Merke und Male** — Gedächtnistraining-App für Kinder (React Native / Expo).
 Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Ergebnis.
 
-- **Aktuell: v1.5.1** (package.json + app.json; versionCode 59)
+- **Aktuell: v1.6.1** (package.json + app.json; versionCode 63)
 - **Mindestanforderung Android: API 26 (Android 8.0 Oreo)** — Nexus 6 (max. API 25) wird nicht mehr unterstützt (Issue #172, geschlossen)
 - **Live Demo:** https://s540d.github.io/DrawFromMemory/
 - **Repo:** https://github.com/S540d/DrawFromMemory
