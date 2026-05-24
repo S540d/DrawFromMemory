@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import Animated, {
+  cancelAnimation,
   Easing,
   useAnimatedStyle,
   useSharedValue,
@@ -43,7 +44,11 @@ const STEPS: Step[] = [
 function PulsingEmoji({ char, animate }: { char: string; animate: boolean }) {
   const scale = useSharedValue(1);
   useEffect(() => {
-    if (!animate) return;
+    if (!animate) {
+      cancelAnimation(scale);
+      scale.value = 1;
+      return;
+    }
     scale.value = withRepeat(
       withSequence(
         withTiming(1.15, { duration: 900, easing: Easing.inOut(Easing.ease) }),
@@ -52,6 +57,10 @@ function PulsingEmoji({ char, animate }: { char: string; animate: boolean }) {
       -1,
       false,
     );
+    return () => {
+      cancelAnimation(scale);
+      scale.value = 1;
+    };
   }, [animate, scale]);
   const style = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
   return (

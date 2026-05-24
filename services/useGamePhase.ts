@@ -222,6 +222,7 @@ export function useGamePhase({
       currentImageRef.current = image;
       setCurrentImage(image);
       setTimeRemaining(getDisplayDuration(levelNumber, extraTimeMode));
+      levelStartedAtRef.current = Date.now();
       setPhase('memorize');
     } catch (error) {
       console.error('Error restarting level:', error);

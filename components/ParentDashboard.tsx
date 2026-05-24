@@ -28,10 +28,29 @@ export default function ParentDashboard({ visible, onClose }: Props) {
 
   useEffect(() => {
     if (!visible) return;
-    Promise.all([getSessionStats(), getStreakData()]).then(([s, st]) => {
-      setStats(s);
-      setStreak(st);
-    });
+    let cancelled = false;
+    // Reset to loading state when re-opening
+    setStats(null);
+    setStreak(null);
+    Promise.all([getSessionStats(), getStreakData()])
+      .then(([s, st]) => {
+        if (cancelled) return;
+        setStats(s);
+        setStreak(st);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        // On error, surface an empty stats object so the UI exits "loading" state
+        setStats({
+          totalSessions: 0,
+          totalDurationMs: 0,
+          averageStars: 0,
+          favoriteLevels: [],
+          dailyBreakdown: [],
+        });
+        setStreak({ currentStreak: 0, longestStreak: 0, lastPlayedDate: null });
+      });
+    return () => { cancelled = true; };
   }, [visible]);
 
   const cardBg = colors.surface ?? Colors.surface;

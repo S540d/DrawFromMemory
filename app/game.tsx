@@ -1,21 +1,30 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, Platform, ScrollView, FlatList } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useScreenLayout } from '@utils/useScreenLayout';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { getTotalLevels } from '@services/LevelManager';
+import { getTotalLevels, getDifficultyForLevel } from '@services/LevelManager';
 import { useTranslation, getLanguage } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import { DrawingColors } from '../constants/Colors';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
+import { FeatureFlags } from '../constants/featureFlags';
 import LevelImageDisplay from '@components/LevelImageDisplay';
 import DrawingCanvas, { useDrawingCanvas } from '@components/DrawingCanvas';
 import SettingsModal from '@components/SettingsModal';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { AnimatedFeedback, AnimatedStar } from '@components/AnimatedPrimitives';
+import ConfettiBurst from '@components/ConfettiBurst';
+import BadgeUnlockToast from '@components/BadgeUnlockToast';
 import SoundManager from '@services/SoundManager';
 import { useGamePhase } from '@services/useGamePhase';
+import {
+  checkAndUnlock,
+  type AchievementDef,
+} from '@services/AchievementManager';
+import { getStreakData } from '@services/StreakManager';
+import storageManager from '@services/StorageManager';
 import type { DrawingPath } from '@components/DrawingCanvas';
 
 /**
@@ -35,6 +44,10 @@ export default function GameScreen() {
   const [showSettings, setShowSettings] = useState(false);
   const [showHintModal, setShowHintModal] = useState(false);
   const [hasUsedHint, setHasUsedHint] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [unlockedBadge, setUnlockedBadge] = useState<AchievementDef | null>(null);
+  const lastCheckedRatingRef = React.useRef<number>(0);
+  const handleBadgeToastHide = useCallback(() => setUnlockedBadge(null), []);
 
   // Drawing Canvas Hook
   const drawing = useDrawingCanvas();
@@ -97,6 +110,53 @@ export default function GameScreen() {
   useEffect(() => {
     SoundManager.init();
   }, []);
+
+  // Trigger confetti + achievement check on each new rating (run once per rating value)
+  useEffect(() => {
+    if (userRating === 0 || userRating === lastCheckedRatingRef.current) return;
+    lastCheckedRatingRef.current = userRating;
+
+    if (userRating === 5 && FeatureFlags.ENABLE_CONFETTI) {
+      setShowConfetti(true);
+      const t = setTimeout(() => setShowConfetti(false), 2700);
+      // not awaited — best-effort
+      checkAchievements(userRating);
+      return () => clearTimeout(t);
+    }
+    checkAchievements(userRating);
+  }, [userRating]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const checkAchievements = async (rating: number) => {
+    try {
+      const [gallery, progress, streak] = await Promise.all([
+        storageManager.getGallery(),
+        storageManager.getProgress(),
+        getStreakData(),
+      ]);
+      // Derive daily-challenge count from gallery (saved daily entries are flagged)
+      const dailyChallengesCompleted = gallery.filter((g) => g.isDailyChallenge).length;
+      // Derive distinct difficulties played from completed levels
+      const difficultiesPlayed = Array.from(
+        new Set(
+          Object.keys(progress.levels ?? {})
+            .map((n) => parseInt(n, 10))
+            .filter((n) => !isNaN(n))
+            .map((n) => getDifficultyForLevel(n)),
+        ),
+      );
+      const newly = await checkAndUnlock({
+        stars: rating,
+        galleryCount: gallery.length,
+        currentStreak: streak.currentStreak,
+        levelsCompleted: progress.totalLevelsCompleted ?? 0,
+        dailyChallengesCompleted,
+        difficultiesPlayed,
+      });
+      if (newly.length > 0) setUnlockedBadge(newly[0]);
+    } catch {
+      // best-effort
+    }
+  };
 
   // Memoized dynamic styles – stable across re-renders unless layout changes
   const dynCanvasContainer = useMemo(() => ({
@@ -546,6 +606,14 @@ export default function GameScreen() {
       {phase === 'memorize' && renderMemorizePhase()}
       {phase === 'draw' && renderDrawPhase()}
       {phase === 'result' && renderResultPhase()}
+
+      {/* Delight overlays (Sprint C) */}
+      {phase === 'result' && (
+        <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+          <ConfettiBurst width={screenWidth} height={layout.canvasMaxHeight + 200} active={showConfetti} />
+        </View>
+      )}
+      <BadgeUnlockToast achievement={unlockedBadge} onHide={handleBadgeToastHide} />
     </View>
   );
 }

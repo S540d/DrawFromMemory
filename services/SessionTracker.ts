@@ -48,9 +48,19 @@ async function loadRaw(): Promise<SessionRecord[]> {
   } catch {
     // fall through to in-memory
   }
-  const parsed = safeParse(raw) ?? safeParse(MEMORY[STORAGE_KEY]) ?? [];
-  if (raw && safeParse(raw)) MEMORY[STORAGE_KEY] = raw;
-  return parsed;
+  const fromRaw = safeParse(raw);
+  if (fromRaw) {
+    MEMORY[STORAGE_KEY] = raw as string;
+    return fromRaw;
+  }
+  // raw is missing or corrupt
+  const fromMemory = safeParse(MEMORY[STORAGE_KEY]);
+  if (raw !== null && raw !== undefined) {
+    // Self-heal: corrupt storage value — drop it so we stop reading garbage
+    try { await AsyncStorage.removeItem(STORAGE_KEY); } catch { /* best-effort */ }
+    if (!fromMemory) delete MEMORY[STORAGE_KEY];
+  }
+  return fromMemory ?? [];
 }
 
 async function saveRaw(records: SessionRecord[]): Promise<void> {

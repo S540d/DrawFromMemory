@@ -190,5 +190,17 @@
     "favoriteLevels": "Favorite levels",
     "dailyBreakdown": "Per day (last 14)",
     "levelLine": "Level {{level}} · played {{count}}×"
+  },
+  "achievements": {
+    "title": "Trophies",
+    "menuLabel": "Show trophies",
+    "unlocked": "New trophy!",
+    "progress": "{{unlocked}} of {{total}} unlocked",
+    "first_5_stars":    { "title": "First 5 Stars",     "desc": "Reach 5 stars in a level for the first time." },
+    "gallery_10":       { "title": "Gallery Artist",    "desc": "Save 10 drawings to your gallery." },
+    "streak_7":         { "title": "7-Day Streak",      "desc": "Play 7 days in a row." },
+    "all_levels_done":  { "title": "All Levels",        "desc": "Complete all 10 base levels." },
+    "daily_5":          { "title": "Daily Champion",    "desc": "Beat the daily challenge 5 times." },
+    "all_difficulties": { "title": "All-Rounder",       "desc": "Play every difficulty level at least once." }
   }
 }
