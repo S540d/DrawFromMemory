@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { AccessibilityInfo, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -20,12 +21,12 @@ export function AnimatedHero() {
   const pencilTranslateX = useSharedValue(0);
   const sparkleOpacity   = useSharedValue(0.2);
 
-  useEffect(() => {
-    let cancelled = false;
-    AccessibilityInfo.isReduceMotionEnabled().then((rm) => {
-      if (cancelled || rm) return;
+  const reduceMotion = useReduceMotion();
 
-      brainScale.value = withRepeat(
+  useEffect(() => {
+    if (reduceMotion) return;
+
+    brainScale.value = withRepeat(
         withSequence(
           withTiming(1.08, { duration: 900, easing: Easing.inOut(Easing.ease) }),
           withTiming(1.0,  { duration: 900, easing: Easing.inOut(Easing.ease) }),
@@ -52,17 +53,15 @@ export function AnimatedHero() {
         false
       );
 
-      sparkleOpacity.value = withRepeat(
-        withSequence(
-          withTiming(1,   { duration: 1200, easing: Easing.inOut(Easing.ease) }),
-          withTiming(0.2, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
-        ),
-        -1,
-        false
-      );
-    });
-    return () => { cancelled = true; };
-  }, [brainScale, pencilRotate, pencilTranslateX, sparkleOpacity]);
+    sparkleOpacity.value = withRepeat(
+      withSequence(
+        withTiming(1,   { duration: 1200, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0.2, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
+      ),
+      -1,
+      false
+    );
+  }, [reduceMotion, brainScale, pencilRotate, pencilTranslateX, sparkleOpacity]);
 
   const brainAnimStyle = useAnimatedStyle(() => ({
     transform: [{ scale: brainScale.value }],

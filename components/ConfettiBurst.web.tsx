@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { AccessibilityInfo, StyleSheet, View } from 'react-native';
+import React, { useEffect, useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -32,16 +33,8 @@ function Particle({ p, progress }: { p: ConfettiParticle; progress: { value: num
 }
 
 export function ConfettiBurst({ width, height, active }: ConfettiBurstProps) {
-  const [reduceMotion, setReduceMotion] = useState(false);
+  const reduceMotion = useReduceMotion();
   const progress = useSharedValue(0);
-
-  useEffect(() => {
-    let cancelled = false;
-    AccessibilityInfo.isReduceMotionEnabled().then((rm) => {
-      if (!cancelled) setReduceMotion(rm);
-    });
-    return () => { cancelled = true; };
-  }, []);
 
   useEffect(() => {
     if (!active || reduceMotion) {

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { Text, StyleSheet, ViewStyle, TextStyle, AccessibilityInfo } from 'react-native';
+import { Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
@@ -76,17 +77,16 @@ export function CountBadge({
   count: number;
   style?: ViewStyle;
 }) {
+  const reduceMotion = useReduceMotion();
   const scale = useSharedValue(1);
 
   useEffect(() => {
-    AccessibilityInfo.isReduceMotionEnabled().then((reduceMotion) => {
-      if (reduceMotion) return;
-      scale.value = withSpring(1.3, { damping: 6, stiffness: 300 }, () => {
-        scale.value = withSpring(1, { damping: 10, stiffness: 200 });
-      });
+    if (reduceMotion) return;
+    scale.value = withSpring(1.3, { damping: 6, stiffness: 300 }, () => {
+      scale.value = withSpring(1, { damping: 10, stiffness: 200 });
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [count]);
+  }, [count, reduceMotion]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],

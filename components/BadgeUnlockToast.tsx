@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { AccessibilityInfo, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -27,39 +28,29 @@ const FADE_MS = 280;
  */
 export default function BadgeUnlockToast({ achievement, onHide }: Props) {
   const { t } = useTranslation();
+  const reduceMotion = useReduceMotion();
   const translateY = useSharedValue(-80);
   const opacity = useSharedValue(0);
 
   useEffect(() => {
     if (!achievement) return;
-    let cancelled = false;
 
-    AccessibilityInfo.isReduceMotionEnabled().then((rm) => {
-      if (cancelled) return;
-      if (rm) {
-        translateY.value = 0;
-        opacity.value = withSequence(
-          withTiming(1, { duration: FADE_MS }),
-          withDelay(VISIBLE_MS, withTiming(0, { duration: FADE_MS })),
-        );
-      } else {
-        translateY.value = withSequence(
-          withTiming(0, { duration: FADE_MS, easing: Easing.out(Easing.ease) }),
-          withDelay(VISIBLE_MS, withTiming(-80, { duration: FADE_MS, easing: Easing.in(Easing.ease) })),
-        );
-        opacity.value = withSequence(
-          withTiming(1, { duration: FADE_MS }),
-          withDelay(VISIBLE_MS, withTiming(0, { duration: FADE_MS })),
-        );
-      }
-    });
+    if (reduceMotion) {
+      translateY.value = 0;
+    } else {
+      translateY.value = withSequence(
+        withTiming(0, { duration: FADE_MS, easing: Easing.out(Easing.ease) }),
+        withDelay(VISIBLE_MS, withTiming(-80, { duration: FADE_MS, easing: Easing.in(Easing.ease) })),
+      );
+    }
+    opacity.value = withSequence(
+      withTiming(1, { duration: FADE_MS }),
+      withDelay(VISIBLE_MS, withTiming(0, { duration: FADE_MS })),
+    );
 
     const timer = setTimeout(onHide, VISIBLE_MS + FADE_MS * 2 + 50);
-    return () => {
-      cancelled = true;
-      clearTimeout(timer);
-    };
-  }, [achievement, translateY, opacity, onHide]);
+    return () => clearTimeout(timer);
+  }, [achievement, reduceMotion, translateY, opacity, onHide]);
 
   const animStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
