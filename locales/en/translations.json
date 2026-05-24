@@ -32,7 +32,8 @@
   "game": {
     "memorize": {
       "title": "Remember the picture!",
-      "timeLeft": "{{seconds}}s"
+      "timeLeft": "{{seconds}}s",
+      "imageInfo": "Level {{level}} • {{strokeCount}} strokes"
     },
     "draw": {
       "title": "Draw the picture!",
@@ -64,6 +65,7 @@
       "title": "Rate yourself:",
       "howWell": "How well did you do?",
       "tapStars": "Tap the stars to rate yourself!",
+      "starAccessibilityLabel": "{{rating}} star{{plural}}",
       "template": "Reference",
       "feedback5": "Perfect! You are a memory master!",
       "feedback4": "Very good! Almost perfect!",
