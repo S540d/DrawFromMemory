@@ -9,4 +9,6 @@
 export const FeatureFlags = {
   /** Konfetti bei 5-Sterne-Ergebnis (Issue #186). */
   ENABLE_CONFETTI: true,
+  /** Draw/Result Tab-Navigation im Game-Screen (Issue #199). */
+  ENABLE_GAME_PHASE_TABS: false,
 } as const;
