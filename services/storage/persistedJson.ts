@@ -69,16 +69,22 @@ export function createPersistedJson<T>(opts: CreateOptions<T>): PersistedJsonSto
       // fall through to in-memory
     }
 
-    const parsed = safeParse(raw) ?? safeParse(memory);
-    if (parsed !== null) {
-      if (raw) memory = raw;
-      return parsed;
+    const rawParsed = safeParse(raw);
+
+    if (rawParsed !== null) {
+      memory = raw ?? undefined;
+      return rawParsed;
     }
 
+    // raw is present but corrupt — clean it up immediately, even if memory fallback succeeds
     if (raw !== null && raw !== undefined) {
-      // value stored but unparseable — drop it so future loads don't keep tripping
       memory = undefined;
       try { await AsyncStorage.removeItem(key); } catch { /* best-effort */ }
+    }
+
+    const memParsed = safeParse(memory);
+    if (memParsed !== null) {
+      return memParsed;
     }
     // Return a deep copy so callers cannot mutate the shared defaultValue reference.
     return JSON.parse(JSON.stringify(defaultValue)) as T;
