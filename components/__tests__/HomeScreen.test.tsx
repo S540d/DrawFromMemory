@@ -18,6 +18,15 @@ jest.mock('../../services/DailyChallengeManager', () => ({
   isTodayCompleted: () => Promise.resolve(false),
 }));
 
+jest.mock('../../services/StreakManager', () => ({
+  getStreakData: () => Promise.resolve({ currentStreak: 0, longestStreak: 0, lastPlayedDate: null }),
+}));
+
+jest.mock('../../components/QuickStatsCards', () => {
+  const { View } = require('react-native');
+  return function QuickStatsCards() { return <View />; };
+});
+
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
 }));

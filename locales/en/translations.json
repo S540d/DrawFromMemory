@@ -9,7 +9,16 @@
     "continueButton": "Continue",
     "levelsButton": "Select Level",
     "galleryButton": "My Gallery",
-    "settingsButton": "Settings"
+    "settingsButton": "Settings",
+    "streakBadge": "🔥 {{count}}",
+    "stats": {
+      "stars": "Stars",
+      "streak": "Streak",
+      "levels": "Levels",
+      "streakDay": "day",
+      "streakDays": "days",
+      "levelOf": "of {{total}}"
+    }
   },
   "levels": {
     "title": "Select Level",
