@@ -10,6 +10,7 @@ import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout
 import ParentalGate from './ParentalGate';
 import ParentDashboard from './ParentDashboard';
 import BadgesModal from './BadgesModal';
+import { useParentalGateAction } from './useParentalGateAction';
 
 interface SettingsModalProps {
   visible: boolean;
@@ -29,10 +30,8 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [showBadgesModal, setShowBadgesModal] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [parentalGateVisible, setParentalGateVisible] = useState(false);
-  const [pendingUrl, setPendingUrl] = useState<string | null>(null);
   const [showParentDashboard, setShowParentDashboard] = useState(false);
-  const [pendingAction, setPendingAction] = useState<null | (() => void)>(null);
+  const parentalGate = useParentalGateAction();
 
   useEffect(() => {
     setCurrentLang(getLanguage());
@@ -76,45 +75,16 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   };
 
   const openExternalUrl = (url: string) => {
-    setPendingUrl(url);
-    setParentalGateVisible(true);
-  };
-
-  const handleParentalGateSuccess = async () => {
-    setParentalGateVisible(false);
-    if (pendingAction) {
-      const action = pendingAction;
-      setPendingAction(null);
-      action();
-      return;
-    }
-    if (!pendingUrl) return;
-    const url = pendingUrl;
-    setPendingUrl(null);
-    const errorMsg = url.includes('ko-fi.com')
-      ? t('settings.browserError')
-      : t('settings.browserErrorGeneric');
-    try {
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
-        await Linking.openURL(url);
-      } else {
-        Alert.alert(t('settings.error'), errorMsg);
-      }
-    } catch {
-      Alert.alert(t('settings.error'), errorMsg);
-    }
-  };
-
-  const handleParentalGateCancel = () => {
-    setParentalGateVisible(false);
-    setPendingUrl(null);
-    setPendingAction(null);
+    parentalGate.openWithUrl(url, {
+      errorTitle: t('settings.error'),
+      errorMessage: url.includes('ko-fi.com')
+        ? t('settings.browserError')
+        : t('settings.browserErrorGeneric'),
+    });
   };
 
   const openParentDashboard = () => {
-    setPendingAction(() => () => setShowParentDashboard(true));
-    setParentalGateVisible(true);
+    parentalGate.openWithAction(() => setShowParentDashboard(true));
   };
 
   const handleSendFeedback = async () => {
@@ -359,9 +329,9 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
     return (
       <>
         <ParentalGate
-          visible={parentalGateVisible}
-          onSuccess={handleParentalGateSuccess}
-          onCancel={handleParentalGateCancel}
+          visible={parentalGate.gateVisible}
+          onSuccess={parentalGate.onSuccess}
+          onCancel={parentalGate.onCancel}
         />
         <Modal
         visible={visible}
@@ -399,9 +369,9 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   return (
     <>
       <ParentalGate
-        visible={parentalGateVisible}
-        onSuccess={handleParentalGateSuccess}
-        onCancel={handleParentalGateCancel}
+        visible={parentalGate.gateVisible}
+        onSuccess={parentalGate.onSuccess}
+        onCancel={parentalGate.onCancel}
       />
       {renderContent()}
     </>
