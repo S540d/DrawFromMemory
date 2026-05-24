@@ -3,9 +3,7 @@
  * Speichert freigeschaltete Badges via AsyncStorage.
  */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const STORAGE_KEY = '@merke_male:achievements';
+import { createPersistedJson } from './storage/persistedJson';
 
 export type AchievementId =
   | 'first_5_stars'
@@ -45,60 +43,15 @@ export interface AchievementEvent {
   difficultiesPlayed?: number[]; // distinct difficulties played at least once
 }
 
-const MEMORY: Record<string, string> = {};
-
-function safeParse(raw: string | null | undefined): UnlockedAchievement[] | null {
-  if (!raw) return null;
-  try {
-    const v = JSON.parse(raw);
-    return Array.isArray(v) ? v : null;
-  } catch {
-    return null;
-  }
-}
-
-async function loadUnlocked(): Promise<UnlockedAchievement[]> {
-  let raw: string | null = null;
-  try {
-    raw = await AsyncStorage.getItem(STORAGE_KEY);
-  } catch {
-    // fall through
-  }
-  const fromRaw = safeParse(raw);
-  if (fromRaw) {
-    MEMORY[STORAGE_KEY] = raw as string;
-    return fromRaw;
-  }
-  // raw is missing or corrupt — try MEMORY cache
-  const fromMemory = safeParse(MEMORY[STORAGE_KEY]);
-  if (fromMemory) {
-    if (raw !== null && raw !== undefined) {
-      // storage was corrupt; clear it but keep valid in-memory cache
-      try { await AsyncStorage.removeItem(STORAGE_KEY); } catch { /* best-effort */ }
-    }
-    return fromMemory;
-  }
-  // nothing valid anywhere
-  if (raw !== null && raw !== undefined) {
-    delete MEMORY[STORAGE_KEY];
-    try { await AsyncStorage.removeItem(STORAGE_KEY); } catch { /* best-effort */ }
-  }
-  return [];
-}
-
-async function saveUnlocked(list: UnlockedAchievement[]): Promise<void> {
-  const raw = JSON.stringify(list);
-  MEMORY[STORAGE_KEY] = raw;
-  try {
-    await AsyncStorage.setItem(STORAGE_KEY, raw);
-  } catch {
-    // in-memory fallback
-  }
-}
+const store = createPersistedJson<UnlockedAchievement[]>({
+  key: '@merke_male:achievements',
+  defaultValue: [],
+  isValid: (v): v is UnlockedAchievement[] => Array.isArray(v),
+});
 
 export async function getUnlockedAchievements(): Promise<UnlockedAchievement[]> {
   try {
-    return await loadUnlocked();
+    return await store.load();
   } catch {
     return [];
   }
@@ -113,7 +66,7 @@ export async function isUnlocked(id: AchievementId): Promise<boolean> {
  * Prüft Event gegen Achievement-Regeln und gibt neu freigeschaltete Badges zurück.
  */
 export async function checkAndUnlock(event: AchievementEvent): Promise<AchievementDef[]> {
-  const list = await loadUnlocked();
+  const list = await store.load();
   const has = (id: AchievementId) => list.some((u) => u.id === id);
   const newly: AchievementDef[] = [];
 
@@ -138,16 +91,11 @@ export async function checkAndUnlock(event: AchievementEvent): Promise<Achieveme
   if (newly.length > 0) {
     const now = new Date().toISOString();
     const updated = [...list, ...newly.map((d) => ({ id: d.id, unlockedAt: now }))];
-    await saveUnlocked(updated);
+    await store.save(updated);
   }
   return newly;
 }
 
 export async function resetAchievements(): Promise<void> {
-  delete MEMORY[STORAGE_KEY];
-  try {
-    await AsyncStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // best-effort
-  }
+  await store.reset();
 }

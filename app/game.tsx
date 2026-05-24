@@ -339,7 +339,12 @@ export default function GameScreen() {
           accessibilityLabel={t('game.draw.undo')}
           accessibilityRole="button"
         >
-          <Text style={[styles.secondaryButtonText, isSmall && styles.buttonTextSmall]}>{t('game.draw.undo')}</Text>
+          <Text
+            style={[styles.secondaryButtonText, isSmall && styles.buttonTextSmall]}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.7}
+          >{t('game.draw.undo')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.secondaryButton, dynButton, drawing.paths.length === 0 && styles.buttonDisabled]}
@@ -368,7 +373,12 @@ export default function GameScreen() {
           }}
           disabled={drawing.paths.length === 0}
         >
-          <Text style={[styles.secondaryButtonText, isSmall && styles.buttonTextSmall]}>{t('game.draw.clear')}</Text>
+          <Text
+            style={[styles.secondaryButtonText, isSmall && styles.buttonTextSmall]}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.7}
+          >{t('game.draw.clear')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.primaryButton, dynButton]}
@@ -377,7 +387,12 @@ export default function GameScreen() {
             setPhase('result');
           }}
         >
-          <Text style={[styles.primaryButtonText, isSmall && styles.buttonTextSmall]}>{t('game.draw.done')}</Text>
+          <Text
+            style={[styles.primaryButtonText, isSmall && styles.buttonTextSmall]}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.7}
+          >{t('game.draw.done')}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -826,7 +841,11 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
   },
   toolToggleIcon: {
-    fontSize: 18,
+    fontSize: 20,
+    lineHeight: 24,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    includeFontPadding: false,
   },
   toolRowSeparator: {
     width: 1,

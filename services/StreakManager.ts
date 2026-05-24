@@ -4,9 +4,7 @@
  * DST-sicher via lokale YYYY-MM-DD-Strings (kein UTC).
  */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const STORAGE_KEY = '@merke_male:streak';
+import { createPersistedJson } from './storage/persistedJson';
 
 export interface StreakData {
   currentStreak: number;
@@ -14,50 +12,23 @@ export interface StreakData {
   lastPlayedDate: string | null; // YYYY-MM-DD (local)
 }
 
-const MEMORY: Record<string, string> = {};
-
 const DEFAULT_STATE: StreakData = { currentStreak: 0, longestStreak: 0, lastPlayedDate: null };
 
-function safeParse(raw: string | undefined | null): StreakData | null {
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as StreakData;
-  } catch {
-    return null;
-  }
-}
+const isStreakData = (v: unknown): v is StreakData => {
+  if (typeof v !== 'object' || v === null) return false;
+  const s = v as Record<string, unknown>;
+  return (
+    typeof s.currentStreak === 'number' &&
+    typeof s.longestStreak === 'number' &&
+    (s.lastPlayedDate === null || typeof s.lastPlayedDate === 'string')
+  );
+};
 
-async function loadState(): Promise<StreakData> {
-  let raw: string | null = null;
-  try {
-    raw = await AsyncStorage.getItem(STORAGE_KEY);
-  } catch {
-    // AsyncStorage unavailable — fall through to in-memory
-  }
-
-  const parsed = safeParse(raw) ?? safeParse(MEMORY[STORAGE_KEY]);
-  if (parsed) {
-    if (raw) MEMORY[STORAGE_KEY] = raw;
-    return parsed;
-  }
-
-  if (raw) {
-    // corrupt value stored — drop it so it can't keep crashing future loads
-    delete MEMORY[STORAGE_KEY];
-    try { await AsyncStorage.removeItem(STORAGE_KEY); } catch { /* best-effort */ }
-  }
-  return { ...DEFAULT_STATE };
-}
-
-async function saveState(state: StreakData): Promise<void> {
-  const raw = JSON.stringify(state);
-  MEMORY[STORAGE_KEY] = raw;
-  try {
-    await AsyncStorage.setItem(STORAGE_KEY, raw);
-  } catch {
-    // in-memory fallback is sufficient for web sessions
-  }
-}
+const store = createPersistedJson<StreakData>({
+  key: '@merke_male:streak',
+  defaultValue: DEFAULT_STATE,
+  isValid: isStreakData,
+});
 
 /**
  * Gibt das Datum als lokalen YYYY-MM-DD-String zurück (DST-sicher).
@@ -74,7 +45,7 @@ export function getLocalDateKey(date: Date = new Date()): string {
  */
 export async function getStreakData(): Promise<StreakData> {
   try {
-    return await loadState();
+    return await store.load();
   } catch {
     return { ...DEFAULT_STATE };
   }
@@ -86,7 +57,7 @@ export async function getStreakData(): Promise<StreakData> {
  */
 export async function updateStreakAfterGame(date: Date = new Date()): Promise<void> {
   try {
-    const state = await loadState();
+    const state = await store.load();
     const today = getLocalDateKey(date);
 
     if (state.lastPlayedDate === today) {
@@ -110,7 +81,7 @@ export async function updateStreakAfterGame(date: Date = new Date()): Promise<vo
       newStreak = 1;
     }
 
-    await saveState({
+    await store.save({
       currentStreak: newStreak,
       longestStreak: Math.max(state.longestStreak, newStreak),
       lastPlayedDate: today,
@@ -124,10 +95,5 @@ export async function updateStreakAfterGame(date: Date = new Date()): Promise<vo
  * Setzt alle Streak-Daten zurück (nur für Tests / Reset-Funktion).
  */
 export async function resetStreakData(): Promise<void> {
-  delete MEMORY[STORAGE_KEY];
-  try {
-    await AsyncStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // best-effort
-  }
+  await store.reset();
 }

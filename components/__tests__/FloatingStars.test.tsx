@@ -1,6 +1,10 @@
 import React from 'react';
 import { render, act } from '@testing-library/react-native';
 
+jest.mock('../../utils/useReduceMotion', () => ({
+  useReduceMotion: jest.fn(() => false),
+}));
+
 jest.mock('react-native-reanimated', () => {
   const { View } = require('react-native');
   return {
@@ -9,6 +13,7 @@ jest.mock('react-native-reanimated', () => {
       View,
       createAnimatedComponent: (c: any) => c,
     },
+    cancelAnimation: jest.fn(),
     useSharedValue: (v: any) => ({ value: v }),
     useAnimatedStyle: (_fn: any) => ({}),
     withTiming: (v: any) => v,
@@ -47,9 +52,6 @@ describe('FloatingStars', () => {
   });
 
   it('starts repeating animations on mount when reduced motion is off', async () => {
-    const { AccessibilityInfo } = require('react-native');
-    jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValueOnce(false);
-
     render(<FloatingStars />);
     await act(async () => {});
 
@@ -57,8 +59,8 @@ describe('FloatingStars', () => {
   });
 
   it('does not start animations when prefers-reduced-motion is enabled', async () => {
-    const { AccessibilityInfo } = require('react-native');
-    jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValueOnce(true);
+    const { useReduceMotion } = require('../../utils/useReduceMotion');
+    (useReduceMotion as jest.Mock).mockReturnValueOnce(true);
 
     render(<FloatingStars />);
     await act(async () => {});
