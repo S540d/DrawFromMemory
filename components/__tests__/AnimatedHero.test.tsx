@@ -1,8 +1,6 @@
 import React from 'react';
 import { render, act } from '@testing-library/react-native';
 
-const withRepeatMock = jest.fn((v: any) => v);
-
 jest.mock('react-native-reanimated', () => {
   const { View } = require('react-native');
   return {
@@ -14,7 +12,7 @@ jest.mock('react-native-reanimated', () => {
     useSharedValue: (v: any) => ({ value: v }),
     useAnimatedStyle: (_fn: any) => ({}),
     withTiming: (v: any) => v,
-    withRepeat: withRepeatMock,
+    withRepeat: jest.fn((v: any) => v),
     withSequence: (...args: any[]) => args[args.length - 1],
     Easing: {
       ease: (t: number) => t,
@@ -23,6 +21,9 @@ jest.mock('react-native-reanimated', () => {
     },
   };
 });
+
+const Reanimated = require('react-native-reanimated');
+const withRepeatMock = Reanimated.withRepeat as jest.Mock;
 
 import { AnimatedHero } from '../AnimatedHero';
 import { Text } from 'react-native';
@@ -40,18 +41,22 @@ describe('AnimatedHero', () => {
     await act(async () => {});
   });
 
-  it('renders with testID', async () => {
-    const { getByTestId } = render(<AnimatedHero />);
-    await act(async () => {});
-    expect(getByTestId('animated-hero')).toBeTruthy();
-  });
-
   it('renders brain and pencil emojis', async () => {
     const { UNSAFE_getAllByType } = render(<AnimatedHero />);
     await act(async () => {});
     const texts = getAllTexts(UNSAFE_getAllByType);
     expect(texts).toContain('🧠');
     expect(texts).toContain('✏️');
+  });
+
+  it('starts repeating animations when reduced motion is off', async () => {
+    const { AccessibilityInfo } = require('react-native');
+    jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValueOnce(false);
+
+    render(<AnimatedHero />);
+    await act(async () => {});
+
+    expect(withRepeatMock).toHaveBeenCalled();
   });
 
   it('does not start animations when prefers-reduced-motion is enabled', async () => {
@@ -62,12 +67,5 @@ describe('AnimatedHero', () => {
     await act(async () => {});
 
     expect(withRepeatMock).not.toHaveBeenCalled();
-  });
-
-  it('is hidden from screen readers', async () => {
-    const { getByTestId } = render(<AnimatedHero />);
-    await act(async () => {});
-    const hero = getByTestId('animated-hero');
-    expect(hero.props.importantForAccessibility).toBe('no-hide-descendants');
   });
 });

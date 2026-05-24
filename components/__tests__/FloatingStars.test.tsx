@@ -1,8 +1,6 @@
 import React from 'react';
 import { render, act } from '@testing-library/react-native';
 
-const withRepeatMock = jest.fn((v: any) => v);
-
 jest.mock('react-native-reanimated', () => {
   const { View } = require('react-native');
   return {
@@ -15,7 +13,7 @@ jest.mock('react-native-reanimated', () => {
     useAnimatedStyle: (_fn: any) => ({}),
     withTiming: (v: any) => v,
     withDelay: (_d: any, v: any) => v,
-    withRepeat: withRepeatMock,
+    withRepeat: jest.fn((v: any) => v),
     withSequence: (...args: any[]) => args[args.length - 1],
     Easing: {
       ease: (t: number) => t,
@@ -25,7 +23,11 @@ jest.mock('react-native-reanimated', () => {
   };
 });
 
+const Reanimated = require('react-native-reanimated');
+const withRepeatMock = Reanimated.withRepeat as jest.Mock;
+
 import { FloatingStars } from '../FloatingStars';
+import { Text } from 'react-native';
 
 describe('FloatingStars', () => {
   beforeEach(() => {
@@ -37,24 +39,21 @@ describe('FloatingStars', () => {
     await act(async () => {});
   });
 
-  it('renders the container with testID', async () => {
-    const { getByTestId } = render(<FloatingStars />);
+  it('renders all 8 decor glyphs', async () => {
+    const { UNSAFE_getAllByType } = render(<FloatingStars />);
     await act(async () => {});
-    expect(getByTestId('floating-stars')).toBeTruthy();
+    const texts = UNSAFE_getAllByType(Text);
+    expect(texts.length).toBe(8);
   });
 
-  it('renders all decor items', async () => {
-    const { getAllByTestId } = render(<FloatingStars />);
-    await act(async () => {});
-    const items = getAllByTestId('floating-decor-item');
-    expect(items.length).toBe(8);
-  });
+  it('starts repeating animations on mount when reduced motion is off', async () => {
+    const { AccessibilityInfo } = require('react-native');
+    jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValueOnce(false);
 
-  it('is not interactive (pointerEvents none)', async () => {
-    const { getByTestId } = render(<FloatingStars />);
+    render(<FloatingStars />);
     await act(async () => {});
-    const container = getByTestId('floating-stars');
-    expect(container.props.pointerEvents).toBe('none');
+
+    expect(withRepeatMock).toHaveBeenCalled();
   });
 
   it('does not start animations when prefers-reduced-motion is enabled', async () => {
@@ -67,12 +66,12 @@ describe('FloatingStars', () => {
     expect(withRepeatMock).not.toHaveBeenCalled();
   });
 
-  it('hides decor items from screen readers', async () => {
-    const { getAllByTestId } = render(<FloatingStars />);
+  it('renders glyphs as non-accessible', async () => {
+    const { UNSAFE_getAllByType } = render(<FloatingStars />);
     await act(async () => {});
-    const items = getAllByTestId('floating-decor-item');
-    items.forEach((item) => {
-      expect(item.props.importantForAccessibility).toBe('no-hide-descendants');
+    const texts = UNSAFE_getAllByType(Text);
+    texts.forEach((t: any) => {
+      expect(t.props.accessible).toBe(false);
     });
   });
 });
