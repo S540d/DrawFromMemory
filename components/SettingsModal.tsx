@@ -8,6 +8,7 @@ import SoundManager from '@services/SoundManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 import ParentalGate from './ParentalGate';
+import ParentDashboard from './ParentDashboard';
 
 interface SettingsModalProps {
   visible: boolean;
@@ -28,6 +29,8 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [parentalGateVisible, setParentalGateVisible] = useState(false);
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
+  const [showParentDashboard, setShowParentDashboard] = useState(false);
+  const [pendingAction, setPendingAction] = useState<null | (() => void)>(null);
 
   useEffect(() => {
     setCurrentLang(getLanguage());
@@ -77,6 +80,12 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
 
   const handleParentalGateSuccess = async () => {
     setParentalGateVisible(false);
+    if (pendingAction) {
+      const action = pendingAction;
+      setPendingAction(null);
+      action();
+      return;
+    }
     if (!pendingUrl) return;
     const url = pendingUrl;
     setPendingUrl(null);
@@ -98,6 +107,12 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   const handleParentalGateCancel = () => {
     setParentalGateVisible(false);
     setPendingUrl(null);
+    setPendingAction(null);
+  };
+
+  const openParentDashboard = () => {
+    setPendingAction(() => () => setShowParentDashboard(true));
+    setParentalGateVisible(true);
   };
 
   const handleSendFeedback = async () => {
@@ -301,6 +316,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
       <View style={[styles.card, { backgroundColor: colors.surface }]}>
         <View style={styles.actionGrid}>
           {([
+            { id: 'parents',  label: t('parentDashboard.menuLabel'), icon: '👨‍👩‍👧', onPress: openParentDashboard },
             { id: 'feedback', label: t('settings.feedback'), icon: '✉️', onPress: handleSendFeedback },
             { id: 'support',  label: t('settings.support'),  icon: '☕',  onPress: handleSupport },
             { id: 'share',    label: t('settings.share'),    icon: '↗',   onPress: handleShareApp },
@@ -330,6 +346,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
       </View>
 
       {renderAboutModal()}
+      <ParentDashboard visible={showParentDashboard} onClose={() => setShowParentDashboard(false)} />
     </View>
   );
 

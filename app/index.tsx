@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter, useFocusEffect } from 'expo-router';
@@ -17,6 +17,8 @@ import SettingsModal from '@components/SettingsModal';
 import QuickStatsCards from '@components/QuickStatsCards';
 import { FloatingStars } from '@components/FloatingStars';
 import { AnimatedHero } from '@components/AnimatedHero';
+import OnboardingModal from '@components/OnboardingModal';
+import { isOnboardingDone } from '@services/OnboardingManager';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -24,7 +26,14 @@ export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [showSettings, setShowSettings] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [dailyCompleted, setDailyCompleted] = useState(false);
+
+  useEffect(() => {
+    isOnboardingDone().then((done) => {
+      if (!done) setShowOnboarding(true);
+    });
+  }, []);
   const [secondsLeft, setSecondsLeft] = useState(() => getSecondsUntilMidnight());
   const [dailyLevel, setDailyLevel] = useState(() => getDailyChallengeLevel());
   const [currentStreak, setCurrentStreak] = useState(0);
@@ -149,6 +158,7 @@ export default function HomeScreen() {
       </View>
 
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
+      <OnboardingModal visible={showOnboarding} onClose={() => setShowOnboarding(false)} />
     </View>
   );
 }

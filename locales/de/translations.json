@@ -167,5 +167,28 @@
     "placeholder": "Antwort eingeben",
     "confirm": "Öffnen",
     "wrongAnswer": "Falsche Antwort. Bitte versuche es erneut."
+  },
+  "onboarding": {
+    "skip": "Überspringen",
+    "next": "Weiter",
+    "start": "Los geht's!",
+    "step1": { "title": "Merken",   "desc": "Schau dir das Bild ein paar Sekunden gut an." },
+    "step2": { "title": "Zeichnen", "desc": "Versuche, es aus dem Gedächtnis nachzumalen." },
+    "step3": { "title": "Sterne",   "desc": "Vergleiche dein Werk und bekomme Sterne." }
+  },
+  "parentDashboard": {
+    "menuLabel": "Eltern-Bereich",
+    "title": "Eltern-Dashboard",
+    "subtitle": "Spielnutzung der letzten 4 Wochen",
+    "privacyHint": "Alle Daten bleiben lokal auf diesem Gerät.",
+    "loading": "Lade Statistiken…",
+    "empty": "Noch keine Spielsessions aufgezeichnet.",
+    "totalSessions": "Sessions",
+    "totalTime": "Gesamtzeit",
+    "avgStars": "Ø Sterne",
+    "streak": "Streak (akt./best.)",
+    "favoriteLevels": "Lieblings-Level",
+    "dailyBreakdown": "Pro Tag (letzte 14)",
+    "levelLine": "Level {{level}} · {{count}}× gespielt"
   }
 }

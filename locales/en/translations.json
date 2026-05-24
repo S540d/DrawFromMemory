@@ -167,5 +167,28 @@
     "placeholder": "Enter answer",
     "confirm": "Open",
     "wrongAnswer": "Wrong answer. Please try again."
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "start": "Let's go!",
+    "step1": { "title": "Remember", "desc": "Look at the picture carefully for a few seconds." },
+    "step2": { "title": "Draw",     "desc": "Try to draw it from memory." },
+    "step3": { "title": "Stars",    "desc": "Compare your drawing and earn stars." }
+  },
+  "parentDashboard": {
+    "menuLabel": "Parent Area",
+    "title": "Parent Dashboard",
+    "subtitle": "Game usage over the last 4 weeks",
+    "privacyHint": "All data stays local on this device.",
+    "loading": "Loading stats…",
+    "empty": "No game sessions recorded yet.",
+    "totalSessions": "Sessions",
+    "totalTime": "Total time",
+    "avgStars": "Avg. stars",
+    "streak": "Streak (curr./best)",
+    "favoriteLevels": "Favorite levels",
+    "dailyBreakdown": "Per day (last 14)",
+    "levelLine": "Level {{level}} · played {{count}}×"
   }
 }

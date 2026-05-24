@@ -40,8 +40,10 @@ The following data is stored **exclusively locally** on your device:
 |-----------|---------|------------------|
 | Game Progress | Saving unlocked levels | Device storage |
 | Settings | Language, theme, brush size | Device storage |
+| Game Sessions | Date, duration, stars, level — for the Parent Dashboard. Auto-deleted after 28 days. | Device storage |
+| Onboarding flag | Remember whether the first-launch tour was completed | Device storage |
 
-**Important:** This data never leaves your device and is only used for app functionality.
+**Important:** This data never leaves your device and is only used for app functionality. The Parent Dashboard (reachable behind the Parental Gate) shows these locally-stored statistics — no transmission takes place.
 
 ### 2.2 No Permissions Required
 

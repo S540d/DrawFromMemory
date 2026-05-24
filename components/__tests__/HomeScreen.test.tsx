@@ -53,6 +53,16 @@ jest.mock('../../components/AnimatedHero', () => {
   return { AnimatedHero: () => <View testID="animated-hero" /> };
 });
 
+jest.mock('../../components/OnboardingModal', () => {
+  const { View } = require('react-native');
+  return { __esModule: true, default: () => <View testID="onboarding-modal" /> };
+});
+
+jest.mock('../../services/OnboardingManager', () => ({
+  isOnboardingDone: jest.fn(async () => true),
+  markOnboardingDone: jest.fn(async () => {}),
+}));
+
 jest.mock('../../services/ThemeContext', () => ({
   useTheme: () => ({
     colors: {
