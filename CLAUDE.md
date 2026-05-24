@@ -5,7 +5,7 @@
 **Merke und Male** — Gedächtnistraining-App für Kinder (React Native / Expo).
 Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Ergebnis.
 
-- **Aktuell: v1.4.2** (package.json + app.json; versionCode 58)
+- **Aktuell: v1.5.1** (package.json + app.json; versionCode 59)
 - **Mindestanforderung Android: API 26 (Android 8.0 Oreo)** — Nexus 6 (max. API 25) wird nicht mehr unterstützt (Issue #172, geschlossen)
 - **Live Demo:** https://s540d.github.io/DrawFromMemory/
 - **Repo:** https://github.com/S540d/DrawFromMemory
@@ -139,6 +139,8 @@ npm run deploy:ghpages             # Deployment auf GitHub Pages
 
 **Branch-Strategie:** Feature-Branches → PR → `testing` (QA) → `staging` (Pre-Production) → `main` (Produktion).
 Die drei Branches `main`, `staging`, `testing` müssen immer existieren und dürfen nie gelöscht werden.
+
+> **⚠️ REGEL FÜR AI-ASSISTENTEN:** Merges auf `main` sind VERBOTEN ohne explizite schriftliche Freigabe durch den Nutzer in der aktuellen Konversation. Das gilt auch für `staging → main`. Immer nach `testing → staging` stoppen und auf Freigabe warten. `main` ist production — nur der Nutzer entscheidet, wann etwas dort landet.
 
 ---
 

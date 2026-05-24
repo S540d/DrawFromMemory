@@ -9,6 +9,7 @@ import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../constants/Layout';
 import { GlassCard } from '@components/AnimatedPrimitives';
 import { Badge } from '@components/Badge';
+import { FloatingStars } from '@components/FloatingStars';
 
 // Default card width for SSR (will be recalculated on client)
 const DEFAULT_CARD_WIDTH = 150;
@@ -98,6 +99,7 @@ export default function LevelsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <FloatingStars />
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: colors.surface }]}>
         <TouchableOpacity onPress={() => router.back()}>
