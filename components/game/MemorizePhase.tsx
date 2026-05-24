@@ -23,7 +23,7 @@ export default function MemorizePhase({
       <Text style={styles.phaseTitle}>{t('game.memorize.title')}</Text>
 
       <View style={styles.timerContainer}>
-        <Text style={styles.timerText}>{timeRemaining}s</Text>
+        <Text style={styles.timerText}>{t('game.memorize.timeLeft', { seconds: timeRemaining })}</Text>
       </View>
 
       <View style={styles.imageContainer}>
@@ -36,7 +36,7 @@ export default function MemorizePhase({
               {currentLang === 'en' ? currentImage.displayNameEn : currentImage.displayName}
             </Text>
             <Text style={styles.imageInfo}>
-              Level {levelNumber} • {currentImage.strokeCount} Striche
+              {t('game.memorize.imageInfo', { level: levelNumber, strokeCount: currentImage.strokeCount })}
             </Text>
           </View>
         )}

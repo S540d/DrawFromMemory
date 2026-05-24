@@ -33,8 +33,6 @@ export interface DrawPhaseProps {
     canvasMinHeight: number;
     canvasMarginVertical: number;
     toolbarMarginVertical: number;
-    toolbarButtonMinHeight: number;
-    toolbarButtonPaddingVertical: number;
     buttonMinHeight: number;
     buttonPaddingVertical: number;
     isSmall: boolean;
@@ -44,7 +42,6 @@ export interface DrawPhaseProps {
 
 export interface ResultPhaseProps {
   currentImage: LevelImage | null;
-  currentLang: string;
   levelNumber: number;
   userRating: number;
   savedToGallery: boolean;

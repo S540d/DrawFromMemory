@@ -32,11 +32,6 @@ export default function DrawPhase({
     marginVertical: layout.toolbarMarginVertical,
   }), [layout.toolbarMarginVertical]);
 
-  const dynButton = useMemo(() => ({
-    minHeight: layout.buttonMinHeight,
-    paddingVertical: layout.buttonPaddingVertical,
-  }), [layout.buttonMinHeight, layout.buttonPaddingVertical]);
-
   return (
     <View style={styles.phaseContainer}>
       {/* Info-Streifen: Aufgabe + Hint-Joker */}
@@ -157,7 +152,7 @@ export default function DrawPhase({
       {/* Buttons */}
       <View style={styles.buttonRow}>
         <TouchableOpacity
-          style={[styles.secondaryButton, dynButton]}
+          style={styles.secondaryButton}
           onPress={drawing.undo}
           disabled={drawing.paths.length === 0}
           accessibilityLabel={t('game.draw.undo')}
@@ -171,7 +166,7 @@ export default function DrawPhase({
           >{t('game.draw.undo')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.secondaryButton, dynButton, drawing.paths.length === 0 && styles.buttonDisabled]}
+          style={[styles.secondaryButton, drawing.paths.length === 0 && styles.buttonDisabled]}
           accessibilityLabel={t('game.draw.clear')}
           accessibilityRole="button"
           onPress={() => {
@@ -201,7 +196,7 @@ export default function DrawPhase({
           >{t('game.draw.clear')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.primaryButton, dynButton]}
+          style={styles.primaryButton}
           onPress={onDone}
         >
           <Text

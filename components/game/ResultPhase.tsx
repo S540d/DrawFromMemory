@@ -11,7 +11,6 @@ import { useTranslation } from '@services/i18n';
 
 export default function ResultPhase({
   currentImage,
-  currentLang,
   levelNumber,
   userRating,
   savedToGallery,
@@ -83,14 +82,14 @@ export default function ResultPhase({
       {/* 2. Sterne-Bewertung */}
       <View style={[styles.starsContainer, isSmall && styles.starsContainerSmall]}>
         <Text style={styles.starsTitle}>{t('game.result.howWell')}</Text>
-        <View style={styles.starsRow}>
+        <View style={styles.starsRow} testID="stars-container">
           {[1, 2, 3, 4, 5].map((star) => (
             <AnimatedStar
               key={star}
               filled={star <= userRating}
               index={star - 1}
               onPress={() => onRatingSubmit(star)}
-              accessibilityLabel={`${star} Stern${star !== 1 ? 'e' : ''}`}
+              accessibilityLabel={t('game.result.starAccessibilityLabel', { rating: star, plural: star !== 1 ? 's' : '' })}
             />
           ))}
         </View>

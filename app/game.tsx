@@ -259,8 +259,6 @@ export default function GameScreen() {
             canvasMinHeight: layout.canvasMinHeight,
             canvasMarginVertical: layout.canvasMarginVertical,
             toolbarMarginVertical: layout.toolbarMarginVertical,
-            toolbarButtonMinHeight: layout.toolbarButtonMinHeight,
-            toolbarButtonPaddingVertical: layout.toolbarButtonPaddingVertical,
             buttonMinHeight: layout.buttonMinHeight,
             buttonPaddingVertical: layout.buttonPaddingVertical,
             isSmall,
@@ -274,7 +272,6 @@ export default function GameScreen() {
       {phase === 'result' && (
         <ResultPhase
           currentImage={currentImage}
-          currentLang={currentLang}
           levelNumber={levelNumber}
           userRating={userRating}
           savedToGallery={savedToGallery}

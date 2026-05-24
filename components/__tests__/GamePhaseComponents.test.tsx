@@ -50,10 +50,10 @@ jest.mock('../../components/AnimatedPrimitives', () => {
   const { View } = require('react-native');
   return {
     AnimatedFeedback: ({ children, visible }: any) => visible ? <View>{children}</View> : null,
-    AnimatedStar: ({ onPress, accessibilityLabel }: any) => {
+    AnimatedStar: ({ onPress, accessibilityLabel, index }: any) => {
       const { TouchableOpacity, Text } = require('react-native');
       return (
-        <TouchableOpacity onPress={onPress} accessibilityLabel={accessibilityLabel}>
+        <TouchableOpacity onPress={onPress} accessibilityLabel={accessibilityLabel} index={index}>
           <Text>★</Text>
         </TouchableOpacity>
       );
@@ -92,10 +92,10 @@ describe('MemorizePhase', () => {
     revealStep: 0,
   };
 
-  it('renders timer countdown value as a number', () => {
+  it('renders timer with i18n translation key', () => {
     const { UNSAFE_getAllByType } = render(<MemorizePhase {...baseProps} timeRemaining={3} />);
     const texts = getAllTexts(UNSAFE_getAllByType);
-    expect(texts).toContain(3);
+    expect(texts).toContain('game.memorize.timeLeft');
   });
 
   it('renders title translation key', () => {
@@ -220,7 +220,7 @@ describe('ResultPhase', () => {
     const { UNSAFE_getAllByType } = render(<ResultPhase {...resultProps} />);
     const { TouchableOpacity } = require('react-native');
     const starButtons = UNSAFE_getAllByType(TouchableOpacity).filter(
-      (b: any) => b.props.accessibilityLabel && b.props.accessibilityLabel.includes('Stern')
+      (b: any) => b.props.index !== undefined
     );
     expect(starButtons).toHaveLength(5);
   });
