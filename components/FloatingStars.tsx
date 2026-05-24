@@ -66,7 +66,8 @@ function DecorElement({ item, animate }: { item: DecorItem; animate: boolean }) 
     <Animated.View
       style={[
         styles.item,
-        { top: item.top, left: item.left, opacity: item.opacity },
+        // reanimated style typing rejects '%' strings — runtime supports them
+        { top: item.top as unknown as number, left: item.left as unknown as number, opacity: item.opacity },
         animStyle,
       ]}
       pointerEvents="none"

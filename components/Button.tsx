@@ -152,7 +152,7 @@ export function Button({
       >
         {variant === 'primary' && (
           <LinearGradient
-            colors={Colors.gradient.cta as [string, ...string[]]}
+            colors={Colors.gradient.cta}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={StyleSheet.absoluteFillObject}
