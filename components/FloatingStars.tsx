@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
   cancelAnimation,
@@ -66,8 +66,8 @@ function DecorElement({ item, animate }: { item: DecorItem; animate: boolean }) 
     <Animated.View
       style={[
         styles.item,
-        // reanimated style typing rejects '%' strings — runtime supports them
-        { top: item.top as unknown as number, left: item.left as unknown as number, opacity: item.opacity },
+        // reanimated style typing rejects '%' strings — cast to ViewStyle['top'] (DimensionValue) preserves semantic intent
+        { top: item.top as ViewStyle['top'], left: item.left as ViewStyle['left'], opacity: item.opacity },
         animStyle,
       ]}
       pointerEvents="none"
