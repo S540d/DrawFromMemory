@@ -42,12 +42,12 @@ export function Chip({
   }));
 
   const handlePressIn = () => {
-    if (reduceMotion.current) return;
+    if (reduceMotion) return;
     scale.value = withSpring(0.94, { damping: 15, stiffness: 300 });
   };
 
   const handlePressOut = () => {
-    if (reduceMotion.current) return;
+    if (reduceMotion) return;
     scale.value = withSpring(1, { damping: 15, stiffness: 300 });
   };
 

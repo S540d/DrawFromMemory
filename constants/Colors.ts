@@ -15,11 +15,11 @@ export const Colors = {
 
   // Gradient-Kombinationen (für LinearGradient)
   gradient: {
-    primary: ['#7C5CFF', '#F093FB'],     // Primary Gradient (Vivid Purple → Rosa)
-    secondary: ['#F093FB', '#f5576c'],   // Rosa-Gradient
-    warm: ['#FFB547', '#FF6B6B'],        // Apricot-Gradient
-    cta: ['#7C5CFF', '#F093FB'],         // CTA-Gradient mit neuem Primary
-    teal: ['#4ECDC4', '#44CF6C'],        // Teal-Gradient
+    primary:   ['#7C5CFF', '#F093FB'] as const,
+    secondary: ['#F093FB', '#f5576c'] as const,
+    warm:      ['#FFB547', '#FF6B6B'] as const,
+    cta:       ['#7C5CFF', '#F093FB'] as const,
+    teal:      ['#4ECDC4', '#44CF6C'] as const,
   },
 
   // UI Farben - "Warm Paper"
