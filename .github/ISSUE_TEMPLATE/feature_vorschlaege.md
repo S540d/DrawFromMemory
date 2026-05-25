@@ -42,9 +42,9 @@ Wir sammeln konkrete Feature-Ideen, um **Merke und Male** weiter aufzuwerten.
 
 ## Priorisierung (Bitte markieren)
 
-- [ ] **Kurzfristig (nächster Release):** 1, 2, 3
-- [ ] **Mittelfristig:** 4, 5
-- [ ] **Langfristig:** 6, 7
+- [ ] **Kurzfristig (nächster Release):** Achievements & Abzeichen, Variabler Timer, Verbesserte Farbauswahl
+- [ ] **Mittelfristig:** Weitere Level & Motivwelten, Tägliche Herausforderungen
+- [ ] **Langfristig:** Replay-Verbesserungen, Optionaler Hilfemodus
 
 ## Akzeptanzkriterien für ausgewählte Features
 
