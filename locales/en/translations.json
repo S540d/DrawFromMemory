@@ -78,7 +78,7 @@
       "nextLevel": "Next",
       "backToMenu": "Menu",
       "allLevelsComplete": "All levels complete!",
-      "allLevelsCompleteMessage": "You have mastered all 10 levels. You are a true memory champion!",
+      "allLevelsCompleteMessage": "You have mastered all 20 levels. You are a true memory champion!",
       "playAgain": "Restart",
       "replay": "▶ Replay",
       "replayStop": "⏹ Stop"
@@ -118,7 +118,6 @@
     "aboutTitle": "About Remember & Draw",
     "versionLabel": "Version",
     "licenseLabel": "License",
-    "featureTeaser": "Coming soon: Take photos of your drawings and share them!",
     "error": "Error",
     "about": "About",
     "version": "Version"

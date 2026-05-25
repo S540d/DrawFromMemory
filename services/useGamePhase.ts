@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'expo-router';
-import { getRandomImageForLevel } from '@services/ImagePoolManager';
+import { getRandomImageForLevel, getSeededImageForLevel } from '@services/ImagePoolManager';
 import { getDisplayDuration, getTotalLevels } from '@services/LevelManager';
 import { getImageElementCount } from '@components/LevelImageDisplay';
 import storageManager from '@services/StorageManager';
-import { markTodayCompleted } from '@services/DailyChallengeManager';
+import { markTodayCompleted, getDailyChallengeKey } from '@services/DailyChallengeManager';
 import { updateStreakAfterGame } from '@services/StreakManager';
 import { recordSession } from '@services/SessionTracker';
 import SoundManager from '@services/SoundManager';
@@ -69,10 +69,18 @@ export function useGamePhase({
     return () => { mounted = false; };
   }, []);
 
-  // Initialize image on levelNumber change only — keeps image stable when extraTimeMode loads
+  // Initialize image on levelNumber change only — keeps image stable when extraTimeMode loads.
+  // For the daily challenge level, use a date-seeded image so it stays consistent all day.
   useEffect(() => {
     try {
-      const image = getRandomImageForLevel(levelNumber);
+      let image;
+      if (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) {
+        const dateKey = getDailyChallengeKey();
+        const seed = parseInt(dateKey.replace(/-/g, ''), 10);
+        image = getSeededImageForLevel(levelNumber, seed);
+      } else {
+        image = getRandomImageForLevel(levelNumber);
+      }
       currentImageRef.current = image;
       setCurrentImage(image);
       levelStartedAtRef.current = Date.now();
@@ -80,7 +88,7 @@ export function useGamePhase({
       console.error('Error initializing level:', error);
       router.back();
     }
-  }, [levelNumber, router]);
+  }, [levelNumber, dailyChallengeLevel, router]);
 
   // Update timer when levelNumber or extraTimeMode changes (separate from image init)
   useEffect(() => {

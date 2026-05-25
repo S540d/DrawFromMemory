@@ -154,8 +154,7 @@ export default function GameScreen() {
           accessibilityRole="button"
           accessibilityLabel={t('common.back')}
         >
-          <Text style={styles.headerTitle}>{t('app.name')}</Text>
-          <Text style={styles.headerSub}>Level {levelNumber}{levelName ? ` · ${levelName}` : ''}</Text>
+          <Text style={styles.headerTitle}>Level {levelNumber}{levelName ? ` · ${levelName}` : ''}</Text>
         </TouchableOpacity>
         <View style={styles.headerRight}>
           <View style={styles.progressDots}>
@@ -319,12 +318,6 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.bold,
     color: Colors.text.primary,
     lineHeight: 26,
-  },
-  headerSub: {
-    fontSize: FontSize.xs,
-    fontWeight: FontWeight.semibold,
-    color: Colors.text.secondary,
-    marginTop: 2,
   },
   headerRight: {
     flexDirection: 'row',

@@ -327,6 +327,22 @@ export function getRandomImageForLevel(levelNumber: number): LevelImage {
 }
 
 /**
+ * Wählt ein deterministisches Bild für ein Level anhand eines numerischen Seeds.
+ * Wird für die Daily Challenge verwendet, damit das Bild des Tages konstant bleibt.
+ * @param levelNumber Level-Nummer
+ * @param seed Numerischer Seed (z. B. YYYYMMDD)
+ */
+export function getSeededImageForLevel(levelNumber: number, seed: number): LevelImage {
+  const targetDifficulty = getDifficultyForLevel(levelNumber);
+  const available = imagePool.filter(img =>
+    img.difficulty === targetDifficulty &&
+    (!img.minLevel || img.minLevel <= levelNumber)
+  );
+  if (available.length === 0) return getRandomImageForLevel(levelNumber);
+  return available[seed % available.length];
+}
+
+/**
  * Gibt alle Bilder einer bestimmten Schwierigkeit zurück
  */
 export function getImagesForDifficulty(difficulty: Difficulty): LevelImage[] {

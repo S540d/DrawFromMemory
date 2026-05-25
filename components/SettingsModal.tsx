@@ -151,11 +151,6 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               </Text>
             </TouchableOpacity>
 
-            <View style={[styles.featureTeaser, { backgroundColor: colors.primary + '15', borderColor: colors.primary }]}>
-              <Text style={[styles.teaserText, { color: colors.text.primary }]}>
-                {t('settings.featureTeaser')}
-              </Text>
-            </View>
           </View>
 
           <TouchableOpacity
@@ -543,16 +538,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.sm,
     fontWeight: FontWeight.medium,
     textDecorationLine: 'underline',
-  },
-  featureTeaser: {
-    marginTop: Spacing.lg,
-    padding: Spacing.md,
-    borderRadius: BorderRadius.md,
-    borderWidth: 1,
-  },
-  teaserText: {
-    fontSize: FontSize.xs,
-    textAlign: 'center',
   },
   modalCloseButton: {
     paddingVertical: Spacing.sm,

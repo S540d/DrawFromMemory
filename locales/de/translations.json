@@ -78,7 +78,7 @@
       "nextLevel": "Weiter",
       "backToMenu": "Menü",
       "allLevelsComplete": "Alle Level geschafft!",
-      "allLevelsCompleteMessage": "Du hast alle 10 Level gemeistert. Du bist ein echtes Gedächtnis-Ass!",
+      "allLevelsCompleteMessage": "Du hast alle 20 Level gemeistert. Du bist ein echtes Gedächtnis-Ass!",
       "playAgain": "Von vorne",
       "replay": "▶ Abspielen",
       "replayStop": "⏹ Stopp"
@@ -118,7 +118,6 @@
     "aboutTitle": "Über Merke und Male",
     "versionLabel": "Version",
     "licenseLabel": "Lizenz",
-    "featureTeaser": "Demnächst: Eigene Zeichnungen fotografieren und teilen!",
     "error": "Fehler",
     "about": "Über die App",
     "version": "Version"
