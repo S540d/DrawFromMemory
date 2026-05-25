@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import DrawingCanvas from '@components/DrawingCanvas';
 import LevelImageDisplay from '@components/LevelImageDisplay';
 import { AnimatedFeedback, AnimatedStar } from '@components/AnimatedPrimitives';
@@ -27,6 +27,15 @@ export default function ResultPhase({
   onRestartFromLevel1,
 }: ResultPhaseProps) {
   const { t } = useTranslation();
+  const isLastLevel = levelNumber >= getTotalLevels();
+  const [showCompletionModal, setShowCompletionModal] = useState(false);
+
+  useEffect(() => {
+    if (isLastLevel && userRating > 0) {
+      const timeout = setTimeout(() => setShowCompletionModal(true), 800);
+      return () => clearTimeout(timeout);
+    }
+  }, [isLastLevel, userRating]);
 
   const getFeedbackText = (rating: number) => {
     if (rating === 5) return t('game.result.feedback5');
@@ -39,6 +48,37 @@ export default function ResultPhase({
   const imageSize = Math.min(Math.max(screenWidth * 0.44, 140), 220);
 
   return (
+    <>
+      {/* Spielende-Modal bei Level 20 */}
+      <Modal
+        visible={showCompletionModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowCompletionModal(false)}
+      >
+        <View style={styles.completionOverlay}>
+          <View style={styles.completionModalBox}>
+            <Text style={styles.completionEmoji}>🏆</Text>
+            <Text style={styles.completionTitle}>{t('game.result.allLevelsComplete')}</Text>
+            <Text style={styles.completionMessage}>{t('game.result.allLevelsCompleteMessage')}</Text>
+            <TouchableOpacity
+              style={styles.completionButton}
+              onPress={() => { setShowCompletionModal(false); onRestartFromLevel1(); }}
+              accessibilityRole="button"
+            >
+              <Text style={styles.completionButtonText}>🔄 {t('game.result.playAgain')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.completionClose}
+              onPress={() => setShowCompletionModal(false)}
+              accessibilityRole="button"
+            >
+              <Text style={styles.completionCloseText}>{t('common.close')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
     <ScrollView
       style={styles.resultScrollView}
       contentContainerStyle={styles.resultContent}
@@ -98,14 +138,6 @@ export default function ResultPhase({
         </AnimatedFeedback>
       </View>
 
-      {/* Completion banner for Level 10 */}
-      {levelNumber >= getTotalLevels() && userRating > 0 && (
-        <View style={styles.completionBanner}>
-          <Text style={styles.completionTitle}>{t('game.result.allLevelsComplete')}</Text>
-          <Text style={styles.completionMessage}>{t('game.result.allLevelsCompleteMessage')}</Text>
-        </View>
-      )}
-
       {/* 3. Aktions-Zeile: Zeitraffer | Galerie | Weiter */}
       <View style={styles.actionRow}>
         <TouchableOpacity
@@ -148,6 +180,7 @@ export default function ResultPhase({
         )}
       </View>
     </ScrollView>
+    </>
   );
 }
 
@@ -225,26 +258,57 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: Spacing.lg,
   },
-  completionBanner: {
-    backgroundColor: Colors.success + '15',
-    borderWidth: 2,
-    borderColor: Colors.success,
-    borderRadius: BorderRadius.xl,
-    padding: Spacing.lg,
+  completionOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.65)',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: Spacing.lg,
+    padding: Spacing.lg,
+  },
+  completionModalBox: {
+    backgroundColor: Colors.surface,
+    borderRadius: BorderRadius.xxl,
+    padding: Spacing.xl,
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 340,
+    gap: Spacing.md,
+    ...Colors.shadow.large,
+  },
+  completionEmoji: {
+    fontSize: 56,
   },
   completionTitle: {
     fontSize: FontSize.xl,
     fontWeight: FontWeight.bold,
-    color: Colors.success,
-    marginBottom: Spacing.sm,
+    color: Colors.text.primary,
     textAlign: 'center',
   },
   completionMessage: {
     fontSize: FontSize.md,
     color: Colors.text.secondary,
     textAlign: 'center',
+    lineHeight: 22,
+  },
+  completionButton: {
+    backgroundColor: Colors.primary,
+    borderRadius: BorderRadius.lg,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.xl,
+    alignItems: 'center',
+    width: '100%',
+  },
+  completionButtonText: {
+    color: Colors.background,
+    fontSize: FontSize.md,
+    fontWeight: FontWeight.bold,
+  },
+  completionClose: {
+    paddingVertical: Spacing.xs,
+  },
+  completionCloseText: {
+    fontSize: FontSize.sm,
+    color: Colors.text.secondary,
   },
   actionRow: {
     flexDirection: 'row',

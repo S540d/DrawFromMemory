@@ -137,16 +137,16 @@ npm run validate                   # Vollständige Release-Validierung
 npm run deploy:ghpages             # Deployment auf GitHub Pages
 ```
 
-**Branch-Strategie:** Feature-Branches → PR → `testing` (QA) → `staging` (Pre-Production) → `main` (Produktion).
-Die drei Branches `main`, `staging`, `testing` müssen immer existieren und dürfen nie gelöscht werden.
+**Branch-Strategie:** Feature-Branches → PR → `staging` (Pre-Production, Sammelbranch) → `main` (Produktion bei Release).
+Die zwei Branches `main` und `staging` müssen immer existieren und dürfen nie gelöscht werden. Features werden in separaten Branches entwickelt und in `staging` gesammelt bis zu einem neuen Release.
 
-> **⚠️ REGEL FÜR AI-ASSISTENTEN:** Merges auf `main` sind VERBOTEN ohne explizite schriftliche Freigabe durch den Nutzer in der aktuellen Konversation. Das gilt auch für `staging → main`. Immer nach `testing → staging` stoppen und auf Freigabe warten. `main` ist production — nur der Nutzer entscheidet, wann etwas dort landet.
+> **⚠️ REGEL FÜR AI-ASSISTENTEN:** Merges auf `main` sind VERBOTEN ohne explizite schriftliche Freigabe durch den Nutzer in der aktuellen Konversation. Das gilt auch für `staging → main`. Feature-PRs gehen immer gegen `staging`. `main` ist production — nur der Nutzer entscheidet, wann etwas dort landet.
 
 ---
 
 ## CI/CD (`.github/workflows/ci-cd.yml`)
 
-Läuft auf `push` und `pull_request` gegen `main` und `staging`.
+Läuft auf `push` und `pull_request` gegen `main` und `staging` (kein `testing`-Branch mehr).
 
 | Job | Name | Inhalt |
 |---|---|---|
@@ -236,13 +236,13 @@ Gespeicherte Felder: `progress`, `theme`, `language`, `sound_enabled`, `music_en
 
 ## UI/UX Design System (Issue #176)
 
-Stand `testing`: Phase A + B abgeschlossen.
+Stand `staging`: Phase A + B abgeschlossen.
 
 ### Phase-Übersicht
 | Phase | Status | Branch/PR |
 |---|---|---|
-| **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie | ✅ in `testing` | PR merged |
-| **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in `testing` | PR #178 merged |
+| **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie | ✅ in `staging` | PR merged |
+| **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in `staging` | PR #178 merged |
 | **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh | 🔲 offen | — |
 | **D: Delight** — Lottie, Konfetti, Mikro-Sounds | 🔲 offen | — |
 | **E: Onboarding** — First-Run-Tour | 🔲 offen | — |

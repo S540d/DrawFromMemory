@@ -215,9 +215,11 @@ const styles = StyleSheet.create({
   },
   hero: {
     flex: 1,
+    flexShrink: 1,
     justifyContent: 'center',
     alignItems: 'center',
     gap: Spacing.lg,
+    minHeight: 80,
   },
   heroTitle: {
     fontSize: FontSize.display,

@@ -23,7 +23,7 @@ export default function MemorizePhase({
       <Text style={styles.phaseTitle}>{t('game.memorize.title')}</Text>
 
       <View style={styles.timerContainer}>
-        <Text style={styles.timerText}>{t('game.memorize.timeLeft', { seconds: timeRemaining })}</Text>
+        <Text style={styles.timerText}>{t('game.memorize.timeLeft', { seconds: Math.max(0, Math.ceil(timeRemaining)) })}</Text>
       </View>
 
       <View style={styles.imageContainer}>

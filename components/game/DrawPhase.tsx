@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: Spacing.md,
     justifyContent: 'space-between',
+    overflow: 'hidden',
   },
   infoStrip: {
     flexDirection: 'row',
