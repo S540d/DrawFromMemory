@@ -203,11 +203,12 @@ export default function GameScreen() {
       {/* Settings Modal */}
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
 
-      {/* Hint Modal */}
+      {/* Hint Modal — statusBarTranslucent sichert volle Überdeckung auf Android */}
       <Modal
         visible={showHintModal}
         transparent
         animationType="fade"
+        statusBarTranslucent
         onRequestClose={() => setShowHintModal(false)}
       >
         <TouchableOpacity
@@ -226,7 +227,7 @@ export default function GameScreen() {
             </View>
             {currentImage && (
               <ErrorBoundary>
-                <LevelImageDisplay image={currentImage} size={Math.min(screenWidth - 80, 300)} />
+                <LevelImageDisplay image={currentImage} size={Math.min(screenWidth - 80, 280)} />
               </ErrorBoundary>
             )}
           </View>
@@ -401,6 +402,7 @@ const styles = StyleSheet.create({
     padding: Spacing.lg,
     width: '90%',
     maxWidth: 380,
+    maxHeight: '85%',
     alignItems: 'center',
     ...Colors.shadow.large,
   },
