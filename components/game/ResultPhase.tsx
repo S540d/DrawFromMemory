@@ -350,6 +350,7 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.lg,
     alignItems: 'center',
     justifyContent: 'center',
+    alignSelf: 'stretch',
     marginTop: Spacing.sm,
     minHeight: 52,
     ...Colors.shadow.medium,

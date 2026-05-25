@@ -221,9 +221,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.lg,
     minHeight: 80,
-    maxHeight: 300,
   },
   bottomSection: {
+    marginTop: 'auto',
     gap: Spacing.md,
   },
   heroTitle: {
