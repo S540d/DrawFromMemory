@@ -19,6 +19,16 @@ interface UseGamePhaseOptions {
   isDailyChallenge?: boolean;
 }
 
+function getImageForLevel(levelNumber: number, dailyChallengeLevel: number | null): LevelImage {
+  if (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) {
+    const dateKey = getDailyChallengeKey();
+    const rawSeed = parseInt(dateKey.replace(/-/g, ''), 10);
+    const seed = Number.isFinite(rawSeed) ? Math.abs(rawSeed) : 0;
+    return getSeededImageForLevel(levelNumber, seed);
+  }
+  return getRandomImageForLevel(levelNumber);
+}
+
 export function useGamePhase({
   initialLevel,
   drawingPaths,
@@ -73,14 +83,7 @@ export function useGamePhase({
   // For the daily challenge level, use a date-seeded image so it stays consistent all day.
   useEffect(() => {
     try {
-      let image;
-      if (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) {
-        const dateKey = getDailyChallengeKey();
-        const seed = parseInt(dateKey.replace(/-/g, ''), 10);
-        image = getSeededImageForLevel(levelNumber, seed);
-      } else {
-        image = getRandomImageForLevel(levelNumber);
-      }
+      const image: LevelImage = getImageForLevel(levelNumber, dailyChallengeLevel);
       currentImageRef.current = image;
       setCurrentImage(image);
       levelStartedAtRef.current = Date.now();
@@ -226,7 +229,7 @@ export function useGamePhase({
     // Re-trigger level-init useEffect by setting a fresh image + time directly
     // (levelNumber doesn't change, so we init manually here)
     try {
-      const image = getRandomImageForLevel(levelNumber);
+      const image: LevelImage = getImageForLevel(levelNumber, dailyChallengeLevel);
       currentImageRef.current = image;
       setCurrentImage(image);
       setTimeRemaining(getDisplayDuration(levelNumber, extraTimeMode));

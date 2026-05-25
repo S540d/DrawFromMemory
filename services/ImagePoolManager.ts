@@ -339,7 +339,9 @@ export function getSeededImageForLevel(levelNumber: number, seed: number): Level
     (!img.minLevel || img.minLevel <= levelNumber)
   );
   if (available.length === 0) return getRandomImageForLevel(levelNumber);
-  return available[seed % available.length];
+  if (!Number.isFinite(seed)) return getRandomImageForLevel(levelNumber);
+  const index = Math.abs(Math.floor(seed)) % available.length;
+  return available[index];
 }
 
 /**

@@ -160,9 +160,9 @@ describe('GameScreen', () => {
     const { UNSAFE_getAllByType } = render(<GameScreen />);
     await act(async () => {});
     const texts = getAllTexts(UNSAFE_getAllByType);
-    expect(texts).not.toContain('Merke & Male');
-    expect(texts).not.toContain('Merke und Male');
-    // Header zeigt jetzt Level-Info statt App-Name
+    // useTranslation is mocked to return the key — ensure the app.name key is absent
+    expect(texts).not.toContain('app.name');
+    // Header shows level info
     expect(texts.some((t: any) => typeof t === 'string' && t.startsWith('Level '))).toBe(true);
   });
 });
