@@ -175,7 +175,7 @@ describe('StorageManager', () => {
       expect(AsyncStorage.removeItem).toHaveBeenCalledWith('@merke_male:progress');
     });
 
-    it('should handle corrupt JSON data gracefully', async () => {
+    it('should handle corrupt JSON data gracefully without wiping storage', async () => {
       (AsyncStorage.getItem as jest.Mock).mockResolvedValue('{ invalid json }');
       (AsyncStorage.removeItem as jest.Mock).mockResolvedValue(undefined);
 
@@ -187,7 +187,9 @@ describe('StorageManager', () => {
         totalLevelsCompleted: 0,
         averageRating: 0,
       });
-      expect(AsyncStorage.removeItem).toHaveBeenCalledWith('@merke_male:progress');
+      // Issue #215: progress must NOT be wiped on parse failure — keep raw data
+      // so a later version or manual recovery can still access it.
+      expect(AsyncStorage.removeItem).not.toHaveBeenCalledWith('@merke_male:progress');
     });
   });
 

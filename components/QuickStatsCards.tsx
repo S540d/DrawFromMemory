@@ -102,10 +102,10 @@ export default function QuickStatsCards() {
           accessibilityLabel={`${card.label}: ${card.value}${card.sub ? ' ' + card.sub : ''}`}
         >
           <Text style={styles.emoji}>{card.emoji}</Text>
-          <Text style={[styles.value, { color: colors.text.primary }]}>{card.value}</Text>
-          <Text style={[styles.label, { color: colors.text.secondary }]}>{card.label}</Text>
+          <Text style={[styles.value, { color: colors.text.primary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{card.value}</Text>
+          <Text style={[styles.label, { color: colors.text.secondary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{card.label}</Text>
           {card.sub !== null && (
-            <Text style={[styles.sub, { color: colors.text.secondary }]}>{card.sub}</Text>
+            <Text style={[styles.sub, { color: colors.text.secondary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{card.sub}</Text>
           )}
         </GlassCard>
       ))}
@@ -126,11 +126,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: Spacing.md,
+    paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.xs,
     borderRadius: BorderRadius.xl,
     minWidth: 80,
-    gap: 2,
+    gap: 1,
   },
   cardWide: {
     minWidth: 0,
@@ -140,13 +140,13 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   emoji: {
-    fontSize: 22,
+    fontSize: 20,
   },
   value: {
-    fontSize: FontSize.lg,
+    fontSize: FontSize.md,
     fontWeight: FontWeight.bold,
     fontFamily: FontFamily.bold,
-    lineHeight: 26,
+    lineHeight: 22,
   },
   label: {
     fontSize: FontSize.xs,
