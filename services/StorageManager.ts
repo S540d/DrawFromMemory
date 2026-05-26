@@ -110,6 +110,23 @@ export interface GalleryEntry {
   isDailyChallenge?: boolean;
 }
 
+// Type-guard for defensively-loaded gallery entries. Validates every required
+// field so downstream UI code (e.g. `'★'.repeat(entry.rating)`) can't crash on
+// malformed persisted data. `isDailyChallenge` is optional and not checked.
+function isValidGalleryEntry(e: unknown): e is GalleryEntry {
+  if (!e || typeof e !== 'object') return false;
+  const r = e as Record<string, unknown>;
+  return (
+    typeof r.id === 'string' &&
+    typeof r.levelNumber === 'number' &&
+    typeof r.imageFilename === 'string' &&
+    typeof r.imageName === 'string' &&
+    Array.isArray(r.paths) &&
+    typeof r.rating === 'number' &&
+    typeof r.savedAt === 'string'
+  );
+}
+
 class StorageManager {
   // ========== Progress Management ==========
 
@@ -332,10 +349,7 @@ class StorageManager {
           if (Array.isArray(parsed)) {
             // Defensive: skip entries that don't match the expected shape,
             // but keep the rest. Never wipe the entire gallery.
-            return parsed.filter(
-              (e): e is GalleryEntry =>
-                e && typeof e === 'object' && typeof e.id === 'string' && Array.isArray(e.paths)
-            );
+            return parsed.filter(isValidGalleryEntry);
           }
         } catch (parseError) {
           // Invalid JSON — return empty but KEEP the raw data so a later

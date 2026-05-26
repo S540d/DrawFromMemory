@@ -56,6 +56,36 @@ describe('StorageManager – Gallery', () => {
       // so a later version or manual recovery can still access it.
       expect(mockAsyncStorage.removeItem).not.toHaveBeenCalled();
     });
+
+    it('should filter out malformed entries but keep valid ones', async () => {
+      const validEntry: GalleryEntry = {
+        id: 'valid1',
+        levelNumber: 3,
+        imageFilename: 'fish.svg',
+        imageName: 'Fisch',
+        paths: makePaths(),
+        rating: 5,
+        savedAt: new Date().toISOString(),
+      };
+      const mixed = [
+        validEntry,
+        { id: 'no-paths', levelNumber: 1, imageFilename: 'x.svg', imageName: 'X', rating: 2, savedAt: 'x' }, // missing paths
+        { id: 'bad-rating', levelNumber: 1, imageFilename: 'x.svg', imageName: 'X', paths: [], rating: 'oops', savedAt: 'x' }, // rating not a number
+        null,
+        'not-an-object',
+        { id: 42, levelNumber: 1, imageFilename: 'x.svg', imageName: 'X', paths: [], rating: 2, savedAt: 'x' }, // id not a string
+      ];
+      mockAsyncStorage.getItem.mockResolvedValueOnce(JSON.stringify(mixed));
+      const gallery = await storageManager.getGallery();
+      expect(gallery).toHaveLength(1);
+      expect(gallery[0].id).toBe('valid1');
+    });
+
+    it('should return empty array when parsed payload is not an array', async () => {
+      mockAsyncStorage.getItem.mockResolvedValueOnce(JSON.stringify({ not: 'an array' }));
+      const gallery = await storageManager.getGallery();
+      expect(gallery).toEqual([]);
+    });
   });
 
   describe('saveToGallery', () => {

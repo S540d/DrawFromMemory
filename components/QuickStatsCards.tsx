@@ -102,10 +102,10 @@ export default function QuickStatsCards() {
           accessibilityLabel={`${card.label}: ${card.value}${card.sub ? ' ' + card.sub : ''}`}
         >
           <Text style={styles.emoji}>{card.emoji}</Text>
-          <Text style={[styles.value, { color: colors.text.primary }]} numberOfLines={1} adjustsFontSizeToFit>{card.value}</Text>
-          <Text style={[styles.label, { color: colors.text.secondary }]} numberOfLines={1} adjustsFontSizeToFit>{card.label}</Text>
+          <Text style={[styles.value, { color: colors.text.primary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{card.value}</Text>
+          <Text style={[styles.label, { color: colors.text.secondary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{card.label}</Text>
           {card.sub !== null && (
-            <Text style={[styles.sub, { color: colors.text.secondary }]} numberOfLines={1} adjustsFontSizeToFit>{card.sub}</Text>
+            <Text style={[styles.sub, { color: colors.text.secondary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{card.sub}</Text>
           )}
         </GlassCard>
       ))}
