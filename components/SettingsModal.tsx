@@ -287,8 +287,8 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               style={[
                 styles.actionGridItem,
                 { borderColor: colors.border },
-                idx < 2 && styles.actionGridItemTop,
-                idx % 2 === 1 && styles.actionGridItemRight,
+                idx < 3 && styles.actionGridItemTop,
+                idx % 3 !== 0 && styles.actionGridItemRight,
               ]}
               onPress={onPress}
               accessibilityRole="button"
@@ -457,9 +457,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   actionGridItem: {
-    width: '50%',
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.sm,
+    width: '33.333%',
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.xs,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 2,
@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: StyleSheet.hairlineWidth,
   },
   actionGridIcon: {
-    fontSize: 18,
+    fontSize: 16,
   },
   actionGridLabel: {
     fontSize: FontSize.xs,
