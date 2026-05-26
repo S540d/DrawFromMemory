@@ -90,72 +90,75 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      {/* Center hero */}
+      {/* Center hero — flex:1 fills space above the bottom section */}
       <View style={styles.hero}>
         <AnimatedHero />
         <Text style={[styles.heroTitle, { color: colors.text.primary }]}>{t('home.title')}</Text>
       </View>
 
-      {/* Quick Stats */}
-      <QuickStatsCards />
+      {/* Bottom section: stats + buttons — always anchored at the bottom */}
+      <View style={styles.bottomSection}>
+        {/* Quick Stats */}
+        <QuickStatsCards />
 
-      {/* Buttons */}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={() => router.push('/game')}
-          accessibilityRole="button"
-          accessibilityLabel={t('home.startButton')}
-          style={styles.gradientWrapper}
-        >
-          <LinearGradient
-            colors={Colors.gradient.cta as [string, string]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.gradientButton}
+        {/* Buttons */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={() => router.push('/game')}
+            accessibilityRole="button"
+            accessibilityLabel={t('home.startButton')}
+            style={styles.gradientWrapper}
           >
-            <Text style={styles.gradientButtonText}>{t('home.startButton')}</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+            <LinearGradient
+              colors={Colors.gradient.cta as [string, string]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.gradientButton}
+            >
+              <Text style={styles.gradientButtonText}>{t('home.startButton')}</Text>
+            </LinearGradient>
+          </TouchableOpacity>
 
-        {/* Daily Challenge */}
-        <TouchableOpacity
-          style={[
-            styles.dailyChallengeButton,
-            { backgroundColor: colors.surface, borderColor: dailyCompleted ? colors.text.light : '#F59E0B' },
-            dailyCompleted && styles.dailyChallengeCompleted,
-          ]}
-          onPress={() => !dailyCompleted && router.push(`/game?level=${dailyLevel}&daily=1`)}
-          accessibilityRole="button"
-          disabled={dailyCompleted}
-        >
-          <Text style={styles.dailyChallengeEmoji}>📅</Text>
-          <View style={styles.dailyChallengeInfo}>
-            <Text style={[styles.dailyChallengeTitle, { color: dailyCompleted ? colors.text.secondary : '#D97706' }]}>
-              {t('dailyChallenge.title')}
-            </Text>
-            <Text style={[styles.dailyChallengeMeta, { color: colors.text.secondary }]}>
-              {dailyCompleted
-                ? t('dailyChallenge.completed')
-                : `${t('dailyChallenge.level', { number: String(dailyLevel) })} · ${t('dailyChallenge.countdown', { hours: String(countdownHours), minutes: String(countdownMinutes) })}`}
-            </Text>
-          </View>
-        </TouchableOpacity>
+          {/* Daily Challenge */}
+          <TouchableOpacity
+            style={[
+              styles.dailyChallengeButton,
+              { backgroundColor: colors.surface, borderColor: dailyCompleted ? colors.text.light : '#F59E0B' },
+              dailyCompleted && styles.dailyChallengeCompleted,
+            ]}
+            onPress={() => !dailyCompleted && router.push(`/game?level=${dailyLevel}&daily=1`)}
+            accessibilityRole="button"
+            disabled={dailyCompleted}
+          >
+            <Text style={styles.dailyChallengeEmoji}>⚡</Text>
+            <View style={styles.dailyChallengeInfo}>
+              <Text style={[styles.dailyChallengeTitle, { color: dailyCompleted ? colors.text.secondary : '#D97706' }]}>
+                {t('dailyChallenge.title')}
+              </Text>
+              <Text style={[styles.dailyChallengeMeta, { color: colors.text.secondary }]}>
+                {dailyCompleted
+                  ? t('dailyChallenge.completed')
+                  : `${t('dailyChallenge.level', { number: String(dailyLevel) })} · ${t('dailyChallenge.countdown', { hours: String(countdownHours), minutes: String(countdownMinutes) })}`}
+              </Text>
+            </View>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary }]}
-          onPress={() => router.push('/levels')}
-          accessibilityRole="button"
-        >
-          <Text style={[styles.secondaryButtonText, { color: colors.primary }]}>{t('home.levelsButton')}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary }]}
+            onPress={() => router.push('/levels')}
+            accessibilityRole="button"
+          >
+            <Text style={[styles.secondaryButtonText, { color: colors.primary }]}>{t('home.levelsButton')}</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary }]}
-          onPress={() => router.push('/gallery')}
-          accessibilityRole="button"
-        >
-          <Text style={[styles.secondaryButtonText, { color: colors.primary }]}>{t('home.galleryButton')}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary }]}
+            onPress={() => router.push('/gallery')}
+            accessibilityRole="button"
+          >
+            <Text style={[styles.secondaryButtonText, { color: colors.primary }]}>{t('home.galleryButton')}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
@@ -168,7 +171,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: Spacing.lg,
-    justifyContent: 'space-between',
   },
   topBar: {
     flexDirection: 'row',
@@ -215,11 +217,14 @@ const styles = StyleSheet.create({
   },
   hero: {
     flex: 1,
-    flexShrink: 1,
     justifyContent: 'center',
     alignItems: 'center',
     gap: Spacing.lg,
     minHeight: 80,
+  },
+  bottomSection: {
+    marginTop: 'auto',
+    gap: Spacing.md,
   },
   heroTitle: {
     fontSize: FontSize.display,
@@ -229,7 +234,7 @@ const styles = StyleSheet.create({
     lineHeight: 48,
   },
   buttonContainer: {
-    gap: Spacing.md,
+    gap: Spacing.sm,
   },
   gradientWrapper: {
     borderRadius: BorderRadius.lg,

@@ -100,21 +100,51 @@ export default function ResultPhase({
           </View>
         </View>
 
-        {/* Deine Zeichnung */}
-        <View style={[styles.comparisonCard, { width: imageSize }]}>
-          <View style={[styles.comparisonCardHeader, styles.comparisonCardHeaderDrawing]}>
-            <Text style={[styles.comparisonCardLabel, { color: Colors.secondary }]}>
-              {t('game.result.yourDrawing').toUpperCase()}
-            </Text>
+        {/* Deine Zeichnung + kontextuelle Aktionen */}
+        <View style={{ width: imageSize, gap: Spacing.xs }}>
+          <View style={[styles.comparisonCard, { width: imageSize }]}>
+            <View style={[styles.comparisonCardHeader, styles.comparisonCardHeaderDrawing]}>
+              <Text style={[styles.comparisonCardLabel, { color: Colors.secondary }]}>
+                {t('game.result.yourDrawing').toUpperCase()}
+              </Text>
+            </View>
+            <View style={[styles.comparisonImage, { width: imageSize, height: imageSize }]}>
+              <DrawingCanvas
+                width={imageSize}
+                height={imageSize}
+                paths={isReplaying ? replayPaths : drawingPaths}
+                strokeColor={Colors.drawing.black}
+                strokeWidth={2}
+              />
+            </View>
           </View>
-          <View style={[styles.comparisonImage, { width: imageSize, height: imageSize }]}>
-            <DrawingCanvas
-              width={imageSize}
-              height={imageSize}
-              paths={isReplaying ? replayPaths : drawingPaths}
-              strokeColor={Colors.drawing.black}
-              strokeWidth={2}
-            />
+
+          {/* Replay + Speichern direkt unter der eigenen Zeichnung */}
+          <View style={styles.drawingActionRow}>
+            <TouchableOpacity
+              style={styles.drawingActionButton}
+              onPress={isReplaying ? onStopReplay : onStartReplay}
+              accessibilityRole="button"
+            >
+              <Text style={styles.drawingActionIcon}>{isReplaying ? '⏹' : '🎬'}</Text>
+              <Text style={styles.drawingActionLabel}>
+                {isReplaying ? t('game.result.replayStop') : t('game.result.replay')}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.drawingActionButton, savedToGallery && styles.drawingActionSaved]}
+              onPress={onSaveToGallery}
+              disabled={savedToGallery}
+              accessibilityRole="button"
+              accessibilityLabel={savedToGallery ? t('gallery.saved') : t('gallery.save')}
+              accessibilityState={{ disabled: savedToGallery }}
+            >
+              <Text style={styles.drawingActionIcon}>{savedToGallery ? '✓' : '🖼'}</Text>
+              <Text style={[styles.drawingActionLabel, savedToGallery && styles.drawingActionLabelSaved]}>
+                {savedToGallery ? t('gallery.saved') : t('gallery.save')}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -138,47 +168,16 @@ export default function ResultPhase({
         </AnimatedFeedback>
       </View>
 
-      {/* 3. Aktions-Zeile: Zeitraffer | Galerie | Weiter */}
-      <View style={styles.actionRow}>
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={isReplaying ? onStopReplay : onStartReplay}
-          accessibilityRole="button"
-        >
-          <Text style={styles.actionButtonText}>
-            {isReplaying ? '⏹' : '🎬'}
-          </Text>
-          <Text style={styles.actionButtonLabel}>
-            {isReplaying ? t('game.result.replayStop') : t('game.result.replay')}
-          </Text>
+      {/* 3. Weiter — prominenter primärer CTA */}
+      {levelNumber < getTotalLevels() ? (
+        <TouchableOpacity style={styles.nextLevelButton} onPress={onNextLevel} accessibilityRole="button">
+          <Text style={styles.nextLevelButtonText}>{t('game.result.nextLevel')} →</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.actionButton, savedToGallery && styles.actionButtonSaved]}
-          onPress={onSaveToGallery}
-          disabled={savedToGallery}
-          accessibilityRole="button"
-          accessibilityLabel={savedToGallery ? t('gallery.saved') : t('gallery.save')}
-          accessibilityState={{ disabled: savedToGallery }}
-        >
-          <Text style={styles.actionButtonText}>{savedToGallery ? '✓' : '🖼'}</Text>
-          <Text style={[styles.actionButtonLabel, savedToGallery && styles.actionButtonLabelSaved]}>
-            {savedToGallery ? t('gallery.saved') : t('gallery.save')}
-          </Text>
+      ) : (
+        <TouchableOpacity style={styles.nextLevelButton} onPress={onRestartFromLevel1} accessibilityRole="button">
+          <Text style={styles.nextLevelButtonText}>🔄 {t('game.result.playAgain')}</Text>
         </TouchableOpacity>
-
-        {levelNumber < getTotalLevels() ? (
-          <TouchableOpacity style={[styles.actionButton, styles.actionButtonPrimary]} onPress={onNextLevel}>
-            <Text style={[styles.actionButtonText, styles.actionButtonPrimaryText]}>→</Text>
-            <Text style={[styles.actionButtonLabel, styles.actionButtonPrimaryText]}>{t('game.result.nextLevel')}</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={[styles.actionButton, styles.actionButtonPrimary]} onPress={onRestartFromLevel1}>
-            <Text style={[styles.actionButtonText, styles.actionButtonPrimaryText]}>🔄</Text>
-            <Text style={[styles.actionButtonLabel, styles.actionButtonPrimaryText]}>{t('game.result.playAgain')}</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      )}
     </ScrollView>
     </>
   );
@@ -310,47 +309,55 @@ const styles = StyleSheet.create({
     fontSize: FontSize.sm,
     color: Colors.text.secondary,
   },
-  actionRow: {
+  drawingActionRow: {
     flexDirection: 'row',
-    gap: Spacing.sm,
-    marginTop: Spacing.sm,
+    gap: Spacing.xs,
   },
-  actionButton: {
+  drawingActionButton: {
     flex: 1,
     backgroundColor: Colors.surface,
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.xs,
-    borderRadius: BorderRadius.lg,
+    paddingVertical: Spacing.xs,
+    borderRadius: BorderRadius.md,
     alignItems: 'center',
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: Colors.border,
-    minHeight: 60,
+    minHeight: 44,
     justifyContent: 'center',
     gap: 2,
     ...Colors.shadow.small,
   },
-  actionButtonPrimary: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
-  },
-  actionButtonSaved: {
+  drawingActionSaved: {
     borderColor: Colors.success,
     backgroundColor: Colors.success + '10',
   },
-  actionButtonText: {
-    fontSize: 20,
+  drawingActionIcon: {
+    fontSize: 16,
     textAlign: 'center',
   },
-  actionButtonLabel: {
+  drawingActionLabel: {
     fontSize: FontSize.xs,
     fontWeight: FontWeight.semibold,
     color: Colors.text.secondary,
     textAlign: 'center',
   },
-  actionButtonLabelSaved: {
+  drawingActionLabelSaved: {
     color: Colors.success,
   },
-  actionButtonPrimaryText: {
+  nextLevelButton: {
+    backgroundColor: Colors.primary,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.xl,
+    borderRadius: BorderRadius.lg,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    marginTop: Spacing.sm,
+    minHeight: 52,
+    ...Colors.shadow.medium,
+  },
+  nextLevelButtonText: {
     color: Colors.background,
+    fontSize: FontSize.md,
+    fontWeight: FontWeight.bold,
   },
 });

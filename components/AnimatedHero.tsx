@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
   cancelAnimation,
@@ -17,6 +17,9 @@ import Animated, {
  * Respects prefers-reduced-motion: static emoji fallback when enabled.
  */
 export function AnimatedHero() {
+  const { height } = useWindowDimensions();
+  const emojiSize = height < 600 ? 44 : height < 750 ? 54 : 64;
+
   const brainScale       = useSharedValue(1);
   const pencilRotate     = useSharedValue(0);
   const pencilTranslateX = useSharedValue(0);
@@ -98,10 +101,10 @@ export function AnimatedHero() {
     >
       <View style={styles.row}>
         <Animated.View style={brainAnimStyle}>
-          <Text style={styles.emoji}>🧠</Text>
+          <Text style={[styles.emoji, { fontSize: emojiSize }]}>🧠</Text>
         </Animated.View>
         <Animated.View style={pencilAnimStyle}>
-          <Text style={styles.emoji}>✏️</Text>
+          <Text style={[styles.emoji, { fontSize: emojiSize }]}>✏️</Text>
         </Animated.View>
       </View>
       <Animated.View style={[styles.sparkleRow, sparkleAnimStyle]} pointerEvents="none">
