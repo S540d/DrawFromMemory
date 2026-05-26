@@ -48,11 +48,13 @@ describe('StorageManager – Gallery', () => {
       expect(gallery[0].imageName).toBe('Hund');
     });
 
-    it('should return empty array and clear on corrupt JSON', async () => {
+    it('should return empty array on corrupt JSON without wiping storage', async () => {
       mockAsyncStorage.getItem.mockResolvedValueOnce('not-valid-json{{{');
       const gallery = await storageManager.getGallery();
       expect(gallery).toEqual([]);
-      expect(mockAsyncStorage.removeItem).toHaveBeenCalled();
+      // Issue #215: gallery must NOT be wiped on parse failure — keep raw data
+      // so a later version or manual recovery can still access it.
+      expect(mockAsyncStorage.removeItem).not.toHaveBeenCalled();
     });
   });
 

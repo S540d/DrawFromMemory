@@ -162,9 +162,9 @@ class StorageManager {
         try {
           return JSON.parse(data);
         } catch (parseError) {
-          // Invalid JSON, return default and clear corrupt data
-          console.error('Failed to parse progress data, resetting:', parseError);
-          await safeStorageOps.removeItem(KEYS.PROGRESS);
+          // Invalid JSON — return defaults but KEEP the raw data so a later
+          // version or manual recovery can still access it. Don't wipe.
+          console.error('Failed to parse progress data, using defaults (raw data kept):', parseError);
         }
       }
     } catch (error) {
@@ -328,10 +328,19 @@ class StorageManager {
       const data = await safeStorageOps.getItem(KEYS.GALLERY);
       if (data) {
         try {
-          return JSON.parse(data);
+          const parsed = JSON.parse(data);
+          if (Array.isArray(parsed)) {
+            // Defensive: skip entries that don't match the expected shape,
+            // but keep the rest. Never wipe the entire gallery.
+            return parsed.filter(
+              (e): e is GalleryEntry =>
+                e && typeof e === 'object' && typeof e.id === 'string' && Array.isArray(e.paths)
+            );
+          }
         } catch (parseError) {
-          console.error('Failed to parse gallery data, resetting:', parseError);
-          await safeStorageOps.removeItem(KEYS.GALLERY);
+          // Invalid JSON — return empty but KEEP the raw data so a later
+          // version or manual recovery can still access it. Don't wipe.
+          console.error('Failed to parse gallery data, using empty list (raw data kept):', parseError);
         }
       }
     } catch (error) {
