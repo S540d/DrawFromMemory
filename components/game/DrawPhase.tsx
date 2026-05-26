@@ -62,6 +62,7 @@ export default function DrawPhase({
       <View style={[styles.canvasContainer, dynCanvasContainer]}>
         <ErrorBoundary>
           <DrawingCanvas
+            height={Math.floor(layout.canvasMaxHeight)}
             strokeColor={drawing.color}
             strokeWidth={drawing.strokeWidth}
             tool={drawing.tool}

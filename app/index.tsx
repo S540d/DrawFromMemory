@@ -16,7 +16,6 @@ import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../cons
 import SettingsModal from '@components/SettingsModal';
 import QuickStatsCards from '@components/QuickStatsCards';
 import { FloatingStars } from '@components/FloatingStars';
-import { AnimatedHero } from '@components/AnimatedHero';
 import OnboardingModal from '@components/OnboardingModal';
 import { isOnboardingDone } from '@services/OnboardingManager';
 
@@ -90,11 +89,8 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      {/* Center hero — flex:1 fills space above the bottom section */}
-      <View style={styles.hero}>
-        <AnimatedHero />
-        <Text style={[styles.heroTitle, { color: colors.text.primary }]}>{t('home.title')}</Text>
-      </View>
+      {/* Center spacer — flex:1 fills space above the bottom section */}
+      <View style={styles.hero} />
 
       {/* Bottom section: stats + buttons — always anchored at the bottom */}
       <View style={styles.bottomSection}>
@@ -217,21 +213,11 @@ const styles = StyleSheet.create({
   },
   hero: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: Spacing.lg,
-    minHeight: 80,
+    minHeight: Spacing.md,
   },
   bottomSection: {
     marginTop: 'auto',
     gap: Spacing.md,
-  },
-  heroTitle: {
-    fontSize: FontSize.display,
-    fontWeight: FontWeight.bold,
-    fontFamily: FontFamily.extraBold,
-    textAlign: 'center',
-    lineHeight: 48,
   },
   buttonContainer: {
     gap: Spacing.sm,
