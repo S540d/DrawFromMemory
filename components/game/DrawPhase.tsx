@@ -7,6 +7,7 @@ import Colors from '../../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../../constants/Layout';
 import type { DrawPhaseProps } from './game.shared';
 import { useTranslation } from '@services/i18n';
+import { useTheme } from '@services/ThemeContext';
 
 export default function DrawPhase({
   currentImage,
@@ -19,6 +20,7 @@ export default function DrawPhase({
   onDone,
 }: DrawPhaseProps) {
   const { t } = useTranslation();
+  const { colors } = useTheme();
 
   const levelName = currentLang === 'en' ? currentImage?.displayNameEn : currentImage?.displayName;
 
@@ -35,10 +37,10 @@ export default function DrawPhase({
   return (
     <View style={styles.phaseContainer}>
       {/* Info-Streifen: Aufgabe + Hint-Joker */}
-      <View style={styles.infoStrip}>
+      <View style={[styles.infoStrip, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         <View style={styles.infoStripCenter}>
-          <Text style={styles.infoStripLabel}>{t('game.draw.referenceLabel')}</Text>
-          <Text style={styles.infoStripText} numberOfLines={2}>
+          <Text style={[styles.infoStripLabel, { color: colors.text.secondary }]}>{t('game.draw.referenceLabel')}</Text>
+          <Text style={[styles.infoStripText, { color: colors.text.primary }]} numberOfLines={2}>
             {t('game.draw.drawFromMemory')}{levelName ? ` — ${levelName}` : ''}
           </Text>
         </View>
@@ -73,7 +75,7 @@ export default function DrawPhase({
       </View>
 
       {/* Toolbar-Gruppe */}
-      <View style={[styles.toolbarGroup, dynToolbar]}>
+      <View style={[styles.toolbarGroup, dynToolbar, { backgroundColor: colors.surfaceAlt }]}>
         {/* Reihe 1: Inline-Farbreihe */}
         <FlatList
           data={DrawingColors}
@@ -105,7 +107,7 @@ export default function DrawPhase({
         {/* Reihe 2: Pen/Fill + Strichstärken */}
         <View style={styles.toolRow}>
           <TouchableOpacity
-            style={[styles.toolToggleButton, drawing.tool === 'brush' && styles.toolToggleButtonActive]}
+            style={[styles.toolToggleButton, { backgroundColor: colors.surface, borderColor: colors.border }, drawing.tool === 'brush' && styles.toolToggleButtonActive]}
             onPress={() => drawing.setTool('brush')}
             accessibilityLabel={t('game.draw.toolBrush')}
             accessibilityRole="button"
@@ -113,7 +115,7 @@ export default function DrawPhase({
             <Text style={styles.toolToggleIcon}>✏️</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.toolToggleButton, drawing.tool === 'fill' && styles.toolToggleButtonActive]}
+            style={[styles.toolToggleButton, { backgroundColor: colors.surface, borderColor: colors.border }, drawing.tool === 'fill' && styles.toolToggleButtonActive]}
             onPress={() => drawing.setTool('fill')}
             accessibilityLabel={t('game.draw.toolFill')}
             accessibilityRole="button"
@@ -142,7 +144,7 @@ export default function DrawPhase({
                   height: size === 2 ? 10 : size === 3 ? 16 : 22,
                   backgroundColor: drawing.strokeWidth === size && drawing.tool !== 'fill'
                     ? drawing.color
-                    : Colors.text.secondary,
+                    : colors.text.secondary,
                 },
               ]} />
             </TouchableOpacity>
@@ -153,7 +155,7 @@ export default function DrawPhase({
       {/* Buttons */}
       <View style={styles.buttonRow}>
         <TouchableOpacity
-          style={styles.secondaryButton}
+          style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: Colors.primary }]}
           onPress={drawing.undo}
           disabled={drawing.paths.length === 0}
           accessibilityLabel={t('game.draw.undo')}
@@ -167,7 +169,7 @@ export default function DrawPhase({
           >{t('game.draw.undo')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.secondaryButton, drawing.paths.length === 0 && styles.buttonDisabled]}
+          style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: Colors.primary }, drawing.paths.length === 0 && styles.buttonDisabled]}
           accessibilityLabel={t('game.draw.clear')}
           accessibilityRole="button"
           onPress={() => {
@@ -223,12 +225,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.sm,
-    backgroundColor: Colors.surface,
     borderRadius: BorderRadius.xl,
     padding: Spacing.sm,
     marginBottom: Spacing.xs,
     borderWidth: 1,
-    borderColor: Colors.border,
     ...Colors.shadow.small,
   },
   infoStripCenter: {
@@ -237,7 +237,6 @@ const styles = StyleSheet.create({
   infoStripLabel: {
     fontSize: FontSize.xs,
     fontWeight: FontWeight.bold,
-    color: Colors.text.secondary,
     textTransform: 'uppercase',
     letterSpacing: 0.6,
     marginBottom: 2,
@@ -245,7 +244,6 @@ const styles = StyleSheet.create({
   infoStripText: {
     fontSize: FontSize.sm,
     fontWeight: FontWeight.bold,
-    color: Colors.text.primary,
   },
   hintButton: {
     width: 40,
@@ -270,7 +268,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   toolbarGroup: {
-    backgroundColor: Colors.surfaceAlt,
     borderRadius: BorderRadius.xl,
     padding: Spacing.sm,
     marginVertical: Spacing.sm,
@@ -287,7 +284,7 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: BorderRadius.md,
     borderWidth: 2,
-    borderColor: Colors.border,
+    borderColor: '#e8e0d5',
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
@@ -303,14 +300,14 @@ const styles = StyleSheet.create({
   inlineColorCheckmark: {
     fontSize: 16,
     fontWeight: FontWeight.bold,
-    color: Colors.text.primary,
-    textShadowColor: Colors.background,
+    color: '#2c2c2c',
+    textShadowColor: '#f7f2eb',
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 3,
   },
   toolbarDivider: {
     height: 1,
-    backgroundColor: Colors.border,
+    backgroundColor: '#e8e0d5',
     marginHorizontal: Spacing.xs,
   },
   toolRow: {
@@ -324,11 +321,9 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: BorderRadius.md,
-    backgroundColor: Colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: Colors.border,
   },
   toolToggleButtonActive: {
     backgroundColor: Colors.primary,
@@ -344,7 +339,7 @@ const styles = StyleSheet.create({
   toolRowSeparator: {
     width: 1,
     height: 28,
-    backgroundColor: Colors.border,
+    backgroundColor: '#e8e0d5',
     marginHorizontal: Spacing.xs,
   },
   strokeCircleButton: {
@@ -381,13 +376,11 @@ const styles = StyleSheet.create({
   },
   secondaryButton: {
     flex: 1,
-    backgroundColor: Colors.surface,
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.lg,
     borderRadius: BorderRadius.lg,
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: Colors.primary,
     minHeight: 48,
     justifyContent: 'center',
     ...Colors.shadow.small,
@@ -399,7 +392,6 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     opacity: 0.4,
-    borderColor: Colors.text.light,
   },
   buttonTextSmall: {
     fontSize: FontSize.md,

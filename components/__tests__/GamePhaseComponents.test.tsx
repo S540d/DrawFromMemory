@@ -9,6 +9,20 @@ jest.mock('../../services/i18n', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
+jest.mock('../../services/ThemeContext', () => ({
+  useTheme: () => ({
+    colors: {
+      background: '#f7f2eb',
+      surface: '#ffffff',
+      surfaceAlt: '#ede7dd',
+      border: '#e8e0d5',
+      text: { primary: '#2c2c2c', secondary: '#9c8b7a', light: '#717171' },
+      primary: '#7C5CFF',
+    },
+    theme: 'light',
+  }),
+}));
+
 jest.mock('../../services/LevelManager', () => ({
   getTotalLevels: () => 10,
 }));

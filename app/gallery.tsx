@@ -138,18 +138,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: Spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.surface,
   },
   backButton: {
     fontSize: FontSize.md,
     fontWeight: FontWeight.semibold,
-    color: Colors.primary,
     minWidth: 80,
   },
   title: {
     fontSize: FontSize.lg,
     fontWeight: FontWeight.bold,
-    color: Colors.text.primary,
   },
   scrollContent: {
     padding: Spacing.md,
@@ -167,7 +164,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: FontSize.md,
-    color: Colors.text.secondary,
     textAlign: 'center',
     paddingHorizontal: Spacing.xl,
   },
@@ -196,16 +192,13 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: FontSize.sm,
     fontWeight: FontWeight.semibold,
-    color: Colors.text.primary,
   },
   cardMeta: {
     fontSize: FontSize.xs,
-    color: Colors.text.secondary,
     marginTop: 2,
   },
   cardDate: {
     fontSize: FontSize.xs,
-    color: Colors.text.light,
     marginTop: 2,
   },
   deleteButton: {

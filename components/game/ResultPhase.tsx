@@ -8,6 +8,7 @@ import { Spacing, FontSize, FontWeight, BorderRadius } from '../../constants/Lay
 import { getTotalLevels } from '@services/LevelManager';
 import type { ResultPhaseProps } from './game.shared';
 import { useTranslation } from '@services/i18n';
+import { useTheme } from '@services/ThemeContext';
 
 export default function ResultPhase({
   currentImage,
@@ -27,6 +28,7 @@ export default function ResultPhase({
   onRestartFromLevel1,
 }: ResultPhaseProps) {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const isLastLevel = levelNumber >= getTotalLevels();
   const [showCompletionModal, setShowCompletionModal] = useState(false);
 
@@ -57,10 +59,10 @@ export default function ResultPhase({
         onRequestClose={() => setShowCompletionModal(false)}
       >
         <View style={styles.completionOverlay}>
-          <View style={styles.completionModalBox}>
+          <View style={[styles.completionModalBox, { backgroundColor: colors.surface }]}>
             <Text style={styles.completionEmoji}>🏆</Text>
-            <Text style={styles.completionTitle}>{t('game.result.allLevelsComplete')}</Text>
-            <Text style={styles.completionMessage}>{t('game.result.allLevelsCompleteMessage')}</Text>
+            <Text style={[styles.completionTitle, { color: colors.text.primary }]}>{t('game.result.allLevelsComplete')}</Text>
+            <Text style={[styles.completionMessage, { color: colors.text.secondary }]}>{t('game.result.allLevelsCompleteMessage')}</Text>
             <TouchableOpacity
               style={styles.completionButton}
               onPress={() => { setShowCompletionModal(false); onRestartFromLevel1(); }}
@@ -73,7 +75,7 @@ export default function ResultPhase({
               onPress={() => setShowCompletionModal(false)}
               accessibilityRole="button"
             >
-              <Text style={styles.completionCloseText}>{t('common.close')}</Text>
+              <Text style={[styles.completionCloseText, { color: colors.text.secondary }]}>{t('common.close')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -87,7 +89,7 @@ export default function ResultPhase({
       {/* 1. Side-by-side Vergleich */}
       <View style={styles.comparisonContainer}>
         {/* Vorlage */}
-        <View style={[styles.comparisonCard, { width: imageSize }]}>
+        <View style={[styles.comparisonCard, { width: imageSize, backgroundColor: colors.surface, borderColor: colors.border }]}>
           <View style={[styles.comparisonCardHeader, styles.comparisonCardHeaderTemplate]}>
             <Text style={[styles.comparisonCardLabel, { color: Colors.primary }]}>
               {t('game.result.template').toUpperCase()}
@@ -102,7 +104,7 @@ export default function ResultPhase({
 
         {/* Deine Zeichnung + kontextuelle Aktionen */}
         <View style={{ width: imageSize, gap: Spacing.xs }}>
-          <View style={[styles.comparisonCard, { width: imageSize }]}>
+          <View style={[styles.comparisonCard, { width: imageSize, backgroundColor: colors.surface, borderColor: colors.border }]}>
             <View style={[styles.comparisonCardHeader, styles.comparisonCardHeaderDrawing]}>
               <Text style={[styles.comparisonCardLabel, { color: Colors.secondary }]}>
                 {t('game.result.yourDrawing').toUpperCase()}
@@ -122,18 +124,18 @@ export default function ResultPhase({
           {/* Replay + Speichern direkt unter der eigenen Zeichnung */}
           <View style={styles.drawingActionRow}>
             <TouchableOpacity
-              style={styles.drawingActionButton}
+              style={[styles.drawingActionButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
               onPress={isReplaying ? onStopReplay : onStartReplay}
               accessibilityRole="button"
             >
               <Text style={styles.drawingActionIcon}>{isReplaying ? '⏹' : '🎬'}</Text>
-              <Text style={styles.drawingActionLabel}>
+              <Text style={[styles.drawingActionLabel, { color: colors.text.secondary }]}>
                 {isReplaying ? t('game.result.replayStop') : t('game.result.replay')}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.drawingActionButton, savedToGallery && styles.drawingActionSaved]}
+              style={[styles.drawingActionButton, { backgroundColor: colors.surface, borderColor: colors.border }, savedToGallery && styles.drawingActionSaved]}
               onPress={onSaveToGallery}
               disabled={savedToGallery}
               accessibilityRole="button"
@@ -141,7 +143,7 @@ export default function ResultPhase({
               accessibilityState={{ disabled: savedToGallery }}
             >
               <Text style={styles.drawingActionIcon}>{savedToGallery ? '✓' : '🖼'}</Text>
-              <Text style={[styles.drawingActionLabel, savedToGallery && styles.drawingActionLabelSaved]}>
+              <Text style={[styles.drawingActionLabel, { color: colors.text.secondary }, savedToGallery && styles.drawingActionLabelSaved]}>
                 {savedToGallery ? t('gallery.saved') : t('gallery.save')}
               </Text>
             </TouchableOpacity>
@@ -150,8 +152,8 @@ export default function ResultPhase({
       </View>
 
       {/* 2. Sterne-Bewertung */}
-      <View style={[styles.starsContainer, isSmall && styles.starsContainerSmall]}>
-        <Text style={styles.starsTitle}>{t('game.result.howWell')}</Text>
+      <View style={[styles.starsContainer, { backgroundColor: colors.surface }, isSmall && styles.starsContainerSmall]}>
+        <Text style={[styles.starsTitle, { color: colors.text.primary }]}>{t('game.result.howWell')}</Text>
         <View style={styles.starsRow} testID="stars-container">
           {[1, 2, 3, 4, 5].map((star) => (
             <AnimatedStar
@@ -164,7 +166,7 @@ export default function ResultPhase({
           ))}
         </View>
         <AnimatedFeedback visible={userRating > 0}>
-          <Text style={styles.feedbackText}>{getFeedbackText(userRating)}</Text>
+          <Text style={[styles.feedbackText, { color: colors.text.secondary }]}>{getFeedbackText(userRating)}</Text>
         </AnimatedFeedback>
       </View>
 
@@ -198,11 +200,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   comparisonCard: {
-    backgroundColor: Colors.surface,
     borderRadius: BorderRadius.xl,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: Colors.border,
     ...Colors.shadow.medium,
   },
   comparisonCardHeader: {
@@ -229,7 +229,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   starsContainer: {
-    backgroundColor: Colors.surface,
     borderRadius: BorderRadius.xxl,
     padding: Spacing.lg,
     alignItems: 'center',
@@ -242,7 +241,6 @@ const styles = StyleSheet.create({
   starsTitle: {
     fontSize: FontSize.lg,
     fontWeight: FontWeight.bold,
-    color: Colors.text.primary,
     marginBottom: Spacing.md,
     textAlign: 'center',
   },
@@ -253,7 +251,6 @@ const styles = StyleSheet.create({
   },
   feedbackText: {
     fontSize: FontSize.md,
-    color: Colors.text.secondary,
     textAlign: 'center',
     paddingHorizontal: Spacing.lg,
   },
@@ -265,7 +262,6 @@ const styles = StyleSheet.create({
     padding: Spacing.lg,
   },
   completionModalBox: {
-    backgroundColor: Colors.surface,
     borderRadius: BorderRadius.xxl,
     padding: Spacing.xl,
     alignItems: 'center',
@@ -280,12 +276,10 @@ const styles = StyleSheet.create({
   completionTitle: {
     fontSize: FontSize.xl,
     fontWeight: FontWeight.bold,
-    color: Colors.text.primary,
     textAlign: 'center',
   },
   completionMessage: {
     fontSize: FontSize.md,
-    color: Colors.text.secondary,
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -298,7 +292,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   completionButtonText: {
-    color: Colors.background,
+    color: '#ffffff',
     fontSize: FontSize.md,
     fontWeight: FontWeight.bold,
   },
@@ -307,7 +301,6 @@ const styles = StyleSheet.create({
   },
   completionCloseText: {
     fontSize: FontSize.sm,
-    color: Colors.text.secondary,
   },
   drawingActionRow: {
     flexDirection: 'row',
@@ -315,12 +308,10 @@ const styles = StyleSheet.create({
   },
   drawingActionButton: {
     flex: 1,
-    backgroundColor: Colors.surface,
     paddingVertical: Spacing.xs,
     borderRadius: BorderRadius.md,
     alignItems: 'center',
     borderWidth: 1.5,
-    borderColor: Colors.border,
     minHeight: 44,
     justifyContent: 'center',
     gap: 2,
@@ -337,7 +328,6 @@ const styles = StyleSheet.create({
   drawingActionLabel: {
     fontSize: FontSize.xs,
     fontWeight: FontWeight.semibold,
-    color: Colors.text.secondary,
     textAlign: 'center',
   },
   drawingActionLabelSaved: {
@@ -356,7 +346,7 @@ const styles = StyleSheet.create({
     ...Colors.shadow.medium,
   },
   nextLevelButtonText: {
-    color: Colors.background,
+    color: '#ffffff',
     fontSize: FontSize.md,
     fontWeight: FontWeight.bold,
   },
