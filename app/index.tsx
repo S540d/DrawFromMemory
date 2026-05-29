@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter, useFocusEffect } from 'expo-router';
@@ -10,9 +10,14 @@ import {
   getSecondsUntilMidnight,
   isTodayCompleted,
 } from '@services/DailyChallengeManager';
+import { getStreakData } from '@services/StreakManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../constants/Layout';
 import SettingsModal from '@components/SettingsModal';
+import QuickStatsCards from '@components/QuickStatsCards';
+import { FloatingStars } from '@components/FloatingStars';
+import OnboardingModal from '@components/OnboardingModal';
+import { isOnboardingDone } from '@services/OnboardingManager';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -20,9 +25,17 @@ export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [showSettings, setShowSettings] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [dailyCompleted, setDailyCompleted] = useState(false);
+
+  useEffect(() => {
+    isOnboardingDone().then((done) => {
+      if (!done) setShowOnboarding(true);
+    });
+  }, []);
   const [secondsLeft, setSecondsLeft] = useState(() => getSecondsUntilMidnight());
   const [dailyLevel, setDailyLevel] = useState(() => getDailyChallengeLevel());
+  const [currentStreak, setCurrentStreak] = useState(0);
 
   // On focus: refresh all daily state and start countdown interval.
   // Interval also re-checks state every minute to handle midnight rollover
@@ -32,7 +45,12 @@ export default function HomeScreen() {
       const refresh = async () => {
         setSecondsLeft(getSecondsUntilMidnight());
         setDailyLevel(getDailyChallengeLevel());
-        setDailyCompleted(await isTodayCompleted());
+        const [completed, streakData] = await Promise.all([
+          isTodayCompleted(),
+          getStreakData(),
+        ]);
+        setDailyCompleted(completed);
+        setCurrentStreak(streakData.currentStreak);
       };
       refresh();
 
@@ -41,11 +59,13 @@ export default function HomeScreen() {
     }, [])
   );
 
+
   const countdownHours = Math.floor(secondsLeft / 3600);
   const countdownMinutes = Math.floor((secondsLeft % 3600) / 60);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top + Spacing.sm, paddingBottom: insets.bottom + Spacing.lg }]}>
+      <FloatingStars />
 
       {/* Top bar */}
       <View style={styles.topBar}>
@@ -53,40 +73,46 @@ export default function HomeScreen() {
           <Text style={[styles.appTitle, { color: colors.text.primary }]}>{t('app.name')}</Text>
           <Text style={[styles.appTagline, { color: colors.text.secondary }]}>{t('home.subtitle')}</Text>
         </View>
-        <Pressable
-          onPress={() => setShowSettings(true)}
-          style={styles.settingsButton}
-          aria-label="Settings"
-        >
-          <Text style={[styles.settingsIcon, { color: colors.text.primary }]}>⋮</Text>
-        </Pressable>
+        <View style={styles.topBarRight}>
+          {currentStreak >= 2 && (
+            <View style={styles.streakBadge}>
+              <Text style={styles.streakBadgeText}>{t('home.streakBadge', { count: String(currentStreak) })}</Text>
+            </View>
+          )}
+          <Pressable
+            onPress={() => setShowSettings(true)}
+            style={styles.settingsButton}
+            aria-label="Settings"
+          >
+            <Text style={[styles.settingsIcon, { color: colors.text.primary }]}>⋮</Text>
+          </Pressable>
+        </View>
       </View>
 
-      {/* Center hero */}
-      <View style={styles.hero}>
-        <Text style={styles.heroEmoji}>🧠✏️</Text>
-        <Text style={[styles.heroTitle, { color: colors.text.primary }]}>{t('home.title')}</Text>
-      </View>
-
-      {/* Buttons */}
-      <View style={styles.buttonContainer}>
+      {/* Hero CTA — "Spiel starten" als dominanter zentraler Button */}
+      <View style={styles.heroSlot}>
         <TouchableOpacity
           onPress={() => router.push('/game')}
           accessibilityRole="button"
           accessibilityLabel={t('home.startButton')}
-          style={styles.gradientWrapper}
+          style={styles.heroCtaWrapper}
+          activeOpacity={0.85}
         >
           <LinearGradient
             colors={Colors.gradient.cta as [string, string]}
             start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.gradientButton}
+            end={{ x: 1, y: 1 }}
+            style={styles.heroCtaPill}
           >
-            <Text style={styles.gradientButtonText}>{t('home.startButton')}</Text>
+            <Text style={styles.heroCtaIcon}>▶</Text>
+            <Text style={styles.heroCtaText}>{t('home.startButton')}</Text>
           </LinearGradient>
         </TouchableOpacity>
+      </View>
 
-        {/* Daily Challenge */}
+      {/* Bottom section: sekundär-Aktionen + Stats — versetzt, nicht statisch gestapelt */}
+      <View style={styles.bottomSection}>
+        {/* Daily Challenge — breite Karte, abgesetzt von den anderen */}
         <TouchableOpacity
           style={[
             styles.dailyChallengeButton,
@@ -97,7 +123,7 @@ export default function HomeScreen() {
           accessibilityRole="button"
           disabled={dailyCompleted}
         >
-          <Text style={styles.dailyChallengeEmoji}>📅</Text>
+          <Text style={styles.dailyChallengeEmoji}>⚡</Text>
           <View style={styles.dailyChallengeInfo}>
             <Text style={[styles.dailyChallengeTitle, { color: dailyCompleted ? colors.text.secondary : '#D97706' }]}>
               {t('dailyChallenge.title')}
@@ -110,24 +136,31 @@ export default function HomeScreen() {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary }]}
-          onPress={() => router.push('/levels')}
-          accessibilityRole="button"
-        >
-          <Text style={[styles.secondaryButtonText, { color: colors.primary }]}>{t('home.levelsButton')}</Text>
-        </TouchableOpacity>
+        {/* Levels + Galerie — Side-by-Side statt untereinander */}
+        <View style={styles.secondaryRow}>
+          <TouchableOpacity
+            style={[styles.secondaryTile, { backgroundColor: colors.surface, borderColor: colors.primary }]}
+            onPress={() => router.push('/levels')}
+            accessibilityRole="button"
+          >
+            <Text style={[styles.secondaryTileText, { color: colors.primary }]}>{t('home.levelsButton')}</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.primary }]}
-          onPress={() => router.push('/gallery')}
-          accessibilityRole="button"
-        >
-          <Text style={[styles.secondaryButtonText, { color: colors.primary }]}>{t('home.galleryButton')}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.secondaryTile, { backgroundColor: colors.surface, borderColor: colors.primary }]}
+            onPress={() => router.push('/gallery')}
+            accessibilityRole="button"
+          >
+            <Text style={[styles.secondaryTileText, { color: colors.primary }]}>{t('home.galleryButton')}</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Quick Stats — dezent am unteren Rand */}
+        <QuickStatsCards />
       </View>
 
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
+      <OnboardingModal visible={showOnboarding} onClose={() => setShowOnboarding(false)} />
     </View>
   );
 }
@@ -136,12 +169,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: Spacing.lg,
-    justifyContent: 'space-between',
   },
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
+  },
+  topBarRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xs,
+  },
+  streakBadge: {
+    backgroundColor: '#FF6B35',
+    borderRadius: BorderRadius.round,
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: 3,
+  },
+  streakBadgeText: {
+    color: '#fff',
+    fontSize: FontSize.xs,
+    fontWeight: FontWeight.bold,
+    fontFamily: FontFamily.bold,
   },
   appTitle: {
     fontSize: FontSize.xl,
@@ -164,46 +213,50 @@ const styles = StyleSheet.create({
   settingsIcon: {
     fontSize: 24,
   },
-  hero: {
+  heroSlot: {
     flex: 1,
+    minHeight: 140,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: Spacing.lg,
   },
-  heroEmoji: {
-    fontSize: 72,
-  },
-  heroTitle: {
-    fontSize: FontSize.display,
-    fontWeight: FontWeight.bold,
-    fontFamily: FontFamily.extraBold,
-    textAlign: 'center',
-    lineHeight: 48,
-  },
-  buttonContainer: {
-    gap: Spacing.md,
-  },
-  gradientWrapper: {
-    borderRadius: BorderRadius.lg,
+  heroCtaWrapper: {
+    borderRadius: BorderRadius.round,
     overflow: 'hidden',
     ...Colors.shadow.large,
   },
-  gradientButton: {
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.xl,
+  heroCtaPill: {
+    flexDirection: 'row',
     alignItems: 'center',
-    minHeight: 52,
     justifyContent: 'center',
+    gap: Spacing.sm,
+    paddingVertical: Spacing.lg,
+    paddingHorizontal: Spacing.xxl,
+    minHeight: 80,
+    minWidth: 240,
   },
-  gradientButtonText: {
-    fontSize: FontSize.md,
-    fontWeight: FontWeight.bold,
+  heroCtaIcon: {
+    fontSize: 22,
     color: '#fff',
-    letterSpacing: 0.3,
   },
-  secondaryButton: {
+  heroCtaText: {
+    fontSize: FontSize.xl,
+    fontWeight: FontWeight.bold,
+    fontFamily: FontFamily.extraBold,
+    color: '#fff',
+    letterSpacing: 0.5,
+  },
+  bottomSection: {
+    marginTop: 'auto',
+    gap: Spacing.md,
+  },
+  secondaryRow: {
+    flexDirection: 'row',
+    gap: Spacing.sm,
+  },
+  secondaryTile: {
+    flex: 1,
     paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.xl,
+    paddingHorizontal: Spacing.md,
     borderRadius: BorderRadius.lg,
     borderWidth: 2,
     alignItems: 'center',
@@ -211,9 +264,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     ...Colors.shadow.small,
   },
-  secondaryButtonText: {
+  secondaryTileText: {
     fontSize: FontSize.md,
     fontWeight: FontWeight.semibold,
+    fontFamily: FontFamily.semibold,
   },
   dailyChallengeButton: {
     flexDirection: 'row',

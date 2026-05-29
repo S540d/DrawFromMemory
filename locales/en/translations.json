@@ -9,7 +9,16 @@
     "continueButton": "Continue",
     "levelsButton": "Select Level",
     "galleryButton": "My Gallery",
-    "settingsButton": "Settings"
+    "settingsButton": "Settings",
+    "streakBadge": "🔥 {{count}}",
+    "stats": {
+      "stars": "Stars",
+      "streak": "Streak",
+      "levels": "Levels",
+      "streakDay": "day",
+      "streakDays": "days",
+      "levelOf": "of {{total}}"
+    }
   },
   "levels": {
     "title": "Select Level",
@@ -23,7 +32,8 @@
   "game": {
     "memorize": {
       "title": "Remember the picture!",
-      "timeLeft": "{{seconds}}s"
+      "timeLeft": "{{seconds}}s",
+      "imageInfo": "Level {{level}} • {{strokeCount}} strokes"
     },
     "draw": {
       "title": "Draw the picture!",
@@ -55,6 +65,7 @@
       "title": "Rate yourself:",
       "howWell": "How well did you do?",
       "tapStars": "Tap the stars to rate yourself!",
+      "starAccessibilityLabel": "{{rating}} star{{plural}}",
       "template": "Reference",
       "feedback5": "Perfect! You are a memory master!",
       "feedback4": "Very good! Almost perfect!",
@@ -67,7 +78,7 @@
       "nextLevel": "Next",
       "backToMenu": "Menu",
       "allLevelsComplete": "All levels complete!",
-      "allLevelsCompleteMessage": "You have mastered all 10 levels. You are a true memory champion!",
+      "allLevelsCompleteMessage": "You have mastered all 20 levels. You are a true memory champion!",
       "playAgain": "Restart",
       "replay": "▶ Replay",
       "replayStop": "⏹ Stop"
@@ -107,7 +118,6 @@
     "aboutTitle": "About Remember & Draw",
     "versionLabel": "Version",
     "licenseLabel": "License",
-    "featureTeaser": "Coming soon: Take photos of your drawings and share them!",
     "error": "Error",
     "about": "About",
     "version": "Version"
@@ -158,5 +168,40 @@
     "placeholder": "Enter answer",
     "confirm": "Open",
     "wrongAnswer": "Wrong answer. Please try again."
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "start": "Let's go!",
+    "step1": { "title": "Remember", "desc": "Look at the picture carefully for a few seconds." },
+    "step2": { "title": "Draw",     "desc": "Try to draw it from memory." },
+    "step3": { "title": "Stars",    "desc": "Compare your drawing and earn stars." }
+  },
+  "parentDashboard": {
+    "menuLabel": "Parent Area",
+    "title": "Parent Dashboard",
+    "subtitle": "Game usage over the last 4 weeks",
+    "privacyHint": "All data stays local on this device.",
+    "loading": "Loading stats…",
+    "empty": "No game sessions recorded yet.",
+    "totalSessions": "Sessions",
+    "totalTime": "Total time",
+    "avgStars": "Avg. stars",
+    "streak": "Streak (curr./best)",
+    "favoriteLevels": "Favorite levels",
+    "dailyBreakdown": "Per day (last 14)",
+    "levelLine": "Level {{level}} · played {{count}}×"
+  },
+  "achievements": {
+    "title": "Trophies",
+    "menuLabel": "Show trophies",
+    "unlocked": "New trophy!",
+    "progress": "{{unlocked}} of {{total}} unlocked",
+    "first_5_stars":    { "title": "First 5 Stars",     "desc": "Reach 5 stars in a level for the first time." },
+    "gallery_10":       { "title": "Gallery Artist",    "desc": "Save 10 drawings to your gallery." },
+    "streak_7":         { "title": "7-Day Streak",      "desc": "Play 7 days in a row." },
+    "all_levels_done":  { "title": "All Levels",        "desc": "Complete all 10 base levels." },
+    "daily_5":          { "title": "Daily Champion",    "desc": "Beat the daily challenge 5 times." },
+    "all_difficulties": { "title": "All-Rounder",       "desc": "Play every difficulty level at least once." }
   }
 }

@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, AccessibilityInfo } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
+  cancelAnimation,
   useSharedValue,
   useAnimatedStyle,
   withRepeat,
@@ -21,20 +23,20 @@ export function Skeleton({ width, height, borderRadius = 8, style }: SkeletonPro
   const { colors } = useTheme();
   const translateX = useSharedValue(-width);
 
+  const reduceMotion = useReduceMotion();
+
   useEffect(() => {
-    let cancelled = false;
-    AccessibilityInfo.isReduceMotionEnabled().then((reduceMotion) => {
-      if (cancelled) return;
-      if (!reduceMotion) {
-        translateX.value = withRepeat(
-          withTiming(width, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
-          -1,
-          false
-        );
-      }
-    });
-    return () => { cancelled = true; };
-  }, [translateX, width]);
+    if (reduceMotion) {
+      cancelAnimation(translateX);
+      translateX.value = -width;
+      return;
+    }
+    translateX.value = withRepeat(
+      withTiming(width, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
+      -1,
+      false
+    );
+  }, [reduceMotion, translateX, width]);
 
   const shimmerStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],

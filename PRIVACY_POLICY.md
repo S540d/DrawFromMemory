@@ -14,6 +14,8 @@ Merke und Male is designed with privacy in mind. All game data is stored locally
 The following data is stored locally on your device:
 - Game progress (completed levels)
 - Settings preferences (language, theme)
+- Game sessions (date, duration, stars, level) — used by the Parent Dashboard, auto-deleted after 28 days
+- Onboarding completion flag
 - No personal identifying information
 - No user accounts or registration data
 

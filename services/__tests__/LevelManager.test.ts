@@ -57,8 +57,8 @@ describe('LevelManager', () => {
       expect(getDifficultyForLevel(1)).toBe(1);
     });
 
-    it('should return difficulty 5 for level 10 (Ende Phase 1)', () => {
-      expect(getDifficultyForLevel(10)).toBe(5);
+    it('should return difficulty 4 for level 10 (monotone Steigerung)', () => {
+      expect(getDifficultyForLevel(10)).toBe(4);
     });
 
     it('should return valid difficulty range (1-5)', () => {
@@ -69,19 +69,17 @@ describe('LevelManager', () => {
       }
     });
 
-    it('should return difficulty 3 for levels 11–13 (Tiere)', () => {
-      expect(getDifficultyForLevel(11)).toBe(3);
-      expect(getDifficultyForLevel(12)).toBe(3);
-      expect(getDifficultyForLevel(13)).toBe(3);
+    it('should use monotone mapping: levels 9–13 → difficulty 4', () => {
+      expect(getDifficultyForLevel(9)).toBe(4);
+      expect(getDifficultyForLevel(11)).toBe(4);
+      expect(getDifficultyForLevel(12)).toBe(4);
+      expect(getDifficultyForLevel(13)).toBe(4);
     });
 
-    it('should return difficulty 4 for levels 14–16 (Fahrzeuge)', () => {
-      expect(getDifficultyForLevel(14)).toBe(4);
-      expect(getDifficultyForLevel(15)).toBe(4);
-      expect(getDifficultyForLevel(16)).toBe(4);
-    });
-
-    it('should return difficulty 5 for levels 17–20 (Natur)', () => {
+    it('should use monotone mapping: levels 14–20 → difficulty 5', () => {
+      expect(getDifficultyForLevel(14)).toBe(5);
+      expect(getDifficultyForLevel(15)).toBe(5);
+      expect(getDifficultyForLevel(16)).toBe(5);
       expect(getDifficultyForLevel(17)).toBe(5);
       expect(getDifficultyForLevel(18)).toBe(5);
       expect(getDifficultyForLevel(19)).toBe(5);
@@ -97,19 +95,19 @@ describe('LevelManager', () => {
     });
 
     it('should return difficulty-based durations without extraTimeMode', () => {
-      expect(getDisplayDuration(1)).toBe(5);   // difficulty 1
-      expect(getDisplayDuration(2)).toBe(4);   // difficulty 2
-      expect(getDisplayDuration(4)).toBe(3);   // difficulty 3
-      expect(getDisplayDuration(6)).toBe(2);   // difficulty 4
-      expect(getDisplayDuration(8)).toBe(1.5); // difficulty 5
+      expect(getDisplayDuration(1)).toBe(5);  // difficulty 1
+      expect(getDisplayDuration(2)).toBe(4);  // difficulty 2
+      expect(getDisplayDuration(5)).toBe(3);  // difficulty 3
+      expect(getDisplayDuration(9)).toBe(2);  // difficulty 4
+      expect(getDisplayDuration(14)).toBe(2); // difficulty 5
     });
 
     it('should add exactly +3 s with extraTimeMode for each difficulty', () => {
-      expect(getDisplayDuration(1, true)).toBe(8);   // 5 + 3
-      expect(getDisplayDuration(2, true)).toBe(7);   // 4 + 3
-      expect(getDisplayDuration(4, true)).toBe(6);   // 3 + 3
-      expect(getDisplayDuration(6, true)).toBe(5);   // 2 + 3
-      expect(getDisplayDuration(8, true)).toBe(4.5); // 1.5 + 3
+      expect(getDisplayDuration(1, true)).toBe(8);  // 5 + 3
+      expect(getDisplayDuration(2, true)).toBe(7);  // 4 + 3
+      expect(getDisplayDuration(5, true)).toBe(6);  // 3 + 3
+      expect(getDisplayDuration(9, true)).toBe(5);  // 2 + 3
+      expect(getDisplayDuration(14, true)).toBe(5); // 2 + 3
     });
 
     it('should return same value as without extraTimeMode when extraTimeMode is false', () => {

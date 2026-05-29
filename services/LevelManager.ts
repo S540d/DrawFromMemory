@@ -10,7 +10,7 @@ const BASE_DURATIONS: Record<number, number> = {
   2: 4,
   3: 3,
   4: 2,
-  5: 1.5,
+  5: 2,
 };
 
 /**
@@ -24,24 +24,19 @@ export function getDisplayDuration(levelNumber: number, extraTimeMode = false): 
 }
 
 /**
- * Ermittelt die Schwierigkeit basierend auf der Level-Nummer
- * Level 1: Difficulty 1
- * Level 2-3: Difficulty 2
- * Level 4-5: Difficulty 3
- * Level 6-7: Difficulty 4
- * Level 8-10: Difficulty 5
- * Level 11-13: Difficulty 3 (Tiere)
- * Level 14-16: Difficulty 4 (Fahrzeuge)
- * Level 17-20: Difficulty 5 (Natur)
+ * Ermittelt die Schwierigkeit basierend auf der Level-Nummer.
+ * Schwierigkeit steigt monoton an — kein Rückfall auf niedrigere Stufen.
+ * Level 1:     Difficulty 1  (5 s)
+ * Level 2-4:   Difficulty 2  (4 s)
+ * Level 5-8:   Difficulty 3  (3 s)
+ * Level 9-13:  Difficulty 4  (2 s)
+ * Level 14-20: Difficulty 5  (2 s)
  */
 export function getDifficultyForLevel(levelNumber: number): Difficulty {
   if (levelNumber === 1) return 1;
-  if (levelNumber <= 3) return 2;
-  if (levelNumber <= 5) return 3;
-  if (levelNumber <= 7) return 4;
-  if (levelNumber <= 10) return 5;
-  if (levelNumber <= 13) return 3;
-  if (levelNumber <= 16) return 4;
+  if (levelNumber <= 4) return 2;
+  if (levelNumber <= 8) return 3;
+  if (levelNumber <= 13) return 4;
   return 5;
 }
 

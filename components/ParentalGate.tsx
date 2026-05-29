@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import {
   Modal,
   View,
@@ -36,6 +36,7 @@ export default function ParentalGate({ visible, onSuccess, onCancel }: ParentalG
   const [challenge, setChallenge] = useState(generateChallenge);
   const [input, setInput] = useState('');
   const [showError, setShowError] = useState(false);
+  const inputRef = useRef<TextInput>(null);
 
   const reset = useCallback(() => {
     setChallenge(generateChallenge());
@@ -64,10 +65,11 @@ export default function ParentalGate({ visible, onSuccess, onCancel }: ParentalG
       transparent
       animationType="fade"
       onRequestClose={handleCancel}
+      onShow={() => inputRef.current?.focus()}
     >
       <KeyboardAvoidingView
         style={styles.overlay}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <View style={[styles.container, { backgroundColor: colors.surface }]}>
           <Text style={[styles.title, { color: colors.text.primary }]}>
@@ -83,6 +85,7 @@ export default function ParentalGate({ visible, onSuccess, onCancel }: ParentalG
           </Text>
 
           <TextInput
+            ref={inputRef}
             style={[
               styles.input,
               {
@@ -101,7 +104,6 @@ export default function ParentalGate({ visible, onSuccess, onCancel }: ParentalG
             placeholder={t('parentalGate.placeholder')}
             placeholderTextColor={colors.text.light}
             maxLength={4}
-            autoFocus
           />
 
           {showError && (

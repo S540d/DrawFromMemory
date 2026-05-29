@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { AccessibilityInfo, Pressable, Text, TextStyle, ViewStyle } from 'react-native';
+import { Pressable, Text, TextStyle, ViewStyle } from 'react-native';
+import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -25,29 +26,25 @@ export function AnimatedCard({
   style?: ViewStyle | ViewStyle[];
   children: React.ReactNode;
 }) {
+  const reduceMotion = useReduceMotion();
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(20);
 
   useEffect(() => {
-    let cancelled = false;
-    AccessibilityInfo.isReduceMotionEnabled().then((reduceMotion) => {
-      if (cancelled) return;
-      if (reduceMotion) {
-        opacity.value = 1;
-        translateY.value = 0;
-      } else {
-        opacity.value = withDelay(
-          index * 50,
-          withTiming(1, { duration: 350, easing: Easing.out(Easing.ease) })
-        );
-        translateY.value = withDelay(
-          index * 50,
-          withTiming(0, { duration: 350, easing: Easing.out(Easing.ease) })
-        );
-      }
-    });
-    return () => { cancelled = true; };
-  }, [opacity, translateY, index]);
+    if (reduceMotion) {
+      opacity.value = 1;
+      translateY.value = 0;
+    } else {
+      opacity.value = withDelay(
+        index * 50,
+        withTiming(1, { duration: 350, easing: Easing.out(Easing.ease) })
+      );
+      translateY.value = withDelay(
+        index * 50,
+        withTiming(0, { duration: 350, easing: Easing.out(Easing.ease) })
+      );
+    }
+  }, [reduceMotion, opacity, translateY, index]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -80,40 +77,34 @@ export function GlassCard({
   children: React.ReactNode;
   accessibilityLabel?: string;
 }) {
+  const reduceMotion = useReduceMotion();
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(20);
   const scale = useSharedValue(1);
-  const reduceMotion = useRef(false);
 
   useEffect(() => {
-    let cancelled = false;
-    AccessibilityInfo.isReduceMotionEnabled().then((rm) => {
-      if (cancelled) return;
-      reduceMotion.current = rm;
-      if (rm) {
-        opacity.value = 1;
-        translateY.value = 0;
-      } else {
-        opacity.value = withDelay(
-          index * 50,
-          withTiming(1, { duration: 350, easing: Easing.out(Easing.ease) })
-        );
-        translateY.value = withDelay(
-          index * 50,
-          withTiming(0, { duration: 350, easing: Easing.out(Easing.ease) })
-        );
-      }
-    });
-    return () => { cancelled = true; };
-  }, [opacity, translateY, index]);
+    if (reduceMotion) {
+      opacity.value = 1;
+      translateY.value = 0;
+    } else {
+      opacity.value = withDelay(
+        index * 50,
+        withTiming(1, { duration: 350, easing: Easing.out(Easing.ease) })
+      );
+      translateY.value = withDelay(
+        index * 50,
+        withTiming(0, { duration: 350, easing: Easing.out(Easing.ease) })
+      );
+    }
+  }, [reduceMotion, opacity, translateY, index]);
 
   const handlePressIn = () => {
-    if (reduceMotion.current) return;
+    if (reduceMotion) return;
     scale.value = withSpring(0.97, { damping: 15, stiffness: 300 });
   };
 
   const handlePressOut = () => {
-    if (reduceMotion.current) return;
+    if (reduceMotion) return;
     scale.value = withSpring(1, { damping: 12, stiffness: 200 });
   };
 
@@ -206,28 +197,24 @@ export function AnimatedFeedback({
   style?: ViewStyle | ViewStyle[];
   children: React.ReactNode;
 }) {
+  const reduceMotion = useReduceMotion();
   const opacity = useSharedValue(0);
   const scaleVal = useSharedValue(0.8);
 
   useEffect(() => {
-    let cancelled = false;
-    AccessibilityInfo.isReduceMotionEnabled().then((reduceMotion) => {
-      if (cancelled) return;
-      if (visible) {
-        if (reduceMotion) {
-          opacity.value = 1;
-          scaleVal.value = 1;
-        } else {
-          opacity.value = withTiming(1, { duration: 150 });
-          scaleVal.value = withTiming(1, { duration: 150 });
-        }
+    if (visible) {
+      if (reduceMotion) {
+        opacity.value = 1;
+        scaleVal.value = 1;
       } else {
-        opacity.value = 0;
-        scaleVal.value = 0.8;
+        opacity.value = withTiming(1, { duration: 150 });
+        scaleVal.value = withTiming(1, { duration: 150 });
       }
-    });
-    return () => { cancelled = true; };
-  }, [visible, opacity, scaleVal]);
+    } else {
+      opacity.value = 0;
+      scaleVal.value = 0.8;
+    }
+  }, [visible, reduceMotion, opacity, scaleVal]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -259,33 +246,29 @@ export function AnimatedStar({
   onPress?: () => void;
   accessibilityLabel?: string;
 }) {
+  const reduceMotion = useReduceMotion();
   const scale = useSharedValue(filled ? 1 : 0.7);
   const prevFilledRef = useRef(filled);
 
   useEffect(() => {
-    let cancelled = false;
-    AccessibilityInfo.isReduceMotionEnabled().then((reduceMotion) => {
-      if (cancelled) return;
-      const wasEmpty = !prevFilledRef.current;
-      prevFilledRef.current = filled;
+    const wasEmpty = !prevFilledRef.current;
+    prevFilledRef.current = filled;
 
-      if (filled && wasEmpty) {
-        if (reduceMotion) {
-          scale.value = 1;
-        } else {
-          scale.value = withDelay(
-            index * 80,
-            withSpring(1, { damping: 5, stiffness: 200, mass: 0.8 })
-          );
-        }
-      } else if (filled) {
-        scale.value = withSpring(1, { damping: 10, stiffness: 200 });
+    if (filled && wasEmpty) {
+      if (reduceMotion) {
+        scale.value = 1;
       } else {
-        scale.value = withTiming(0.7, { duration: 200 });
+        scale.value = withDelay(
+          index * 80,
+          withSpring(1, { damping: 5, stiffness: 200, mass: 0.8 })
+        );
       }
-    });
-    return () => { cancelled = true; };
-  }, [filled, index, scale]);
+    } else if (filled) {
+      scale.value = withSpring(1, { damping: 10, stiffness: 200 });
+    } else {
+      scale.value = withTiming(0.7, { duration: 200 });
+    }
+  }, [filled, reduceMotion, index, scale]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],

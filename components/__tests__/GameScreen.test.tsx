@@ -99,6 +99,33 @@ jest.mock('../../services/SoundManager', () => ({
   default: { init: jest.fn(), playPhaseTransition: jest.fn() },
 }));
 
+jest.mock('../../components/ConfettiBurst', () => {
+  const { View } = require('react-native');
+  return { __esModule: true, default: () => <View testID="confetti-burst" /> };
+});
+
+jest.mock('../../components/BadgeUnlockToast', () => {
+  const { View } = require('react-native');
+  return { __esModule: true, default: () => <View testID="badge-unlock-toast" /> };
+});
+
+jest.mock('../../services/AchievementManager', () => ({
+  checkAndUnlock: jest.fn(async () => []),
+  ACHIEVEMENTS: [],
+}));
+
+jest.mock('../../services/StreakManager', () => ({
+  getStreakData: jest.fn(async () => ({ currentStreak: 0, longestStreak: 0, lastPlayedDate: null })),
+}));
+
+jest.mock('../../services/StorageManager', () => ({
+  __esModule: true,
+  default: {
+    getGallery: jest.fn(async () => []),
+    getProgress: jest.fn(async () => ({ levels: {}, totalLevelsCompleted: 0, averageRating: 0 })),
+  },
+}));
+
 jest.mock('../../services/useGamePhase', () => ({
   useGamePhase: () => ({
     phase: 'memorize',
@@ -129,11 +156,13 @@ const getAllTexts = (getAllByType: (type: any) => any[]) => {
 };
 
 describe('GameScreen', () => {
-  it('renders the app name via translation key, not hardcoded', async () => {
+  it('renders the level header without the app name', async () => {
     const { UNSAFE_getAllByType } = render(<GameScreen />);
     await act(async () => {});
     const texts = getAllTexts(UNSAFE_getAllByType);
-    expect(texts).toContain('app.name');
-    expect(texts).not.toContain('Merke & Male');
+    // useTranslation is mocked to return the key — ensure the app.name key is absent
+    expect(texts).not.toContain('app.name');
+    // Header shows level info
+    expect(texts.some((t: any) => typeof t === 'string' && t.startsWith('Level '))).toBe(true);
   });
 });

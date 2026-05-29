@@ -110,8 +110,8 @@ export function useScreenLayout(): ScreenLayout {
   const toolbarMarginVertical        = isXSmall ? 2  : isSmall ? 4  : 8;
 
   // ── Aktions-Buttons ─────────────────────────────────────────────────
-  const buttonMinHeight      = isXSmall ? 34 : isSmall ? 38 : 48;
-  const buttonPaddingVertical = isXSmall ? 4  : isSmall ? 6  : 16;
+  const buttonMinHeight      = isXSmall ? 34 : isSmall ? 38 : 44;
+  const buttonPaddingVertical = isXSmall ? 4  : isSmall ? 6  : isMedium ? 8 : 10;
 
   // ── Canvas ───────────────────────────────────────────────────────────
   // Schätzung des Platzes, der von festen Elementen verbraucht wird:

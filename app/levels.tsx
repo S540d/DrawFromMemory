@@ -9,6 +9,7 @@ import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../constants/Layout';
 import { GlassCard } from '@components/AnimatedPrimitives';
 import { Badge } from '@components/Badge';
+import { FloatingStars } from '@components/FloatingStars';
 
 // Default card width for SSR (will be recalculated on client)
 const DEFAULT_CARD_WIDTH = 150;
@@ -98,6 +99,7 @@ export default function LevelsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <FloatingStars />
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: colors.surface }]}>
         <TouchableOpacity onPress={() => router.back()}>
@@ -124,26 +126,22 @@ export default function LevelsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
   },
   header: {
     paddingHorizontal: Spacing.lg,
     paddingTop: Spacing.xl,
     paddingBottom: Spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.surface,
   },
   backButton: {
     fontSize: FontSize.md,
     fontFamily: FontFamily.semibold,
-    color: Colors.primary,
     marginBottom: Spacing.sm,
   },
   title: {
     fontSize: FontSize.xxl,
     fontWeight: FontWeight.bold,
     fontFamily: FontFamily.extraBold,
-    color: Colors.text.primary,
   },
   listContent: {
     padding: Spacing.lg,
@@ -164,7 +162,6 @@ const styles = StyleSheet.create({
   levelNumber: {
     fontSize: FontSize.xl,
     fontWeight: FontWeight.bold,
-    color: Colors.text.primary,
   },
   difficultyBadge: {
     marginBottom: Spacing.sm,

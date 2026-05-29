@@ -9,7 +9,16 @@
     "continueButton": "Weiterspielen",
     "levelsButton": "Level auswählen",
     "galleryButton": "Meine Galerie",
-    "settingsButton": "Einstellungen"
+    "settingsButton": "Einstellungen",
+    "streakBadge": "🔥 {{count}}",
+    "stats": {
+      "stars": "Sterne",
+      "streak": "Serie",
+      "levels": "Level",
+      "streakDay": "Tag",
+      "streakDays": "Tage",
+      "levelOf": "von {{total}}"
+    }
   },
   "levels": {
     "title": "Level auswählen",
@@ -23,7 +32,8 @@
   "game": {
     "memorize": {
       "title": "Merke dir das Bild!",
-      "timeLeft": "{{seconds}}s"
+      "timeLeft": "{{seconds}}s",
+      "imageInfo": "Level {{level}} • {{strokeCount}} Striche"
     },
     "draw": {
       "title": "Male das Bild nach!",
@@ -55,6 +65,7 @@
       "title": "Bewerte selbst:",
       "howWell": "Wie gut hast du's getroffen?",
       "tapStars": "Tippe auf die Sterne, um dich zu bewerten!",
+      "starAccessibilityLabel": "{{rating}} Stern{{plural}}",
       "template": "Vorlage",
       "feedback5": "Perfekt! Du bist ein Gedächtnis-Meister!",
       "feedback4": "Sehr gut! Fast perfekt!",
@@ -67,7 +78,7 @@
       "nextLevel": "Weiter",
       "backToMenu": "Menü",
       "allLevelsComplete": "Alle Level geschafft!",
-      "allLevelsCompleteMessage": "Du hast alle 10 Level gemeistert. Du bist ein echtes Gedächtnis-Ass!",
+      "allLevelsCompleteMessage": "Du hast alle 20 Level gemeistert. Du bist ein echtes Gedächtnis-Ass!",
       "playAgain": "Von vorne",
       "replay": "▶ Abspielen",
       "replayStop": "⏹ Stopp"
@@ -107,7 +118,6 @@
     "aboutTitle": "Über Merke und Male",
     "versionLabel": "Version",
     "licenseLabel": "Lizenz",
-    "featureTeaser": "Demnächst: Eigene Zeichnungen fotografieren und teilen!",
     "error": "Fehler",
     "about": "Über die App",
     "version": "Version"
@@ -158,5 +168,40 @@
     "placeholder": "Antwort eingeben",
     "confirm": "Öffnen",
     "wrongAnswer": "Falsche Antwort. Bitte versuche es erneut."
+  },
+  "onboarding": {
+    "skip": "Überspringen",
+    "next": "Weiter",
+    "start": "Los geht's!",
+    "step1": { "title": "Merken",   "desc": "Schau dir das Bild ein paar Sekunden gut an." },
+    "step2": { "title": "Zeichnen", "desc": "Versuche, es aus dem Gedächtnis nachzumalen." },
+    "step3": { "title": "Sterne",   "desc": "Vergleiche dein Werk und bekomme Sterne." }
+  },
+  "parentDashboard": {
+    "menuLabel": "Eltern-Bereich",
+    "title": "Eltern-Dashboard",
+    "subtitle": "Spielnutzung der letzten 4 Wochen",
+    "privacyHint": "Alle Daten bleiben lokal auf diesem Gerät.",
+    "loading": "Lade Statistiken…",
+    "empty": "Noch keine Spielsessions aufgezeichnet.",
+    "totalSessions": "Sessions",
+    "totalTime": "Gesamtzeit",
+    "avgStars": "Ø Sterne",
+    "streak": "Streak (akt./best.)",
+    "favoriteLevels": "Lieblings-Level",
+    "dailyBreakdown": "Pro Tag (letzte 14)",
+    "levelLine": "Level {{level}} · {{count}}× gespielt"
+  },
+  "achievements": {
+    "title": "Trophäen",
+    "menuLabel": "Trophäen anzeigen",
+    "unlocked": "Neue Trophäe!",
+    "progress": "{{unlocked}} von {{total}} freigeschaltet",
+    "first_5_stars":    { "title": "Erste 5 Sterne",     "desc": "Erreiche zum ersten Mal 5 Sterne in einem Level." },
+    "gallery_10":       { "title": "Galerie-Künstler",   "desc": "Speichere 10 Zeichnungen in deiner Galerie." },
+    "streak_7":         { "title": "7-Tage-Streak",      "desc": "Spiele 7 Tage hintereinander." },
+    "all_levels_done":  { "title": "Alle Level",         "desc": "Schließe alle 10 Basis-Level ab." },
+    "daily_5":          { "title": "Daily-Champion",     "desc": "Bestehe 5× die tägliche Herausforderung." },
+    "all_difficulties": { "title": "Allrounder",         "desc": "Spiele jede Schwierigkeitsstufe mindestens einmal." }
   }
 }

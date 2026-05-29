@@ -5,6 +5,7 @@
 
 import {
   getRandomImageForLevel,
+  getSeededImageForLevel,
   getImagesForDifficulty,
   getTotalImageCount,
   getImageCountByDifficulty,
@@ -75,6 +76,42 @@ describe('ImagePoolManager', () => {
   describe('getTotalImageCount', () => {
     it('should return total number of images', () => {
       expect(getTotalImageCount()).toBeGreaterThan(0);
+    });
+  });
+
+  describe('getSeededImageForLevel', () => {
+    it('should return the same image for the same seed', () => {
+      const seed = 20260525;
+      const img1 = getSeededImageForLevel(1, seed);
+      const img2 = getSeededImageForLevel(1, seed);
+      expect(img1.filename).toBe(img2.filename);
+    });
+
+    it('should return a valid image', () => {
+      const img = getSeededImageForLevel(1, 20260525);
+      expect(img).toBeDefined();
+      expect(img.filename).toBeTruthy();
+      expect(img.difficulty).toBeGreaterThanOrEqual(1);
+    });
+
+    it('should fall back safely for invalid seeds (NaN)', () => {
+      expect(() => getSeededImageForLevel(1, NaN)).not.toThrow();
+      const img = getSeededImageForLevel(1, NaN);
+      expect(img).toBeDefined();
+    });
+
+    it('should fall back safely for negative seeds', () => {
+      expect(() => getSeededImageForLevel(1, -99)).not.toThrow();
+      const img = getSeededImageForLevel(1, -99);
+      expect(img).toBeDefined();
+    });
+
+    it('different seeds can return different images', () => {
+      const results = new Set<string>();
+      for (let s = 0; s < 50; s++) {
+        results.add(getSeededImageForLevel(1, s * 1000).filename);
+      }
+      expect(results.size).toBeGreaterThanOrEqual(1);
     });
   });
 

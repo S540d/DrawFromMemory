@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import { Text, StyleSheet, ViewStyle, TextStyle, ActivityIndicator, AccessibilityInfo } from 'react-native';
+import React from 'react';
+import { Text, StyleSheet, ViewStyle, TextStyle, ActivityIndicator } from 'react-native';
+import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -110,23 +111,19 @@ export function Button({
   accessibilityLabel?: string;
 }) {
   const scale = useSharedValue(1);
-  const reduceMotion = useRef(false);
-
-  useEffect(() => {
-    AccessibilityInfo.isReduceMotionEnabled().then((v) => { reduceMotion.current = v; });
-  }, []);
+  const reduceMotion = useReduceMotion();
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
 
   const handlePressIn = () => {
-    if (reduceMotion.current) return;
+    if (reduceMotion) return;
     scale.value = withSpring(0.96, { damping: 15, stiffness: 300 });
   };
 
   const handlePressOut = () => {
-    if (reduceMotion.current) return;
+    if (reduceMotion) return;
     scale.value = withSpring(1, { damping: 15, stiffness: 300 });
   };
 
@@ -155,7 +152,7 @@ export function Button({
       >
         {variant === 'primary' && (
           <LinearGradient
-            colors={Colors.gradient.cta as [string, ...string[]]}
+            colors={Colors.gradient.cta}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={StyleSheet.absoluteFillObject}

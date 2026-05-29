@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'expo-router';
-import { getRandomImageForLevel } from '@services/ImagePoolManager';
+import { getRandomImageForLevel, getSeededImageForLevel } from '@services/ImagePoolManager';
 import { getDisplayDuration, getTotalLevels } from '@services/LevelManager';
 import { getImageElementCount } from '@components/LevelImageDisplay';
 import storageManager from '@services/StorageManager';
-import { markTodayCompleted } from '@services/DailyChallengeManager';
+import { markTodayCompleted, getDailyChallengeKey } from '@services/DailyChallengeManager';
+import { updateStreakAfterGame } from '@services/StreakManager';
+import { recordSession } from '@services/SessionTracker';
 import SoundManager from '@services/SoundManager';
 import { useTimer } from '@services/useTimer';
 import type { DrawingPath } from '@components/DrawingCanvas';
@@ -15,6 +17,16 @@ interface UseGamePhaseOptions {
   drawingPaths: DrawingPath[];
   clearCanvas: () => void;
   isDailyChallenge?: boolean;
+}
+
+function getImageForLevel(levelNumber: number, dailyChallengeLevel: number | null): LevelImage {
+  if (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) {
+    const dateKey = getDailyChallengeKey();
+    const rawSeed = parseInt(dateKey.replace(/-/g, ''), 10);
+    const seed = Number.isFinite(rawSeed) ? Math.abs(rawSeed) : 0;
+    return getSeededImageForLevel(levelNumber, seed);
+  }
+  return getRandomImageForLevel(levelNumber);
 }
 
 export function useGamePhase({
@@ -38,6 +50,7 @@ export function useGamePhase({
   const timerExpireTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const replayCompleteTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentImageRef = useRef<LevelImage | null>(null);
+  const levelStartedAtRef = useRef<number>(Date.now());
 
   const [extraTimeMode, setExtraTimeMode] = useState(false);
 
@@ -66,17 +79,19 @@ export function useGamePhase({
     return () => { mounted = false; };
   }, []);
 
-  // Initialize image on levelNumber change only — keeps image stable when extraTimeMode loads
+  // Initialize image on levelNumber change only — keeps image stable when extraTimeMode loads.
+  // For the daily challenge level, use a date-seeded image so it stays consistent all day.
   useEffect(() => {
     try {
-      const image = getRandomImageForLevel(levelNumber);
+      const image: LevelImage = getImageForLevel(levelNumber, dailyChallengeLevel);
       currentImageRef.current = image;
       setCurrentImage(image);
+      levelStartedAtRef.current = Date.now();
     } catch (error) {
       console.error('Error initializing level:', error);
       router.back();
     }
-  }, [levelNumber, router]);
+  }, [levelNumber, dailyChallengeLevel, router]);
 
   // Update timer when levelNumber or extraTimeMode changes (separate from image init)
   useEffect(() => {
@@ -169,6 +184,12 @@ export function useGamePhase({
       SoundManager.playStarTap(rating);
       setUserRating(rating);
       await storageManager.saveLevelProgress(levelNumber, rating);
+      await updateStreakAfterGame();
+      await recordSession({
+        durationMs: Date.now() - levelStartedAtRef.current,
+        stars: rating,
+        levelId: levelNumber,
+      });
       if (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) {
         await markTodayCompleted();
       }
@@ -208,10 +229,11 @@ export function useGamePhase({
     // Re-trigger level-init useEffect by setting a fresh image + time directly
     // (levelNumber doesn't change, so we init manually here)
     try {
-      const image = getRandomImageForLevel(levelNumber);
+      const image: LevelImage = getImageForLevel(levelNumber, dailyChallengeLevel);
       currentImageRef.current = image;
       setCurrentImage(image);
       setTimeRemaining(getDisplayDuration(levelNumber, extraTimeMode));
+      levelStartedAtRef.current = Date.now();
       setPhase('memorize');
     } catch (error) {
       console.error('Error restarting level:', error);

@@ -8,6 +8,9 @@ import SoundManager from '@services/SoundManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 import ParentalGate from './ParentalGate';
+import ParentDashboard from './ParentDashboard';
+import BadgesModal from './BadgesModal';
+import { useParentalGateAction } from './useParentalGateAction';
 
 interface SettingsModalProps {
   visible: boolean;
@@ -25,9 +28,10 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   const [currentLang, setCurrentLang] = useState(getLanguage());
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>(themeSetting);
   const [showAboutModal, setShowAboutModal] = useState(false);
+  const [showBadgesModal, setShowBadgesModal] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [parentalGateVisible, setParentalGateVisible] = useState(false);
-  const [pendingUrl, setPendingUrl] = useState<string | null>(null);
+  const [showParentDashboard, setShowParentDashboard] = useState(false);
+  const parentalGate = useParentalGateAction();
 
   useEffect(() => {
     setCurrentLang(getLanguage());
@@ -71,33 +75,16 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   };
 
   const openExternalUrl = (url: string) => {
-    setPendingUrl(url);
-    setParentalGateVisible(true);
+    parentalGate.openWithUrl(url, {
+      errorTitle: t('settings.error'),
+      errorMessage: url.includes('ko-fi.com')
+        ? t('settings.browserError')
+        : t('settings.browserErrorGeneric'),
+    });
   };
 
-  const handleParentalGateSuccess = async () => {
-    setParentalGateVisible(false);
-    if (!pendingUrl) return;
-    const url = pendingUrl;
-    setPendingUrl(null);
-    const errorMsg = url.includes('ko-fi.com')
-      ? t('settings.browserError')
-      : t('settings.browserErrorGeneric');
-    try {
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
-        await Linking.openURL(url);
-      } else {
-        Alert.alert(t('settings.error'), errorMsg);
-      }
-    } catch {
-      Alert.alert(t('settings.error'), errorMsg);
-    }
-  };
-
-  const handleParentalGateCancel = () => {
-    setParentalGateVisible(false);
-    setPendingUrl(null);
+  const openParentDashboard = () => {
+    parentalGate.openWithAction(() => setShowParentDashboard(true));
   };
 
   const handleSendFeedback = async () => {
@@ -164,11 +151,6 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               </Text>
             </TouchableOpacity>
 
-            <View style={[styles.featureTeaser, { backgroundColor: colors.primary + '15', borderColor: colors.primary }]}>
-              <Text style={[styles.teaserText, { color: colors.text.primary }]}>
-                {t('settings.featureTeaser')}
-              </Text>
-            </View>
           </View>
 
           <TouchableOpacity
@@ -286,33 +268,27 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
         ))}
       </View>
 
-      {/* DATEN */}
-      <Text style={[styles.sectionHeader, { color: colors.text.light }]}>
-        {t('settings.dataSection')}
-      </Text>
-      <View style={[styles.card, { backgroundColor: colors.surface }]}>
-        {renderTapRow(t('settings.resetProgress'), handleResetProgress, true)}
-      </View>
-
-      {/* INFO & SUPPORT */}
+      {/* INFO & SUPPORT + DATEN */}
       <Text style={[styles.sectionHeader, { color: colors.text.light }]}>
         {t('settings.aboutSupport')}
       </Text>
       <View style={[styles.card, { backgroundColor: colors.surface }]}>
         <View style={styles.actionGrid}>
           {([
-            { id: 'feedback', label: t('settings.feedback'), icon: '✉️', onPress: handleSendFeedback },
-            { id: 'support',  label: t('settings.support'),  icon: '☕',  onPress: handleSupport },
-            { id: 'share',    label: t('settings.share'),    icon: '↗',   onPress: handleShareApp },
-            { id: 'about',    label: t('settings.aboutButton'), icon: 'ℹ', onPress: () => setShowAboutModal(true) },
+            { id: 'trophies', label: t('achievements.menuLabel'),    icon: '🏆', onPress: () => setShowBadgesModal(true) },
+            { id: 'parents',  label: t('parentDashboard.menuLabel'), icon: '👨‍👩‍👧', onPress: openParentDashboard },
+            { id: 'feedback', label: t('settings.feedback'),         icon: '✉️', onPress: handleSendFeedback },
+            { id: 'support',  label: t('settings.support'),          icon: '☕',  onPress: handleSupport },
+            { id: 'share',    label: t('settings.share'),            icon: '↗',  onPress: handleShareApp },
+            { id: 'about',    label: t('settings.aboutButton'),      icon: 'ℹ',  onPress: () => setShowAboutModal(true) },
           ] as const).map(({ id, label, icon, onPress }, idx) => (
             <TouchableOpacity
               key={id}
               style={[
                 styles.actionGridItem,
                 { borderColor: colors.border },
-                idx < 2 && styles.actionGridItemTop,
-                idx % 2 === 1 && styles.actionGridItemRight,
+                idx < 3 && styles.actionGridItemTop,
+                idx % 3 !== 0 && styles.actionGridItemRight,
               ]}
               onPress={onPress}
               accessibilityRole="button"
@@ -327,9 +303,12 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             </TouchableOpacity>
           ))}
         </View>
+        {renderTapRow(t('settings.resetProgress'), handleResetProgress, true)}
       </View>
 
       {renderAboutModal()}
+      <ParentDashboard visible={showParentDashboard} onClose={() => setShowParentDashboard(false)} />
+      <BadgesModal visible={showBadgesModal} onClose={() => setShowBadgesModal(false)} />
     </View>
   );
 
@@ -338,9 +317,9 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
     return (
       <>
         <ParentalGate
-          visible={parentalGateVisible}
-          onSuccess={handleParentalGateSuccess}
-          onCancel={handleParentalGateCancel}
+          visible={parentalGate.gateVisible}
+          onSuccess={parentalGate.onSuccess}
+          onCancel={parentalGate.onCancel}
         />
         <Modal
         visible={visible}
@@ -378,9 +357,9 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   return (
     <>
       <ParentalGate
-        visible={parentalGateVisible}
-        onSuccess={handleParentalGateSuccess}
-        onCancel={handleParentalGateCancel}
+        visible={parentalGate.gateVisible}
+        onSuccess={parentalGate.onSuccess}
+        onCancel={parentalGate.onCancel}
       />
       {renderContent()}
     </>
@@ -393,13 +372,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: Spacing.lg,
+    padding: Spacing.md,
   },
   settingsModalContent: {
-    borderRadius: BorderRadius.xxl,
+    borderRadius: BorderRadius.xl,
     width: '100%',
     maxWidth: 400,
-    maxHeight: '85%',
+    maxHeight: '75%',
     overflow: 'hidden',
     ...Colors.shadow.large,
   },
@@ -407,45 +386,45 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.xs,
     borderBottomWidth: 1,
   },
   settingsTitle: {
-    fontSize: FontSize.lg,      // H3 – Modal-Titel
+    fontSize: FontSize.md,
     fontWeight: FontWeight.semibold,
   },
   closeButton: {
-    width: 44,
-    height: 44,
+    width: 36,
+    height: 36,
     justifyContent: 'center',
     alignItems: 'center',
   },
   closeText: {
-    fontSize: FontSize.md,
+    fontSize: FontSize.sm,
   },
   settingsContent: {
     flexGrow: 1,
     flexShrink: 1,
   },
   settingsContentInner: {
-    padding: Spacing.md,
+    padding: Spacing.sm,
   },
 
   // ── Abschnitts-Beschriftung ─────────────────────────────────────────────
   sectionHeader: {
-    fontSize: FontSize.xs,      // Tiny – uppercase label
+    fontSize: FontSize.xs,
     fontWeight: FontWeight.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
-    marginTop: Spacing.md,
-    marginBottom: Spacing.xs,
+    marginTop: Spacing.sm,
+    marginBottom: 2,
     paddingHorizontal: Spacing.xs,
   },
 
   // ── Card-Container pro Abschnitt ────────────────────────────────────────
   card: {
-    borderRadius: BorderRadius.lg,
+    borderRadius: BorderRadius.md,
     overflow: 'hidden',
     ...Colors.shadow.small,
   },
@@ -455,22 +434,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
-    minHeight: 44,
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: Spacing.xs,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   rowLabel: {
-    fontSize: FontSize.sm,      // Small row label (not main body text)
+    fontSize: FontSize.xs,
     fontWeight: FontWeight.medium,
     flex: 1,
   },
   rowControl: {
-    marginLeft: Spacing.sm,
+    marginLeft: Spacing.xs,
   },
   rowChevron: {
-    fontSize: FontSize.lg,
-    marginLeft: Spacing.sm,
+    fontSize: FontSize.md,
+    marginLeft: Spacing.xs,
   },
 
   // ── Action Grid ─────────────────────────────────────────────────────────
@@ -479,12 +457,12 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   actionGridItem: {
-    width: '50%',
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.md,
+    width: '33.333%',
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.xs,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: Spacing.xs,
+    gap: 2,
     borderTopWidth: StyleSheet.hairlineWidth,
   },
   actionGridItemTop: {
@@ -494,28 +472,28 @@ const styles = StyleSheet.create({
     borderLeftWidth: StyleSheet.hairlineWidth,
   },
   actionGridIcon: {
-    fontSize: 22,
+    fontSize: 16,
   },
   actionGridLabel: {
-    fontSize: FontSize.sm,
+    fontSize: FontSize.xs,
     fontWeight: FontWeight.medium,
   },
 
   // ── Segment-Control ─────────────────────────────────────────────────────
   segment: {
     flexDirection: 'row',
-    borderRadius: BorderRadius.md,
+    borderRadius: BorderRadius.sm,
     overflow: 'hidden',
   },
   segmentItem: {
-    paddingVertical: Spacing.xs,
-    paddingHorizontal: Spacing.sm,
-    minWidth: 40,
+    paddingVertical: 3,
+    paddingHorizontal: Spacing.xs,
+    minWidth: 36,
     alignItems: 'center',
     justifyContent: 'center',
   },
   segmentText: {
-    fontSize: FontSize.xs,      // Tiny
+    fontSize: FontSize.xs,
     fontWeight: FontWeight.medium,
   },
   segmentTextActive: {
@@ -527,51 +505,41 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 400,
     borderRadius: BorderRadius.md,
-    padding: Spacing.lg,
+    padding: Spacing.md,
     ...Colors.shadow.large,
   },
   modalTitle: {
-    fontSize: FontSize.lg,      // H3
+    fontSize: FontSize.md,
     fontWeight: FontWeight.bold,
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
     textAlign: 'center',
   },
   modalBody: {
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
   },
   modalLabel: {
-    fontSize: FontSize.xs,      // Caption
+    fontSize: FontSize.xs,
     fontWeight: FontWeight.medium,
-    marginBottom: Spacing.xs,
+    marginBottom: 2,
   },
   modalValue: {
-    fontSize: FontSize.sm,      // Body
+    fontSize: FontSize.xs,
     fontWeight: FontWeight.semibold,
   },
   modalLink: {
-    fontSize: FontSize.sm,
+    fontSize: FontSize.xs,
     fontWeight: FontWeight.medium,
     textDecorationLine: 'underline',
   },
-  featureTeaser: {
-    marginTop: Spacing.lg,
-    padding: Spacing.md,
-    borderRadius: BorderRadius.md,
-    borderWidth: 1,
-  },
-  teaserText: {
-    fontSize: FontSize.xs,
-    textAlign: 'center',
-  },
   modalCloseButton: {
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.md,
     borderRadius: BorderRadius.md,
     alignItems: 'center',
   },
   modalCloseButtonText: {
     color: Colors.drawing.white,
-    fontSize: FontSize.sm,
+    fontSize: FontSize.xs,
     fontWeight: FontWeight.bold,
   },
 });

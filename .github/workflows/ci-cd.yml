@@ -74,7 +74,7 @@ jobs:
         run: npm run validate:svg-counts
 
       - name: TypeScript Type Check
-        run: npx tsc --noEmit || true
+        run: npx tsc --noEmit
 
   # ============================================================================
   # JOB 2: Unit Tests & Coverage
