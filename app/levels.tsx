@@ -126,26 +126,22 @@ export default function LevelsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
   },
   header: {
     paddingHorizontal: Spacing.lg,
     paddingTop: Spacing.xl,
     paddingBottom: Spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.surface,
   },
   backButton: {
     fontSize: FontSize.md,
     fontFamily: FontFamily.semibold,
-    color: Colors.primary,
     marginBottom: Spacing.sm,
   },
   title: {
     fontSize: FontSize.xxl,
     fontWeight: FontWeight.bold,
     fontFamily: FontFamily.extraBold,
-    color: Colors.text.primary,
   },
   listContent: {
     padding: Spacing.lg,
@@ -166,7 +162,6 @@ const styles = StyleSheet.create({
   levelNumber: {
     fontSize: FontSize.xl,
     fontWeight: FontWeight.bold,
-    color: Colors.text.primary,
   },
   difficultyBadge: {
     marginBottom: Spacing.sm,

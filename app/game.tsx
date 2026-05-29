@@ -145,7 +145,7 @@ export default function GameScreen() {
   const levelName = currentLang === 'en' ? currentImage?.displayNameEn : currentImage?.displayName;
 
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom }]}>
+    <View style={[styles.container, { paddingBottom: insets.bottom, backgroundColor: colors.background }]}>
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 8, paddingHorizontal: layout.headerPaddingHorizontal, paddingBottom: Spacing.sm }]}>
         <TouchableOpacity
@@ -154,7 +154,7 @@ export default function GameScreen() {
           accessibilityRole="button"
           accessibilityLabel={t('common.back')}
         >
-          <Text style={styles.headerTitle}>Level {levelNumber}{levelName ? ` · ${levelName}` : ''}</Text>
+          <Text style={[styles.headerTitle, { color: colors.text.primary }]}>Level {levelNumber}{levelName ? ` · ${levelName}` : ''}</Text>
         </TouchableOpacity>
         <View style={styles.headerRight}>
           <View style={styles.progressDots}>
@@ -175,27 +175,27 @@ export default function GameScreen() {
             accessibilityLabel={t('common.settings')}
             accessibilityRole="button"
           >
-            <Text style={styles.settingsIcon}>⋮</Text>
+            <Text style={[styles.settingsIcon, { color: colors.text.primary }]}>⋮</Text>
           </TouchableOpacity>
         </View>
       </View>
 
       {/* Pill-Tabs: Zeichnen / Ergebnis */}
       {FeatureFlags.ENABLE_GAME_PHASE_TABS && (phase === 'draw' || phase === 'result') && (
-        <View style={styles.tabBar}>
+        <View style={[styles.tabBar, { backgroundColor: colors.surfaceAlt }]}>
           <TouchableOpacity
-            style={[styles.tab, phase === 'draw' && styles.tabActive]}
+            style={[styles.tab, phase === 'draw' && [styles.tabActive, { backgroundColor: colors.surface }]]}
             onPress={() => phase === 'result' && setPhase('draw')}
             accessibilityRole="tab"
           >
-            <Text style={[styles.tabText, phase === 'draw' && styles.tabTextActive]}>✏️ {t('game.tabs.draw')}</Text>
+            <Text style={[styles.tabText, { color: colors.text.secondary }, phase === 'draw' && [styles.tabTextActive, { color: colors.text.primary }]]}>✏️ {t('game.tabs.draw')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.tab, phase === 'result' && styles.tabActive]}
+            style={[styles.tab, phase === 'result' && [styles.tabActive, { backgroundColor: colors.surface }]]}
             onPress={() => phase === 'draw' && setPhase('result')}
             accessibilityRole="tab"
           >
-            <Text style={[styles.tabText, phase === 'result' && styles.tabTextActive]}>🎨 {t('game.tabs.result')}</Text>
+            <Text style={[styles.tabText, { color: colors.text.secondary }, phase === 'result' && [styles.tabTextActive, { color: colors.text.primary }]]}>🎨 {t('game.tabs.result')}</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -212,17 +212,17 @@ export default function GameScreen() {
         onRequestClose={() => setShowHintModal(false)}
       >
         <TouchableOpacity
-          style={styles.modalOverlay}
+          style={[styles.modalOverlay, { backgroundColor: colors.modalOverlay }]}
           activeOpacity={1}
           onPress={() => setShowHintModal(false)}
           accessibilityRole="button"
           accessibilityLabel={t('common.close')}
         >
-          <View style={styles.hintModal}>
+          <View style={[styles.hintModal, { backgroundColor: colors.background }]}>
             <View style={styles.hintModalHeader}>
-              <Text style={styles.hintModalTitle}>{t('game.draw.hintModalTitle')}</Text>
+              <Text style={[styles.hintModalTitle, { color: colors.text.primary }]}>{t('game.draw.hintModalTitle')}</Text>
               <TouchableOpacity onPress={() => setShowHintModal(false)} style={styles.closeButton}>
-                <Text style={styles.closeText}>✕</Text>
+                <Text style={[styles.closeText, { color: colors.text.secondary }]}>✕</Text>
               </TouchableOpacity>
             </View>
             {currentImage && (
@@ -303,7 +303,6 @@ export default function GameScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -317,7 +316,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: FontSize.xl,
     fontWeight: FontWeight.bold,
-    color: Colors.text.primary,
     lineHeight: 26,
   },
   headerRight: {
@@ -353,7 +351,6 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing.lg,
     marginTop: Spacing.sm,
     marginBottom: Spacing.xs,
-    backgroundColor: Colors.surfaceAlt,
     borderRadius: BorderRadius.lg,
     padding: 4,
     gap: 0,
@@ -366,17 +363,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   tabActive: {
-    backgroundColor: Colors.surface,
     ...Colors.shadow.small,
   },
   tabText: {
     fontSize: FontSize.sm,
     fontWeight: FontWeight.semibold,
-    color: Colors.text.secondary,
   },
   tabTextActive: {
     fontWeight: FontWeight.bold,
-    color: Colors.text.primary,
   },
   settingsButton: {
     width: 44,
@@ -387,17 +381,14 @@ const styles = StyleSheet.create({
   },
   settingsIcon: {
     fontSize: 24,
-    color: Colors.text.primary,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: Colors.modalOverlay,
     justifyContent: 'center',
     alignItems: 'center',
     padding: Spacing.lg,
   },
   hintModal: {
-    backgroundColor: Colors.background,
     borderRadius: BorderRadius.xxl,
     padding: Spacing.lg,
     width: '90%',
@@ -416,7 +407,6 @@ const styles = StyleSheet.create({
   hintModalTitle: {
     fontSize: FontSize.lg,
     fontWeight: FontWeight.semibold,
-    color: Colors.text.primary,
   },
   closeButton: {
     width: 44,
@@ -426,6 +416,5 @@ const styles = StyleSheet.create({
   },
   closeText: {
     fontSize: 24,
-    color: Colors.text.secondary,
   },
 });
