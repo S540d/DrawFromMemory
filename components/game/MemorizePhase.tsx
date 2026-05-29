@@ -25,7 +25,7 @@ export default function MemorizePhase({
       <Text style={[styles.phaseTitle, { color: colors.text.primary }]}>{t('game.memorize.title')}</Text>
 
       <View style={styles.timerContainer}>
-        <Text style={[styles.timerText, { color: colors.background }]}>{t('game.memorize.timeLeft', { seconds: Math.max(0, Math.ceil(timeRemaining)) })}</Text>
+        <Text style={styles.timerText}>{t('game.memorize.timeLeft', { seconds: Math.max(0, Math.ceil(timeRemaining)) })}</Text>
       </View>
 
       <View style={styles.imageContainer}>
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
   timerText: {
     fontSize: FontSize.huge,
     fontWeight: FontWeight.bold,
+    color: '#ffffff',
   },
   imageContainer: {
     flex: 1,

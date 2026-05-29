@@ -212,7 +212,7 @@ export default function GameScreen() {
         onRequestClose={() => setShowHintModal(false)}
       >
         <TouchableOpacity
-          style={styles.modalOverlay}
+          style={[styles.modalOverlay, { backgroundColor: colors.modalOverlay }]}
           activeOpacity={1}
           onPress={() => setShowHintModal(false)}
           accessibilityRole="button"
@@ -384,7 +384,6 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: Spacing.lg,

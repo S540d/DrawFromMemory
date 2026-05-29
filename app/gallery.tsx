@@ -60,7 +60,7 @@ export default function GalleryScreen() {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={() => router.back()}>
           <Text style={[styles.backButton, { color: colors.primary }]}>
             ← {t('common.back')}

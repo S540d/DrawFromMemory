@@ -87,7 +87,7 @@ export default function DrawPhase({
             <TouchableOpacity
               style={[
                 styles.inlineColorSwatch,
-                item.border && { borderColor: item.border },
+                { borderColor: item.border ?? colors.border },
                 drawing.color === item.hex && styles.inlineColorSwatchActive,
               ]}
               onPress={() => drawing.setColor(item.hex)}
@@ -102,7 +102,7 @@ export default function DrawPhase({
           )}
         />
 
-        <View style={styles.toolbarDivider} />
+        <View style={[styles.toolbarDivider, { backgroundColor: colors.border }]} />
 
         {/* Reihe 2: Pen/Fill + Strichstärken */}
         <View style={styles.toolRow}>
@@ -123,7 +123,7 @@ export default function DrawPhase({
             <Text style={styles.toolToggleIcon}>🪣</Text>
           </TouchableOpacity>
 
-          <View style={styles.toolRowSeparator} />
+          <View style={[styles.toolRowSeparator, { backgroundColor: colors.border }]} />
 
           {([2, 3, 5] as const).map((size) => (
             <TouchableOpacity
@@ -284,7 +284,6 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: BorderRadius.md,
     borderWidth: 2,
-    borderColor: '#e8e0d5',
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
@@ -307,7 +306,6 @@ const styles = StyleSheet.create({
   },
   toolbarDivider: {
     height: 1,
-    backgroundColor: '#e8e0d5',
     marginHorizontal: Spacing.xs,
   },
   toolRow: {
@@ -339,7 +337,6 @@ const styles = StyleSheet.create({
   toolRowSeparator: {
     width: 1,
     height: 28,
-    backgroundColor: '#e8e0d5',
     marginHorizontal: Spacing.xs,
   },
   strokeCircleButton: {
