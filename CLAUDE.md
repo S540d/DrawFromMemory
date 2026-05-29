@@ -142,6 +142,8 @@ Die zwei Branches `main` und `staging` müssen immer existieren und dürfen nie 
 
 > **⚠️ REGEL FÜR AI-ASSISTENTEN:** Merges auf `main` sind VERBOTEN ohne explizite schriftliche Freigabe durch den Nutzer in der aktuellen Konversation. Das gilt auch für `staging → main`. Feature-PRs gehen immer gegen `staging`. `main` ist production — nur der Nutzer entscheidet, wann etwas dort landet.
 
+> **⚠️ REGEL FÜR AI-ASSISTENTEN:** Merges auf `main` sind VERBOTEN ohne explizite schriftliche Freigabe durch den Nutzer in der aktuellen Konversation. Das gilt auch für `staging → main`. Immer nach `testing → staging` stoppen und auf Freigabe warten. `main` ist production — nur der Nutzer entscheidet, wann etwas dort landet.
+
 ---
 
 ## CI/CD (`.github/workflows/ci-cd.yml`)
