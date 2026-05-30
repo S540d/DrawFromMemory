@@ -48,13 +48,15 @@ export async function requestReviewIfEligible(
     const count = await storageManager.incrementReviewDailyCount();
     if (count >= 3) {
       shouldTrigger = true;
-      await storageManager.resetReviewDailyCount();
     }
   }
 
   if (!shouldTrigger) return;
   if (!(await canShowReview())) return;
 
+  // Always reset counter when dialog is shown, regardless of which trigger fired.
+  // Prevents stale counts from triggering early after the next 90-day cooldown.
+  await storageManager.resetReviewDailyCount();
   await storageManager.setReviewLastShown();
   await requestNativeReview();
 }
