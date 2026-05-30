@@ -45,6 +45,17 @@ const IMAGE_ELEMENT_COUNTS: Record<string, number> = {
   'level-18-flower-detailed.svg': 16,
   'level-19-fish-tropical.svg': 17,
   'level-20-house-detailed.svg': 25,
+  // Tiere v1 Pack
+  'tiere-01-frog.svg': 10,
+  'tiere-02-rabbit.svg': 11,
+  'tiere-03-duck.svg': 10,
+  'tiere-04-owl.svg': 12,
+  'tiere-05-bear.svg': 11,
+  'tiere-06-penguin.svg': 12,
+  'tiere-07-snail.svg': 11,
+  'tiere-08-horse.svg': 14,
+  'tiere-09-elephant.svg': 14,
+  'tiere-10-fox.svg': 13,
 };
 
 /**
@@ -906,6 +917,304 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             <Line x1="40" y1="205" x2="40" y2="215" stroke="#8B4513" strokeWidth="3" strokeLinecap="round" />
             <Line x1="55" y1="205" x2="55" y2="215" stroke="#8B4513" strokeWidth="3" strokeLinecap="round" />
             <Line x1="70" y1="205" x2="70" y2="215" stroke="#8B4513" strokeWidth="3" strokeLinecap="round" />
+          </Svg>
+        );
+
+      // ── Tiere v1 Pack ──────────────────────────────────────────────────────
+
+      case 'tiere-01-frog.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Ellipse cx="100" cy="118" rx="55" ry="42" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" />
+            {/* Left eye dome */}
+            <Circle cx="76" cy="78" r="18" fill="#66BB6A" stroke="#2E7D32" strokeWidth="2" />
+            {/* Right eye dome */}
+            <Circle cx="124" cy="78" r="18" fill="#66BB6A" stroke="#2E7D32" strokeWidth="2" />
+            {/* Left pupil */}
+            <Circle cx="76" cy="75" r="9" fill="#1A1A1A" />
+            {/* Right pupil */}
+            <Circle cx="124" cy="75" r="9" fill="#1A1A1A" />
+            {/* Left eye shine */}
+            <Circle cx="79" cy="73" r="3" fill="#FFFFFF" />
+            {/* Right eye shine */}
+            <Circle cx="127" cy="73" r="3" fill="#FFFFFF" />
+            {/* Smile */}
+            <Path d="M 78 105 Q 100 118 122 105" stroke="#2E7D32" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            {/* Left back leg */}
+            <Ellipse cx="52" cy="152" rx="22" ry="13" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" rotation="-25" origin="52,152" />
+            {/* Right back leg */}
+            <Ellipse cx="148" cy="152" rx="22" ry="13" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" rotation="25" origin="148,152" />
+          </Svg>
+        );
+
+      case 'tiere-02-rabbit.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Ellipse cx="100" cy="130" rx="38" ry="44" fill="#F5F5F5" stroke="#BDBDBD" strokeWidth="2" />
+            {/* Head */}
+            <Circle cx="100" cy="82" r="28" fill="#F5F5F5" stroke="#BDBDBD" strokeWidth="2" />
+            {/* Left ear outer */}
+            <Ellipse cx="80" cy="38" rx="12" ry="30" fill="#F5F5F5" stroke="#BDBDBD" strokeWidth="2" />
+            {/* Left ear inner */}
+            <Ellipse cx="80" cy="38" rx="6" ry="20" fill="#FFB6C1" stroke="none" />
+            {/* Right ear outer */}
+            <Ellipse cx="120" cy="38" rx="12" ry="30" fill="#F5F5F5" stroke="#BDBDBD" strokeWidth="2" />
+            {/* Right ear inner */}
+            <Ellipse cx="120" cy="38" rx="6" ry="20" fill="#FFB6C1" stroke="none" />
+            {/* Left eye */}
+            <Circle cx="90" cy="77" r="5" fill="#1A1A1A" />
+            {/* Right eye */}
+            <Circle cx="110" cy="77" r="5" fill="#1A1A1A" />
+            {/* Nose */}
+            <Circle cx="100" cy="90" r="5" fill="#FFB6C1" />
+            {/* Mouth */}
+            <Path d="M 90 96 Q 100 102 110 96" stroke="#BDBDBD" strokeWidth="1.5" fill="none" />
+            {/* Fluffy tail */}
+            <Circle cx="100" cy="155" r="9" fill="#F5F5F5" stroke="#BDBDBD" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'tiere-03-duck.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Ellipse cx="95" cy="120" rx="48" ry="38" fill="#FFD700" stroke="#FF8C00" strokeWidth="2" />
+            {/* Head */}
+            <Circle cx="125" cy="78" r="26" fill="#FFD700" stroke="#FF8C00" strokeWidth="2" />
+            {/* Beak */}
+            <Polygon points="151,75 175,70 151,84" fill="#FF8C00" stroke="#CC6600" strokeWidth="1.5" />
+            {/* Eye */}
+            <Circle cx="130" cy="73" r="5" fill="#1A1A1A" />
+            {/* Eye shine */}
+            <Circle cx="132" cy="71" r="2" fill="#FFFFFF" />
+            {/* Wing */}
+            <Ellipse cx="75" cy="115" rx="32" ry="20" fill="#F9A825" stroke="#FF8C00" strokeWidth="2" rotation="-15" origin="75,115" />
+            {/* Tail feather */}
+            <Polygon points="47,118 22,108 22,128" fill="#F9A825" stroke="#FF8C00" strokeWidth="2" />
+            {/* Left foot */}
+            <Line x1="90" y1="155" x2="80" y2="172" stroke="#FF8C00" strokeWidth="3" strokeLinecap="round" />
+            {/* Right foot */}
+            <Line x1="110" y1="155" x2="120" y2="172" stroke="#FF8C00" strokeWidth="3" strokeLinecap="round" />
+            {/* Webbed feet base */}
+            <Ellipse cx="100" cy="175" rx="20" ry="6" fill="#FF8C00" stroke="#CC6600" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'tiere-04-owl.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Ellipse cx="100" cy="120" rx="45" ry="55" fill="#795548" stroke="#4E342E" strokeWidth="2" />
+            {/* Head */}
+            <Circle cx="100" cy="72" r="38" fill="#8D6E63" stroke="#4E342E" strokeWidth="2" />
+            {/* Left ear tuft */}
+            <Polygon points="78,38 70,15 90,42" fill="#795548" stroke="#4E342E" strokeWidth="2" />
+            {/* Right ear tuft */}
+            <Polygon points="122,38 130,15 110,42" fill="#795548" stroke="#4E342E" strokeWidth="2" />
+            {/* Left eye ring */}
+            <Circle cx="86" cy="72" r="14" fill="#FFFFFF" stroke="#4E342E" strokeWidth="1.5" />
+            {/* Right eye ring */}
+            <Circle cx="114" cy="72" r="14" fill="#FFFFFF" stroke="#4E342E" strokeWidth="1.5" />
+            {/* Left pupil */}
+            <Circle cx="86" cy="73" r="8" fill="#1A1A1A" />
+            {/* Right pupil */}
+            <Circle cx="114" cy="73" r="8" fill="#1A1A1A" />
+            {/* Beak */}
+            <Polygon points="100,83 93,93 107,93" fill="#FFD700" stroke="#E65100" strokeWidth="1.5" />
+            {/* Belly patch */}
+            <Ellipse cx="100" cy="128" rx="28" ry="36" fill="#D7CCC8" stroke="#A1887F" strokeWidth="1.5" />
+            {/* Left talon */}
+            <Line x1="78" y1="168" x2="68" y2="182" stroke="#4E342E" strokeWidth="3" strokeLinecap="round" />
+            {/* Right talon */}
+            <Line x1="122" y1="168" x2="132" y2="182" stroke="#4E342E" strokeWidth="3" strokeLinecap="round" />
+          </Svg>
+        );
+
+      case 'tiere-05-bear.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Ellipse cx="100" cy="132" rx="50" ry="46" fill="#795548" stroke="#4E342E" strokeWidth="2" />
+            {/* Head */}
+            <Circle cx="100" cy="76" r="35" fill="#795548" stroke="#4E342E" strokeWidth="2" />
+            {/* Left ear outer */}
+            <Circle cx="70" cy="48" r="16" fill="#795548" stroke="#4E342E" strokeWidth="2" />
+            {/* Left ear inner */}
+            <Circle cx="70" cy="48" r="10" fill="#A1887F" stroke="none" />
+            {/* Right ear outer */}
+            <Circle cx="130" cy="48" r="16" fill="#795548" stroke="#4E342E" strokeWidth="2" />
+            {/* Right ear inner */}
+            <Circle cx="130" cy="48" r="10" fill="#A1887F" stroke="none" />
+            {/* Muzzle */}
+            <Ellipse cx="100" cy="88" rx="18" ry="14" fill="#A1887F" stroke="#6D4C41" strokeWidth="1.5" />
+            {/* Left eye */}
+            <Circle cx="88" cy="68" r="5" fill="#1A1A1A" />
+            {/* Right eye */}
+            <Circle cx="112" cy="68" r="5" fill="#1A1A1A" />
+            {/* Nose */}
+            <Circle cx="100" cy="84" r="5" fill="#1A1A1A" />
+            {/* Smile */}
+            <Path d="M 88 93 Q 100 100 112 93" stroke="#4E342E" strokeWidth="2" fill="none" strokeLinecap="round" />
+          </Svg>
+        );
+
+      case 'tiere-06-penguin.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Ellipse cx="100" cy="118" rx="45" ry="60" fill="#212121" stroke="#000000" strokeWidth="2" />
+            {/* Head */}
+            <Circle cx="100" cy="65" r="30" fill="#212121" stroke="#000000" strokeWidth="2" />
+            {/* White belly */}
+            <Ellipse cx="100" cy="118" rx="28" ry="44" fill="#FFFFFF" stroke="none" />
+            {/* White face */}
+            <Ellipse cx="100" cy="68" rx="18" ry="20" fill="#FFFFFF" stroke="none" />
+            {/* Left eye */}
+            <Circle cx="90" cy="60" r="5" fill="#1A1A1A" />
+            {/* Right eye */}
+            <Circle cx="110" cy="60" r="5" fill="#1A1A1A" />
+            {/* Left eye shine */}
+            <Circle cx="92" cy="58" r="2" fill="#FFFFFF" />
+            {/* Right eye shine */}
+            <Circle cx="112" cy="58" r="2" fill="#FFFFFF" />
+            {/* Beak */}
+            <Polygon points="100,72 92,80 108,80" fill="#FF9800" stroke="#E65100" strokeWidth="1.5" />
+            {/* Left wing */}
+            <Ellipse cx="53" cy="118" rx="18" ry="35" fill="#212121" stroke="#000000" strokeWidth="1.5" rotation="10" origin="53,118" />
+            {/* Right wing */}
+            <Ellipse cx="147" cy="118" rx="18" ry="35" fill="#212121" stroke="#000000" strokeWidth="1.5" rotation="-10" origin="147,118" />
+            {/* Feet */}
+            <Ellipse cx="100" cy="178" rx="25" ry="8" fill="#FF9800" stroke="#E65100" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'tiere-07-snail.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body/foot */}
+            <Ellipse cx="78" cy="148" rx="65" ry="24" fill="#66BB6A" stroke="#388E3C" strokeWidth="2" />
+            {/* Head */}
+            <Circle cx="48" cy="136" r="16" fill="#66BB6A" stroke="#388E3C" strokeWidth="2" />
+            {/* Left antennae */}
+            <Line x1="42" y1="122" x2="34" y2="100" stroke="#388E3C" strokeWidth="2.5" strokeLinecap="round" />
+            {/* Left antennae tip */}
+            <Circle cx="34" cy="98" r="4" fill="#1A1A1A" />
+            {/* Right antennae */}
+            <Line x1="54" y1="122" x2="62" y2="100" stroke="#388E3C" strokeWidth="2.5" strokeLinecap="round" />
+            {/* Right antennae tip */}
+            <Circle cx="62" cy="98" r="4" fill="#1A1A1A" />
+            {/* Eye */}
+            <Circle cx="42" cy="132" r="3" fill="#1A1A1A" />
+            {/* Shell outer */}
+            <Circle cx="135" cy="118" r="50" fill="#FF8A65" stroke="#BF360C" strokeWidth="2" />
+            {/* Shell middle ring */}
+            <Circle cx="135" cy="118" r="30" fill="#FFAB91" stroke="#BF360C" strokeWidth="1.5" />
+            {/* Shell inner */}
+            <Circle cx="135" cy="118" r="12" fill="#FF7043" stroke="#BF360C" strokeWidth="1" />
+            {/* Shell spiral accent */}
+            <Path d="M 135 68 A 50 50 0 0 1 185 118" stroke="#BF360C" strokeWidth="2" fill="none" />
+          </Svg>
+        );
+
+      case 'tiere-08-horse.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Ellipse cx="97" cy="128" rx="65" ry="40" fill="#C8A47E" stroke="#8B6914" strokeWidth="2" />
+            {/* Neck */}
+            <Rect x="130" y="75" width="28" height="42" fill="#C8A47E" stroke="#8B6914" strokeWidth="2" rx="8" />
+            {/* Head */}
+            <Ellipse cx="160" cy="66" rx="22" ry="18" fill="#C8A47E" stroke="#8B6914" strokeWidth="2" />
+            {/* Ear */}
+            <Polygon points="150,50 148,30 162,50" fill="#C8A47E" stroke="#8B6914" strokeWidth="2" />
+            {/* Muzzle */}
+            <Ellipse cx="174" cy="72" rx="10" ry="8" fill="#B08060" stroke="#8B6914" strokeWidth="1.5" />
+            {/* Nostril */}
+            <Circle cx="174" cy="73" r="3" fill="#8B6914" />
+            {/* Eye */}
+            <Circle cx="157" cy="61" r="5" fill="#1A1A1A" />
+            {/* Eye shine */}
+            <Circle cx="159" cy="59" r="2" fill="#FFFFFF" />
+            {/* Mane */}
+            <Path d="M 130 75 Q 142 55 152 50 Q 148 62 150 68 Q 140 60 136 72" fill="#7A5230" stroke="none" />
+            {/* Front left leg */}
+            <Rect x="55" y="160" width="14" height="32" fill="#C8A47E" stroke="#8B6914" strokeWidth="2" rx="3" />
+            {/* Front right leg */}
+            <Rect x="82" y="160" width="14" height="32" fill="#C8A47E" stroke="#8B6914" strokeWidth="2" rx="3" />
+            {/* Rear left leg */}
+            <Rect x="116" y="160" width="14" height="32" fill="#C8A47E" stroke="#8B6914" strokeWidth="2" rx="3" />
+            {/* Rear right leg */}
+            <Rect x="143" y="160" width="14" height="32" fill="#C8A47E" stroke="#8B6914" strokeWidth="2" rx="3" />
+            {/* Tail */}
+            <Path d="M 35 118 Q 18 103 20 82" stroke="#7A5230" strokeWidth="9" fill="none" strokeLinecap="round" />
+          </Svg>
+        );
+
+      case 'tiere-09-elephant.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Ellipse cx="100" cy="132" rx="65" ry="48" fill="#9E9E9E" stroke="#616161" strokeWidth="2" />
+            {/* Head */}
+            <Circle cx="72" cy="76" r="38" fill="#9E9E9E" stroke="#616161" strokeWidth="2" />
+            {/* Left ear */}
+            <Ellipse cx="36" cy="74" rx="28" ry="38" fill="#BDBDBD" stroke="#616161" strokeWidth="2" />
+            {/* Left ear inner */}
+            <Ellipse cx="36" cy="74" rx="18" ry="26" fill="#FFCDD2" stroke="none" />
+            {/* Trunk */}
+            <Path d="M 55 110 Q 32 128 38 152 Q 44 162 52 160 Q 60 157 56 148 Q 48 130 68 118" fill="#9E9E9E" stroke="#616161" strokeWidth="2" />
+            {/* Trunk tip */}
+            <Circle cx="50" cy="157" r="5" fill="#757575" />
+            {/* Eye */}
+            <Circle cx="80" cy="68" r="7" fill="#1A1A1A" />
+            {/* Eye shine */}
+            <Circle cx="82" cy="66" r="3" fill="#FFFFFF" />
+            {/* Tusk */}
+            <Path d="M 56 108 Q 40 122 36 134" stroke="#FAFAFA" strokeWidth="6" fill="none" strokeLinecap="round" />
+            {/* Front left leg */}
+            <Rect x="42" y="170" width="18" height="26" fill="#9E9E9E" stroke="#616161" strokeWidth="2" rx="4" />
+            {/* Front right leg */}
+            <Rect x="72" y="170" width="18" height="26" fill="#9E9E9E" stroke="#616161" strokeWidth="2" rx="4" />
+            {/* Rear left leg */}
+            <Rect x="108" y="170" width="18" height="26" fill="#9E9E9E" stroke="#616161" strokeWidth="2" rx="4" />
+            {/* Rear right leg */}
+            <Rect x="138" y="170" width="18" height="26" fill="#9E9E9E" stroke="#616161" strokeWidth="2" rx="4" />
+            {/* Tail */}
+            <Path d="M 165 122 Q 180 108 182 90" stroke="#757575" strokeWidth="5" fill="none" strokeLinecap="round" />
+          </Svg>
+        );
+
+      case 'tiere-10-fox.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Ellipse cx="100" cy="130" rx="48" ry="38" fill="#FF6F00" stroke="#E65100" strokeWidth="2" />
+            {/* Head */}
+            <Circle cx="100" cy="78" r="33" fill="#FF6F00" stroke="#E65100" strokeWidth="2" />
+            {/* Left ear */}
+            <Polygon points="76,50 68,18 90,52" fill="#FF6F00" stroke="#E65100" strokeWidth="2" />
+            {/* Right ear */}
+            <Polygon points="124,50 132,18 110,52" fill="#FF6F00" stroke="#E65100" strokeWidth="2" />
+            {/* White muzzle */}
+            <Ellipse cx="100" cy="90" rx="20" ry="16" fill="#FFECB3" stroke="#E65100" strokeWidth="1" />
+            {/* Left eye */}
+            <Circle cx="88" cy="72" r="5" fill="#1A1A1A" />
+            {/* Right eye */}
+            <Circle cx="112" cy="72" r="5" fill="#1A1A1A" />
+            {/* Nose */}
+            <Circle cx="100" cy="86" r="4" fill="#1A1A1A" />
+            {/* Bushy tail */}
+            <Ellipse cx="153" cy="152" rx="35" ry="25" fill="#FF6F00" stroke="#E65100" strokeWidth="2" rotation="30" origin="153,152" />
+            {/* Tail tip white */}
+            <Ellipse cx="153" cy="152" rx="20" ry="14" fill="#FFFFFF" stroke="none" rotation="30" origin="153,152" />
+            {/* Front left leg */}
+            <Rect x="78" y="160" width="12" height="28" fill="#FF6F00" stroke="#E65100" strokeWidth="2" rx="3" />
+            {/* Front right leg */}
+            <Rect x="110" y="160" width="12" height="28" fill="#FF6F00" stroke="#E65100" strokeWidth="2" rx="3" />
+            {/* White chest patch */}
+            <Ellipse cx="100" cy="130" rx="20" ry="26" fill="#FFECB3" stroke="none" />
           </Svg>
         );
 

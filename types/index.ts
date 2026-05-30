@@ -18,6 +18,7 @@ export interface LevelImage {
   strokeCount: number;
   colors: string[]; // Array von Hex-Farben für dieses Bild
   minLevel?: number; // Wenn gesetzt, nur ab dieser Level-Nummer im Pool
+  pack?: string;    // Optionale Themen-Pack-Zugehörigkeit (z.B. 'tiere-v1')
 }
 
 /**
