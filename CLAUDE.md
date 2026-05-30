@@ -27,7 +27,7 @@ Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Er
 | Theming | ThemeContext (light / dark / system) |
 | Sound | Web Audio API (web) + `expo-haptics` (native) |
 | i18n | Custom `services/i18n.ts` (de/en), Locales in `locales/` |
-| Tests | Jest 29 + jest-expo ~55 (270+ Tests, jsdom-Environment) |
+| Tests | Jest 29 + jest-expo ~55 (372+ Tests, jsdom-Environment) |
 | CI | GitHub Actions (`.github/workflows/ci-cd.yml`) |
 | Build (Native) | EAS Build (`eas.json`) |
 | Crash Reporting | Sentry via `EXPO_PUBLIC_SENTRY_DSN` (optional, no-op on Web) |
@@ -74,6 +74,7 @@ services/
   SentryService.ts           # Sentry-Wrapper (init, captureException, etc.)
   ThemeContext.tsx            # ThemeProvider + useTheme Hook (light/dark/system)
   i18n.ts                    # Übersetzungs-Service (de/en) mit listener-basiertem Reload
+  ReviewManager.ts           # In-App-Review-Trigger: 5-Sterne oder 3. Daily Challenge, 90-Tage-Cooldown
   useGamePhase.ts            # Spielphasen-Hook: memorize / draw / result + Replay
   useTimer.ts                # Timer-Hook (Countdown, pause/resume via phase)
 
@@ -313,6 +314,7 @@ Web-APIs über `utils/platform.ts` absichern (`safeWebAPI`, `isWeb`-Guard). Für
 ### Tests
 - Test-Dateien liegen bei `services/__tests__/`, `components/__tests__/`, `utils/__tests__/`, `__tests__/`
 - Jest-Umgebung: `jsdom`; Skia wird gemockt via `__mocks__/@shopify/react-native-skia.js`
+- `@testing-library/dom` muss installiert sein (Peer-Dep von `@testing-library/react` v16)
 - `npm test` (kein `--runInBand` nötig, aber stabil)
 
 ---
@@ -320,7 +322,7 @@ Web-APIs über `utils/platform.ts` absichern (`safeWebAPI`, `isWeb`-Guard). Für
 ## Security
 
 - `npm audit --audit-level=high` in CI — Pipeline blockiert bei high/critical
-- Verbleibende 5 low-Findings: `@tootallnate/once` via jest-expo-Chain — Fix würde ein Breaking-Major-Upgrade von jest-expo erfordern (aktuell `~55.0.9`), intentionally excluded
+- Verbleibende Findings (1 low, 14 moderate): alle im jest-expo/expo-SDK-Chain — `npm audit --audit-level=high` schlägt nicht an, intentionally excluded
 - Alle high/critical Vulnerabilities zuletzt gefixt: 2026-04-21 via PR #144
 
 ---
@@ -335,7 +337,7 @@ Ausgangspunkt: `staging` @ v1.6.3 / versionCode 65.
 |---|---|
 | Galerie-Persistenz (#215) | ✅ erledigt (v1.6.3) |
 | Play-Store-Listing-Audit | ⏭ extern — teilweise umgesetzt |
-| **In-App-Review-Prompt** (`expo-store-review`) | 🔲 offen — Quick-Win |
+| **In-App-Review-Prompt** (`expo-store-review`) | ✅ PR #223 merged in staging |
 | Analytics-Setup (COPPA-konform) | 🔲 offen — Tool-Entscheidung nötig |
 | Crash-Rate-Baseline (Sentry) | 🔲 offen — manuell |
 
