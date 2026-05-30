@@ -5,7 +5,7 @@
 **Merke und Male** — Gedächtnistraining-App für Kinder (React Native / Expo).
 Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Ergebnis.
 
-- **Aktuell: v1.6.1** (package.json + app.json; versionCode 63)
+- **Aktuell: v1.6.3** (package.json + app.json; versionCode 65)
 - **Mindestanforderung Android: API 26 (Android 8.0 Oreo)** — Nexus 6 (max. API 25) wird nicht mehr unterstützt (Issue #172, geschlossen)
 - **Live Demo:** https://s540d.github.io/DrawFromMemory/
 - **Repo:** https://github.com/S540d/DrawFromMemory
@@ -175,8 +175,8 @@ memorize  →  draw  →  result
 2. **Draw**: Zeichnen auf `DrawingCanvas` (Pinsel + Flood-Fill). Tool wechselt nach Fill automatisch zu Brush zurück (Issue #45).
 3. **Result**: Sternbewertung (1–5), Replay-Animation, Speichern in Galerie möglich.
 
-Level-Anzahl: 10 (Difficulty 1–5). Alle Level haben 3 s Anzeigezeit.
-Bilderpool: `ImagePoolManager.ts` wählt zufällig nach Difficulty-Klasse aus.
+Level-Anzahl: 20 (Difficulty 1–5). Alle Level haben 3 s Anzeigezeit.
+Bilderpool: `ImagePoolManager.ts` wählt zufällig nach Difficulty-Klasse aus. Aktuell **41 Bilder** (inkl. Tiere v1 Pack — 10 Tiere, PR #221).
 
 ---
 
@@ -322,6 +322,45 @@ Web-APIs über `utils/platform.ts` absichern (`safeWebAPI`, `isWeb`-Guard). Für
 - `npm audit --audit-level=high` in CI — Pipeline blockiert bei high/critical
 - Verbleibende 5 low-Findings: `@tootallnate/once` via jest-expo-Chain — Fix würde ein Breaking-Major-Upgrade von jest-expo erfordern (aktuell `~55.0.9`), intentionally excluded
 - Alle high/critical Vulnerabilities zuletzt gefixt: 2026-04-21 via PR #144
+
+---
+
+## Wachstums-Roadmap (Issue #219)
+
+Übergeordneter Plan, um aus der App eine dauerhaft wachsende Kids-App im Play Store zu machen.
+Ausgangspunkt: `staging` @ v1.6.3 / versionCode 65.
+
+### P0 — Foundation für Wachstum
+| Task | Status |
+|---|---|
+| Galerie-Persistenz (#215) | ✅ erledigt (v1.6.3) |
+| Play-Store-Listing-Audit | ⏭ extern — teilweise umgesetzt |
+| **In-App-Review-Prompt** (`expo-store-review`) | 🔲 offen — Quick-Win |
+| Analytics-Setup (COPPA-konform) | 🔲 offen — Tool-Entscheidung nötig |
+| Crash-Rate-Baseline (Sentry) | 🔲 offen — manuell |
+
+### P1 — Content & Retention
+| Task | Status |
+|---|---|
+| **Themen-Pack Tiere v1** (10 Bilder) | ✅ PR #221 merged in staging |
+| Themen-Pack Fahrzeuge / Natur / Märchen | 🔲 offen |
+| Avatar & Personalisierung | 🔲 offen |
+| XP- & Level-System | 🔲 offen |
+| Wöchentliche Challenge | 🔲 offen |
+
+### P2 — Reichweite & Trust
+| Task | Status |
+|---|---|
+| Designed for Families Programm | 🔲 offen |
+| Weitere Sprachen (ES/FR/IT/NL/PL) | 🔲 offen |
+| Sharing-Feature (PNG-Export) | 🔲 offen |
+| Push-Notifications (opt-in) | 🔲 offen |
+
+### Themen-Pack Architektur (ab PR #221)
+- `LevelImage.pack?: string` — optionaler Tag (z.B. `'tiere-v1'`)
+- Bilder ohne `minLevel` sind ab dem passenden Difficulty-Level verfügbar
+- Neue Packs: einfach neue Cases in `LevelImageDisplay.tsx` + Einträge in `ImagePoolManager.ts` + `IMAGE_ELEMENT_COUNTS`
+- Pflicht nach jedem neuen SVG: `npm run validate:svg-counts` (derzeit 41 Einträge)
 
 ---
 
