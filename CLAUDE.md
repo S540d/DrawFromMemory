@@ -74,7 +74,7 @@ services/
   SentryService.ts           # Sentry-Wrapper (init, captureException, etc.)
   ThemeContext.tsx            # ThemeProvider + useTheme Hook (light/dark/system)
   i18n.ts                    # Übersetzungs-Service (de/en) mit listener-basiertem Reload
-  ReviewManager.ts           # In-App-Review-Trigger: 5-Sterne oder 3. Daily Challenge, 90-Tage-Cooldown
+  ReviewManager.ts           # In-App-Review-Trigger: 5-Sterne oder 3. Daily Challenge, 90-Tage-Cooldown — deaktiviert via EXPO_PUBLIC_ENABLE_IN_APP_REVIEW
   useGamePhase.ts            # Spielphasen-Hook: memorize / draw / result + Replay
   useTimer.ts                # Timer-Hook (Countdown, pause/resume via phase)
 
