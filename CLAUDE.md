@@ -344,21 +344,21 @@ Web-APIs über `utils/platform.ts` absichern (`safeWebAPI`, `isWeb`-Guard). Für
 ## Wachstums-Roadmap (Issue #219)
 
 Übergeordneter Plan, um aus der App eine dauerhaft wachsende Kids-App im Play Store zu machen.
-Ausgangspunkt: `staging` @ v1.7.0 / versionCode 66.
+Stand: `main` @ v1.7.0 / versionCode 66. `staging` = `main` (keine offenen Features).
 
 ### P0 — Foundation für Wachstum
 | Task | Status |
 |---|---|
 | Galerie-Persistenz (#215) | ✅ erledigt (v1.6.3) |
 | Play-Store-Listing-Audit | ⏭ extern — teilweise umgesetzt |
-| **In-App-Review-Prompt** (`expo-store-review`) | ✅ PR #223 merged in staging — per Feature-Flag deaktiviert (`EXPO_PUBLIC_ENABLE_IN_APP_REVIEW`) |
+| **In-App-Review-Prompt** (`expo-store-review`) | ✅ in main (v1.7.0) — per Feature-Flag deaktiviert (`EXPO_PUBLIC_ENABLE_IN_APP_REVIEW`) |
 | Analytics-Setup (COPPA-konform) | 🔲 offen — Tool-Entscheidung nötig |
 | Crash-Rate-Baseline (Sentry) | 🔲 offen — manuell |
 
 ### P1 — Content & Retention
 | Task | Status |
 |---|---|
-| **Themen-Pack Tiere v1** (10 Bilder) | ✅ PR #221 merged in staging |
+| **Themen-Pack Tiere v1** (10 Bilder, #222) | ✅ in main (v1.7.0) |
 | Themen-Pack Fahrzeuge / Natur / Märchen | 🔲 offen |
 | Avatar & Personalisierung | 🔲 offen |
 | XP- & Level-System | 🔲 offen |
