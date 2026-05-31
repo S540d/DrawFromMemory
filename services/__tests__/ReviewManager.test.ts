@@ -41,11 +41,21 @@ const daysAgo = (days: number) =>
 describe('ReviewManager', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    process.env.EXPO_PUBLIC_ENABLE_IN_APP_REVIEW = 'true';
     (Platform as { OS: string }).OS = 'android';
     sm.getReviewLastShown.mockResolvedValue(null);
     sm.setReviewLastShown.mockResolvedValue(undefined);
     sm.incrementReviewDailyCount.mockResolvedValue(1);
     sm.resetReviewDailyCount.mockResolvedValue(undefined);
+  });
+
+  describe('feature flag', () => {
+    it('tut nichts wenn EXPO_PUBLIC_ENABLE_IN_APP_REVIEW nicht gesetzt', async () => {
+      delete process.env.EXPO_PUBLIC_ENABLE_IN_APP_REVIEW;
+      await requestReviewIfEligible(true, false);
+      expect(sm.getReviewLastShown).not.toHaveBeenCalled();
+      expect(sm.setReviewLastShown).not.toHaveBeenCalled();
+    });
   });
 
   describe('web platform guard', () => {
