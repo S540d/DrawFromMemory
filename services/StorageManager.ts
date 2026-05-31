@@ -15,6 +15,8 @@ const KEYS = {
   MUSIC_ENABLED: '@merke_male:music_enabled',
   EXTRA_TIME_MODE: '@merke_male:extra_time_mode',
   GALLERY: '@merke_male:gallery',
+  REVIEW_LAST_SHOWN: '@merke_male:review_last_shown',
+  REVIEW_DAILY_COUNT: '@merke_male:review_daily_count',
 };
 
 // In-memory fallback for Web when localStorage is unavailable
@@ -374,6 +376,32 @@ class StorageManager {
     } catch (error) {
       console.error('Error deleting gallery entry:', error);
     }
+  }
+
+  // ========== Store Review Tracking ==========
+
+  async getReviewLastShown(): Promise<string | null> {
+    return safeStorageOps.getItem(KEYS.REVIEW_LAST_SHOWN);
+  }
+
+  async setReviewLastShown(): Promise<void> {
+    await safeStorageOps.setItem(KEYS.REVIEW_LAST_SHOWN, new Date().toISOString());
+  }
+
+  async getReviewDailyCount(): Promise<number> {
+    const raw = await safeStorageOps.getItem(KEYS.REVIEW_DAILY_COUNT);
+    return raw ? parseInt(raw, 10) || 0 : 0;
+  }
+
+  async incrementReviewDailyCount(): Promise<number> {
+    const current = await this.getReviewDailyCount();
+    const next = current + 1;
+    await safeStorageOps.setItem(KEYS.REVIEW_DAILY_COUNT, String(next));
+    return next;
+  }
+
+  async resetReviewDailyCount(): Promise<void> {
+    await safeStorageOps.setItem(KEYS.REVIEW_DAILY_COUNT, '0');
   }
 
   // ========== General Cleanup ==========

@@ -8,6 +8,7 @@ import { markTodayCompleted, getDailyChallengeKey } from '@services/DailyChallen
 import { updateStreakAfterGame } from '@services/StreakManager';
 import { recordSession } from '@services/SessionTracker';
 import SoundManager from '@services/SoundManager';
+import { requestReviewIfEligible } from '@services/ReviewManager';
 import { useTimer } from '@services/useTimer';
 import type { DrawingPath } from '@components/DrawingCanvas';
 import type { GamePhase, LevelImage } from '../types';
@@ -190,9 +191,12 @@ export function useGamePhase({
         stars: rating,
         levelId: levelNumber,
       });
-      if (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) {
+      const isThisDailyChallenge = dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel;
+      if (isThisDailyChallenge) {
         await markTodayCompleted();
       }
+      // Fire-and-forget: non-blocking, silently ignored on failure
+      requestReviewIfEligible(rating === 5, isThisDailyChallenge).catch(() => undefined);
     } catch (error) {
       console.error('Error saving rating:', error);
     }

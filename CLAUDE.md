@@ -5,7 +5,7 @@
 **Merke und Male** — Gedächtnistraining-App für Kinder (React Native / Expo).
 Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Ergebnis.
 
-- **Aktuell: v1.6.1** (package.json + app.json; versionCode 63)
+- **Aktuell: v1.7.0** (package.json + app.json; versionCode 66)
 - **Mindestanforderung Android: API 26 (Android 8.0 Oreo)** — Nexus 6 (max. API 25) wird nicht mehr unterstützt (Issue #172, geschlossen)
 - **Live Demo:** https://s540d.github.io/DrawFromMemory/
 - **Repo:** https://github.com/S540d/DrawFromMemory
@@ -27,7 +27,7 @@ Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Er
 | Theming | ThemeContext (light / dark / system) |
 | Sound | Web Audio API (web) + `expo-haptics` (native) |
 | i18n | Custom `services/i18n.ts` (de/en), Locales in `locales/` |
-| Tests | Jest 29 + jest-expo ~55 (270+ Tests, jsdom-Environment) |
+| Tests | Jest 29 + jest-expo ~55 (372+ Tests, jsdom-Environment) |
 | CI | GitHub Actions (`.github/workflows/ci-cd.yml`) |
 | Build (Native) | EAS Build (`eas.json`) |
 | Crash Reporting | Sentry via `EXPO_PUBLIC_SENTRY_DSN` (optional, no-op on Web) |
@@ -74,6 +74,7 @@ services/
   SentryService.ts           # Sentry-Wrapper (init, captureException, etc.)
   ThemeContext.tsx            # ThemeProvider + useTheme Hook (light/dark/system)
   i18n.ts                    # Übersetzungs-Service (de/en) mit listener-basiertem Reload
+  ReviewManager.ts           # In-App-Review-Trigger: 5-Sterne oder 3. Daily Challenge, 90-Tage-Cooldown — deaktiviert via EXPO_PUBLIC_ENABLE_IN_APP_REVIEW
   useGamePhase.ts            # Spielphasen-Hook: memorize / draw / result + Replay
   useTimer.ts                # Timer-Hook (Countdown, pause/resume via phase)
 
@@ -175,8 +176,8 @@ memorize  →  draw  →  result
 2. **Draw**: Zeichnen auf `DrawingCanvas` (Pinsel + Flood-Fill). Tool wechselt nach Fill automatisch zu Brush zurück (Issue #45).
 3. **Result**: Sternbewertung (1–5), Replay-Animation, Speichern in Galerie möglich.
 
-Level-Anzahl: 10 (Difficulty 1–5). Alle Level haben 3 s Anzeigezeit.
-Bilderpool: `ImagePoolManager.ts` wählt zufällig nach Difficulty-Klasse aus.
+Level-Anzahl: 20 (Difficulty 1–5). Alle Level haben 3 s Anzeigezeit.
+Bilderpool: `ImagePoolManager.ts` wählt zufällig nach Difficulty-Klasse aus. Aktuell **41 Bilder** (inkl. Tiere v1 Pack — 10 Tiere, PR #221).
 
 ---
 
@@ -293,6 +294,20 @@ Colors.glass.darkShadow    // { boxShadow, elevation } — dunkel
 
 ---
 
+## Feature Flags (Env-Vars)
+
+Alle `EXPO_PUBLIC_*`-Flags sind zur Build-Zeit eingefroren (Expo bündelt sie statisch).
+
+| Env-Var | Default | Bedeutung |
+|---|---|---|
+| `EXPO_PUBLIC_SENTRY_DSN` | — | Sentry-Reporting aktivieren (leer = no-op) |
+| `EXPO_PUBLIC_ENABLE_IN_APP_REVIEW` | `false` | In-App-Review-Prompt via `expo-store-review` — **deaktiviert bis Play-Store-Listing auditiert** (Issue #219 P0) |
+
+> **Aktivieren:** In `.env` oder EAS-Build-Profil `EXPO_PUBLIC_ENABLE_IN_APP_REVIEW=true` setzen.  
+> Der Flag wird in `services/ReviewManager.ts` ausgewertet; kein Code-Change nötig.
+
+---
+
 ## Konventionen für AI-Assistenten
 
 ### Verboten (wird von CI geprüft)
@@ -313,6 +328,7 @@ Web-APIs über `utils/platform.ts` absichern (`safeWebAPI`, `isWeb`-Guard). Für
 ### Tests
 - Test-Dateien liegen bei `services/__tests__/`, `components/__tests__/`, `utils/__tests__/`, `__tests__/`
 - Jest-Umgebung: `jsdom`; Skia wird gemockt via `__mocks__/@shopify/react-native-skia.js`
+- `@testing-library/dom` muss installiert sein (Peer-Dep von `@testing-library/react` v16)
 - `npm test` (kein `--runInBand` nötig, aber stabil)
 
 ---
@@ -320,8 +336,47 @@ Web-APIs über `utils/platform.ts` absichern (`safeWebAPI`, `isWeb`-Guard). Für
 ## Security
 
 - `npm audit --audit-level=high` in CI — Pipeline blockiert bei high/critical
-- Verbleibende 5 low-Findings: `@tootallnate/once` via jest-expo-Chain — Fix würde ein Breaking-Major-Upgrade von jest-expo erfordern (aktuell `~55.0.9`), intentionally excluded
+- Verbleibende Findings (1 low, 14 moderate): alle im jest-expo/expo-SDK-Chain — `npm audit --audit-level=high` schlägt nicht an, intentionally excluded
 - Alle high/critical Vulnerabilities zuletzt gefixt: 2026-04-21 via PR #144
+
+---
+
+## Wachstums-Roadmap (Issue #219)
+
+Übergeordneter Plan, um aus der App eine dauerhaft wachsende Kids-App im Play Store zu machen.
+Ausgangspunkt: `staging` @ v1.7.0 / versionCode 66.
+
+### P0 — Foundation für Wachstum
+| Task | Status |
+|---|---|
+| Galerie-Persistenz (#215) | ✅ erledigt (v1.6.3) |
+| Play-Store-Listing-Audit | ⏭ extern — teilweise umgesetzt |
+| **In-App-Review-Prompt** (`expo-store-review`) | ✅ PR #223 merged in staging — per Feature-Flag deaktiviert (`EXPO_PUBLIC_ENABLE_IN_APP_REVIEW`) |
+| Analytics-Setup (COPPA-konform) | 🔲 offen — Tool-Entscheidung nötig |
+| Crash-Rate-Baseline (Sentry) | 🔲 offen — manuell |
+
+### P1 — Content & Retention
+| Task | Status |
+|---|---|
+| **Themen-Pack Tiere v1** (10 Bilder) | ✅ PR #221 merged in staging |
+| Themen-Pack Fahrzeuge / Natur / Märchen | 🔲 offen |
+| Avatar & Personalisierung | 🔲 offen |
+| XP- & Level-System | 🔲 offen |
+| Wöchentliche Challenge | 🔲 offen |
+
+### P2 — Reichweite & Trust
+| Task | Status |
+|---|---|
+| Designed for Families Programm | 🔲 offen |
+| Weitere Sprachen (ES/FR/IT/NL/PL) | 🔲 offen |
+| Sharing-Feature (PNG-Export) | 🔲 offen |
+| Push-Notifications (opt-in) | 🔲 offen |
+
+### Themen-Pack Architektur (ab PR #221)
+- `LevelImage.pack?: string` — optionaler Tag (z.B. `'tiere-v1'`)
+- Bilder ohne `minLevel` sind ab dem passenden Difficulty-Level verfügbar
+- Neue Packs: einfach neue Cases in `LevelImageDisplay.tsx` + Einträge in `ImagePoolManager.ts` + `IMAGE_ELEMENT_COUNTS`
+- Pflicht nach jedem neuen SVG: `npm run validate:svg-counts` (derzeit 41 Einträge)
 
 ---
 
