@@ -294,6 +294,20 @@ Colors.glass.darkShadow    // { boxShadow, elevation } — dunkel
 
 ---
 
+## Feature Flags (Env-Vars)
+
+Alle `EXPO_PUBLIC_*`-Flags sind zur Build-Zeit eingefroren (Expo bündelt sie statisch).
+
+| Env-Var | Default | Bedeutung |
+|---|---|---|
+| `EXPO_PUBLIC_SENTRY_DSN` | — | Sentry-Reporting aktivieren (leer = no-op) |
+| `EXPO_PUBLIC_ENABLE_IN_APP_REVIEW` | `false` | In-App-Review-Prompt via `expo-store-review` — **deaktiviert bis Play-Store-Listing auditiert** (Issue #219 P0) |
+
+> **Aktivieren:** In `.env` oder EAS-Build-Profil `EXPO_PUBLIC_ENABLE_IN_APP_REVIEW=true` setzen.  
+> Der Flag wird in `services/ReviewManager.ts` ausgewertet; kein Code-Change nötig.
+
+---
+
 ## Konventionen für AI-Assistenten
 
 ### Verboten (wird von CI geprüft)
@@ -337,7 +351,7 @@ Ausgangspunkt: `staging` @ v1.6.3 / versionCode 65.
 |---|---|
 | Galerie-Persistenz (#215) | ✅ erledigt (v1.6.3) |
 | Play-Store-Listing-Audit | ⏭ extern — teilweise umgesetzt |
-| **In-App-Review-Prompt** (`expo-store-review`) | ✅ PR #223 merged in staging |
+| **In-App-Review-Prompt** (`expo-store-review`) | ✅ PR #223 merged in staging — per Feature-Flag deaktiviert (`EXPO_PUBLIC_ENABLE_IN_APP_REVIEW`) |
 | Analytics-Setup (COPPA-konform) | 🔲 offen — Tool-Entscheidung nötig |
 | Crash-Rate-Baseline (Sentry) | 🔲 offen — manuell |
 
