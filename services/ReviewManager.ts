@@ -3,10 +3,16 @@
  *
  * Trigger: 5-Sterne-Bewertung ODER 3. abgeschlossene Daily Challenge
  * Guard:   max. 1× alle 90 Tage; kein Web-Support (native only)
+ *
+ * Feature-Flag: EXPO_PUBLIC_ENABLE_IN_APP_REVIEW=true aktiviert den Dialog.
+ * Standardmäßig deaktiviert — erst aktivieren, wenn Play-Store-Listing auditiert.
  */
 
 import { Platform } from 'react-native';
 import storageManager from './StorageManager';
+
+// Deactivated until Play Store listing is audited (Issue #219 P0)
+const ENABLE_IN_APP_REVIEW = process.env.EXPO_PUBLIC_ENABLE_IN_APP_REVIEW === 'true';
 
 const REVIEW_COOLDOWN_DAYS = 90;
 
@@ -40,6 +46,7 @@ export async function requestReviewIfEligible(
   hasFiveStar: boolean,
   isDailyChallenge: boolean
 ): Promise<void> {
+  if (!ENABLE_IN_APP_REVIEW) return;
   if (Platform.OS === 'web') return;
 
   let shouldTrigger = hasFiveStar;
