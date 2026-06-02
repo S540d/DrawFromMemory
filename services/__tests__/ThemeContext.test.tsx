@@ -43,15 +43,15 @@ describe('ThemeContext', () => {
     spy.mockRestore();
   });
 
-  it('defaults to light theme', () => {
+  it('defaults to dark theme', () => {
     const { result } = renderHook(() => useTheme(), { wrapper });
-    expect(result.current.theme).toBe('light');
-    expect(result.current.themeSetting).toBe('system');
+    expect(result.current.theme).toBe('dark');
+    expect(result.current.themeSetting).toBe('dark');
   });
 
-  it('returns light colors for light theme', () => {
+  it('returns dark colors for dark theme (default)', () => {
     const { result } = renderHook(() => useTheme(), { wrapper });
-    expect(result.current.colors.background).toBe('#FAFAFA');
+    expect(result.current.colors.background).toBe('#1F1B2E');
   });
 
   it('uses dark theme when setting is dark', async () => {
@@ -93,8 +93,14 @@ describe('ThemeContext', () => {
     expect(result.current.theme).toBe('dark');
   });
 
-  it('responds to system appearance changes', async () => {
+  it('responds to system appearance changes when theme is set to system', async () => {
+    storageManager.getSetting.mockResolvedValue('system');
+    (Appearance.getColorScheme as jest.Mock).mockReturnValue('light');
     const { result } = renderHook(() => useTheme(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.themeSetting).toBe('system');
+    });
     expect(result.current.theme).toBe('light');
 
     // Simulate system theme change via the listener callback
@@ -121,15 +127,15 @@ describe('ThemeContext', () => {
     await waitFor(() => {
       expect(spy).toHaveBeenCalled();
     });
-    // Falls back to system/light
-    expect(result.current.theme).toBe('light');
+    // Falls back to initial default (dark)
+    expect(result.current.theme).toBe('dark');
     spy.mockRestore();
   });
 
   it('handles null colorScheme gracefully', () => {
     (Appearance.getColorScheme as jest.Mock).mockReturnValue(null);
     const { result } = renderHook(() => useTheme(), { wrapper });
-    // null defaults to 'light'
-    expect(result.current.theme).toBe('light');
+    // themeSetting defaults to 'dark', so null colorScheme doesn't affect the result
+    expect(result.current.theme).toBe('dark');
   });
 });

@@ -200,7 +200,7 @@ describe('StorageManager', () => {
       const settings = await storageManager.getSettings();
 
       expect(settings).toEqual({
-        theme: 'system',
+        theme: 'dark',
         language: 'de',
         soundEnabled: true,
         musicEnabled: false,
