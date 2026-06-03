@@ -189,7 +189,7 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [themeSetting, setThemeSetting] = useState<Theme>('system');
+  const [themeSetting, setThemeSetting] = useState<Theme>('dark');
   // Always start with 'light' to ensure consistent SSR/client hydration
   const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>('light');
 

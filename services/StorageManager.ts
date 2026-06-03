@@ -275,7 +275,7 @@ class StorageManager {
       };
 
       return {
-        theme: (theme as 'light' | 'dark' | 'system') || 'system',
+        theme: (theme as 'light' | 'dark' | 'system') || 'dark',
         language: (language as 'de' | 'en') || 'de',
         soundEnabled: parseSafely(sound, true),
         musicEnabled: parseSafely(music, false),
@@ -287,7 +287,7 @@ class StorageManager {
 
     // Return defaults
     return {
-      theme: 'system',
+      theme: 'dark',
       language: 'de',
       soundEnabled: true,
       musicEnabled: false,
