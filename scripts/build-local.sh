@@ -49,6 +49,12 @@ fi
 # Output-Verzeichnis anlegen
 mkdir -p build
 
+# macOS /tmp ist ein Symlink → /private/tmp; CMake/Ninja vermischen logische und physische
+# Pfade, was zu "missing libworklets.so"-Fehlern führt. EAS_LOCAL_BUILD_WORKINGDIR auf einen
+# echten Pfad zeigen vermeidet das. (Refs: expo/expo#42893)
+export EAS_LOCAL_BUILD_WORKINGDIR="$HOME/tmp/eas-build"
+mkdir -p "$EAS_LOCAL_BUILD_WORKINGDIR"
+
 # Sentry Source Map Upload deaktivieren (kein Sentry-Projekt lokal konfiguriert)
 # Sentry lädt Source Maps nur in CI hoch, wo SENTRY_DSN/Org gesetzt sind
 export SENTRY_DISABLE_AUTO_UPLOAD=true

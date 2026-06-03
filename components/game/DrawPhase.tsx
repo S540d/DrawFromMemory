@@ -56,7 +56,7 @@ export default function DrawPhase({
           accessibilityLabel={hasUsedHint ? t('game.draw.hintUsed') : t('game.draw.hintButton')}
           accessibilityRole="button"
         >
-          <Text style={styles.hintButtonIcon}>👁</Text>
+          <Text style={styles.hintButtonIcon}>{hasUsedHint ? '👁' : t('game.draw.hintButton')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -246,8 +246,9 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.bold,
   },
   hintButton: {
-    width: 40,
+    minWidth: 52,
     height: 40,
+    paddingHorizontal: Spacing.sm,
     borderRadius: BorderRadius.md,
     backgroundColor: Colors.primary,
     flexShrink: 0,
@@ -260,7 +261,9 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   hintButtonIcon: {
-    fontSize: 20,
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: '#FFFFFF',
   },
   canvasContainer: {
     flex: 1,
