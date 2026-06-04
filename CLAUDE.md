@@ -138,18 +138,15 @@ npm run validate                   # Vollständige Release-Validierung
 npm run deploy:ghpages             # Deployment auf GitHub Pages
 ```
 
-**Branch-Strategie:** Feature-Branches → PR → `staging` (Pre-Production, Sammelbranch) → `main` (Produktion bei Release).
-Die zwei Branches `main` und `staging` müssen immer existieren und dürfen nie gelöscht werden. Features werden in separaten Branches entwickelt und in `staging` gesammelt bis zu einem neuen Release.
+**Branch-Strategie:** `feature/issue-XXX → testing → main` (`staging` entfernt 2026-06-03, Issue #7).
 
-> **⚠️ REGEL FÜR AI-ASSISTENTEN:** Merges auf `main` sind VERBOTEN ohne explizite schriftliche Freigabe durch den Nutzer in der aktuellen Konversation. Das gilt auch für `staging → main`. Feature-PRs gehen immer gegen `staging`. `main` ist production — nur der Nutzer entscheidet, wann etwas dort landet.
-
-> **⚠️ REGEL FÜR AI-ASSISTENTEN:** Merges auf `main` sind VERBOTEN ohne explizite schriftliche Freigabe durch den Nutzer in der aktuellen Konversation. Das gilt auch für `staging → main`. Immer nach `testing → staging` stoppen und auf Freigabe warten. `main` ist production — nur der Nutzer entscheidet, wann etwas dort landet.
+> **⚠️ REGEL FÜR AI-ASSISTENTEN:** Merges auf `main` sind VERBOTEN ohne explizite schriftliche Freigabe durch den Nutzer in der aktuellen Konversation. Feature-PRs gehen immer gegen `testing`. `main` ist production — nur der Nutzer entscheidet, wann etwas dort landet.
 
 ---
 
 ## CI/CD (`.github/workflows/ci-cd.yml`)
 
-Läuft auf `push` und `pull_request` gegen `main` und `staging` (kein `testing`-Branch mehr).
+Läuft auf `push` und `pull_request` gegen `main` und `testing`.
 
 | Job | Name | Inhalt |
 |---|---|---|
