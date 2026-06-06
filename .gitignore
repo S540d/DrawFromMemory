@@ -28,8 +28,9 @@ yarn-error.log*
 *.swo
 *~
 
-# Claude Code (private instructions)
-.claude/
+# Claude Code – .claude/commands/ wird versioniert (Issue #31)
+# Maschinenspezifisches via ~/.gitignore_global ignoriert; settings.json lokal halten
+.claude/settings.json
 
 # Private documentation (deployment guides, store metadata, etc.)
 docs/private/
