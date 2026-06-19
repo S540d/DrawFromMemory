@@ -123,6 +123,7 @@ jest.mock('../../services/StorageManager', () => ({
   default: {
     getGallery: jest.fn(async () => []),
     getProgress: jest.fn(async () => ({ levels: {}, totalLevelsCompleted: 0, averageRating: 0 })),
+    getSetting: jest.fn(async () => true),
   },
 }));
 

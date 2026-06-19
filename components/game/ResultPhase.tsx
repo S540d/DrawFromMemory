@@ -9,10 +9,13 @@ import { getTotalLevels } from '@services/LevelManager';
 import type { ResultPhaseProps } from './game.shared';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
+import { getRatingFeedback } from '@services/RatingManager';
+import type { StarRating } from '../../types';
 
 export default function ResultPhase({
   currentImage,
   levelNumber,
+  currentLang,
   userRating,
   savedToGallery,
   isReplaying,
@@ -40,10 +43,10 @@ export default function ResultPhase({
   }, [isLastLevel, userRating]);
 
   const getFeedbackText = (rating: number) => {
-    if (rating === 5) return t('game.result.feedback5');
-    if (rating === 4) return t('game.result.feedback4');
-    if (rating === 3) return t('game.result.feedback3');
-    if (rating >= 1) return t('game.result.feedback1');
+    if (rating >= 1 && rating <= 5) {
+      const feedback = getRatingFeedback(rating as StarRating);
+      return currentLang === 'en' ? feedback.messageEn : feedback.message;
+    }
     return t('game.result.tapStars');
   };
 

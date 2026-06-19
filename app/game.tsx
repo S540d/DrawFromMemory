@@ -39,6 +39,7 @@ export default function GameScreen() {
   const [showHintModal, setShowHintModal] = useState(false);
   const [hasUsedHint, setHasUsedHint] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [celebrationEnabled, setCelebrationEnabled] = useState(true);
   const [unlockedBadge, setUnlockedBadge] = useState<AchievementDef | null>(null);
   const lastCheckedRatingRef = React.useRef<number>(0);
   const handleBadgeToastHide = useCallback(() => setUnlockedBadge(null), []);
@@ -96,21 +97,27 @@ export default function GameScreen() {
   };
 
   useEffect(() => {
-    SoundManager.init();
+    async function init() {
+      await SoundManager.init();
+      const enabled = await storageManager.getSetting('celebrationEnabled');
+      setCelebrationEnabled(enabled);
+    }
+    init();
   }, []);
 
   useEffect(() => {
     if (userRating === 0 || userRating === lastCheckedRatingRef.current) return;
     lastCheckedRatingRef.current = userRating;
 
-    if (userRating === 5 && FeatureFlags.ENABLE_CONFETTI) {
+    if (userRating >= 4 && FeatureFlags.ENABLE_CONFETTI && celebrationEnabled) {
       setShowConfetti(true);
+      SoundManager.playCelebration();
       const timer = setTimeout(() => setShowConfetti(false), 2700);
       checkAchievements(userRating);
       return () => clearTimeout(timer);
     }
     checkAchievements(userRating);
-  }, [userRating]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [userRating, celebrationEnabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const checkAchievements = async (rating: number) => {
     try {
@@ -273,6 +280,7 @@ export default function GameScreen() {
         <ResultPhase
           currentImage={currentImage}
           levelNumber={levelNumber}
+          currentLang={currentLang}
           userRating={userRating}
           savedToGallery={savedToGallery}
           isReplaying={isReplaying}

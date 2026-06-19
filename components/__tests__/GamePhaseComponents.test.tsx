@@ -9,6 +9,16 @@ jest.mock('../../services/i18n', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
+jest.mock('../../services/RatingManager', () => ({
+  getRatingFeedback: jest.fn((stars: number) => ({
+    stars,
+    message: `feedback-de-${stars}`,
+    messageEn: `feedback-en-${stars}`,
+    animation: 'none',
+    sound: null,
+  })),
+}));
+
 jest.mock('../../services/ThemeContext', () => ({
   useTheme: () => ({
     colors: {
@@ -254,7 +264,8 @@ describe('ResultPhase', () => {
   it('shows feedback text when rating > 0', () => {
     const { UNSAFE_getAllByType } = render(<ResultPhase {...resultProps} userRating={5} />);
     const texts = getAllTexts(UNSAFE_getAllByType);
-    expect(texts).toContain('game.result.feedback5');
+    // RatingManager returns language-specific message; currentLang='en' in resultProps
+    expect(texts).toContain('feedback-en-5');
   });
 
   it('shows saved label when savedToGallery is true', () => {

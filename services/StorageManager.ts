@@ -14,6 +14,7 @@ const KEYS = {
   SOUND_ENABLED: '@merke_male:sound_enabled',
   MUSIC_ENABLED: '@merke_male:music_enabled',
   EXTRA_TIME_MODE: '@merke_male:extra_time_mode',
+  CELEBRATION_ENABLED: '@merke_male:celebration_enabled',
   GALLERY: '@merke_male:gallery',
   REVIEW_LAST_SHOWN: '@merke_male:review_last_shown',
   REVIEW_DAILY_COUNT: '@merke_male:review_daily_count',
@@ -99,6 +100,7 @@ export interface AppSettings {
   soundEnabled: boolean;
   musicEnabled: boolean;
   extraTimeMode: boolean; // Add 5 seconds to all timers
+  celebrationEnabled: boolean; // Konfetti + Jubel-Sound bei 4-5 Sternen
 }
 
 export interface GalleryEntry {
@@ -246,6 +248,10 @@ class StorageManager {
         KEYS.EXTRA_TIME_MODE,
         JSON.stringify(updated.extraTimeMode)
       );
+      await safeStorageOps.setItem(
+        KEYS.CELEBRATION_ENABLED,
+        JSON.stringify(updated.celebrationEnabled)
+      );
     } catch (error) {
       console.error('Error saving settings:', error);
     }
@@ -256,12 +262,13 @@ class StorageManager {
    */
   async getSettings(): Promise<AppSettings> {
     try {
-      const [theme, language, sound, music, extraTime] = await Promise.all([
+      const [theme, language, sound, music, extraTime, celebration] = await Promise.all([
         safeStorageOps.getItem(KEYS.THEME),
         safeStorageOps.getItem(KEYS.LANGUAGE),
         safeStorageOps.getItem(KEYS.SOUND_ENABLED),
         safeStorageOps.getItem(KEYS.MUSIC_ENABLED),
         safeStorageOps.getItem(KEYS.EXTRA_TIME_MODE),
+        safeStorageOps.getItem(KEYS.CELEBRATION_ENABLED),
       ]);
 
       // Safe JSON parsing with fallback
@@ -280,6 +287,7 @@ class StorageManager {
         soundEnabled: parseSafely(sound, true),
         musicEnabled: parseSafely(music, false),
         extraTimeMode: parseSafely(extraTime, false),
+        celebrationEnabled: parseSafely(celebration, true),
       };
     } catch (error) {
       console.error('Error loading settings:', error);
@@ -292,6 +300,7 @@ class StorageManager {
       soundEnabled: true,
       musicEnabled: false,
       extraTimeMode: false,
+      celebrationEnabled: true,
     };
   }
 

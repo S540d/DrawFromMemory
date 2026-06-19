@@ -120,7 +120,9 @@
     "licenseLabel": "License",
     "error": "Error",
     "about": "About",
-    "version": "Version"
+    "version": "Version",
+    "personalize": "Personalize",
+    "celebration": "Celebration moment (Confetti & Sound)"
   },
   "difficulty": {
     "1": "Very easy",
