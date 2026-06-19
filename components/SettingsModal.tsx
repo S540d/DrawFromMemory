@@ -30,6 +30,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [showBadgesModal, setShowBadgesModal] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [celebrationEnabled, setCelebrationEnabled] = useState(true);
   const [showParentDashboard, setShowParentDashboard] = useState(false);
   const parentalGate = useParentalGateAction();
 
@@ -37,6 +38,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
     setCurrentLang(getLanguage());
     setCurrentTheme(themeSetting);
     storageManager.getSetting('soundEnabled').then(setSoundEnabled);
+    storageManager.getSetting('celebrationEnabled').then(setCelebrationEnabled);
   }, [visible, themeSetting]);
 
   const handleLanguageChange = async (lang: 'de' | 'en') => {
@@ -264,6 +266,25 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             setSoundEnabled(enabled);
             SoundManager.setSoundEnabled(enabled);
             await storageManager.setSetting('soundEnabled', enabled);
+          }
+        ))}
+      </View>
+
+      {/* PERSONALISIEREN */}
+      <Text style={[styles.sectionHeader, { color: colors.text.light }]}>
+        {t('settings.personalize')}
+      </Text>
+      <View style={[styles.card, { backgroundColor: colors.surface }]}>
+        {renderRow(t('settings.celebration'), renderSegment(
+          [
+            { label: t('settings.soundOn'), value: 'on' },
+            { label: t('settings.soundOff'), value: 'off' },
+          ],
+          celebrationEnabled ? 'on' : 'off',
+          async (v) => {
+            const enabled = v === 'on';
+            setCelebrationEnabled(enabled);
+            await storageManager.setSetting('celebrationEnabled', enabled);
           }
         ))}
       </View>

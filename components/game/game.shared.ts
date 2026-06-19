@@ -43,6 +43,7 @@ export interface DrawPhaseProps {
 export interface ResultPhaseProps {
   currentImage: LevelImage | null;
   levelNumber: number;
+  currentLang: string;
   userRating: number;
   savedToGallery: boolean;
   isReplaying: boolean;

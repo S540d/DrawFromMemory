@@ -107,7 +107,9 @@ export default function GalleryScreen() {
                   {entry.imageName}
                 </Text>
                 <Text style={[styles.cardMeta, { color: colors.text.secondary }]}>
-                  Level {entry.levelNumber} • {'★'.repeat(entry.rating)}{'☆'.repeat(5 - entry.rating)}
+                  {entry.levelNumber === 0
+                    ? t('gallery.creativeLabel')
+                    : `Level ${entry.levelNumber} • ${'★'.repeat(entry.rating)}${'☆'.repeat(5 - entry.rating)}`}
                 </Text>
                 <Text style={[styles.cardDate, { color: colors.text.light }]}>
                   {formatDate(entry.savedAt)}

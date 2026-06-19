@@ -9,6 +9,7 @@
     "continueButton": "Continue",
     "levelsButton": "Select Level",
     "galleryButton": "My Gallery",
+    "creativeButton": "Creative",
     "settingsButton": "Settings",
     "streakBadge": "🔥 {{count}}",
     "stats": {
@@ -120,7 +121,9 @@
     "licenseLabel": "License",
     "error": "Error",
     "about": "About",
-    "version": "Version"
+    "version": "Version",
+    "personalize": "Personalize",
+    "celebration": "Celebration moment (Confetti & Sound)"
   },
   "difficulty": {
     "1": "Very easy",
@@ -137,7 +140,12 @@
     "delete": "Delete",
     "deleteTitle": "Delete drawing",
     "deleteConfirm": "Do you really want to delete this drawing?",
-    "dailyChallengeLabel": "Daily Challenge"
+    "dailyChallengeLabel": "Daily Challenge",
+    "creativeLabel": "Free Drawing"
+  },
+  "creative": {
+    "title": "Free Drawing",
+    "imageName": "Creative Drawing"
   },
   "dailyChallenge": {
     "title": "Daily Challenge",

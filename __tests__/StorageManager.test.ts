@@ -205,6 +205,7 @@ describe('StorageManager', () => {
         soundEnabled: true,
         musicEnabled: false,
         extraTimeMode: false,
+        celebrationEnabled: true,
       });
     });
 

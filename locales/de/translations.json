@@ -9,6 +9,7 @@
     "continueButton": "Weiterspielen",
     "levelsButton": "Level auswählen",
     "galleryButton": "Meine Galerie",
+    "creativeButton": "Kreativ",
     "settingsButton": "Einstellungen",
     "streakBadge": "🔥 {{count}}",
     "stats": {
@@ -120,7 +121,9 @@
     "licenseLabel": "Lizenz",
     "error": "Fehler",
     "about": "Über die App",
-    "version": "Version"
+    "version": "Version",
+    "personalize": "Personalisieren",
+    "celebration": "Jubelmoment (Konfetti & Sound)"
   },
   "difficulty": {
     "1": "Sehr einfach",
@@ -137,7 +140,12 @@
     "delete": "Löschen",
     "deleteTitle": "Zeichnung löschen",
     "deleteConfirm": "Möchtest du diese Zeichnung wirklich löschen?",
-    "dailyChallengeLabel": "Daily Challenge"
+    "dailyChallengeLabel": "Daily Challenge",
+    "creativeLabel": "Freies Malen"
+  },
+  "creative": {
+    "title": "Freies Malen",
+    "imageName": "Kreativ-Zeichnung"
   },
   "dailyChallenge": {
     "title": "Tägliche Challenge",
