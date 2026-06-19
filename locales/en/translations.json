@@ -9,6 +9,7 @@
     "continueButton": "Continue",
     "levelsButton": "Select Level",
     "galleryButton": "My Gallery",
+    "creativeButton": "Creative",
     "settingsButton": "Settings",
     "streakBadge": "🔥 {{count}}",
     "stats": {
@@ -139,7 +140,12 @@
     "delete": "Delete",
     "deleteTitle": "Delete drawing",
     "deleteConfirm": "Do you really want to delete this drawing?",
-    "dailyChallengeLabel": "Daily Challenge"
+    "dailyChallengeLabel": "Daily Challenge",
+    "creativeLabel": "Free Drawing"
+  },
+  "creative": {
+    "title": "Free Drawing",
+    "imageName": "Creative Drawing"
   },
   "dailyChallenge": {
     "title": "Daily Challenge",
