@@ -45,6 +45,17 @@ const IMAGE_ELEMENT_COUNTS: Record<string, number> = {
   'level-18-flower-detailed.svg': 16,
   'level-19-fish-tropical.svg': 17,
   'level-20-house-detailed.svg': 25,
+  // Fahrzeuge v1 Pack
+  'fahrzeuge-01-bus.svg': 11,
+  'fahrzeuge-02-airplane.svg': 10,
+  'fahrzeuge-03-sailboat.svg': 9,
+  'fahrzeuge-04-tractor.svg': 13,
+  'fahrzeuge-05-helicopter.svg': 12,
+  'fahrzeuge-06-firetruck.svg': 13,
+  'fahrzeuge-07-ambulance.svg': 12,
+  'fahrzeuge-08-submarine.svg': 13,
+  'fahrzeuge-09-speedboat.svg': 12,
+  'fahrzeuge-10-spaceshuttle.svg': 14,
   // Tiere v1 Pack
   'tiere-01-frog.svg': 10,
   'tiere-02-rabbit.svg': 11,
@@ -1215,6 +1226,306 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             <Rect x="110" y="160" width="12" height="28" fill="#FF6F00" stroke="#E65100" strokeWidth="2" rx="3" />
             {/* White chest patch */}
             <Ellipse cx="100" cy="130" rx="20" ry="26" fill="#FFECB3" stroke="none" />
+          </Svg>
+        );
+
+      // ── Fahrzeuge v1 Pack ──────────────────────────────────────────────────
+
+      case 'fahrzeuge-01-bus.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Rect x="18" y="88" width="162" height="60" fill="#FFD700" stroke="#FFA000" strokeWidth="2.5" rx="6" />
+            {/* Roof */}
+            <Rect x="28" y="75" width="142" height="18" fill="#FFC300" stroke="#FFA000" strokeWidth="2" rx="5" />
+            {/* Front windshield */}
+            <Rect x="150" y="92" width="24" height="26" fill="#87CEEB" stroke="#FFA000" strokeWidth="1.5" rx="3" />
+            {/* Window 1 */}
+            <Rect x="28" y="92" width="26" height="22" fill="#87CEEB" stroke="#FFA000" strokeWidth="1.5" rx="3" />
+            {/* Window 2 */}
+            <Rect x="62" y="92" width="26" height="22" fill="#87CEEB" stroke="#FFA000" strokeWidth="1.5" rx="3" />
+            {/* Window 3 */}
+            <Rect x="96" y="92" width="26" height="22" fill="#87CEEB" stroke="#FFA000" strokeWidth="1.5" rx="3" />
+            {/* Left wheel */}
+            <Circle cx="52" cy="156" r="17" fill="#333333" stroke="#1A1A1A" strokeWidth="2" />
+            {/* Left wheel hub */}
+            <Circle cx="52" cy="156" r="7" fill="#999999" />
+            {/* Right wheel */}
+            <Circle cx="148" cy="156" r="17" fill="#333333" stroke="#1A1A1A" strokeWidth="2" />
+            {/* Right wheel hub */}
+            <Circle cx="148" cy="156" r="7" fill="#999999" />
+            {/* Headlight */}
+            <Circle cx="179" cy="108" r="7" fill="#FFFDE7" stroke="#FFA000" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-02-airplane.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Fuselage */}
+            <Ellipse cx="100" cy="108" rx="78" ry="18" fill="#87CEEB" stroke="#4A90D9" strokeWidth="2.5" />
+            {/* Nose cone */}
+            <Ellipse cx="176" cy="108" rx="15" ry="11" fill="#6BB5D5" stroke="#4A90D9" strokeWidth="2" />
+            {/* Main wing upper */}
+            <Polygon points="100,108 72,58 132,108" fill="#4A90D9" stroke="#2C5F9A" strokeWidth="2" />
+            {/* Main wing lower */}
+            <Polygon points="100,108 72,158 132,108" fill="#4A90D9" stroke="#2C5F9A" strokeWidth="2" />
+            {/* Tail fin (vertical) */}
+            <Polygon points="30,104 28,74 52,104" fill="#4A90D9" stroke="#2C5F9A" strokeWidth="2" />
+            {/* Tail horizontal left */}
+            <Polygon points="32,108 12,94 52,108" fill="#4A90D9" stroke="#2C5F9A" strokeWidth="1.5" />
+            {/* Tail horizontal right */}
+            <Polygon points="32,108 12,122 52,108" fill="#4A90D9" stroke="#2C5F9A" strokeWidth="1.5" />
+            {/* Window 1 */}
+            <Circle cx="140" cy="105" r="8" fill="#FFFFFF" stroke="#4A90D9" strokeWidth="1.5" />
+            {/* Window 2 */}
+            <Circle cx="160" cy="105" r="8" fill="#FFFFFF" stroke="#4A90D9" strokeWidth="1.5" />
+            {/* Engine pod */}
+            <Ellipse cx="88" cy="122" rx="16" ry="7" fill="#7FB3D3" stroke="#4A90D9" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-03-sailboat.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Hull */}
+            <Path d="M 28 138 Q 100 158 172 138 L 162 118 Q 100 132 38 118 Z" fill="#8B4513" stroke="#5D2E0C" strokeWidth="2.5" />
+            {/* Mast */}
+            <Line x1="100" y1="50" x2="100" y2="138" stroke="#5D2E0C" strokeWidth="4" strokeLinecap="round" />
+            {/* Main sail */}
+            <Polygon points="100,55 100,128 162,118" fill="#FFFFFF" stroke="#4A90D9" strokeWidth="2" />
+            {/* Jib (front sail) */}
+            <Polygon points="100,75 100,128 48,118" fill="#FFD700" stroke="#FFA000" strokeWidth="2" />
+            {/* Flag */}
+            <Polygon points="100,50 100,65 118,57" fill="#E74C3C" stroke="none" />
+            {/* Water wave 1 */}
+            <Path d="M 8 152 Q 28 144 48 152 Q 68 160 88 152" stroke="#4A90D9" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            {/* Water wave 2 */}
+            <Path d="M 108 157 Q 128 149 148 157 Q 168 165 188 157" stroke="#4A90D9" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            {/* Porthole */}
+            <Circle cx="68" cy="130" r="6" fill="#87CEEB" stroke="#5D2E0C" strokeWidth="1.5" />
+            {/* Boom */}
+            <Line x1="100" y1="128" x2="156" y2="120" stroke="#5D2E0C" strokeWidth="3" strokeLinecap="round" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-04-tractor.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Rect x="62" y="95" width="80" height="55" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2.5" rx="5" />
+            {/* Hood */}
+            <Rect x="118" y="108" width="48" height="35" fill="#388E3C" stroke="#2E7D32" strokeWidth="2" rx="4" />
+            {/* Cabin roof */}
+            <Rect x="65" y="75" width="74" height="25" fill="#2E7D32" stroke="#1B5E20" strokeWidth="2" rx="4" />
+            {/* Cabin window */}
+            <Rect x="70" y="79" width="62" height="17" fill="#87CEEB" stroke="#1B5E20" strokeWidth="1.5" rx="3" />
+            {/* Exhaust pipe */}
+            <Rect x="128" y="88" width="8" height="24" fill="#424242" stroke="#212121" strokeWidth="1.5" rx="2" />
+            {/* Front small wheel */}
+            <Circle cx="150" cy="154" r="18" fill="#333333" stroke="#1A1A1A" strokeWidth="2" />
+            {/* Front wheel hub */}
+            <Circle cx="150" cy="154" r="7" fill="#888888" />
+            {/* Big rear wheel outer */}
+            <Circle cx="72" cy="158" r="35" fill="#333333" stroke="#1A1A1A" strokeWidth="2.5" />
+            {/* Big rear wheel inner */}
+            <Circle cx="72" cy="158" r="22" fill="#555555" />
+            {/* Rear wheel hub */}
+            <Circle cx="72" cy="158" r="10" fill="#888888" />
+            {/* Rear mudguard */}
+            <Path d="M 38 126 Q 36 112 46 108" stroke="#2E7D32" strokeWidth="8" fill="none" strokeLinecap="round" />
+            {/* Headlight */}
+            <Circle cx="164" cy="120" r="7" fill="#FFFDE7" stroke="#FFA000" strokeWidth="1.5" />
+            {/* Rear wheel lug */}
+            <Line x1="72" y1="136" x2="72" y2="146" stroke="#AAAAAA" strokeWidth="3" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-05-helicopter.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Fuselage */}
+            <Ellipse cx="95" cy="118" rx="62" ry="30" fill="#FF6B35" stroke="#E64A19" strokeWidth="2.5" />
+            {/* Cockpit bubble */}
+            <Ellipse cx="138" cy="112" rx="30" ry="24" fill="#87CEEB" stroke="#E64A19" strokeWidth="2" />
+            {/* Tail boom */}
+            <Rect x="20" y="112" width="42" height="14" fill="#FF6B35" stroke="#E64A19" strokeWidth="2" rx="4" />
+            {/* Tail fin */}
+            <Polygon points="20,112 10,90 35,112" fill="#E64A19" stroke="#BF360C" strokeWidth="2" />
+            {/* Tail rotor */}
+            <Ellipse cx="22" cy="100" rx="4" ry="18" fill="#D32F2F" stroke="#B71C1C" strokeWidth="1.5" />
+            {/* Main rotor mast */}
+            <Rect x="95" y="85" width="6" height="20" fill="#757575" stroke="#424242" strokeWidth="1.5" rx="2" />
+            {/* Main rotor blade left */}
+            <Ellipse cx="76" cy="84" rx="28" ry="7" fill="#D32F2F" stroke="#B71C1C" strokeWidth="1.5" />
+            {/* Main rotor blade right */}
+            <Ellipse cx="122" cy="84" rx="28" ry="7" fill="#D32F2F" stroke="#B71C1C" strokeWidth="1.5" />
+            {/* Pilot window */}
+            <Circle cx="142" cy="110" r="14" fill="#FFFFFF" stroke="#E64A19" strokeWidth="1.5" />
+            {/* Skid bar */}
+            <Rect x="68" y="146" width="52" height="7" fill="#757575" stroke="#424242" strokeWidth="1.5" rx="3" />
+            {/* Skid front post */}
+            <Line x1="72" y1="145" x2="72" y2="150" stroke="#424242" strokeWidth="3" />
+            {/* Skid rear post */}
+            <Line x1="115" y1="145" x2="115" y2="150" stroke="#424242" strokeWidth="3" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-06-firetruck.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Rect x="22" y="95" width="158" height="55" fill="#E74C3C" stroke="#C0392B" strokeWidth="2.5" rx="5" />
+            {/* Cabin */}
+            <Rect x="148" y="80" width="32" height="28" fill="#C0392B" stroke="#922B21" strokeWidth="2" rx="4" />
+            {/* Cabin window */}
+            <Rect x="152" y="84" width="24" height="16" fill="#87CEEB" stroke="#922B21" strokeWidth="1.5" rx="3" />
+            {/* Equipment compartment */}
+            <Rect x="30" y="103" width="35" height="38" fill="#C0392B" stroke="#922B21" strokeWidth="1.5" rx="3" />
+            {/* Hose reel */}
+            <Circle cx="100" cy="99" r="16" fill="#CC3D2A" stroke="#922B21" strokeWidth="1.5" />
+            {/* Hose reel center */}
+            <Circle cx="100" cy="99" r="6" fill="#E74C3C" />
+            {/* Ladder */}
+            <Rect x="22" y="85" width="125" height="6" fill="#FFD700" stroke="#FFC300" strokeWidth="1.5" rx="2" />
+            {/* Ladder rungs */}
+            <Path d="M 40 85 L 40 91 M 65 85 L 65 91 M 90 85 L 90 91 M 115 85 L 115 91" stroke="#FFA000" strokeWidth="1.5" />
+            {/* Left wheel */}
+            <Circle cx="52" cy="157" r="18" fill="#333333" stroke="#1A1A1A" strokeWidth="2" />
+            {/* Left wheel hub */}
+            <Circle cx="52" cy="157" r="7" fill="#888888" />
+            {/* Right wheel */}
+            <Circle cx="148" cy="157" r="18" fill="#333333" stroke="#1A1A1A" strokeWidth="2" />
+            {/* Right wheel hub */}
+            <Circle cx="148" cy="157" r="7" fill="#888888" />
+            {/* Headlight */}
+            <Circle cx="179" cy="110" r="7" fill="#FFFDE7" stroke="#FFA000" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-07-ambulance.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Rect x="22" y="90" width="158" height="62" fill="#FFFFFF" stroke="#BDBDBD" strokeWidth="2.5" rx="5" />
+            {/* Cabin roof */}
+            <Rect x="130" y="75" width="52" height="20" fill="#F5F5F5" stroke="#BDBDBD" strokeWidth="2" rx="4" />
+            {/* Windshield */}
+            <Rect x="134" y="79" width="42" height="16" fill="#87CEEB" stroke="#BDBDBD" strokeWidth="1.5" rx="3" />
+            {/* Red cross vertical */}
+            <Rect x="68" y="96" width="12" height="36" fill="#E74C3C" stroke="none" rx="2" />
+            {/* Red cross horizontal */}
+            <Rect x="56" y="108" width="36" height="12" fill="#E74C3C" stroke="none" rx="2" />
+            {/* Red stripe */}
+            <Rect x="22" y="116" width="158" height="10" fill="#E74C3C" stroke="none" />
+            {/* Side window */}
+            <Rect x="110" y="96" width="55" height="22" fill="#E3F2FD" stroke="#BDBDBD" strokeWidth="1" rx="2" />
+            {/* Siren light */}
+            <Rect x="148" y="73" width="20" height="8" fill="#2196F3" stroke="#1565C0" strokeWidth="1.5" rx="3" />
+            {/* Left wheel */}
+            <Circle cx="52" cy="158" r="17" fill="#333333" stroke="#1A1A1A" strokeWidth="2" />
+            {/* Left wheel hub */}
+            <Circle cx="52" cy="158" r="6" fill="#999999" />
+            {/* Right wheel */}
+            <Circle cx="148" cy="158" r="17" fill="#333333" stroke="#1A1A1A" strokeWidth="2" />
+            {/* Right wheel hub */}
+            <Circle cx="148" cy="158" r="6" fill="#999999" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-08-submarine.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Water surface */}
+            <Path d="M 8 100 Q 28 90 48 100 Q 68 110 88 100 Q 108 90 128 100 Q 148 110 168 100 Q 188 90 200 100" stroke="#87CEEB" strokeWidth="3" fill="none" />
+            {/* Sub body */}
+            <Ellipse cx="100" cy="130" rx="82" ry="30" fill="#FFD700" stroke="#FFC107" strokeWidth="2.5" />
+            {/* Conning tower */}
+            <Rect x="82" y="98" width="36" height="36" fill="#FFC300" stroke="#FFA000" strokeWidth="2" rx="5" />
+            {/* Periscope shaft */}
+            <Rect x="96" y="72" width="8" height="30" fill="#FFA000" stroke="#E65100" strokeWidth="1.5" rx="2" />
+            {/* Periscope head */}
+            <Rect x="88" y="70" width="24" height="8" fill="#FFA000" stroke="#E65100" strokeWidth="1.5" rx="2" />
+            {/* Propeller */}
+            <Ellipse cx="18" cy="130" rx="6" ry="18" fill="#FFC107" stroke="#FFA000" strokeWidth="2" />
+            {/* Porthole 1 */}
+            <Circle cx="68" cy="132" r="10" fill="#87CEEB" stroke="#FFA000" strokeWidth="2" />
+            {/* Porthole 2 */}
+            <Circle cx="110" cy="132" r="10" fill="#87CEEB" stroke="#FFA000" strokeWidth="2" />
+            {/* Porthole 3 */}
+            <Circle cx="148" cy="132" r="10" fill="#87CEEB" stroke="#FFA000" strokeWidth="2" />
+            {/* Nose cone */}
+            <Ellipse cx="180" cy="130" rx="18" ry="22" fill="#FFD700" stroke="#FFC107" strokeWidth="2" />
+            {/* Torpedo tube */}
+            <Rect x="192" y="124" width="10" height="12" fill="#FFA000" stroke="#E65100" strokeWidth="1.5" rx="2" />
+            {/* Fin top */}
+            <Polygon points="130,98 124,76 146,98" fill="#FFC107" stroke="#FFA000" strokeWidth="2" />
+            {/* Fin bottom */}
+            <Polygon points="130,162 124,182 146,162" fill="#FFC107" stroke="#FFA000" strokeWidth="2" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-09-speedboat.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Hull */}
+            <Path d="M 20 140 Q 100 115 180 132 L 172 155 Q 100 165 28 158 Z" fill="#E74C3C" stroke="#C0392B" strokeWidth="2.5" />
+            {/* Deck */}
+            <Path d="M 42 140 Q 100 120 172 135 L 168 138 Q 100 124 46 143 Z" fill="#C0392B" stroke="none" />
+            {/* Windshield */}
+            <Polygon points="110,128 110,112 145,118 145,130" fill="#87CEEB" stroke="#C0392B" strokeWidth="2" />
+            {/* Steering post */}
+            <Line x1="120" y1="120" x2="120" y2="138" stroke="#7F8C8D" strokeWidth="3" strokeLinecap="round" />
+            {/* Bow wave */}
+            <Path d="M 18 148 Q 10 140 18 133" stroke="#4A90D9" strokeWidth="3" fill="none" strokeLinecap="round" />
+            {/* Water wave 1 */}
+            <Path d="M 8 165 Q 28 157 48 165 Q 68 173 88 165" stroke="#4A90D9" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            {/* Water wave 2 */}
+            <Path d="M 108 168 Q 128 160 148 168 Q 168 176 188 168" stroke="#4A90D9" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            {/* Engine block */}
+            <Rect x="15" y="138" width="18" height="20" fill="#7F8C8D" stroke="#2C3E50" strokeWidth="2" rx="3" />
+            {/* White racing stripe */}
+            <Path d="M 42 150 Q 100 132 168 146" stroke="#FFFFFF" strokeWidth="3" fill="none" />
+            {/* Wake left */}
+            <Path d="M 14 148 Q 5 153 12 162" stroke="#87CEEB" strokeWidth="2" fill="none" strokeLinecap="round" />
+            {/* Wake right */}
+            <Path d="M 22 158 Q 12 165 18 175" stroke="#87CEEB" strokeWidth="2" fill="none" strokeLinecap="round" />
+            {/* Flag pole */}
+            <Line x1="168" y1="136" x2="168" y2="112" stroke="#7F8C8D" strokeWidth="2" strokeLinecap="round" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-10-spaceshuttle.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Orbiter body */}
+            <Ellipse cx="100" cy="112" rx="20" ry="70" fill="#ECEFF1" stroke="#B0BEC5" strokeWidth="2.5" />
+            {/* Nose cone */}
+            <Polygon points="100,40 84,80 116,80" fill="#CFD8DC" stroke="#B0BEC5" strokeWidth="2" />
+            {/* Left wing */}
+            <Polygon points="82,140 35,178 100,160" fill="#CFD8DC" stroke="#B0BEC5" strokeWidth="2" />
+            {/* Right wing */}
+            <Polygon points="118,140 165,178 100,160" fill="#CFD8DC" stroke="#B0BEC5" strokeWidth="2" />
+            {/* Left wing edge */}
+            <Line x1="35" y1="178" x2="100" y2="190" stroke="#B0BEC5" strokeWidth="1.5" />
+            {/* Right wing edge */}
+            <Line x1="165" y1="178" x2="100" y2="190" stroke="#B0BEC5" strokeWidth="1.5" />
+            {/* Cockpit window */}
+            <Ellipse cx="100" cy="76" rx="12" ry="16" fill="#87CEEB" stroke="#78909C" strokeWidth="2" />
+            {/* Engine left */}
+            <Circle cx="88" cy="180" r="10" fill="#FF7043" stroke="#E64A19" strokeWidth="2" />
+            {/* Engine center */}
+            <Circle cx="100" cy="183" r="10" fill="#FF7043" stroke="#E64A19" strokeWidth="2" />
+            {/* Engine right */}
+            <Circle cx="112" cy="180" r="10" fill="#FF7043" stroke="#E64A19" strokeWidth="2" />
+            {/* Flame left */}
+            <Ellipse cx="88" cy="193" rx="7" ry="10" fill="#FFD700" stroke="none" />
+            {/* Flame center */}
+            <Ellipse cx="100" cy="197" rx="7" ry="11" fill="#FFD700" stroke="none" />
+            {/* Flame right */}
+            <Ellipse cx="112" cy="193" rx="7" ry="10" fill="#FFD700" stroke="none" />
+            {/* Payload door line */}
+            <Line x1="90" y1="88" x2="90" y2="155" stroke="#78909C" strokeWidth="1.5" />
           </Svg>
         );
 
