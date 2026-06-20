@@ -141,7 +141,9 @@
     "deleteTitle": "Zeichnung löschen",
     "deleteConfirm": "Möchtest du diese Zeichnung wirklich löschen?",
     "dailyChallengeLabel": "Daily Challenge",
-    "creativeLabel": "Freies Malen"
+    "creativeLabel": "Freies Malen",
+    "share": "Teilen",
+    "shareError": "Teilen fehlgeschlagen."
   },
   "creative": {
     "title": "Freies Malen",
