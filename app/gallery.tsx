@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import storageManager, { GalleryEntry } from '@services/StorageManager';
+import { shareDrawing } from '@services/ShareService';
 import DrawingCanvas from '@components/DrawingCanvas';
 import { GallerySkeleton } from '@components/SkeletonLoader';
 import { GlassCard } from '@components/AnimatedPrimitives';
@@ -29,6 +30,14 @@ export default function GalleryScreen() {
   useEffect(() => {
     loadGallery();
   }, [loadGallery]);
+
+  const handleShare = async (entry: GalleryEntry) => {
+    try {
+      await shareDrawing(entry.paths, entry.imageName);
+    } catch (e) {
+      Alert.alert(t('gallery.shareError'));
+    }
+  };
 
   const handleDelete = (entry: GalleryEntry) => {
     const doDelete = async () => {
@@ -116,6 +125,13 @@ export default function GalleryScreen() {
                 </Text>
               </View>
               <TouchableOpacity
+                style={styles.shareButton}
+                onPress={() => handleShare(entry)}
+                accessibilityLabel={t('gallery.share')}
+              >
+                <Text style={styles.shareIcon}>↗</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={styles.deleteButton}
                 onPress={() => handleDelete(entry)}
                 accessibilityLabel={t('gallery.delete')}
@@ -202,6 +218,22 @@ const styles = StyleSheet.create({
   cardDate: {
     fontSize: FontSize.xs,
     marginTop: 2,
+  },
+  shareButton: {
+    position: 'absolute',
+    top: Spacing.xs,
+    left: Spacing.xs,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  shareIcon: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
   },
   deleteButton: {
     position: 'absolute',

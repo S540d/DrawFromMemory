@@ -141,7 +141,9 @@
     "deleteTitle": "Delete drawing",
     "deleteConfirm": "Do you really want to delete this drawing?",
     "dailyChallengeLabel": "Daily Challenge",
-    "creativeLabel": "Free Drawing"
+    "creativeLabel": "Free Drawing",
+    "share": "Share",
+    "shareError": "Share failed."
   },
   "creative": {
     "title": "Free Drawing",

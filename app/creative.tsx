@@ -10,6 +10,7 @@ import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import storageManager from '@services/StorageManager';
+import { shareDrawing } from '@services/ShareService';
 import SoundManager from '@services/SoundManager';
 
 export default function CreativeScreen() {
@@ -32,6 +33,15 @@ export default function CreativeScreen() {
     });
     SoundManager.playSuccess();
     setSavedToGallery(true);
+  };
+
+  const handleShare = async () => {
+    if (drawing.paths.length === 0) return;
+    try {
+      await shareDrawing(drawing.paths, t('creative.imageName'));
+    } catch (e) {
+      Alert.alert(t('gallery.shareError'));
+    }
   };
 
   const handleClear = () => {
@@ -174,6 +184,16 @@ export default function CreativeScreen() {
           accessibilityLabel={t('game.draw.clear')}
         >
           <Text style={[styles.secondaryButtonText, { color: Colors.primary }]}>{t('game.draw.clear')}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: Colors.primary }, drawing.paths.length === 0 && styles.buttonDisabled]}
+          onPress={handleShare}
+          disabled={drawing.paths.length === 0}
+          accessibilityRole="button"
+          accessibilityLabel={t('gallery.share')}
+        >
+          <Text style={[styles.secondaryButtonText, { color: Colors.primary }]}>{t('gallery.share')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
