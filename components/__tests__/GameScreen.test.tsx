@@ -104,6 +104,35 @@ jest.mock('../../components/ConfettiBurst', () => {
   return { __esModule: true, default: () => <View testID="confetti-burst" /> };
 });
 
+jest.mock('../../components/game/TimerArc', () => {
+  const { View } = require('react-native');
+  return {
+    __esModule: true,
+    default: () => <View testID="timer-arc" />,
+    TimerArc: () => <View testID="timer-arc" />,
+  };
+});
+
+jest.mock('react-native-reanimated', () => {
+  const { View } = require('react-native');
+  return {
+    __esModule: true,
+    default: { View, createAnimatedComponent: (c: any) => c },
+    useSharedValue: (v: any) => ({ value: v }),
+    useAnimatedStyle: (_fn: any) => ({}),
+    withTiming: (_v: any, _config?: any, cb?: (finished: boolean) => void) => {
+      if (cb) cb(true);
+      return _v;
+    },
+    runOnJS: (fn: any) => fn,
+    Easing: { out: (fn: any) => fn, cubic: (t: number) => t, linear: (t: number) => t },
+  };
+});
+
+jest.mock('../../utils/useReduceMotion', () => ({
+  useReduceMotion: () => false,
+}));
+
 jest.mock('../../components/BadgeUnlockToast', () => {
   const { View } = require('react-native');
   return { __esModule: true, default: () => <View testID="badge-unlock-toast" /> };
@@ -134,6 +163,7 @@ jest.mock('../../services/useGamePhase', () => ({
     levelNumber: 1,
     currentImage: null,
     timeRemaining: 5,
+    displayDuration: 5,
     userRating: 0,
     revealStep: 0,
     savedToGallery: false,

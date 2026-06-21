@@ -2,14 +2,16 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import LevelImageDisplay from '@components/LevelImageDisplay';
 import { ErrorBoundary } from '@components/ErrorBoundary';
-import Colors from '../../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../../constants/Layout';
+import Colors from '../../constants/Colors';
 import type { MemorizePhaseProps } from './game.shared';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
+import TimerArc from './TimerArc';
 
 export default function MemorizePhase({
   timeRemaining,
+  totalTime,
   currentImage,
   levelNumber,
   currentLang,
@@ -24,9 +26,7 @@ export default function MemorizePhase({
     <View style={styles.phaseContainer}>
       <Text style={[styles.phaseTitle, { color: colors.text.primary }]}>{t('game.memorize.title')}</Text>
 
-      <View style={styles.timerContainer}>
-        <Text style={styles.timerText}>{t('game.memorize.timeLeft', { seconds: Math.max(0, Math.ceil(timeRemaining)) })}</Text>
-      </View>
+      <TimerArc timeRemaining={timeRemaining} totalTime={totalTime} />
 
       <View style={styles.imageContainer}>
         {currentImage && (
@@ -59,22 +59,6 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginBottom: Spacing.xs,
     textAlign: 'center',
-  },
-  timerContainer: {
-    alignSelf: 'center',
-    backgroundColor: Colors.primary,
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: Spacing.md,
-    ...Colors.shadow.large,
-  },
-  timerText: {
-    fontSize: FontSize.huge,
-    fontWeight: FontWeight.bold,
-    color: '#ffffff',
   },
   imageContainer: {
     flex: 1,

@@ -1,9 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { GlassCard } from '@components/AnimatedPrimitives';
 import { useTheme } from '@services/ThemeContext';
 import { useTranslation } from '@services/i18n';
+import { useReduceMotion } from '../utils/useReduceMotion';
 import storageManager from '@services/StorageManager';
 import { getStreakData } from '@services/StreakManager';
 import { getTotalLevels } from '@services/LevelManager';
@@ -16,12 +17,18 @@ interface Stats {
   levelsCompleted: number;
 }
 
+const ZERO_STATS: Stats = { totalStars: 0, currentStreak: 0, levelsCompleted: 0 };
+const COUNTER_DURATION_MS = 600;
+const COUNTER_STEPS = 20;
+
 export default function QuickStatsCards() {
   const { t } = useTranslation();
   const { theme, colors } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const [stats, setStats] = useState<Stats>({ totalStars: 0, currentStreak: 0, levelsCompleted: 0 });
+  const reduceMotion = useReduceMotion();
+  const [stats, setStats] = useState<Stats>(ZERO_STATS);
+  const [displayStats, setDisplayStats] = useState<Stats>(ZERO_STATS);
 
   const glassSurface = theme === 'dark' ? Colors.glass.darkSurface : Colors.glass.lightSurface;
   const glassBorder  = theme === 'dark' ? Colors.glass.darkBorder  : Colors.glass.lightBorder;
@@ -51,6 +58,38 @@ export default function QuickStatsCards() {
     }, [])
   );
 
+  // Animate displayed values from 0 to the loaded targets
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
+    if (reduceMotion || (stats.totalStars === 0 && stats.currentStreak === 0 && stats.levelsCompleted === 0)) {
+      setDisplayStats(stats);
+      return;
+    }
+
+    setDisplayStats(ZERO_STATS);
+    let step = 0;
+    intervalRef.current = setInterval(() => {
+      step++;
+      const t = Math.min(1, step / COUNTER_STEPS);
+      setDisplayStats({
+        totalStars: Math.round(t * stats.totalStars),
+        currentStreak: Math.round(t * stats.currentStreak),
+        levelsCompleted: Math.round(t * stats.levelsCompleted),
+      });
+      if (step >= COUNTER_STEPS) {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        setDisplayStats(stats);
+      }
+    }, COUNTER_DURATION_MS / COUNTER_STEPS);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [stats.totalStars, stats.currentStreak, stats.levelsCompleted, reduceMotion]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Below 340px: wrap into 2 rows; otherwise all 3 in one row
   const narrow = width < 340;
   const totalLevels = getTotalLevels();
@@ -66,7 +105,7 @@ export default function QuickStatsCards() {
     {
       emoji: '⭐',
       label: t('home.stats.stars'),
-      value: String(stats.totalStars),
+      value: String(displayStats.totalStars),
       sub: null,
       onPress: () => router.push('/gallery'),
       index: 0,
@@ -74,7 +113,7 @@ export default function QuickStatsCards() {
     {
       emoji: '🔥',
       label: t('home.stats.streak'),
-      value: String(stats.currentStreak),
+      value: String(displayStats.currentStreak),
       sub: stats.currentStreak > 0
         ? t(stats.currentStreak === 1 ? 'home.stats.streakDay' : 'home.stats.streakDays')
         : null,
@@ -84,7 +123,7 @@ export default function QuickStatsCards() {
     {
       emoji: '🏆',
       label: t('home.stats.levels'),
-      value: String(stats.levelsCompleted),
+      value: String(displayStats.levelsCompleted),
       sub: t('home.stats.levelOf', { total: String(totalLevels) }),
       onPress: () => router.push('/levels'),
       index: 2,

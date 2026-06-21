@@ -3,6 +3,7 @@ import type { LevelImage } from '../../types';
 
 export interface MemorizePhaseProps {
   timeRemaining: number;
+  totalTime: number;
   currentImage: LevelImage | null;
   levelNumber: number;
   currentLang: string;
