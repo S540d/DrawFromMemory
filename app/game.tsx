@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useScreenLayout } from '@utils/useScreenLayout';
@@ -26,6 +26,15 @@ import storageManager from '@services/StorageManager';
 import MemorizePhase from '@components/game/MemorizePhase';
 import DrawPhase from '@components/game/DrawPhase';
 import ResultPhase from '@components/game/ResultPhase';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  runOnJS,
+} from 'react-native-reanimated';
+import { useReduceMotion } from '../utils/useReduceMotion';
+import type { GamePhase } from '../types';
+import type { ConfettiIntensity } from '@components/ConfettiBurst';
 
 export default function GameScreen() {
   const { t } = useTranslation();
@@ -35,14 +44,21 @@ export default function GameScreen() {
   const insets = useSafeAreaInsets();
   const layout = useScreenLayout();
   const { screenWidth, isSmall } = layout;
+  const reduceMotion = useReduceMotion();
   const [showSettings, setShowSettings] = useState(false);
   const [showHintModal, setShowHintModal] = useState(false);
   const [hasUsedHint, setHasUsedHint] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [celebrationEnabled, setCelebrationEnabled] = useState(true);
+  const [confettiIntensity, setConfettiIntensity] = useState<ConfettiIntensity>('full');
   const [unlockedBadge, setUnlockedBadge] = useState<AchievementDef | null>(null);
-  const lastCheckedRatingRef = React.useRef<number>(0);
+  const lastCheckedRatingRef = useRef<number>(0);
   const handleBadgeToastHide = useCallback(() => setUnlockedBadge(null), []);
+
+  // Phase crossfade
+  const [visiblePhase, setVisiblePhase] = useState<GamePhase>('memorize');
+  const phaseOpacity = useSharedValue(1);
+  const phaseAnimStyle = useAnimatedStyle(() => ({ opacity: phaseOpacity.value, flex: 1 }));
 
   const drawing = useDrawingCanvas();
   const currentLang = getLanguage();
@@ -62,6 +78,7 @@ export default function GameScreen() {
     levelNumber,
     currentImage,
     timeRemaining,
+    displayDuration,
     userRating,
     revealStep,
     savedToGallery,
@@ -80,6 +97,23 @@ export default function GameScreen() {
     clearCanvas: drawing.clearCanvas,
     isDailyChallenge,
   });
+
+  useEffect(() => {
+    if (phase === visiblePhase) return;
+
+    if (reduceMotion) {
+      setVisiblePhase(phase);
+      return;
+    }
+
+    phaseOpacity.value = withTiming(0, { duration: 150 }, (finished) => {
+      'worklet';
+      if (finished) {
+        runOnJS(setVisiblePhase)(phase);
+        phaseOpacity.value = withTiming(1, { duration: 250 });
+      }
+    });
+  }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleRestartCurrentLevel = () => {
     setHasUsedHint(false);
@@ -110,9 +144,12 @@ export default function GameScreen() {
     lastCheckedRatingRef.current = userRating;
 
     if (userRating >= 4 && FeatureFlags.ENABLE_CONFETTI && celebrationEnabled) {
+      const intensity: ConfettiIntensity = userRating === 5 ? 'full' : 'light';
+      const clearAfter = userRating === 5 ? 2700 : 1700;
+      setConfettiIntensity(intensity);
       setShowConfetti(true);
       SoundManager.playCelebration();
-      const timer = setTimeout(() => setShowConfetti(false), 2700);
+      const timer = setTimeout(() => setShowConfetti(false), clearAfter);
       checkAchievements(userRating);
       return () => clearTimeout(timer);
     }
@@ -241,66 +278,74 @@ export default function GameScreen() {
         </TouchableOpacity>
       </Modal>
 
-      {/* Phase Content */}
-      {phase === 'memorize' && (
-        <MemorizePhase
-          timeRemaining={timeRemaining}
-          currentImage={currentImage}
-          levelNumber={levelNumber}
-          currentLang={currentLang}
-          memorizeImageSize={layout.memorizeImageSize}
-          imagePlaceholderMinSize={layout.imagePlaceholderMinSize}
-          revealStep={revealStep}
-        />
-      )}
-      {phase === 'draw' && (
-        <DrawPhase
-          currentImage={currentImage}
-          currentLang={currentLang}
-          hasUsedHint={hasUsedHint}
-          onUseHint={() => setHasUsedHint(true)}
-          onShowHintModal={() => setShowHintModal(true)}
-          drawing={drawing}
-          layout={{
-            canvasMaxHeight: layout.canvasMaxHeight,
-            canvasMinHeight: layout.canvasMinHeight,
-            canvasMarginVertical: layout.canvasMarginVertical,
-            toolbarMarginVertical: layout.toolbarMarginVertical,
-            buttonMinHeight: layout.buttonMinHeight,
-            buttonPaddingVertical: layout.buttonPaddingVertical,
-            isSmall,
-          }}
-          onDone={() => {
-            SoundManager.playPhaseTransition();
-            setPhase('result');
-          }}
-        />
-      )}
-      {phase === 'result' && (
-        <ResultPhase
-          currentImage={currentImage}
-          levelNumber={levelNumber}
-          currentLang={currentLang}
-          userRating={userRating}
-          savedToGallery={savedToGallery}
-          isReplaying={isReplaying}
-          replayPaths={replayPaths}
-          drawingPaths={drawing.paths}
-          screenWidth={screenWidth}
-          isSmall={isSmall}
-          onRatingSubmit={handleRatingSubmit}
-          onSaveToGallery={saveToGallery}
-          onStartReplay={startReplay}
-          onStopReplay={() => setIsReplaying(false)}
-          onNextLevel={handleStartNextLevel}
-          onRestartFromLevel1={handleRestartFromLevel1}
-        />
-      )}
+      {/* Phase Content — crossfade on transition */}
+      <Animated.View style={phaseAnimStyle}>
+        {visiblePhase === 'memorize' && (
+          <MemorizePhase
+            timeRemaining={timeRemaining}
+            totalTime={displayDuration}
+            currentImage={currentImage}
+            levelNumber={levelNumber}
+            currentLang={currentLang}
+            memorizeImageSize={layout.memorizeImageSize}
+            imagePlaceholderMinSize={layout.imagePlaceholderMinSize}
+            revealStep={revealStep}
+          />
+        )}
+        {visiblePhase === 'draw' && (
+          <DrawPhase
+            currentImage={currentImage}
+            currentLang={currentLang}
+            hasUsedHint={hasUsedHint}
+            onUseHint={() => setHasUsedHint(true)}
+            onShowHintModal={() => setShowHintModal(true)}
+            drawing={drawing}
+            layout={{
+              canvasMaxHeight: layout.canvasMaxHeight,
+              canvasMinHeight: layout.canvasMinHeight,
+              canvasMarginVertical: layout.canvasMarginVertical,
+              toolbarMarginVertical: layout.toolbarMarginVertical,
+              buttonMinHeight: layout.buttonMinHeight,
+              buttonPaddingVertical: layout.buttonPaddingVertical,
+              isSmall,
+            }}
+            onDone={() => {
+              SoundManager.playPhaseTransition();
+              setPhase('result');
+            }}
+          />
+        )}
+        {visiblePhase === 'result' && (
+          <ResultPhase
+            currentImage={currentImage}
+            levelNumber={levelNumber}
+            currentLang={currentLang}
+            userRating={userRating}
+            savedToGallery={savedToGallery}
+            isReplaying={isReplaying}
+            replayPaths={replayPaths}
+            drawingPaths={drawing.paths}
+            screenWidth={screenWidth}
+            isSmall={isSmall}
+            onRatingSubmit={handleRatingSubmit}
+            onSaveToGallery={saveToGallery}
+            onStartReplay={startReplay}
+            onStopReplay={() => setIsReplaying(false)}
+            onNextLevel={handleStartNextLevel}
+            onRestartFromLevel1={handleRestartFromLevel1}
+          />
+        )}
+      </Animated.View>
 
       {/* Delight overlays */}
       {phase === 'result' && (
         <View pointerEvents="none" style={StyleSheet.absoluteFill}>
-          <ConfettiBurst width={screenWidth} height={layout.canvasMaxHeight + 200} active={showConfetti} />
+          <ConfettiBurst
+            width={screenWidth}
+            height={layout.canvasMaxHeight + 200}
+            active={showConfetti}
+            intensity={confettiIntensity}
+          />
         </View>
       )}
       <BadgeUnlockToast achievement={unlockedBadge} onHide={handleBadgeToastHide} />

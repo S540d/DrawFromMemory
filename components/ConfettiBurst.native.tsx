@@ -12,6 +12,7 @@ import {
 import {
   buildParticles,
   CONFETTI_DURATION_MS,
+  CONFETTI_LIGHT_DURATION_MS,
   type ConfettiBurstProps,
   type ConfettiParticle,
 } from './ConfettiBurst.shared';
@@ -25,9 +26,10 @@ function Particle({ p, progress }: { p: ConfettiParticle; progress: { value: num
   return <Circle cx={cx} cy={cy} r={p.size / 2} color={p.color} opacity={opacity} />;
 }
 
-export function ConfettiBurst({ width, height, active }: ConfettiBurstProps) {
+export function ConfettiBurst({ width, height, active, intensity = 'full' }: ConfettiBurstProps) {
   const reduceMotion = useReduceMotion();
   const progress = useSharedValue(0);
+  const duration = intensity === 'light' ? CONFETTI_LIGHT_DURATION_MS : CONFETTI_DURATION_MS;
 
   useEffect(() => {
     if (!active || reduceMotion) {
@@ -37,11 +39,14 @@ export function ConfettiBurst({ width, height, active }: ConfettiBurstProps) {
     progress.value = 0;
     progress.value = withDelay(
       0,
-      withTiming(1, { duration: CONFETTI_DURATION_MS, easing: Easing.out(Easing.cubic) }),
+      withTiming(1, { duration, easing: Easing.out(Easing.cubic) }),
     );
-  }, [active, reduceMotion, progress]);
+  }, [active, reduceMotion, progress, duration]);
 
-  const particles = useMemo(() => buildParticles(width, height, Math.floor(width + height)), [width, height]);
+  const particles = useMemo(
+    () => buildParticles(width, height, Math.floor(width + height), intensity),
+    [width, height, intensity],
+  );
 
   if (!active || reduceMotion) return null;
 
