@@ -168,7 +168,14 @@ export default function HomeScreen() {
       </View>
 
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
-      <OnboardingModal visible={showOnboarding} onClose={() => setShowOnboarding(false)} />
+      <OnboardingModal
+        visible={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        onStartTutorial={() => {
+          setShowOnboarding(false);
+          router.push('/game?tutorial=1&level=1');
+        }}
+      />
     </View>
   );
 }
