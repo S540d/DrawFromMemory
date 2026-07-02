@@ -251,16 +251,16 @@ Gespeicherte Felder: `progress`, `theme`, `language`, `sound_enabled`, `music_en
 
 ## UI/UX Design System (Issue #176)
 
-Stand `testing`: Phase A + B abgeschlossen, Phase D (Konfetti + Jubel-Sound) teilweise umgesetzt.
+Stand `testing`: Phase A, B, C und E abgeschlossen, Phase D (Konfetti + Jubel-Sound, TimerArc, Phasen-Crossfade, Stats-Counter) größtenteils umgesetzt — nur Lottie offen.
 
 ### Phase-Übersicht
 | Phase | Status | Branch/PR |
 |---|---|---|
 | **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie | ✅ in `testing` | PR merged |
 | **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in `testing` | PR #178 merged |
-| **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh | 🔲 offen | — |
-| **D: Delight** — Lottie, Konfetti, Mikro-Sounds | 🔶 teilweise (Konfetti + Jubel-Sound in PR #253) | — |
-| **E: Onboarding** — First-Run-Tour | 🔲 offen | — |
+| **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh | ✅ in `testing` | PR #257 merged |
+| **D: Delight** — Lottie, Konfetti, Mikro-Sounds | 🔶 größtenteils (Konfetti + Jubel-Sound PR #253, TimerArc/Phasen-Crossfade/Stats-Counter PR #257) — Lottie offen | — |
+| **E: Onboarding** — First-Run-Tour | ✅ in `testing` | PR #261 merged (In-Game Coach-Marks) |
 
 ### Neue Primitiven (Phase B)
 
@@ -356,7 +356,7 @@ Web-APIs über `utils/platform.ts` absichern (`safeWebAPI`, `isWeb`-Guard). Für
 ## Wachstums-Roadmap (Issue #219)
 
 Übergeordneter Plan, um aus der App eine dauerhaft wachsende Kids-App im Play Store zu machen.
-Stand: `main` @ v1.7.0 / versionCode 66. `testing` hat Fahrzeuge v1 + PNG-Export (noch nicht in main).
+Stand: `main` @ v1.7.0 / versionCode 66. `testing` hat Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten und weitere Sprachen (noch nicht in main).
 
 ### P0 — Foundation für Wachstum
 | Task | Status |
