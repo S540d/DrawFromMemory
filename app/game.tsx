@@ -15,6 +15,8 @@ import SettingsModal from '@components/SettingsModal';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import ConfettiBurst from '@components/ConfettiBurst';
 import BadgeUnlockToast from '@components/BadgeUnlockToast';
+import TutorialOverlay from '@components/TutorialOverlay';
+import { markOnboardingDone } from '@services/OnboardingManager';
 import SoundManager from '@services/SoundManager';
 import { useGamePhase } from '@services/useGamePhase';
 import {
@@ -71,6 +73,8 @@ export default function GameScreen() {
       : 1;
 
   const isDailyChallenge = params.daily === '1';
+  const [isTutorial, setIsTutorial] = useState(params.tutorial === '1');
+  const [tutorialHintVisible, setTutorialHintVisible] = useState(true);
 
   const {
     phase,
@@ -138,6 +142,19 @@ export default function GameScreen() {
     }
     init();
   }, []);
+
+  // Reset tutorial hint when phase changes so each phase shows its own hint
+  useEffect(() => {
+    if (isTutorial) setTutorialHintVisible(true);
+  }, [phase, isTutorial]);
+
+  // Complete tutorial after first rating is submitted
+  useEffect(() => {
+    if (isTutorial && userRating > 0) {
+      markOnboardingDone();
+      setIsTutorial(false);
+    }
+  }, [isTutorial, userRating]);
 
   useEffect(() => {
     if (userRating === 0 || userRating === lastCheckedRatingRef.current) return;
@@ -349,6 +366,14 @@ export default function GameScreen() {
         </View>
       )}
       <BadgeUnlockToast achievement={unlockedBadge} onHide={handleBadgeToastHide} />
+
+      {/* Tutorial Coach Mark */}
+      {isTutorial && tutorialHintVisible && (phase === 'memorize' || phase === 'draw' || phase === 'result') && (
+        <TutorialOverlay
+          phase={phase}
+          onDismiss={() => setTutorialHintVisible(false)}
+        />
+      )}
     </View>
   );
 }
