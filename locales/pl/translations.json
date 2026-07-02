@@ -1,0 +1,263 @@
+{
+  "app": {
+    "name": "Zapamiętaj i Rysuj"
+  },
+  "home": {
+    "title": "Zapamiętaj i Rysuj",
+    "subtitle": "Trenuj swoją pamięć!",
+    "startButton": "Rozpocznij grę",
+    "continueButton": "Kontynuuj",
+    "levelsButton": "Wybierz poziom",
+    "galleryButton": "Moja galeria",
+    "creativeButton": "Kreatywny",
+    "settingsButton": "Ustawienia",
+    "streakBadge": "🔥 {{count}}",
+    "stats": {
+      "stars": "Gwiazdki",
+      "streak": "Seria",
+      "levels": "Poziomy",
+      "streakDay": "dzień",
+      "streakDays": "dni",
+      "levelOf": "z {{total}}"
+    }
+  },
+  "levels": {
+    "title": "Wybierz poziom",
+    "level": "Poziom {{number}}",
+    "difficulty": "Trudność: {{diff}}",
+    "displayTime": "{{seconds}}s wyświetlania",
+    "stars": "{{count}} gwiazdek",
+    "locked": "Zablokowany",
+    "unlockHint": "Ukończ poziom {{prev}}",
+    "variant": {
+      "title": "Tryb gry",
+      "normal": "Normalny",
+      "outline": "Tylko kontur",
+      "mirror": "Lustrzane odbicie"
+    }
+  },
+  "game": {
+    "memorize": {
+      "title": "Zapamiętaj obrazek!",
+      "timeLeft": "{{seconds}}s",
+      "imageInfo": "Poziom {{level}} • {{strokeCount}} kresek"
+    },
+    "draw": {
+      "title": "Narysuj obrazek!",
+      "hint": "Użyj kolorów i narysuj to, co zapamiętałeś",
+      "tool": "Narzędzie",
+      "toolBrush": "🖊️ Pędzel",
+      "toolFill": "💧 Wypełnij",
+      "strokeWidth": "Grubość linii",
+      "strokeWidthThin": "Cienka",
+      "strokeWidthNormal": "Normalna",
+      "strokeWidthThick": "Gruba",
+      "color": "Kolor",
+      "selectColor": "Wybierz kolor",
+      "undo": "Cofnij",
+      "clear": "Wyczyść wszystko",
+      "clearConfirm": "Na pewno wyczyścić wszystko?",
+      "done": "Gotowe",
+      "hintButton": "👁 1x",
+      "hintUsed": "Podpowiedź użyta",
+      "hintModalTitle": "Wzór",
+      "drawFromMemory": "Narysuj",
+      "referenceLabel": "Zobacz wzór"
+    },
+    "tabs": {
+      "draw": "Rysuj",
+      "result": "Wynik"
+    },
+    "result": {
+      "title": "Oceń się:",
+      "howWell": "Jak dobrze Ci poszło?",
+      "tapStars": "Dotknij gwiazdek, aby się ocenić!",
+      "starAccessibilityLabel": "{{rating}} gwiazdek{{plural}}",
+      "template": "Wzór",
+      "feedback5": "Idealnie! Jesteś mistrzem pamięci!",
+      "feedback4": "Bardzo dobrze! Prawie idealnie!",
+      "feedback3": "Dobra robota! Tak trzymaj!",
+      "feedback1": "Było już lepiej niż wcześniej, chcesz mimo to spróbować ponownie?",
+      "yourDrawing": "Twój rysunek",
+      "original": "Oryginał",
+      "rating": "Twoja ocena",
+      "retry": "Jeszcze raz",
+      "nextLevel": "Dalej",
+      "backToMenu": "Menu",
+      "allLevelsComplete": "Wszystkie poziomy ukończone!",
+      "allLevelsCompleteMessage": "Opanowałeś wszystkie 20 poziomów. Jesteś prawdziwym mistrzem pamięci!",
+      "playAgain": "Zacznij od nowa",
+      "replay": "▶ Powtórz",
+      "replayStop": "⏹ Zatrzymaj"
+    }
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "appearance": "Wygląd",
+    "theme": "Motyw",
+    "themeLight": "Jasny",
+    "themeDark": "Ciemny",
+    "themeSystem": "Systemowy",
+    "language": "Język",
+    "sound": "Efekty dźwiękowe",
+    "soundOn": "Wł.",
+    "soundOff": "Wył.",
+    "music": "Muzyka w tle",
+    "dataSection": "Dane",
+    "resetProgress": "Resetuj postępy",
+    "resetConfirm": "Na pewno usunąć wszystkie postępy?",
+    "resetConfirmMessage": "Czy na pewno chcesz zresetować swoje postępy? Tej czynności nie można cofnąć.",
+    "resetSuccess": "Postępy zresetowane",
+    "resetSuccessMessage": "Twoje postępy w grze zostały pomyślnie zresetowane.",
+    "languageChanged": "Język zmieniony",
+    "languageChangedMessage": "Język został zmieniony na polski. Uruchom ponownie aplikację, aby zmiany zadziałały wszędzie.",
+    "feedbackEmailSubject": "Opinia: Zapamiętaj i Rysuj",
+    "feedbackEmailBody": "Cześć,\n\nMam opinię na temat Zapamiętaj i Rysuj:\n\n",
+    "feedbackEmailError": "Nie można otworzyć klienta e-mail. Prześlij opinię na adres: devsven@posteo.de",
+    "browserError": "Nie można otworzyć przeglądarki. Odwiedź: https://ko-fi.com/s540d",
+    "browserErrorGeneric": "Nie można otworzyć przeglądarki.",
+    "shareMessage": "Sprawdź tę świetną aplikację do trenowania pamięci: Zapamiętaj i Rysuj! https://github.com/S540d/DrawFromMemory",
+    "aboutSupport": "O aplikacji i wsparcie",
+    "feedback": "Opinia",
+    "support": "Wsparcie",
+    "share": "Udostępnij",
+    "aboutButton": "O aplikacji",
+    "aboutTitle": "O aplikacji Zapamiętaj i Rysuj",
+    "versionLabel": "Wersja",
+    "licenseLabel": "Licencja",
+    "error": "Błąd",
+    "about": "O aplikacji",
+    "version": "Wersja",
+    "personalize": "Personalizuj",
+    "celebration": "Moment świętowania (konfetti i dźwięk)"
+  },
+  "difficulty": {
+    "1": "Bardzo łatwy",
+    "2": "Łatwy",
+    "3": "Średni",
+    "4": "Trudny",
+    "5": "Bardzo trudny"
+  },
+  "gallery": {
+    "title": "Moja galeria",
+    "empty": "Brak zapisanych rysunków. Narysuj obrazek i dotknij \"Zapisz\"!",
+    "save": "Zapisz w galerii",
+    "saved": "Zapisano!",
+    "delete": "Usuń",
+    "deleteTitle": "Usuń rysunek",
+    "deleteConfirm": "Czy na pewno chcesz usunąć ten rysunek?",
+    "dailyChallengeLabel": "Codzienne wyzwanie",
+    "creativeLabel": "Rysowanie dowolne",
+    "share": "Udostępnij",
+    "shareError": "Udostępnianie nie powiodło się."
+  },
+  "creative": {
+    "title": "Rysowanie dowolne",
+    "imageName": "Kreatywny rysunek"
+  },
+  "dailyChallenge": {
+    "title": "Codzienne wyzwanie",
+    "subtitle": "Obrazek dnia",
+    "start": "Rozpocznij wyzwanie",
+    "completed": "Ukończono na dziś ✓",
+    "countdown": "Nowe za {{hours}}h {{minutes}}m",
+    "level": "Poziom {{number}}"
+  },
+  "errors": {
+    "skiaUnavailableTitle": "Powierzchnia rysowania niedostępna",
+    "skiaUnavailableMessage": "Nie udało się załadować funkcji rysowania.\nSpróbuj ponownie lub uruchom aplikację od nowa.",
+    "skiaLoading": "Ładowanie powierzchni rysowania…",
+    "skiaRetry": "Spróbuj ponownie"
+  },
+  "common": {
+    "yes": "Tak",
+    "no": "Nie",
+    "cancel": "Anuluj",
+    "ok": "OK",
+    "close": "Zamknij",
+    "back": "Wstecz",
+    "settings": "Ustawienia"
+  },
+  "parentalGate": {
+    "title": "Blokada rodzicielska",
+    "message": "Ten link prowadzi poza aplikację. Rozwiąż zadanie, aby kontynuować:",
+    "placeholder": "Wpisz odpowiedź",
+    "confirm": "Otwórz",
+    "wrongAnswer": "Błędna odpowiedź. Spróbuj ponownie."
+  },
+  "onboarding": {
+    "skip": "Pomiń",
+    "next": "Dalej",
+    "start": "Zaczynamy!",
+    "step1": {
+      "title": "Zapamiętaj",
+      "desc": "Przyjrzyj się uważnie obrazkowi przez kilka sekund."
+    },
+    "step2": {
+      "title": "Rysuj",
+      "desc": "Spróbuj narysować go z pamięci."
+    },
+    "step3": {
+      "title": "Gwiazdki",
+      "desc": "Porównaj swój rysunek i zdobądź gwiazdki."
+    },
+    "welcomeTitle": "Gotowy do gry?",
+    "welcomeDesc": "Zapamiętaj obrazek, a potem narysuj go z pamięci. Przeprowadzimy Cię przez pierwszą rundę!",
+    "startButton": "Graj!"
+  },
+  "parentDashboard": {
+    "menuLabel": "Strefa rodzica",
+    "title": "Panel rodzica",
+    "subtitle": "Użycie gry w ciągu ostatnich 4 tygodni",
+    "privacyHint": "Wszystkie dane pozostają lokalnie na tym urządzeniu.",
+    "loading": "Ładowanie statystyk…",
+    "empty": "Nie zarejestrowano jeszcze żadnych sesji gry.",
+    "totalSessions": "Sesje",
+    "totalTime": "Całkowity czas",
+    "avgStars": "Śr. gwiazdek",
+    "streak": "Seria (obecna/najlepsza)",
+    "favoriteLevels": "Ulubione poziomy",
+    "dailyBreakdown": "Dziennie (ostatnie 14)",
+    "levelLine": "Poziom {{level}} · zagrano {{count}}×"
+  },
+  "achievements": {
+    "title": "Trofea",
+    "menuLabel": "Pokaż trofea",
+    "unlocked": "Nowe trofeum!",
+    "progress": "{{unlocked}} z {{total}} odblokowanych",
+    "first_5_stars": {
+      "title": "Pierwsze 5 gwiazdek",
+      "desc": "Zdobądź po raz pierwszy 5 gwiazdek w poziomie."
+    },
+    "gallery_10": {
+      "title": "Artysta galerii",
+      "desc": "Zapisz 10 rysunków w swojej galerii."
+    },
+    "streak_7": {
+      "title": "7-dniowa seria",
+      "desc": "Graj 7 dni z rzędu."
+    },
+    "all_levels_done": {
+      "title": "Wszystkie poziomy",
+      "desc": "Ukończ wszystkie 10 podstawowych poziomów."
+    },
+    "daily_5": {
+      "title": "Codzienny mistrz",
+      "desc": "Pokonaj codzienne wyzwanie 5 razy."
+    },
+    "all_difficulties": {
+      "title": "Wszechstronny",
+      "desc": "Zagraj na każdym poziomie trudności przynajmniej raz."
+    }
+  },
+  "tutorial": {
+    "memorize": "Przyjrzyj się dokładnie obrazkowi — masz tylko kilka sekund!",
+    "draw": "Narysuj to, co zobaczyłeś, z pamięci. Bez stresu! 😊",
+    "result": "Dotknij gwiazdek — jak dobrze Ci poszło?",
+    "tap": "Dotknij, aby kontynuować",
+    "step": "Krok {{current}} z {{total}}",
+    "badgeMemorize": "Zapamiętaj",
+    "badgeDraw": "Rysuj",
+    "badgeResult": "Oceń"
+  }
+}

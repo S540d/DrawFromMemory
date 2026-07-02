@@ -7,6 +7,30 @@ interface Props {
   image: LevelImage;
   size?: number;
   revealStep?: number; // If set, only show SVG children 0..revealStep (for progressive reveal)
+  mode?: 'normal' | 'outline'; // 'outline' strips colors, showing only the silhouette (game variant "Nur Umriss merken")
+  mirror?: boolean; // Horizontally flips the image (game variant "Spiegelbild")
+}
+
+const OUTLINE_COLOR = '#3a3a3a';
+
+/**
+ * Recursively strips fill colors from an SVG element tree and forces a uniform
+ * outline stroke, so only the silhouette remains visible (no color information).
+ */
+function toOutlineElement(node: React.ReactNode): React.ReactNode {
+  if (!React.isValidElement(node)) return node;
+  const props: Record<string, unknown> = { ...(node.props as Record<string, unknown>) };
+
+  if ('fill' in props) props.fill = 'none';
+  props.stroke = OUTLINE_COLOR;
+  if (!props.strokeWidth || Number(props.strokeWidth) < 2) props.strokeWidth = '2';
+  delete props.opacity;
+
+  if (props.children) {
+    props.children = React.Children.map(props.children as React.ReactNode, toOutlineElement);
+  }
+
+  return React.cloneElement(node, props);
 }
 
 /**
@@ -1546,15 +1570,29 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
  * Rendert die SVG-Bilder als React Native SVG Komponenten
  * Optional: revealStep für schrittweises Aufdecken
  */
-export default function LevelImageDisplay({ image, size = 300, revealStep }: Props) {
+export default function LevelImageDisplay({ image, size = 300, revealStep, mode = 'normal', mirror = false }: Props) {
   const svgSize = size;
   const viewBox = "0 0 200 200";
 
-  const svgElement = renderSvgForImage(image, svgSize, viewBox);
+  let svgElement = renderSvgForImage(image, svgSize, viewBox);
 
   if (!svgElement) {
     return <View style={[styles.container, { width: svgSize, height: svgSize }]} />;
   }
+
+  if (mode === 'outline') {
+    const outlinedChildren = React.Children.map(
+      (svgElement.props as React.ComponentProps<typeof Svg>).children,
+      toOutlineElement
+    );
+    svgElement = React.cloneElement(svgElement, {}, outlinedChildren);
+  }
+
+  const containerStyle = [
+    styles.container,
+    { width: svgSize, height: svgSize },
+    mirror && styles.mirrored,
+  ];
 
   // Progressive reveal: only show children up to revealStep
   if (revealStep !== undefined) {
@@ -1562,14 +1600,14 @@ export default function LevelImageDisplay({ image, size = 300, revealStep }: Pro
     const visibleChildren = children.slice(0, revealStep + 1);
     const cloned = React.cloneElement(svgElement, {}, ...visibleChildren);
     return (
-      <View style={[styles.container, { width: svgSize, height: svgSize }]}>
+      <View style={containerStyle}>
         {cloned}
       </View>
     );
   }
 
   return (
-    <View style={[styles.container, { width: svgSize, height: svgSize }]}>
+    <View style={containerStyle}>
       {svgElement}
     </View>
   );
@@ -1579,5 +1617,8 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  mirrored: {
+    transform: [{ scaleX: -1 }],
   },
 });

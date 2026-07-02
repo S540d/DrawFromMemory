@@ -18,6 +18,7 @@ export default function MemorizePhase({
   memorizeImageSize,
   imagePlaceholderMinSize,
   revealStep,
+  variant = 'normal',
 }: MemorizePhaseProps) {
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -32,7 +33,13 @@ export default function MemorizePhase({
         {currentImage && (
           <View style={[styles.imagePlaceholder, { minWidth: imagePlaceholderMinSize, minHeight: imagePlaceholderMinSize, backgroundColor: colors.surface }]}>
             <ErrorBoundary>
-              <LevelImageDisplay image={currentImage} size={memorizeImageSize} revealStep={revealStep} />
+              <LevelImageDisplay
+                image={currentImage}
+                size={memorizeImageSize}
+                revealStep={revealStep}
+                mode={variant === 'outline' ? 'outline' : 'normal'}
+                mirror={variant === 'mirror'}
+              />
             </ErrorBoundary>
             <Text style={[styles.imageName, { color: colors.text.primary }]}>
               {currentLang === 'en' ? currentImage.displayNameEn : currentImage.displayName}

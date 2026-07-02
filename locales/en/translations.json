@@ -28,7 +28,13 @@
     "displayTime": "{{seconds}}s display time",
     "stars": "{{count}} stars",
     "locked": "Locked",
-    "unlockHint": "Complete level {{prev}}"
+    "unlockHint": "Complete level {{prev}}",
+    "variant": {
+      "title": "Game mode",
+      "normal": "Normal",
+      "outline": "Outline only",
+      "mirror": "Mirror image"
+    }
   },
   "game": {
     "memorize": {

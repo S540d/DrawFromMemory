@@ -5,14 +5,25 @@
 
 import de from '../locales/de/translations.json';
 import en from '../locales/en/translations.json';
+import es from '../locales/es/translations.json';
+import fr from '../locales/fr/translations.json';
+import it from '../locales/it/translations.json';
+import nl from '../locales/nl/translations.json';
+import pl from '../locales/pl/translations.json';
 import storageManager from './StorageManager';
 import * as Localization from 'expo-localization';
 
-type Language = 'de' | 'en';
+export type Language = 'de' | 'en' | 'es' | 'fr' | 'it' | 'nl' | 'pl';
 type TranslationKey = string;
 type LanguageChangeListener = (lang: Language) => void;
 
-const translations = { de, en };
+const SUPPORTED_LANGUAGES: Language[] = ['de', 'en', 'es', 'fr', 'it', 'nl', 'pl'];
+
+function isSupportedLanguage(value: unknown): value is Language {
+  return typeof value === 'string' && (SUPPORTED_LANGUAGES as string[]).includes(value);
+}
+
+const translations = { de, en, es, fr, it, nl, pl };
 let currentLanguage: Language = 'en';
 let isInitialized = false;
 const listeners: Set<LanguageChangeListener> = new Set();
@@ -38,12 +49,12 @@ export function addLanguageChangeListener(fn: LanguageChangeListener): () => voi
  * Detects the device's locale and returns a supported language
  * Falls back to 'en' if the device locale is not supported
  *
- * @returns {Language} The detected language code ('de' or 'en')
+ * @returns {Language} The detected language code (de/en/es/fr/it/nl/pl)
  * @example
  * // Device set to German
  * getDeviceLanguage() // returns 'de'
  *
- * // Device set to French (unsupported)
+ * // Device set to Japanese (unsupported)
  * getDeviceLanguage() // returns 'en' (fallback)
  */
 export function getDeviceLanguage(): Language {
@@ -51,12 +62,12 @@ export function getDeviceLanguage(): Language {
     // Get the device locale (e.g., "en-US", "de-DE", "fr-FR")
     const deviceLocale = Localization.getLocales()[0];
     const languageCode = deviceLocale?.languageCode;
-    
+
     // Check if the language code is supported
-    if (languageCode === 'de' || languageCode === 'en') {
-      return languageCode as Language;
+    if (isSupportedLanguage(languageCode)) {
+      return languageCode;
     }
-    
+
     // Default to English if language is not supported
     return 'en';
   } catch (error) {
@@ -78,7 +89,7 @@ export async function initLanguage(): Promise<void> {
   try {
     const savedLanguage = await storageManager.getSetting('language');
     // Only update if we got a valid language value
-    if (savedLanguage === 'de' || savedLanguage === 'en') {
+    if (isSupportedLanguage(savedLanguage)) {
       currentLanguage = savedLanguage;
     } else {
       // No saved language found, detect device language
