@@ -54,8 +54,21 @@ describe('i18n Service', () => {
       expect(getDeviceLanguage()).toBe('en');
     });
 
-    it('should fallback to English for unsupported locales', () => {
+    it('should detect additional supported locales (es/fr/it/nl/pl)', () => {
       Localization.getLocales.mockReturnValue([{ languageCode: 'fr' }]);
+      expect(getDeviceLanguage()).toBe('fr');
+      Localization.getLocales.mockReturnValue([{ languageCode: 'es' }]);
+      expect(getDeviceLanguage()).toBe('es');
+      Localization.getLocales.mockReturnValue([{ languageCode: 'it' }]);
+      expect(getDeviceLanguage()).toBe('it');
+      Localization.getLocales.mockReturnValue([{ languageCode: 'nl' }]);
+      expect(getDeviceLanguage()).toBe('nl');
+      Localization.getLocales.mockReturnValue([{ languageCode: 'pl' }]);
+      expect(getDeviceLanguage()).toBe('pl');
+    });
+
+    it('should fallback to English for unsupported locales', () => {
+      Localization.getLocales.mockReturnValue([{ languageCode: 'ja' }]);
       expect(getDeviceLanguage()).toBe('en');
     });
 

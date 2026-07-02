@@ -35,7 +35,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { useReduceMotion } from '../utils/useReduceMotion';
-import type { GamePhase } from '../types';
+import type { GamePhase, GameVariant } from '../types';
 import type { ConfettiIntensity } from '@components/ConfettiBurst';
 
 export default function GameScreen() {
@@ -73,6 +73,8 @@ export default function GameScreen() {
       : 1;
 
   const isDailyChallenge = params.daily === '1';
+  const variant: GameVariant =
+    params.variant === 'outline' || params.variant === 'mirror' ? params.variant : 'normal';
   const [isTutorial, setIsTutorial] = useState(params.tutorial === '1');
   const [tutorialHintVisible, setTutorialHintVisible] = useState(true);
 
@@ -288,7 +290,12 @@ export default function GameScreen() {
             </View>
             {currentImage && (
               <ErrorBoundary>
-                <LevelImageDisplay image={currentImage} size={Math.min(screenWidth - 80, 280)} />
+                <LevelImageDisplay
+                  image={currentImage}
+                  size={Math.min(screenWidth - 80, 280)}
+                  mode={variant === 'outline' ? 'outline' : 'normal'}
+                  mirror={variant === 'mirror'}
+                />
               </ErrorBoundary>
             )}
           </View>
@@ -307,6 +314,7 @@ export default function GameScreen() {
             memorizeImageSize={layout.memorizeImageSize}
             imagePlaceholderMinSize={layout.imagePlaceholderMinSize}
             revealStep={revealStep}
+            variant={variant}
           />
         )}
         {visiblePhase === 'draw' && (

@@ -1,5 +1,5 @@
 import type { DrawingPath } from '@components/DrawingCanvas';
-import type { LevelImage } from '../../types';
+import type { LevelImage, GameVariant } from '../../types';
 
 export interface MemorizePhaseProps {
   timeRemaining: number;
@@ -10,6 +10,7 @@ export interface MemorizePhaseProps {
   memorizeImageSize: number;
   imagePlaceholderMinSize: number;
   revealStep: number;
+  variant?: GameVariant;
 }
 
 export interface DrawPhaseProps {

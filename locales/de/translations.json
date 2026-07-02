@@ -28,7 +28,13 @@
     "displayTime": "{{seconds}}s Anzeigezeit",
     "stars": "{{count}} Sterne",
     "locked": "Gesperrt",
-    "unlockHint": "Schließe Level {{prev}} ab"
+    "unlockHint": "Schließe Level {{prev}} ab",
+    "variant": {
+      "title": "Spielvariante",
+      "normal": "Normal",
+      "outline": "Nur Umriss",
+      "mirror": "Spiegelbild"
+    }
   },
   "game": {
     "memorize": {

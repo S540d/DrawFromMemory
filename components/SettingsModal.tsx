@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, Linking, Share, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
-import { useTranslation, getLanguage, setLanguage } from '@services/i18n';
+import { useTranslation, getLanguage, setLanguage, type Language } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import storageManager from '@services/StorageManager';
 import SoundManager from '@services/SoundManager';
@@ -41,7 +41,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
     storageManager.getSetting('celebrationEnabled').then(setCelebrationEnabled);
   }, [visible, themeSetting]);
 
-  const handleLanguageChange = async (lang: 'de' | 'en') => {
+  const handleLanguageChange = async (lang: Language) => {
     await setLanguage(lang);
     setCurrentLang(lang);
   };
@@ -247,14 +247,24 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
           currentTheme,
           (v) => handleThemeChange(v as 'light' | 'dark' | 'system')
         ))}
-        {renderRow(t('settings.language'), renderSegment(
-          [
-            { label: 'DE', value: 'de' },
-            { label: 'EN', value: 'en' },
-          ],
-          currentLang,
-          (v) => handleLanguageChange(v as 'de' | 'en')
-        ))}
+        <View style={[styles.row, styles.languageRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.rowLabel, { color: colors.text.primary, marginBottom: Spacing.xs }]}>
+            {t('settings.language')}
+          </Text>
+          {renderSegment(
+            [
+              { label: 'DE', value: 'de' },
+              { label: 'EN', value: 'en' },
+              { label: 'ES', value: 'es' },
+              { label: 'FR', value: 'fr' },
+              { label: 'IT', value: 'it' },
+              { label: 'NL', value: 'nl' },
+              { label: 'PL', value: 'pl' },
+            ],
+            currentLang,
+            (v) => handleLanguageChange(v as Language)
+          )}
+        </View>
         {renderRow(t('settings.sound'), renderSegment(
           [
             { label: t('settings.soundOn'),  value: 'on'  },
@@ -459,6 +469,10 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.xs,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
+  languageRow: {
+    flexDirection: 'column',
+    alignItems: 'stretch',
+  },
   rowLabel: {
     fontSize: FontSize.xs,
     fontWeight: FontWeight.medium,
@@ -503,6 +517,7 @@ const styles = StyleSheet.create({
   // ── Segment-Control ─────────────────────────────────────────────────────
   segment: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     borderRadius: BorderRadius.sm,
     overflow: 'hidden',
   },

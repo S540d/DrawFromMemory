@@ -96,7 +96,7 @@ export interface AppProgress {
 
 export interface AppSettings {
   theme: 'light' | 'dark' | 'system';
-  language: 'de' | 'en';
+  language: 'de' | 'en' | 'es' | 'fr' | 'it' | 'nl' | 'pl';
   soundEnabled: boolean;
   musicEnabled: boolean;
   extraTimeMode: boolean; // Add 5 seconds to all timers
