@@ -15,12 +15,16 @@ if (Platform.OS !== 'web') {
 export function initSentry() {
   if (!Sentry || !DSN) return;
 
-  Sentry.init({
-    dsn: DSN,
-    enabled: !__DEV__,
-    tracesSampleRate: 0.2,
-    environment: __DEV__ ? 'development' : 'production',
-  });
+  try {
+    Sentry.init({
+      dsn: DSN,
+      enabled: !__DEV__,
+      tracesSampleRate: 0.2,
+      environment: __DEV__ ? 'development' : 'production',
+    });
+  } catch (error) {
+    console.error('Failed to initialize Sentry:', error);
+  }
 }
 
 /**

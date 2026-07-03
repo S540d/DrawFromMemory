@@ -5,6 +5,7 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { captureException } from '@services/SentryService';
 
 interface Props {
   children: ReactNode;
@@ -36,6 +37,10 @@ export class ErrorBoundary extends Component<Props, State> {
     if (typeof __DEV__ !== 'undefined' && __DEV__) {
       console.error('Error Info:', errorInfo);
     }
+    captureException(error, {
+      component: 'ErrorBoundary',
+      componentStack: errorInfo.componentStack ?? '',
+    });
   }
 
   handleReset = (): void => {
