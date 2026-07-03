@@ -9,6 +9,7 @@
     "continueButton": "Weiterspielen",
     "levelsButton": "Level auswählen",
     "galleryButton": "Meine Galerie",
+    "creativeButton": "Kreativ",
     "settingsButton": "Einstellungen",
     "streakBadge": "🔥 {{count}}",
     "stats": {
@@ -27,7 +28,13 @@
     "displayTime": "{{seconds}}s Anzeigezeit",
     "stars": "{{count}} Sterne",
     "locked": "Gesperrt",
-    "unlockHint": "Schließe Level {{prev}} ab"
+    "unlockHint": "Schließe Level {{prev}} ab",
+    "variant": {
+      "title": "Spielvariante",
+      "normal": "Normal",
+      "outline": "Nur Umriss",
+      "mirror": "Spiegelbild"
+    }
   },
   "game": {
     "memorize": {
@@ -120,7 +127,9 @@
     "licenseLabel": "Lizenz",
     "error": "Fehler",
     "about": "Über die App",
-    "version": "Version"
+    "version": "Version",
+    "personalize": "Personalisieren",
+    "celebration": "Jubelmoment (Konfetti & Sound)"
   },
   "difficulty": {
     "1": "Sehr einfach",
@@ -137,7 +146,14 @@
     "delete": "Löschen",
     "deleteTitle": "Zeichnung löschen",
     "deleteConfirm": "Möchtest du diese Zeichnung wirklich löschen?",
-    "dailyChallengeLabel": "Daily Challenge"
+    "dailyChallengeLabel": "Daily Challenge",
+    "creativeLabel": "Freies Malen",
+    "share": "Teilen",
+    "shareError": "Teilen fehlgeschlagen."
+  },
+  "creative": {
+    "title": "Freies Malen",
+    "imageName": "Kreativ-Zeichnung"
   },
   "dailyChallenge": {
     "title": "Tägliche Challenge",
@@ -173,9 +189,21 @@
     "skip": "Überspringen",
     "next": "Weiter",
     "start": "Los geht's!",
-    "step1": { "title": "Merken",   "desc": "Schau dir das Bild ein paar Sekunden gut an." },
-    "step2": { "title": "Zeichnen", "desc": "Versuche, es aus dem Gedächtnis nachzumalen." },
-    "step3": { "title": "Sterne",   "desc": "Vergleiche dein Werk und bekomme Sterne." }
+    "step1": {
+      "title": "Merken",
+      "desc": "Schau dir das Bild ein paar Sekunden gut an."
+    },
+    "step2": {
+      "title": "Zeichnen",
+      "desc": "Versuche, es aus dem Gedächtnis nachzumalen."
+    },
+    "step3": {
+      "title": "Sterne",
+      "desc": "Vergleiche dein Werk und bekomme Sterne."
+    },
+    "welcomeTitle": "Bereit zum Spielen?",
+    "welcomeDesc": "Merke dir ein Bild und male es nach. Wir führen dich durch die erste Runde!",
+    "startButton": "Spielen!"
   },
   "parentDashboard": {
     "menuLabel": "Eltern-Bereich",
@@ -197,11 +225,39 @@
     "menuLabel": "Trophäen anzeigen",
     "unlocked": "Neue Trophäe!",
     "progress": "{{unlocked}} von {{total}} freigeschaltet",
-    "first_5_stars":    { "title": "Erste 5 Sterne",     "desc": "Erreiche zum ersten Mal 5 Sterne in einem Level." },
-    "gallery_10":       { "title": "Galerie-Künstler",   "desc": "Speichere 10 Zeichnungen in deiner Galerie." },
-    "streak_7":         { "title": "7-Tage-Streak",      "desc": "Spiele 7 Tage hintereinander." },
-    "all_levels_done":  { "title": "Alle Level",         "desc": "Schließe alle 10 Basis-Level ab." },
-    "daily_5":          { "title": "Daily-Champion",     "desc": "Bestehe 5× die tägliche Herausforderung." },
-    "all_difficulties": { "title": "Allrounder",         "desc": "Spiele jede Schwierigkeitsstufe mindestens einmal." }
+    "first_5_stars": {
+      "title": "Erste 5 Sterne",
+      "desc": "Erreiche zum ersten Mal 5 Sterne in einem Level."
+    },
+    "gallery_10": {
+      "title": "Galerie-Künstler",
+      "desc": "Speichere 10 Zeichnungen in deiner Galerie."
+    },
+    "streak_7": {
+      "title": "7-Tage-Streak",
+      "desc": "Spiele 7 Tage hintereinander."
+    },
+    "all_levels_done": {
+      "title": "Alle Level",
+      "desc": "Schließe alle 10 Basis-Level ab."
+    },
+    "daily_5": {
+      "title": "Daily-Champion",
+      "desc": "Bestehe 5× die tägliche Herausforderung."
+    },
+    "all_difficulties": {
+      "title": "Allrounder",
+      "desc": "Spiele jede Schwierigkeitsstufe mindestens einmal."
+    }
+  },
+  "tutorial": {
+    "memorize": "Schau dir das Bild genau an — du hast nur wenige Sekunden!",
+    "draw": "Male nach, was du gesehen hast. Kein Stress! 😊",
+    "result": "Tippe auf die Sterne — wie gut war dein Bild?",
+    "tap": "Tippe, um weiterzumachen",
+    "step": "Schritt {{current}} von {{total}}",
+    "badgeMemorize": "Merken",
+    "badgeDraw": "Zeichnen",
+    "badgeResult": "Bewerten"
   }
 }

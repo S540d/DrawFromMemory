@@ -1,0 +1,263 @@
+{
+  "app": {
+    "name": "Onthoud en Teken"
+  },
+  "home": {
+    "title": "Onthoud en Teken",
+    "subtitle": "Train je geheugen!",
+    "startButton": "Spel starten",
+    "continueButton": "Doorgaan",
+    "levelsButton": "Level kiezen",
+    "galleryButton": "Mijn galerij",
+    "creativeButton": "Creatief",
+    "settingsButton": "Instellingen",
+    "streakBadge": "🔥 {{count}}",
+    "stats": {
+      "stars": "Sterren",
+      "streak": "Reeks",
+      "levels": "Levels",
+      "streakDay": "dag",
+      "streakDays": "dagen",
+      "levelOf": "van {{total}}"
+    }
+  },
+  "levels": {
+    "title": "Level kiezen",
+    "level": "Level {{number}}",
+    "difficulty": "Moeilijkheid: {{diff}}",
+    "displayTime": "{{seconds}}s weergavetijd",
+    "stars": "{{count}} sterren",
+    "locked": "Vergrendeld",
+    "unlockHint": "Voltooi level {{prev}}",
+    "variant": {
+      "title": "Spelmodus",
+      "normal": "Normaal",
+      "outline": "Alleen omtrek",
+      "mirror": "Spiegelbeeld"
+    }
+  },
+  "game": {
+    "memorize": {
+      "title": "Onthoud de afbeelding!",
+      "timeLeft": "{{seconds}}s",
+      "imageInfo": "Level {{level}} • {{strokeCount}} lijnen"
+    },
+    "draw": {
+      "title": "Teken de afbeelding!",
+      "hint": "Gebruik de kleuren en teken wat je je herinnert",
+      "tool": "Gereedschap",
+      "toolBrush": "🖊️ Penseel",
+      "toolFill": "💧 Vullen",
+      "strokeWidth": "Lijndikte",
+      "strokeWidthThin": "Dun",
+      "strokeWidthNormal": "Normaal",
+      "strokeWidthThick": "Dik",
+      "color": "Kleur",
+      "selectColor": "Kleur kiezen",
+      "undo": "Ongedaan maken",
+      "clear": "Alles wissen",
+      "clearConfirm": "Echt alles wissen?",
+      "done": "Klaar",
+      "hintButton": "👁 1x",
+      "hintUsed": "Hint gebruikt",
+      "hintModalTitle": "Voorbeeld",
+      "drawFromMemory": "Teken de",
+      "referenceLabel": "Voorbeeld bekijken"
+    },
+    "tabs": {
+      "draw": "Tekenen",
+      "result": "Resultaat"
+    },
+    "result": {
+      "title": "Beoordeel jezelf:",
+      "howWell": "Hoe goed heb je het gedaan?",
+      "tapStars": "Tik op de sterren om jezelf te beoordelen!",
+      "starAccessibilityLabel": "{{rating}} ster{{plural}}",
+      "template": "Voorbeeld",
+      "feedback5": "Perfect! Je bent een geheugenmeester!",
+      "feedback4": "Heel goed! Bijna perfect!",
+      "feedback3": "Goed gedaan! Ga zo door!",
+      "feedback1": "Dat was al beter dan eerst, wil je het toch nog eens proberen?",
+      "yourDrawing": "Jouw tekening",
+      "original": "Origineel",
+      "rating": "Jouw beoordeling",
+      "retry": "Opnieuw",
+      "nextLevel": "Volgende",
+      "backToMenu": "Menu",
+      "allLevelsComplete": "Alle levels voltooid!",
+      "allLevelsCompleteMessage": "Je hebt alle 20 levels onder de knie. Je bent een echte geheugenkampioen!",
+      "playAgain": "Opnieuw beginnen",
+      "replay": "▶ Herhalen",
+      "replayStop": "⏹ Stoppen"
+    }
+  },
+  "settings": {
+    "title": "Instellingen",
+    "appearance": "Weergave",
+    "theme": "Thema",
+    "themeLight": "Licht",
+    "themeDark": "Donker",
+    "themeSystem": "Systeem",
+    "language": "Taal",
+    "sound": "Geluidseffecten",
+    "soundOn": "Aan",
+    "soundOff": "Uit",
+    "music": "Achtergrondmuziek",
+    "dataSection": "Gegevens",
+    "resetProgress": "Voortgang resetten",
+    "resetConfirm": "Echt alle voortgang verwijderen?",
+    "resetConfirmMessage": "Wil je je voortgang echt resetten? Deze actie kan niet ongedaan worden gemaakt.",
+    "resetSuccess": "Voortgang gereset",
+    "resetSuccessMessage": "Je speelvoortgang is succesvol gereset.",
+    "languageChanged": "Taal gewijzigd",
+    "languageChangedMessage": "De taal is gewijzigd naar Nederlands. Start de app opnieuw op zodat de wijzigingen overal doorgevoerd worden.",
+    "feedbackEmailSubject": "Feedback: Onthoud en Teken",
+    "feedbackEmailBody": "Hallo,\n\nIk heb feedback over Onthoud en Teken:\n\n",
+    "feedbackEmailError": "Kon e-mailclient niet openen. Stuur je feedback naar: devsven@posteo.de",
+    "browserError": "Kon browser niet openen. Bezoek: https://ko-fi.com/s540d",
+    "browserErrorGeneric": "Kon browser niet openen.",
+    "shareMessage": "Bekijk deze leuke geheugentraining-app: Onthoud en Teken! https://github.com/S540d/DrawFromMemory",
+    "aboutSupport": "Over & ondersteuning",
+    "feedback": "Feedback",
+    "support": "Ondersteuning",
+    "share": "Delen",
+    "aboutButton": "Over",
+    "aboutTitle": "Over Onthoud en Teken",
+    "versionLabel": "Versie",
+    "licenseLabel": "Licentie",
+    "error": "Fout",
+    "about": "Over de app",
+    "version": "Versie",
+    "personalize": "Personaliseren",
+    "celebration": "Feestmoment (confetti & geluid)"
+  },
+  "difficulty": {
+    "1": "Heel makkelijk",
+    "2": "Makkelijk",
+    "3": "Gemiddeld",
+    "4": "Moeilijk",
+    "5": "Heel moeilijk"
+  },
+  "gallery": {
+    "title": "Mijn galerij",
+    "empty": "Nog geen tekeningen opgeslagen. Teken een afbeelding en tik op \"Opslaan\"!",
+    "save": "Opslaan in galerij",
+    "saved": "Opgeslagen!",
+    "delete": "Verwijderen",
+    "deleteTitle": "Tekening verwijderen",
+    "deleteConfirm": "Wil je deze tekening echt verwijderen?",
+    "dailyChallengeLabel": "Dagelijkse uitdaging",
+    "creativeLabel": "Vrij tekenen",
+    "share": "Delen",
+    "shareError": "Delen is mislukt."
+  },
+  "creative": {
+    "title": "Vrij tekenen",
+    "imageName": "Creatieve tekening"
+  },
+  "dailyChallenge": {
+    "title": "Dagelijkse uitdaging",
+    "subtitle": "Afbeelding van de dag",
+    "start": "Uitdaging starten",
+    "completed": "Vandaag voltooid ✓",
+    "countdown": "Nieuw over {{hours}}u {{minutes}}m",
+    "level": "Level {{number}}"
+  },
+  "errors": {
+    "skiaUnavailableTitle": "Tekenoppervlak niet beschikbaar",
+    "skiaUnavailableMessage": "De tekenfunctie kon niet worden geladen.\nProbeer het opnieuw of start de app opnieuw op.",
+    "skiaLoading": "Tekenoppervlak laden…",
+    "skiaRetry": "Opnieuw proberen"
+  },
+  "common": {
+    "yes": "Ja",
+    "no": "Nee",
+    "cancel": "Annuleren",
+    "ok": "OK",
+    "close": "Sluiten",
+    "back": "Terug",
+    "settings": "Instellingen"
+  },
+  "parentalGate": {
+    "title": "Ouderlijk slot",
+    "message": "Deze link leidt buiten de app. Los de opdracht op om verder te gaan:",
+    "placeholder": "Antwoord invoeren",
+    "confirm": "Openen",
+    "wrongAnswer": "Fout antwoord. Probeer het opnieuw."
+  },
+  "onboarding": {
+    "skip": "Overslaan",
+    "next": "Volgende",
+    "start": "Laten we beginnen!",
+    "step1": {
+      "title": "Onthouden",
+      "desc": "Bekijk de afbeelding een paar seconden goed."
+    },
+    "step2": {
+      "title": "Tekenen",
+      "desc": "Probeer het uit je geheugen na te tekenen."
+    },
+    "step3": {
+      "title": "Sterren",
+      "desc": "Vergelijk je tekening en verdien sterren."
+    },
+    "welcomeTitle": "Klaar om te spelen?",
+    "welcomeDesc": "Onthoud een afbeelding en teken deze daarna uit je geheugen. We begeleiden je door de eerste ronde!",
+    "startButton": "Spelen!"
+  },
+  "parentDashboard": {
+    "menuLabel": "Ouderzone",
+    "title": "Ouderdashboard",
+    "subtitle": "Spelgebruik van de afgelopen 4 weken",
+    "privacyHint": "Alle gegevens blijven lokaal op dit apparaat.",
+    "loading": "Statistieken laden…",
+    "empty": "Nog geen spelsessies geregistreerd.",
+    "totalSessions": "Sessies",
+    "totalTime": "Totale tijd",
+    "avgStars": "Gem. sterren",
+    "streak": "Reeks (huidig/best)",
+    "favoriteLevels": "Favoriete levels",
+    "dailyBreakdown": "Per dag (laatste 14)",
+    "levelLine": "Level {{level}} · {{count}}× gespeeld"
+  },
+  "achievements": {
+    "title": "Trofeeën",
+    "menuLabel": "Trofeeën tonen",
+    "unlocked": "Nieuwe trofee!",
+    "progress": "{{unlocked}} van {{total}} ontgrendeld",
+    "first_5_stars": {
+      "title": "Eerste 5 sterren",
+      "desc": "Behaal voor het eerst 5 sterren in een level."
+    },
+    "gallery_10": {
+      "title": "Galerij-artiest",
+      "desc": "Sla 10 tekeningen op in je galerij."
+    },
+    "streak_7": {
+      "title": "7-daagse reeks",
+      "desc": "Speel 7 dagen achter elkaar."
+    },
+    "all_levels_done": {
+      "title": "Alle levels",
+      "desc": "Voltooi alle 10 basislevels."
+    },
+    "daily_5": {
+      "title": "Dagelijkse kampioen",
+      "desc": "Voltooi de dagelijkse uitdaging 5 keer."
+    },
+    "all_difficulties": {
+      "title": "Allrounder",
+      "desc": "Speel elke moeilijkheidsgraad minstens één keer."
+    }
+  },
+  "tutorial": {
+    "memorize": "Bekijk de afbeelding goed — je hebt maar een paar seconden!",
+    "draw": "Teken wat je uit je geheugen hebt gezien. Geen stress! 😊",
+    "result": "Tik op de sterren — hoe goed heb je het gedaan?",
+    "tap": "Tik om door te gaan",
+    "step": "Stap {{current}} van {{total}}",
+    "badgeMemorize": "Onthouden",
+    "badgeDraw": "Tekenen",
+    "badgeResult": "Beoordelen"
+  }
+}

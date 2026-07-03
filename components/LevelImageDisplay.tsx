@@ -7,6 +7,30 @@ interface Props {
   image: LevelImage;
   size?: number;
   revealStep?: number; // If set, only show SVG children 0..revealStep (for progressive reveal)
+  mode?: 'normal' | 'outline'; // 'outline' strips colors, showing only the silhouette (game variant "Nur Umriss merken")
+  mirror?: boolean; // Horizontally flips the image (game variant "Spiegelbild")
+}
+
+const OUTLINE_COLOR = '#3a3a3a';
+
+/**
+ * Recursively strips fill colors from an SVG element tree and forces a uniform
+ * outline stroke, so only the silhouette remains visible (no color information).
+ */
+function toOutlineElement(node: React.ReactNode): React.ReactNode {
+  if (!React.isValidElement(node)) return node;
+  const props: Record<string, unknown> = { ...(node.props as Record<string, unknown>) };
+
+  if ('fill' in props) props.fill = 'none';
+  props.stroke = OUTLINE_COLOR;
+  if (!props.strokeWidth || Number(props.strokeWidth) < 2) props.strokeWidth = '2';
+  delete props.opacity;
+
+  if (props.children) {
+    props.children = React.Children.map(props.children as React.ReactNode, toOutlineElement);
+  }
+
+  return React.cloneElement(node, props);
 }
 
 /**
@@ -45,6 +69,17 @@ const IMAGE_ELEMENT_COUNTS: Record<string, number> = {
   'level-18-flower-detailed.svg': 16,
   'level-19-fish-tropical.svg': 17,
   'level-20-house-detailed.svg': 25,
+  // Fahrzeuge v1 Pack
+  'fahrzeuge-01-bus.svg': 11,
+  'fahrzeuge-02-airplane.svg': 10,
+  'fahrzeuge-03-sailboat.svg': 9,
+  'fahrzeuge-04-tractor.svg': 13,
+  'fahrzeuge-05-helicopter.svg': 12,
+  'fahrzeuge-06-firetruck.svg': 13,
+  'fahrzeuge-07-ambulance.svg': 12,
+  'fahrzeuge-08-submarine.svg': 13,
+  'fahrzeuge-09-speedboat.svg': 12,
+  'fahrzeuge-10-spaceshuttle.svg': 14,
   // Tiere v1 Pack
   'tiere-01-frog.svg': 10,
   'tiere-02-rabbit.svg': 11,
@@ -304,7 +339,7 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Dog Head */}
             <Circle cx="65" cy="100" r="28" fill="#D2691E" stroke="#8B4513" strokeWidth="3" />
             {/* Ear (floppy) */}
-            <Ellipse cx="55" cy="85" rx="12" ry="25" fill="#A0522D" stroke="#8B4513" strokeWidth="2" rotation="-20" origin="55, 85" />
+            <Ellipse cx="55" cy="85" rx="12" ry="25" fill="#A0522D" stroke="#8B4513" strokeWidth="2" transform="rotate(-20 55 85)" />
             {/* Snout */}
             <Ellipse cx="45" cy="105" rx="15" ry="12" fill="#CD853F" stroke="#8B4513" strokeWidth="2" />
             {/* Nose */}
@@ -378,8 +413,8 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Sheep Head (black face) */}
             <Ellipse cx="60" cy="105" rx="20" ry="22" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="2" />
             {/* Ears */}
-            <Ellipse cx="52" cy="90" rx="8" ry="12" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="2" rotation="-15" origin="52, 90" />
-            <Ellipse cx="68" cy="90" rx="8" ry="12" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="2" rotation="15" origin="68, 90" />
+            <Ellipse cx="52" cy="90" rx="8" ry="12" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="2" transform="rotate(-15 52 90)" />
+            <Ellipse cx="68" cy="90" rx="8" ry="12" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="2" transform="rotate(15 68 90)" />
             {/* Eyes (white dots on black face) */}
             <Circle cx="56" cy="102" r="3" fill="#FFFFFF" />
             <Circle cx="64" cy="102" r="3" fill="#FFFFFF" />
@@ -403,8 +438,8 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Stem */}
             <Line x1="100" y1="180" x2="100" y2="80" stroke="#228B22" strokeWidth="4" strokeLinecap="round" />
             {/* Leaves */}
-            <Ellipse cx="85" cy="130" rx="15" ry="25" fill="#32CD32" stroke="#228B22" strokeWidth="2" rotation="-30" origin="85, 130" />
-            <Ellipse cx="115" cy="150" rx="15" ry="25" fill="#32CD32" stroke="#228B22" strokeWidth="2" rotation="30" origin="115, 150" />
+            <Ellipse cx="85" cy="130" rx="15" ry="25" fill="#32CD32" stroke="#228B22" strokeWidth="2" transform="rotate(-30 85 130)" />
+            <Ellipse cx="115" cy="150" rx="15" ry="25" fill="#32CD32" stroke="#228B22" strokeWidth="2" transform="rotate(30 115 150)" />
             {/* Flower Center */}
             <Circle cx="100" cy="60" r="15" fill="#FFD700" stroke="#FFA500" strokeWidth="2" />
             {/* Petals */}
@@ -413,10 +448,10 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             <Ellipse cx="100" cy="90" rx="12" ry="20" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" />
             <Ellipse cx="70" cy="60" rx="20" ry="12" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" />
             {/* Diagonal Petals */}
-            <Ellipse cx="120" cy="40" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" rotation="45" origin="120, 40" />
-            <Ellipse cx="120" cy="80" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" rotation="-45" origin="120, 80" />
-            <Ellipse cx="80" cy="40" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" rotation="-45" origin="80, 40" />
-            <Ellipse cx="80" cy="80" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" rotation="45" origin="80, 80" />
+            <Ellipse cx="120" cy="40" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" transform="rotate(45 120 40)" />
+            <Ellipse cx="120" cy="80" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" transform="rotate(-45 120 80)" />
+            <Ellipse cx="80" cy="40" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" transform="rotate(-45 80 40)" />
+            <Ellipse cx="80" cy="80" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" transform="rotate(45 80 80)" />
           </Svg>
         );
 
@@ -433,13 +468,13 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Beak */}
             <Polygon points="150,85 165,82 150,90" fill="#FFD700" stroke="#FFA500" strokeWidth="2" />
             {/* Wing */}
-            <Ellipse cx="90" cy="100" rx="30" ry="20" fill="#4169E1" stroke="#0000CD" strokeWidth="3" rotation="-20" origin="90, 100" />
+            <Ellipse cx="90" cy="100" rx="30" ry="20" fill="#4169E1" stroke="#0000CD" strokeWidth="3" transform="rotate(-20 90 100)" />
             {/* Wing Detail Lines */}
             <Line x1="70" y1="95" x2="85" y2="105" stroke="#0000CD" strokeWidth="2" />
             <Line x1="75" y1="90" x2="90" y2="100" stroke="#0000CD" strokeWidth="2" />
             {/* Tail Feathers */}
-            <Ellipse cx="60" cy="105" rx="20" ry="12" fill="#4169E1" stroke="#0000CD" strokeWidth="2" rotation="-30" origin="60, 105" />
-            <Ellipse cx="65" cy="110" rx="18" ry="10" fill="#4169E1" stroke="#0000CD" strokeWidth="2" rotation="-20" origin="65, 110" />
+            <Ellipse cx="60" cy="105" rx="20" ry="12" fill="#4169E1" stroke="#0000CD" strokeWidth="2" transform="rotate(-30 60 105)" />
+            <Ellipse cx="65" cy="110" rx="18" ry="10" fill="#4169E1" stroke="#0000CD" strokeWidth="2" transform="rotate(-20 65 110)" />
             {/* Legs */}
             <Line x1="100" y1="120" x2="95" y2="135" stroke="#FFA500" strokeWidth="3" strokeLinecap="round" />
             <Line x1="110" y1="120" x2="115" y2="135" stroke="#FFA500" strokeWidth="3" strokeLinecap="round" />
@@ -574,19 +609,19 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             <Path d="M 104 55 Q 120 35 125 30" stroke="#000000" strokeWidth="2" fill="none" strokeLinecap="round" />
             <Circle cx="125" cy="30" r="3" fill="#000000" />
             {/* Upper left wing */}
-            <Ellipse cx="65" cy="80" rx="35" ry="28" fill="#9B59B6" stroke="#000000" strokeWidth="2" rotation="-20" origin="65, 80" />
-            <Ellipse cx="60" cy="78" rx="15" ry="12" fill="#FF69B4" stroke="none" opacity="0.7" rotation="-20" origin="60, 78" />
+            <Ellipse cx="65" cy="80" rx="35" ry="28" fill="#9B59B6" stroke="#000000" strokeWidth="2" transform="rotate(-20 65 80)" />
+            <Ellipse cx="60" cy="78" rx="15" ry="12" fill="#FF69B4" stroke="none" opacity="0.7" transform="rotate(-20 60 78)" />
             <Circle cx="55" cy="75" r="5" fill="#FFD700" stroke="none" opacity="0.8" />
             {/* Upper right wing */}
-            <Ellipse cx="135" cy="80" rx="35" ry="28" fill="#9B59B6" stroke="#000000" strokeWidth="2" rotation="20" origin="135, 80" />
-            <Ellipse cx="140" cy="78" rx="15" ry="12" fill="#FF69B4" stroke="none" opacity="0.7" rotation="20" origin="140, 78" />
+            <Ellipse cx="135" cy="80" rx="35" ry="28" fill="#9B59B6" stroke="#000000" strokeWidth="2" transform="rotate(20 135 80)" />
+            <Ellipse cx="140" cy="78" rx="15" ry="12" fill="#FF69B4" stroke="none" opacity="0.7" transform="rotate(20 140 78)" />
             <Circle cx="145" cy="75" r="5" fill="#FFD700" stroke="none" opacity="0.8" />
             {/* Lower left wing */}
-            <Ellipse cx="70" cy="115" rx="28" ry="22" fill="#BB6BD9" stroke="#000000" strokeWidth="2" rotation="15" origin="70, 115" />
-            <Ellipse cx="65" cy="115" rx="12" ry="10" fill="#FFFFFF" stroke="none" opacity="0.4" rotation="15" origin="65, 115" />
+            <Ellipse cx="70" cy="115" rx="28" ry="22" fill="#BB6BD9" stroke="#000000" strokeWidth="2" transform="rotate(15 70 115)" />
+            <Ellipse cx="65" cy="115" rx="12" ry="10" fill="#FFFFFF" stroke="none" opacity="0.4" transform="rotate(15 65 115)" />
             {/* Lower right wing */}
-            <Ellipse cx="130" cy="115" rx="28" ry="22" fill="#BB6BD9" stroke="#000000" strokeWidth="2" rotation="-15" origin="130, 115" />
-            <Ellipse cx="135" cy="115" rx="12" ry="10" fill="#FFFFFF" stroke="none" opacity="0.4" rotation="-15" origin="135, 115" />
+            <Ellipse cx="130" cy="115" rx="28" ry="22" fill="#BB6BD9" stroke="#000000" strokeWidth="2" transform="rotate(-15 130 115)" />
+            <Ellipse cx="135" cy="115" rx="12" ry="10" fill="#FFFFFF" stroke="none" opacity="0.4" transform="rotate(-15 135 115)" />
           </Svg>
         );
 
@@ -654,7 +689,7 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Eye */}
             <Circle cx="136" cy="84" r="4" fill="#000000" />
             {/* Wing */}
-            <Ellipse cx="88" cy="105" rx="30" ry="18" fill="#4169E1" stroke="#000000" strokeWidth="2" rotation="-15" origin="88,105" />
+            <Ellipse cx="88" cy="105" rx="30" ry="18" fill="#4169E1" stroke="#000000" strokeWidth="2" transform="rotate(-15 88 105)" />
             {/* Tail */}
             <Polygon points="62,110 38,100 38,120" fill="#4169E1" stroke="#000000" strokeWidth="2" />
             {/* Left leg */}
@@ -819,9 +854,9 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Stem */}
             <Path d="M 100 158 Q 95 130 100 80" stroke="#27AE60" strokeWidth="5" fill="none" strokeLinecap="round" />
             {/* Left leaf */}
-            <Ellipse cx="80" cy="125" rx="18" ry="28" fill="#32CD32" stroke="#27AE60" strokeWidth="2" rotation="-35" origin="80,125" />
+            <Ellipse cx="80" cy="125" rx="18" ry="28" fill="#32CD32" stroke="#27AE60" strokeWidth="2" transform="rotate(-35 80 125)" />
             {/* Right leaf */}
-            <Ellipse cx="120" cy="105" rx="18" ry="28" fill="#32CD32" stroke="#27AE60" strokeWidth="2" rotation="35" origin="120,105" />
+            <Ellipse cx="120" cy="105" rx="18" ry="28" fill="#32CD32" stroke="#27AE60" strokeWidth="2" transform="rotate(35 120 105)" />
             {/* Flower center */}
             <Circle cx="100" cy="58" r="16" fill="#FFD700" stroke="#FFA500" strokeWidth="2" />
             {/* Petals top/bottom */}
@@ -831,10 +866,10 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             <Ellipse cx="69" cy="58" rx="20" ry="11" fill="#FF69B4" stroke="#FF1493" strokeWidth="1.5" />
             <Ellipse cx="131" cy="58" rx="20" ry="11" fill="#FF69B4" stroke="#FF1493" strokeWidth="1.5" />
             {/* Diagonal petals */}
-            <Ellipse cx="79" cy="37" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" rotation="-45" origin="79,37" />
-            <Ellipse cx="121" cy="37" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" rotation="45" origin="121,37" />
-            <Ellipse cx="79" cy="79" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" rotation="45" origin="79,79" />
-            <Ellipse cx="121" cy="79" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" rotation="-45" origin="121,79" />
+            <Ellipse cx="79" cy="37" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" transform="rotate(-45 79 37)" />
+            <Ellipse cx="121" cy="37" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" transform="rotate(45 121 37)" />
+            <Ellipse cx="79" cy="79" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" transform="rotate(45 79 79)" />
+            <Ellipse cx="121" cy="79" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" transform="rotate(-45 121 79)" />
             {/* Center dot */}
             <Circle cx="100" cy="58" r="6" fill="#FFA500" stroke="#000000" strokeWidth="1" />
           </Svg>
@@ -850,7 +885,7 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Dorsal fin */}
             <Path d="M 88 65 Q 105 42 125 65" fill="#FFD700" stroke="#000000" strokeWidth="2" />
             {/* Pectoral fin */}
-            <Ellipse cx="115" cy="118" rx="18" ry="10" fill="#FFD700" stroke="#000000" strokeWidth="2" rotation="30" origin="115,118" />
+            <Ellipse cx="115" cy="118" rx="18" ry="10" fill="#FFD700" stroke="#000000" strokeWidth="2" transform="rotate(30 115 118)" />
             {/* Eye ring */}
             <Circle cx="72" cy="92" r="12" fill="#FFFFFF" stroke="#000000" strokeWidth="2" />
             {/* Eye */}
@@ -942,9 +977,9 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Smile */}
             <Path d="M 78 105 Q 100 118 122 105" stroke="#2E7D32" strokeWidth="2.5" fill="none" strokeLinecap="round" />
             {/* Left back leg */}
-            <Ellipse cx="52" cy="152" rx="22" ry="13" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" rotation="-25" origin="52,152" />
+            <Ellipse cx="52" cy="152" rx="22" ry="13" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" transform="rotate(-25 52 152)" />
             {/* Right back leg */}
-            <Ellipse cx="148" cy="152" rx="22" ry="13" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" rotation="25" origin="148,152" />
+            <Ellipse cx="148" cy="152" rx="22" ry="13" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" transform="rotate(25 148 152)" />
           </Svg>
         );
 
@@ -990,7 +1025,7 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Eye shine */}
             <Circle cx="132" cy="71" r="2" fill="#FFFFFF" />
             {/* Wing */}
-            <Ellipse cx="75" cy="115" rx="32" ry="20" fill="#F9A825" stroke="#FF8C00" strokeWidth="2" rotation="-15" origin="75,115" />
+            <Ellipse cx="75" cy="115" rx="32" ry="20" fill="#F9A825" stroke="#FF8C00" strokeWidth="2" transform="rotate(-15 75 115)" />
             {/* Tail feather */}
             <Polygon points="47,118 22,108 22,128" fill="#F9A825" stroke="#FF8C00" strokeWidth="2" />
             {/* Left foot */}
@@ -1082,9 +1117,9 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Beak */}
             <Polygon points="100,72 92,80 108,80" fill="#FF9800" stroke="#E65100" strokeWidth="1.5" />
             {/* Left wing */}
-            <Ellipse cx="53" cy="118" rx="18" ry="35" fill="#212121" stroke="#000000" strokeWidth="1.5" rotation="10" origin="53,118" />
+            <Ellipse cx="53" cy="118" rx="18" ry="35" fill="#212121" stroke="#000000" strokeWidth="1.5" transform="rotate(10 53 118)" />
             {/* Right wing */}
-            <Ellipse cx="147" cy="118" rx="18" ry="35" fill="#212121" stroke="#000000" strokeWidth="1.5" rotation="-10" origin="147,118" />
+            <Ellipse cx="147" cy="118" rx="18" ry="35" fill="#212121" stroke="#000000" strokeWidth="1.5" transform="rotate(-10 147 118)" />
             {/* Feet */}
             <Ellipse cx="100" cy="178" rx="25" ry="8" fill="#FF9800" stroke="#E65100" strokeWidth="1.5" />
           </Svg>
@@ -1206,15 +1241,315 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Nose */}
             <Circle cx="100" cy="86" r="4" fill="#1A1A1A" />
             {/* Bushy tail */}
-            <Ellipse cx="153" cy="152" rx="35" ry="25" fill="#FF6F00" stroke="#E65100" strokeWidth="2" rotation="30" origin="153,152" />
+            <Ellipse cx="153" cy="152" rx="35" ry="25" fill="#FF6F00" stroke="#E65100" strokeWidth="2" transform="rotate(30 153 152)" />
             {/* Tail tip white */}
-            <Ellipse cx="153" cy="152" rx="20" ry="14" fill="#FFFFFF" stroke="none" rotation="30" origin="153,152" />
+            <Ellipse cx="153" cy="152" rx="20" ry="14" fill="#FFFFFF" stroke="none" transform="rotate(30 153 152)" />
             {/* Front left leg */}
             <Rect x="78" y="160" width="12" height="28" fill="#FF6F00" stroke="#E65100" strokeWidth="2" rx="3" />
             {/* Front right leg */}
             <Rect x="110" y="160" width="12" height="28" fill="#FF6F00" stroke="#E65100" strokeWidth="2" rx="3" />
             {/* White chest patch */}
             <Ellipse cx="100" cy="130" rx="20" ry="26" fill="#FFECB3" stroke="none" />
+          </Svg>
+        );
+
+      // ── Fahrzeuge v1 Pack ──────────────────────────────────────────────────
+
+      case 'fahrzeuge-01-bus.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Rect x="18" y="88" width="162" height="60" fill="#FFD700" stroke="#FFA000" strokeWidth="2.5" rx="6" />
+            {/* Roof */}
+            <Rect x="28" y="75" width="142" height="18" fill="#FFC300" stroke="#FFA000" strokeWidth="2" rx="5" />
+            {/* Front windshield */}
+            <Rect x="150" y="92" width="24" height="26" fill="#87CEEB" stroke="#FFA000" strokeWidth="1.5" rx="3" />
+            {/* Window 1 */}
+            <Rect x="28" y="92" width="26" height="22" fill="#87CEEB" stroke="#FFA000" strokeWidth="1.5" rx="3" />
+            {/* Window 2 */}
+            <Rect x="62" y="92" width="26" height="22" fill="#87CEEB" stroke="#FFA000" strokeWidth="1.5" rx="3" />
+            {/* Window 3 */}
+            <Rect x="96" y="92" width="26" height="22" fill="#87CEEB" stroke="#FFA000" strokeWidth="1.5" rx="3" />
+            {/* Left wheel */}
+            <Circle cx="52" cy="156" r="17" fill="#333333" stroke="#1A1A1A" strokeWidth="2" />
+            {/* Left wheel hub */}
+            <Circle cx="52" cy="156" r="7" fill="#999999" />
+            {/* Right wheel */}
+            <Circle cx="148" cy="156" r="17" fill="#333333" stroke="#1A1A1A" strokeWidth="2" />
+            {/* Right wheel hub */}
+            <Circle cx="148" cy="156" r="7" fill="#999999" />
+            {/* Headlight */}
+            <Circle cx="179" cy="108" r="7" fill="#FFFDE7" stroke="#FFA000" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-02-airplane.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Fuselage */}
+            <Ellipse cx="100" cy="108" rx="78" ry="18" fill="#87CEEB" stroke="#4A90D9" strokeWidth="2.5" />
+            {/* Nose cone */}
+            <Ellipse cx="176" cy="108" rx="15" ry="11" fill="#6BB5D5" stroke="#4A90D9" strokeWidth="2" />
+            {/* Main wing upper */}
+            <Polygon points="100,108 72,58 132,108" fill="#4A90D9" stroke="#2C5F9A" strokeWidth="2" />
+            {/* Main wing lower */}
+            <Polygon points="100,108 72,158 132,108" fill="#4A90D9" stroke="#2C5F9A" strokeWidth="2" />
+            {/* Tail fin (vertical) */}
+            <Polygon points="30,104 28,74 52,104" fill="#4A90D9" stroke="#2C5F9A" strokeWidth="2" />
+            {/* Tail horizontal left */}
+            <Polygon points="32,108 12,94 52,108" fill="#4A90D9" stroke="#2C5F9A" strokeWidth="1.5" />
+            {/* Tail horizontal right */}
+            <Polygon points="32,108 12,122 52,108" fill="#4A90D9" stroke="#2C5F9A" strokeWidth="1.5" />
+            {/* Window 1 */}
+            <Circle cx="140" cy="105" r="8" fill="#FFFFFF" stroke="#4A90D9" strokeWidth="1.5" />
+            {/* Window 2 */}
+            <Circle cx="160" cy="105" r="8" fill="#FFFFFF" stroke="#4A90D9" strokeWidth="1.5" />
+            {/* Engine pod */}
+            <Ellipse cx="88" cy="122" rx="16" ry="7" fill="#7FB3D3" stroke="#4A90D9" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-03-sailboat.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Hull */}
+            <Path d="M 28 138 Q 100 158 172 138 L 162 118 Q 100 132 38 118 Z" fill="#8B4513" stroke="#5D2E0C" strokeWidth="2.5" />
+            {/* Mast */}
+            <Line x1="100" y1="50" x2="100" y2="138" stroke="#5D2E0C" strokeWidth="4" strokeLinecap="round" />
+            {/* Main sail */}
+            <Polygon points="100,55 100,128 162,118" fill="#FFFFFF" stroke="#4A90D9" strokeWidth="2" />
+            {/* Jib (front sail) */}
+            <Polygon points="100,75 100,128 48,118" fill="#FFD700" stroke="#FFA000" strokeWidth="2" />
+            {/* Flag */}
+            <Polygon points="100,50 100,65 118,57" fill="#E74C3C" stroke="none" />
+            {/* Water wave 1 */}
+            <Path d="M 8 152 Q 28 144 48 152 Q 68 160 88 152" stroke="#4A90D9" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            {/* Water wave 2 */}
+            <Path d="M 108 157 Q 128 149 148 157 Q 168 165 188 157" stroke="#4A90D9" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            {/* Porthole */}
+            <Circle cx="68" cy="130" r="6" fill="#87CEEB" stroke="#5D2E0C" strokeWidth="1.5" />
+            {/* Boom */}
+            <Line x1="100" y1="128" x2="156" y2="120" stroke="#5D2E0C" strokeWidth="3" strokeLinecap="round" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-04-tractor.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Rect x="62" y="95" width="80" height="55" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2.5" rx="5" />
+            {/* Hood */}
+            <Rect x="118" y="108" width="48" height="35" fill="#388E3C" stroke="#2E7D32" strokeWidth="2" rx="4" />
+            {/* Cabin roof */}
+            <Rect x="65" y="75" width="74" height="25" fill="#2E7D32" stroke="#1B5E20" strokeWidth="2" rx="4" />
+            {/* Cabin window */}
+            <Rect x="70" y="79" width="62" height="17" fill="#87CEEB" stroke="#1B5E20" strokeWidth="1.5" rx="3" />
+            {/* Exhaust pipe */}
+            <Rect x="128" y="88" width="8" height="24" fill="#424242" stroke="#212121" strokeWidth="1.5" rx="2" />
+            {/* Front small wheel */}
+            <Circle cx="150" cy="154" r="18" fill="#333333" stroke="#1A1A1A" strokeWidth="2" />
+            {/* Front wheel hub */}
+            <Circle cx="150" cy="154" r="7" fill="#888888" />
+            {/* Big rear wheel outer */}
+            <Circle cx="72" cy="158" r="35" fill="#333333" stroke="#1A1A1A" strokeWidth="2.5" />
+            {/* Big rear wheel inner */}
+            <Circle cx="72" cy="158" r="22" fill="#555555" />
+            {/* Rear wheel hub */}
+            <Circle cx="72" cy="158" r="10" fill="#888888" />
+            {/* Rear mudguard */}
+            <Path d="M 38 126 Q 36 112 46 108" stroke="#2E7D32" strokeWidth="8" fill="none" strokeLinecap="round" />
+            {/* Headlight */}
+            <Circle cx="164" cy="120" r="7" fill="#FFFDE7" stroke="#FFA000" strokeWidth="1.5" />
+            {/* Rear wheel lug */}
+            <Line x1="72" y1="136" x2="72" y2="146" stroke="#AAAAAA" strokeWidth="3" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-05-helicopter.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Fuselage */}
+            <Ellipse cx="95" cy="118" rx="62" ry="30" fill="#FF6B35" stroke="#E64A19" strokeWidth="2.5" />
+            {/* Cockpit bubble */}
+            <Ellipse cx="138" cy="112" rx="30" ry="24" fill="#87CEEB" stroke="#E64A19" strokeWidth="2" />
+            {/* Tail boom */}
+            <Rect x="20" y="112" width="42" height="14" fill="#FF6B35" stroke="#E64A19" strokeWidth="2" rx="4" />
+            {/* Tail fin */}
+            <Polygon points="20,112 10,90 35,112" fill="#E64A19" stroke="#BF360C" strokeWidth="2" />
+            {/* Tail rotor */}
+            <Ellipse cx="22" cy="100" rx="4" ry="18" fill="#D32F2F" stroke="#B71C1C" strokeWidth="1.5" />
+            {/* Main rotor mast */}
+            <Rect x="95" y="85" width="6" height="20" fill="#757575" stroke="#424242" strokeWidth="1.5" rx="2" />
+            {/* Main rotor blade left */}
+            <Ellipse cx="76" cy="84" rx="28" ry="7" fill="#D32F2F" stroke="#B71C1C" strokeWidth="1.5" />
+            {/* Main rotor blade right */}
+            <Ellipse cx="122" cy="84" rx="28" ry="7" fill="#D32F2F" stroke="#B71C1C" strokeWidth="1.5" />
+            {/* Pilot window */}
+            <Circle cx="142" cy="110" r="14" fill="#FFFFFF" stroke="#E64A19" strokeWidth="1.5" />
+            {/* Skid bar */}
+            <Rect x="68" y="146" width="52" height="7" fill="#757575" stroke="#424242" strokeWidth="1.5" rx="3" />
+            {/* Skid front post */}
+            <Line x1="72" y1="145" x2="72" y2="150" stroke="#424242" strokeWidth="3" />
+            {/* Skid rear post */}
+            <Line x1="115" y1="145" x2="115" y2="150" stroke="#424242" strokeWidth="3" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-06-firetruck.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Rect x="22" y="95" width="158" height="55" fill="#E74C3C" stroke="#C0392B" strokeWidth="2.5" rx="5" />
+            {/* Cabin */}
+            <Rect x="148" y="80" width="32" height="28" fill="#C0392B" stroke="#922B21" strokeWidth="2" rx="4" />
+            {/* Cabin window */}
+            <Rect x="152" y="84" width="24" height="16" fill="#87CEEB" stroke="#922B21" strokeWidth="1.5" rx="3" />
+            {/* Equipment compartment */}
+            <Rect x="30" y="103" width="35" height="38" fill="#C0392B" stroke="#922B21" strokeWidth="1.5" rx="3" />
+            {/* Hose reel */}
+            <Circle cx="100" cy="99" r="16" fill="#CC3D2A" stroke="#922B21" strokeWidth="1.5" />
+            {/* Hose reel center */}
+            <Circle cx="100" cy="99" r="6" fill="#E74C3C" />
+            {/* Ladder */}
+            <Rect x="22" y="85" width="125" height="6" fill="#FFD700" stroke="#FFC300" strokeWidth="1.5" rx="2" />
+            {/* Ladder rungs */}
+            <Path d="M 40 85 L 40 91 M 65 85 L 65 91 M 90 85 L 90 91 M 115 85 L 115 91" stroke="#FFA000" strokeWidth="1.5" />
+            {/* Left wheel */}
+            <Circle cx="52" cy="157" r="18" fill="#333333" stroke="#1A1A1A" strokeWidth="2" />
+            {/* Left wheel hub */}
+            <Circle cx="52" cy="157" r="7" fill="#888888" />
+            {/* Right wheel */}
+            <Circle cx="148" cy="157" r="18" fill="#333333" stroke="#1A1A1A" strokeWidth="2" />
+            {/* Right wheel hub */}
+            <Circle cx="148" cy="157" r="7" fill="#888888" />
+            {/* Headlight */}
+            <Circle cx="179" cy="110" r="7" fill="#FFFDE7" stroke="#FFA000" strokeWidth="1.5" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-07-ambulance.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Body */}
+            <Rect x="22" y="90" width="158" height="62" fill="#FFFFFF" stroke="#BDBDBD" strokeWidth="2.5" rx="5" />
+            {/* Cabin roof */}
+            <Rect x="130" y="75" width="52" height="20" fill="#F5F5F5" stroke="#BDBDBD" strokeWidth="2" rx="4" />
+            {/* Windshield */}
+            <Rect x="134" y="79" width="42" height="16" fill="#87CEEB" stroke="#BDBDBD" strokeWidth="1.5" rx="3" />
+            {/* Red cross vertical */}
+            <Rect x="68" y="96" width="12" height="36" fill="#E74C3C" stroke="none" rx="2" />
+            {/* Red cross horizontal */}
+            <Rect x="56" y="108" width="36" height="12" fill="#E74C3C" stroke="none" rx="2" />
+            {/* Red stripe */}
+            <Rect x="22" y="116" width="158" height="10" fill="#E74C3C" stroke="none" />
+            {/* Side window */}
+            <Rect x="110" y="96" width="55" height="22" fill="#E3F2FD" stroke="#BDBDBD" strokeWidth="1" rx="2" />
+            {/* Siren light */}
+            <Rect x="148" y="73" width="20" height="8" fill="#2196F3" stroke="#1565C0" strokeWidth="1.5" rx="3" />
+            {/* Left wheel */}
+            <Circle cx="52" cy="158" r="17" fill="#333333" stroke="#1A1A1A" strokeWidth="2" />
+            {/* Left wheel hub */}
+            <Circle cx="52" cy="158" r="6" fill="#999999" />
+            {/* Right wheel */}
+            <Circle cx="148" cy="158" r="17" fill="#333333" stroke="#1A1A1A" strokeWidth="2" />
+            {/* Right wheel hub */}
+            <Circle cx="148" cy="158" r="6" fill="#999999" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-08-submarine.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Water surface */}
+            <Path d="M 8 100 Q 28 90 48 100 Q 68 110 88 100 Q 108 90 128 100 Q 148 110 168 100 Q 188 90 200 100" stroke="#87CEEB" strokeWidth="3" fill="none" />
+            {/* Sub body */}
+            <Ellipse cx="100" cy="130" rx="82" ry="30" fill="#FFD700" stroke="#FFC107" strokeWidth="2.5" />
+            {/* Conning tower */}
+            <Rect x="82" y="98" width="36" height="36" fill="#FFC300" stroke="#FFA000" strokeWidth="2" rx="5" />
+            {/* Periscope shaft */}
+            <Rect x="96" y="72" width="8" height="30" fill="#FFA000" stroke="#E65100" strokeWidth="1.5" rx="2" />
+            {/* Periscope head */}
+            <Rect x="88" y="70" width="24" height="8" fill="#FFA000" stroke="#E65100" strokeWidth="1.5" rx="2" />
+            {/* Propeller */}
+            <Ellipse cx="18" cy="130" rx="6" ry="18" fill="#FFC107" stroke="#FFA000" strokeWidth="2" />
+            {/* Porthole 1 */}
+            <Circle cx="68" cy="132" r="10" fill="#87CEEB" stroke="#FFA000" strokeWidth="2" />
+            {/* Porthole 2 */}
+            <Circle cx="110" cy="132" r="10" fill="#87CEEB" stroke="#FFA000" strokeWidth="2" />
+            {/* Porthole 3 */}
+            <Circle cx="148" cy="132" r="10" fill="#87CEEB" stroke="#FFA000" strokeWidth="2" />
+            {/* Nose cone */}
+            <Ellipse cx="180" cy="130" rx="18" ry="22" fill="#FFD700" stroke="#FFC107" strokeWidth="2" />
+            {/* Torpedo tube */}
+            <Rect x="192" y="124" width="10" height="12" fill="#FFA000" stroke="#E65100" strokeWidth="1.5" rx="2" />
+            {/* Fin top */}
+            <Polygon points="130,98 124,76 146,98" fill="#FFC107" stroke="#FFA000" strokeWidth="2" />
+            {/* Fin bottom */}
+            <Polygon points="130,162 124,182 146,162" fill="#FFC107" stroke="#FFA000" strokeWidth="2" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-09-speedboat.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Hull */}
+            <Path d="M 20 140 Q 100 115 180 132 L 172 155 Q 100 165 28 158 Z" fill="#E74C3C" stroke="#C0392B" strokeWidth="2.5" />
+            {/* Deck */}
+            <Path d="M 42 140 Q 100 120 172 135 L 168 138 Q 100 124 46 143 Z" fill="#C0392B" stroke="none" />
+            {/* Windshield */}
+            <Polygon points="110,128 110,112 145,118 145,130" fill="#87CEEB" stroke="#C0392B" strokeWidth="2" />
+            {/* Steering post */}
+            <Line x1="120" y1="120" x2="120" y2="138" stroke="#7F8C8D" strokeWidth="3" strokeLinecap="round" />
+            {/* Bow wave */}
+            <Path d="M 18 148 Q 10 140 18 133" stroke="#4A90D9" strokeWidth="3" fill="none" strokeLinecap="round" />
+            {/* Water wave 1 */}
+            <Path d="M 8 165 Q 28 157 48 165 Q 68 173 88 165" stroke="#4A90D9" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            {/* Water wave 2 */}
+            <Path d="M 108 168 Q 128 160 148 168 Q 168 176 188 168" stroke="#4A90D9" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            {/* Engine block */}
+            <Rect x="15" y="138" width="18" height="20" fill="#7F8C8D" stroke="#2C3E50" strokeWidth="2" rx="3" />
+            {/* White racing stripe */}
+            <Path d="M 42 150 Q 100 132 168 146" stroke="#FFFFFF" strokeWidth="3" fill="none" />
+            {/* Wake left */}
+            <Path d="M 14 148 Q 5 153 12 162" stroke="#87CEEB" strokeWidth="2" fill="none" strokeLinecap="round" />
+            {/* Wake right */}
+            <Path d="M 22 158 Q 12 165 18 175" stroke="#87CEEB" strokeWidth="2" fill="none" strokeLinecap="round" />
+            {/* Flag pole */}
+            <Line x1="168" y1="136" x2="168" y2="112" stroke="#7F8C8D" strokeWidth="2" strokeLinecap="round" />
+          </Svg>
+        );
+
+      case 'fahrzeuge-10-spaceshuttle.svg':
+        return (
+          <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+            {/* Orbiter body */}
+            <Ellipse cx="100" cy="112" rx="20" ry="70" fill="#ECEFF1" stroke="#B0BEC5" strokeWidth="2.5" />
+            {/* Nose cone */}
+            <Polygon points="100,40 84,80 116,80" fill="#CFD8DC" stroke="#B0BEC5" strokeWidth="2" />
+            {/* Left wing */}
+            <Polygon points="82,140 35,178 100,160" fill="#CFD8DC" stroke="#B0BEC5" strokeWidth="2" />
+            {/* Right wing */}
+            <Polygon points="118,140 165,178 100,160" fill="#CFD8DC" stroke="#B0BEC5" strokeWidth="2" />
+            {/* Left wing edge */}
+            <Line x1="35" y1="178" x2="100" y2="190" stroke="#B0BEC5" strokeWidth="1.5" />
+            {/* Right wing edge */}
+            <Line x1="165" y1="178" x2="100" y2="190" stroke="#B0BEC5" strokeWidth="1.5" />
+            {/* Cockpit window */}
+            <Ellipse cx="100" cy="76" rx="12" ry="16" fill="#87CEEB" stroke="#78909C" strokeWidth="2" />
+            {/* Engine left */}
+            <Circle cx="88" cy="180" r="10" fill="#FF7043" stroke="#E64A19" strokeWidth="2" />
+            {/* Engine center */}
+            <Circle cx="100" cy="183" r="10" fill="#FF7043" stroke="#E64A19" strokeWidth="2" />
+            {/* Engine right */}
+            <Circle cx="112" cy="180" r="10" fill="#FF7043" stroke="#E64A19" strokeWidth="2" />
+            {/* Flame left */}
+            <Ellipse cx="88" cy="193" rx="7" ry="10" fill="#FFD700" stroke="none" />
+            {/* Flame center */}
+            <Ellipse cx="100" cy="197" rx="7" ry="11" fill="#FFD700" stroke="none" />
+            {/* Flame right */}
+            <Ellipse cx="112" cy="193" rx="7" ry="10" fill="#FFD700" stroke="none" />
+            {/* Payload door line */}
+            <Line x1="90" y1="88" x2="90" y2="155" stroke="#78909C" strokeWidth="1.5" />
           </Svg>
         );
 
@@ -1235,15 +1570,29 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
  * Rendert die SVG-Bilder als React Native SVG Komponenten
  * Optional: revealStep für schrittweises Aufdecken
  */
-export default function LevelImageDisplay({ image, size = 300, revealStep }: Props) {
+export default function LevelImageDisplay({ image, size = 300, revealStep, mode = 'normal', mirror = false }: Props) {
   const svgSize = size;
   const viewBox = "0 0 200 200";
 
-  const svgElement = renderSvgForImage(image, svgSize, viewBox);
+  let svgElement = renderSvgForImage(image, svgSize, viewBox);
 
   if (!svgElement) {
     return <View style={[styles.container, { width: svgSize, height: svgSize }]} />;
   }
+
+  if (mode === 'outline') {
+    const outlinedChildren = React.Children.map(
+      (svgElement.props as React.ComponentProps<typeof Svg>).children,
+      toOutlineElement
+    );
+    svgElement = React.cloneElement(svgElement, {}, outlinedChildren);
+  }
+
+  const containerStyle = [
+    styles.container,
+    { width: svgSize, height: svgSize },
+    mirror && styles.mirrored,
+  ];
 
   // Progressive reveal: only show children up to revealStep
   if (revealStep !== undefined) {
@@ -1251,14 +1600,14 @@ export default function LevelImageDisplay({ image, size = 300, revealStep }: Pro
     const visibleChildren = children.slice(0, revealStep + 1);
     const cloned = React.cloneElement(svgElement, {}, ...visibleChildren);
     return (
-      <View style={[styles.container, { width: svgSize, height: svgSize }]}>
+      <View style={containerStyle}>
         {cloned}
       </View>
     );
   }
 
   return (
-    <View style={[styles.container, { width: svgSize, height: svgSize }]}>
+    <View style={containerStyle}>
       {svgElement}
     </View>
   );
@@ -1268,5 +1617,8 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  mirrored: {
+    transform: [{ scaleX: -1 }],
   },
 });

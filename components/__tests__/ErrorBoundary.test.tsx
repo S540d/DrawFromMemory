@@ -5,6 +5,11 @@ import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import { Text } from 'react-native';
 import { ErrorBoundary } from '../ErrorBoundary';
+import { captureException } from '../../services/SentryService';
+
+jest.mock('../../services/SentryService', () => ({
+  captureException: jest.fn(),
+}));
 
 // Suppress console.error from ErrorBoundary's componentDidCatch and React's error logging
 const originalConsoleError = console.error;
@@ -22,6 +27,7 @@ const ThrowError = ({ message }: { message: string }) => {
 describe('ErrorBoundary', () => {
   beforeEach(() => {
     (console.error as jest.Mock).mockClear();
+    (captureException as jest.Mock).mockClear();
   });
 
   it('renders children normally when no error', () => {
@@ -70,6 +76,18 @@ describe('ErrorBoundary', () => {
     expect(console.error).toHaveBeenCalledWith(
       'ErrorBoundary caught an error:',
       expect.any(Error)
+    );
+  });
+
+  it('calls captureException via componentDidCatch', () => {
+    render(
+      <ErrorBoundary>
+        <ThrowError message="Reported error" />
+      </ErrorBoundary>
+    );
+    expect(captureException).toHaveBeenCalledWith(
+      expect.any(Error),
+      expect.objectContaining({ component: 'ErrorBoundary' })
     );
   });
 });

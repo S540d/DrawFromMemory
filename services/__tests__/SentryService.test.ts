@@ -113,4 +113,18 @@ describe('SentryService – native platform, with DSN (active)', () => {
     expect(mockSetTag).toHaveBeenCalledWith('platform', 'android');
     expect(mockSetTag).toHaveBeenCalledWith('version', '1.2.1');
   });
+
+  it('initSentry does not throw when Sentry.init throws', () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    mockInit.mockImplementationOnce(() => {
+      throw new Error('native init failure');
+    });
+    const { initSentry } = require('../SentryService');
+    expect(() => initSentry()).not.toThrow();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Failed to initialize Sentry:',
+      expect.any(Error)
+    );
+    consoleErrorSpy.mockRestore();
+  });
 });

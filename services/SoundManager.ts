@@ -26,7 +26,7 @@ class SoundManager {
     if (Platform.OS !== 'web') return null;
     if (!this.audioContext) {
       try {
-        this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)(); // platform-safe
       } catch {
         return null;
       }
@@ -110,6 +110,16 @@ class SoundManager {
     if (!this.soundEnabled) return;
     [660, 880].forEach((freq, i) => {
       setTimeout(() => this.playTone(freq, 0.15, 'sine', 0.2), i * 80);
+    });
+    this.hapticSuccess();
+  }
+
+  /** Jubel-Sound bei 4–5 Sternen (fröhlicher Aufwärts-Akkord) */
+  playCelebration() {
+    if (!this.soundEnabled) return;
+    const notes = [523, 659, 784, 880, 1047, 1319];
+    notes.forEach((freq, i) => {
+      setTimeout(() => this.playTone(freq, 0.28, 'sine', 0.22), i * 85);
     });
     this.hapticSuccess();
   }

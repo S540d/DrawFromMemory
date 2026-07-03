@@ -9,6 +9,16 @@ jest.mock('../../services/i18n', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
+jest.mock('../../services/RatingManager', () => ({
+  getRatingFeedback: jest.fn((stars: number) => ({
+    stars,
+    message: `feedback-de-${stars}`,
+    messageEn: `feedback-en-${stars}`,
+    animation: 'none',
+    sound: null,
+  })),
+}));
+
 jest.mock('../../services/ThemeContext', () => ({
   useTheme: () => ({
     colors: {
@@ -75,6 +85,19 @@ jest.mock('../../components/AnimatedPrimitives', () => {
   };
 });
 
+jest.mock('../../components/game/TimerArc', () => {
+  const { View, Text } = require('react-native');
+  return {
+    __esModule: true,
+    default: ({ timeRemaining }: any) => (
+      <View testID="timer-arc-container"><Text testID="timer-arc">{String(Math.max(0, Math.ceil(timeRemaining)))}</Text></View>
+    ),
+    TimerArc: ({ timeRemaining }: any) => (
+      <View testID="timer-arc-container"><Text testID="timer-arc">{String(Math.max(0, Math.ceil(timeRemaining)))}</Text></View>
+    ),
+  };
+});
+
 // ─── MemorizePhase ────────────────────────────────────────────────────────────
 
 import MemorizePhase from '../../components/game/MemorizePhase';
@@ -98,6 +121,7 @@ const getAllTexts = (UNSAFE_getAllByType: any): any[] => {
 describe('MemorizePhase', () => {
   const baseProps = {
     timeRemaining: 5,
+    totalTime: 5,
     currentImage: null,
     levelNumber: 1,
     currentLang: 'en',
@@ -106,10 +130,10 @@ describe('MemorizePhase', () => {
     revealStep: 0,
   };
 
-  it('renders timer with i18n translation key', () => {
-    const { UNSAFE_getAllByType } = render(<MemorizePhase {...baseProps} timeRemaining={3} />);
+  it('renders timer arc countdown value', () => {
+    const { UNSAFE_getAllByType } = render(<MemorizePhase {...baseProps} timeRemaining={3} totalTime={5} />);
     const texts = getAllTexts(UNSAFE_getAllByType);
-    expect(texts).toContain('game.memorize.timeLeft');
+    expect(texts).toContain('3');
   });
 
   it('renders title translation key', () => {
@@ -254,7 +278,8 @@ describe('ResultPhase', () => {
   it('shows feedback text when rating > 0', () => {
     const { UNSAFE_getAllByType } = render(<ResultPhase {...resultProps} userRating={5} />);
     const texts = getAllTexts(UNSAFE_getAllByType);
-    expect(texts).toContain('game.result.feedback5');
+    // RatingManager returns language-specific message; currentLang='en' in resultProps
+    expect(texts).toContain('feedback-en-5');
   });
 
   it('shows saved label when savedToGallery is true', () => {

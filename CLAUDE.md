@@ -26,8 +26,8 @@ Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Er
 | State | React Hooks + AsyncStorage |
 | Theming | ThemeContext (light / dark / system) |
 | Sound | Web Audio API (web) + `expo-haptics` (native) |
-| i18n | Custom `services/i18n.ts` (de/en), Locales in `locales/` |
-| Tests | Jest 29 + jest-expo ~55 (372+ Tests, jsdom-Environment) |
+| i18n | Custom `services/i18n.ts` (de/en/es/fr/it/nl/pl), Locales in `locales/`, automatische Geräte-Spracherkennung |
+| Tests | Jest 29 + jest-expo ~55 (373+ Tests, jsdom-Environment) |
 | CI | GitHub Actions (`.github/workflows/ci-cd.yml`) |
 | Build (Native) | EAS Build (`eas.json`) |
 | Crash Reporting | Sentry via `EXPO_PUBLIC_SENTRY_DSN` (optional, no-op on Web) |
@@ -73,8 +73,10 @@ services/
   SoundManager.ts            # Web Audio API (Web) + expo-haptics (Native)
   SentryService.ts           # Sentry-Wrapper (init, captureException, etc.)
   ThemeContext.tsx            # ThemeProvider + useTheme Hook (light/dark/system)
-  i18n.ts                    # Übersetzungs-Service (de/en) mit listener-basiertem Reload
+  i18n.ts                    # Übersetzungs-Service (de/en/es/fr/it/nl/pl) mit listener-basiertem Reload + automatischer Geräte-Spracherkennung
   ReviewManager.ts           # In-App-Review-Trigger: 5-Sterne oder 3. Daily Challenge, 90-Tage-Cooldown — deaktiviert via EXPO_PUBLIC_ENABLE_IN_APP_REVIEW
+  ShareService.ts            # PNG-Export (Web): Off-Screen-Canvas → Web Share API / Download-Fallback
+  ShareService.native.ts     # PNG-Export (Native): Skia Surface → expo-file-system + expo-sharing
   useGamePhase.ts            # Spielphasen-Hook: memorize / draw / result + Replay
   useTimer.ts                # Timer-Hook (Countdown, pause/resume via phase)
 
@@ -93,6 +95,7 @@ types/
 locales/
   de/translations.json       # Deutsche Übersetzungen
   en/translations.json       # Englische Übersetzungen
+  es/, fr/, it/, nl/, pl/     # Spanisch, Französisch, Italienisch, Niederländisch, Polnisch (Issue #247)
 
 assets/images/levels/        # Kanonische SVG-Bilder (level-01-sun.svg … extra-04-bird.svg)
 assets/images/levels-{1-5}/  # Level-sortierte Kopien der gleichen SVGs
@@ -174,7 +177,19 @@ memorize  →  draw  →  result
 3. **Result**: Sternbewertung (1–5), Replay-Animation, Speichern in Galerie möglich.
 
 Level-Anzahl: 20 (Difficulty 1–5). Alle Level haben 3 s Anzeigezeit.
-Bilderpool: `ImagePoolManager.ts` wählt zufällig nach Difficulty-Klasse aus. Aktuell **41 Bilder** (inkl. Tiere v1 Pack — 10 Tiere, PR #221).
+Bilderpool: `ImagePoolManager.ts` wählt zufällig nach Difficulty-Klasse aus. Aktuell **51 Bilder** (inkl. Tiere v1 Pack — 10 Tiere, PR #221 + Fahrzeuge v1 Pack — 10 Fahrzeuge, PR #254).
+
+### Spielvarianten (Issue #247)
+
+Auf dem Level-Auswahl-Screen (`app/levels.tsx`) wählbar (`GameVariant` in `types/index.ts`), wird als `?variant=` Query-Param an `/game` übergeben:
+
+| Variante | Effekt |
+|---|---|
+| `normal` | Standard — Bild wird unverändert gezeigt |
+| `outline` | Nur Umriss merken — `LevelImageDisplay` entfernt rekursiv alle Füllfarben (`mode="outline"`), nur eine einheitliche Kontur bleibt sichtbar |
+| `mirror` | Spiegelbild — `LevelImageDisplay` spiegelt die Anzeige horizontal (`mirror`, `transform: scaleX(-1)`) |
+
+Wirkt in Memorize-Phase und im Hinweis-Modal der Draw-Phase gleichermaßen. Kreativ-Modus (freies Malen ohne Vorlage, `app/creative.tsx`) ist eine eigenständige Route, kein `GameVariant`.
 
 ---
 
@@ -236,16 +251,16 @@ Gespeicherte Felder: `progress`, `theme`, `language`, `sound_enabled`, `music_en
 
 ## UI/UX Design System (Issue #176)
 
-Stand `staging`: Phase A + B abgeschlossen.
+Stand `testing`: Phase A, B, C und E abgeschlossen, Phase D (Konfetti + Jubel-Sound, TimerArc, Phasen-Crossfade, Stats-Counter) größtenteils umgesetzt — nur Lottie offen.
 
 ### Phase-Übersicht
 | Phase | Status | Branch/PR |
 |---|---|---|
-| **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie | ✅ in `staging` | PR merged |
-| **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in `staging` | PR #178 merged |
-| **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh | 🔲 offen | — |
-| **D: Delight** — Lottie, Konfetti, Mikro-Sounds | 🔲 offen | — |
-| **E: Onboarding** — First-Run-Tour | 🔲 offen | — |
+| **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie | ✅ in `testing` | PR merged |
+| **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in `testing` | PR #178 merged |
+| **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh | ✅ in `testing` | PR #257 merged |
+| **D: Delight** — Lottie, Konfetti, Mikro-Sounds | 🔶 größtenteils (Konfetti + Jubel-Sound PR #253, TimerArc/Phasen-Crossfade/Stats-Counter PR #257) — Lottie offen | — |
+| **E: Onboarding** — First-Run-Tour | ✅ in `testing` | PR #261 merged (In-Game Coach-Marks) |
 
 ### Neue Primitiven (Phase B)
 
@@ -341,7 +356,7 @@ Web-APIs über `utils/platform.ts` absichern (`safeWebAPI`, `isWeb`-Guard). Für
 ## Wachstums-Roadmap (Issue #219)
 
 Übergeordneter Plan, um aus der App eine dauerhaft wachsende Kids-App im Play Store zu machen.
-Stand: `main` @ v1.7.0 / versionCode 66. `staging` = `main` (keine offenen Features).
+Stand: `main` @ v1.7.0 / versionCode 66. `testing` hat Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten und weitere Sprachen (noch nicht in main).
 
 ### P0 — Foundation für Wachstum
 | Task | Status |
@@ -356,7 +371,9 @@ Stand: `main` @ v1.7.0 / versionCode 66. `staging` = `main` (keine offenen Featu
 | Task | Status |
 |---|---|
 | **Themen-Pack Tiere v1** (10 Bilder, #222) | ✅ in main (v1.7.0) |
-| Themen-Pack Fahrzeuge / Natur / Märchen | 🔲 offen |
+| **Themen-Pack Fahrzeuge v1** (10 Bilder, PR #254) | ✅ in testing |
+| Themen-Pack Natur / Märchen / weitere | 🔲 offen |
+| **Spielvarianten** (Nur Umriss merken, Spiegelbild, Kreativ-Modus, #247) | ✅ in testing |
 | Avatar & Personalisierung | 🔲 offen |
 | XP- & Level-System | 🔲 offen |
 | Wöchentliche Challenge | 🔲 offen |
@@ -365,15 +382,15 @@ Stand: `main` @ v1.7.0 / versionCode 66. `staging` = `main` (keine offenen Featu
 | Task | Status |
 |---|---|
 | Designed for Families Programm | 🔲 offen |
-| Weitere Sprachen (ES/FR/IT/NL/PL) | 🔲 offen |
-| Sharing-Feature (PNG-Export) | 🔲 offen |
+| **Weitere Sprachen** (ES/FR/IT/NL/PL, #247) | ✅ in testing — automatische Geräte-Spracherkennung |
+| **Sharing-Feature / PNG-Export** (ShareService, PR #255) | ✅ in testing |
 | Push-Notifications (opt-in) | 🔲 offen |
 
 ### Themen-Pack Architektur (ab PR #221)
 - `LevelImage.pack?: string` — optionaler Tag (z.B. `'tiere-v1'`)
 - Bilder ohne `minLevel` sind ab dem passenden Difficulty-Level verfügbar
 - Neue Packs: einfach neue Cases in `LevelImageDisplay.tsx` + Einträge in `ImagePoolManager.ts` + `IMAGE_ELEMENT_COUNTS`
-- Pflicht nach jedem neuen SVG: `npm run validate:svg-counts` (derzeit 41 Einträge)
+- Pflicht nach jedem neuen SVG: `npm run validate:svg-counts` (derzeit 51 Einträge)
 
 ---
 

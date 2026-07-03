@@ -43,6 +43,12 @@ export interface RatingFeedback {
 export type GamePhase = 'memorize' | 'draw' | 'result';
 
 /**
+ * Spielvariante: 'normal' (Standard), 'outline' (nur Umriss merken),
+ * 'mirror' (Spiegelbild merken/zeichnen)
+ */
+export type GameVariant = 'normal' | 'outline' | 'mirror';
+
+/**
  * Level-Daten
  */
 export interface Level {
@@ -76,7 +82,7 @@ export interface UserProgress {
  * App-Settings (gespeichert in AsyncStorage)
  */
 export interface AppSettings {
-  language: 'de' | 'en';
+  language: 'de' | 'en' | 'es' | 'fr' | 'it' | 'nl' | 'pl';
   soundEnabled: boolean;
   musicEnabled: boolean;
 }
