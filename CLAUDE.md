@@ -337,6 +337,9 @@ Path-Aliase nutzen: `@services/...`, `@components/...`, `@utils/...`.
 ### Plattform-spezifischer Code
 Web-APIs über `utils/platform.ts` absichern (`safeWebAPI`, `isWeb`-Guard). Für Storage stets `StorageManager` nutzen — nicht direkt `AsyncStorage` oder `localStorage`.
 
+### react-native-svg auf Web
+Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerendert werden — sie erzeugen ein ungültiges `transform-origin`-DOM-Attribut (React DOM erwartet `transformOrigin`) → Console-Error bei jedem Render. Stattdessen Standard-SVG `transform={`rotate(angle cx cy)`}` verwenden (Fix: PR #265).
+
 ### Tests
 - Test-Dateien liegen bei `services/__tests__/`, `components/__tests__/`, `utils/__tests__/`, `__tests__/`
 - Jest-Umgebung: `jsdom`; Skia wird gemockt via `__mocks__/@shopify/react-native-skia.js`
@@ -348,15 +351,15 @@ Web-APIs über `utils/platform.ts` absichern (`safeWebAPI`, `isWeb`-Guard). Für
 ## Security
 
 - `npm audit --audit-level=high` in CI — Pipeline blockiert bei high/critical
-- Verbleibende Findings (1 low, 14 moderate): alle im jest-expo/expo-SDK-Chain — `npm audit --audit-level=high` schlägt nicht an, intentionally excluded
-- Alle high/critical Vulnerabilities zuletzt gefixt: 2026-04-21 via PR #144
+- Verbleibende Findings (11 moderate, Stand 2026-07-03): alle im jest-expo/expo-SDK-Chain — nur via `npm audit fix --force` (Breaking) behebbar, `npm audit --audit-level=high` schlägt nicht an
+- Alle high/critical Vulnerabilities zuletzt gefixt: 2026-07-03 via `npm audit fix` (19 → 11, PR #265)
 
 ---
 
 ## Wachstums-Roadmap (Issue #219)
 
 Übergeordneter Plan, um aus der App eine dauerhaft wachsende Kids-App im Play Store zu machen.
-Stand: `main` @ v1.7.0 / versionCode 66. `testing` hat Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten und weitere Sprachen (noch nicht in main).
+Stand: `main` @ v1.7.0 / versionCode 66 — `testing` synchron. Enthält Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten, weitere Sprachen, Sentry-ErrorBoundary (#264) und den transform-origin Web-Fix (#265). **Play Store noch nicht auf v1.7.0** — Release-Aufgabe in Issue #267.
 
 ### P0 — Foundation für Wachstum
 | Task | Status |
@@ -365,15 +368,15 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` hat Fahrzeuge v1, PNG-Export,
 | Play-Store-Listing-Audit | ⏭ extern — teilweise umgesetzt |
 | **In-App-Review-Prompt** (`expo-store-review`) | ✅ in main (v1.7.0) — per Feature-Flag deaktiviert (`EXPO_PUBLIC_ENABLE_IN_APP_REVIEW`) |
 | Analytics-Setup (COPPA-konform) | 🔲 offen — Tool-Entscheidung nötig |
-| Crash-Rate-Baseline (Sentry) | 🔲 offen — manuell |
+| Crash-Rate-Baseline (Sentry) | 🟡 teilweise — ErrorBoundary meldet an Sentry, initSentry abgesichert (PR #264); noch offen: `EXPO_PUBLIC_SENTRY_DSN` für Produktions-Build setzen |
 
 ### P1 — Content & Retention
 | Task | Status |
 |---|---|
 | **Themen-Pack Tiere v1** (10 Bilder, #222) | ✅ in main (v1.7.0) |
-| **Themen-Pack Fahrzeuge v1** (10 Bilder, PR #254) | ✅ in testing |
+| **Themen-Pack Fahrzeuge v1** (10 Bilder, PR #254) | ✅ in main (v1.7.0) |
 | Themen-Pack Natur / Märchen / weitere | 🔲 offen |
-| **Spielvarianten** (Nur Umriss merken, Spiegelbild, Kreativ-Modus, #247) | ✅ in testing |
+| **Spielvarianten** (Nur Umriss merken, Spiegelbild, Kreativ-Modus, #247) | ✅ in main (v1.7.0) |
 | Avatar & Personalisierung | 🔲 offen |
 | XP- & Level-System | 🔲 offen |
 | Wöchentliche Challenge | 🔲 offen |
@@ -382,8 +385,8 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` hat Fahrzeuge v1, PNG-Export,
 | Task | Status |
 |---|---|
 | Designed for Families Programm | 🔲 offen |
-| **Weitere Sprachen** (ES/FR/IT/NL/PL, #247) | ✅ in testing — automatische Geräte-Spracherkennung |
-| **Sharing-Feature / PNG-Export** (ShareService, PR #255) | ✅ in testing |
+| **Weitere Sprachen** (ES/FR/IT/NL/PL, #247) | ✅ in main (v1.7.0) — automatische Geräte-Spracherkennung |
+| **Sharing-Feature / PNG-Export** (ShareService, PR #255) | ✅ in main (v1.7.0) |
 | Push-Notifications (opt-in) | 🔲 offen |
 
 ### Themen-Pack Architektur (ab PR #221)
