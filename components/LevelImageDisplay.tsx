@@ -339,7 +339,7 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Dog Head */}
             <Circle cx="65" cy="100" r="28" fill="#D2691E" stroke="#8B4513" strokeWidth="3" />
             {/* Ear (floppy) */}
-            <Ellipse cx="55" cy="85" rx="12" ry="25" fill="#A0522D" stroke="#8B4513" strokeWidth="2" rotation="-20" origin="55, 85" />
+            <Ellipse cx="55" cy="85" rx="12" ry="25" fill="#A0522D" stroke="#8B4513" strokeWidth="2" transform="rotate(-20 55 85)" />
             {/* Snout */}
             <Ellipse cx="45" cy="105" rx="15" ry="12" fill="#CD853F" stroke="#8B4513" strokeWidth="2" />
             {/* Nose */}
@@ -413,8 +413,8 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Sheep Head (black face) */}
             <Ellipse cx="60" cy="105" rx="20" ry="22" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="2" />
             {/* Ears */}
-            <Ellipse cx="52" cy="90" rx="8" ry="12" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="2" rotation="-15" origin="52, 90" />
-            <Ellipse cx="68" cy="90" rx="8" ry="12" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="2" rotation="15" origin="68, 90" />
+            <Ellipse cx="52" cy="90" rx="8" ry="12" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="2" transform="rotate(-15 52 90)" />
+            <Ellipse cx="68" cy="90" rx="8" ry="12" fill="#2F4F4F" stroke="#1C1C1C" strokeWidth="2" transform="rotate(15 68 90)" />
             {/* Eyes (white dots on black face) */}
             <Circle cx="56" cy="102" r="3" fill="#FFFFFF" />
             <Circle cx="64" cy="102" r="3" fill="#FFFFFF" />
@@ -438,8 +438,8 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Stem */}
             <Line x1="100" y1="180" x2="100" y2="80" stroke="#228B22" strokeWidth="4" strokeLinecap="round" />
             {/* Leaves */}
-            <Ellipse cx="85" cy="130" rx="15" ry="25" fill="#32CD32" stroke="#228B22" strokeWidth="2" rotation="-30" origin="85, 130" />
-            <Ellipse cx="115" cy="150" rx="15" ry="25" fill="#32CD32" stroke="#228B22" strokeWidth="2" rotation="30" origin="115, 150" />
+            <Ellipse cx="85" cy="130" rx="15" ry="25" fill="#32CD32" stroke="#228B22" strokeWidth="2" transform="rotate(-30 85 130)" />
+            <Ellipse cx="115" cy="150" rx="15" ry="25" fill="#32CD32" stroke="#228B22" strokeWidth="2" transform="rotate(30 115 150)" />
             {/* Flower Center */}
             <Circle cx="100" cy="60" r="15" fill="#FFD700" stroke="#FFA500" strokeWidth="2" />
             {/* Petals */}
@@ -448,10 +448,10 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             <Ellipse cx="100" cy="90" rx="12" ry="20" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" />
             <Ellipse cx="70" cy="60" rx="20" ry="12" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" />
             {/* Diagonal Petals */}
-            <Ellipse cx="120" cy="40" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" rotation="45" origin="120, 40" />
-            <Ellipse cx="120" cy="80" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" rotation="-45" origin="120, 80" />
-            <Ellipse cx="80" cy="40" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" rotation="-45" origin="80, 40" />
-            <Ellipse cx="80" cy="80" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" rotation="45" origin="80, 80" />
+            <Ellipse cx="120" cy="40" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" transform="rotate(45 120 40)" />
+            <Ellipse cx="120" cy="80" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" transform="rotate(-45 120 80)" />
+            <Ellipse cx="80" cy="40" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" transform="rotate(-45 80 40)" />
+            <Ellipse cx="80" cy="80" rx="15" ry="18" fill="#FF69B4" stroke="#FF1493" strokeWidth="2" transform="rotate(45 80 80)" />
           </Svg>
         );
 
@@ -468,13 +468,13 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Beak */}
             <Polygon points="150,85 165,82 150,90" fill="#FFD700" stroke="#FFA500" strokeWidth="2" />
             {/* Wing */}
-            <Ellipse cx="90" cy="100" rx="30" ry="20" fill="#4169E1" stroke="#0000CD" strokeWidth="3" rotation="-20" origin="90, 100" />
+            <Ellipse cx="90" cy="100" rx="30" ry="20" fill="#4169E1" stroke="#0000CD" strokeWidth="3" transform="rotate(-20 90 100)" />
             {/* Wing Detail Lines */}
             <Line x1="70" y1="95" x2="85" y2="105" stroke="#0000CD" strokeWidth="2" />
             <Line x1="75" y1="90" x2="90" y2="100" stroke="#0000CD" strokeWidth="2" />
             {/* Tail Feathers */}
-            <Ellipse cx="60" cy="105" rx="20" ry="12" fill="#4169E1" stroke="#0000CD" strokeWidth="2" rotation="-30" origin="60, 105" />
-            <Ellipse cx="65" cy="110" rx="18" ry="10" fill="#4169E1" stroke="#0000CD" strokeWidth="2" rotation="-20" origin="65, 110" />
+            <Ellipse cx="60" cy="105" rx="20" ry="12" fill="#4169E1" stroke="#0000CD" strokeWidth="2" transform="rotate(-30 60 105)" />
+            <Ellipse cx="65" cy="110" rx="18" ry="10" fill="#4169E1" stroke="#0000CD" strokeWidth="2" transform="rotate(-20 65 110)" />
             {/* Legs */}
             <Line x1="100" y1="120" x2="95" y2="135" stroke="#FFA500" strokeWidth="3" strokeLinecap="round" />
             <Line x1="110" y1="120" x2="115" y2="135" stroke="#FFA500" strokeWidth="3" strokeLinecap="round" />
@@ -609,19 +609,19 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             <Path d="M 104 55 Q 120 35 125 30" stroke="#000000" strokeWidth="2" fill="none" strokeLinecap="round" />
             <Circle cx="125" cy="30" r="3" fill="#000000" />
             {/* Upper left wing */}
-            <Ellipse cx="65" cy="80" rx="35" ry="28" fill="#9B59B6" stroke="#000000" strokeWidth="2" rotation="-20" origin="65, 80" />
-            <Ellipse cx="60" cy="78" rx="15" ry="12" fill="#FF69B4" stroke="none" opacity="0.7" rotation="-20" origin="60, 78" />
+            <Ellipse cx="65" cy="80" rx="35" ry="28" fill="#9B59B6" stroke="#000000" strokeWidth="2" transform="rotate(-20 65 80)" />
+            <Ellipse cx="60" cy="78" rx="15" ry="12" fill="#FF69B4" stroke="none" opacity="0.7" transform="rotate(-20 60 78)" />
             <Circle cx="55" cy="75" r="5" fill="#FFD700" stroke="none" opacity="0.8" />
             {/* Upper right wing */}
-            <Ellipse cx="135" cy="80" rx="35" ry="28" fill="#9B59B6" stroke="#000000" strokeWidth="2" rotation="20" origin="135, 80" />
-            <Ellipse cx="140" cy="78" rx="15" ry="12" fill="#FF69B4" stroke="none" opacity="0.7" rotation="20" origin="140, 78" />
+            <Ellipse cx="135" cy="80" rx="35" ry="28" fill="#9B59B6" stroke="#000000" strokeWidth="2" transform="rotate(20 135 80)" />
+            <Ellipse cx="140" cy="78" rx="15" ry="12" fill="#FF69B4" stroke="none" opacity="0.7" transform="rotate(20 140 78)" />
             <Circle cx="145" cy="75" r="5" fill="#FFD700" stroke="none" opacity="0.8" />
             {/* Lower left wing */}
-            <Ellipse cx="70" cy="115" rx="28" ry="22" fill="#BB6BD9" stroke="#000000" strokeWidth="2" rotation="15" origin="70, 115" />
-            <Ellipse cx="65" cy="115" rx="12" ry="10" fill="#FFFFFF" stroke="none" opacity="0.4" rotation="15" origin="65, 115" />
+            <Ellipse cx="70" cy="115" rx="28" ry="22" fill="#BB6BD9" stroke="#000000" strokeWidth="2" transform="rotate(15 70 115)" />
+            <Ellipse cx="65" cy="115" rx="12" ry="10" fill="#FFFFFF" stroke="none" opacity="0.4" transform="rotate(15 65 115)" />
             {/* Lower right wing */}
-            <Ellipse cx="130" cy="115" rx="28" ry="22" fill="#BB6BD9" stroke="#000000" strokeWidth="2" rotation="-15" origin="130, 115" />
-            <Ellipse cx="135" cy="115" rx="12" ry="10" fill="#FFFFFF" stroke="none" opacity="0.4" rotation="-15" origin="135, 115" />
+            <Ellipse cx="130" cy="115" rx="28" ry="22" fill="#BB6BD9" stroke="#000000" strokeWidth="2" transform="rotate(-15 130 115)" />
+            <Ellipse cx="135" cy="115" rx="12" ry="10" fill="#FFFFFF" stroke="none" opacity="0.4" transform="rotate(-15 135 115)" />
           </Svg>
         );
 
@@ -689,7 +689,7 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Eye */}
             <Circle cx="136" cy="84" r="4" fill="#000000" />
             {/* Wing */}
-            <Ellipse cx="88" cy="105" rx="30" ry="18" fill="#4169E1" stroke="#000000" strokeWidth="2" rotation="-15" origin="88,105" />
+            <Ellipse cx="88" cy="105" rx="30" ry="18" fill="#4169E1" stroke="#000000" strokeWidth="2" transform="rotate(-15 88 105)" />
             {/* Tail */}
             <Polygon points="62,110 38,100 38,120" fill="#4169E1" stroke="#000000" strokeWidth="2" />
             {/* Left leg */}
@@ -854,9 +854,9 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Stem */}
             <Path d="M 100 158 Q 95 130 100 80" stroke="#27AE60" strokeWidth="5" fill="none" strokeLinecap="round" />
             {/* Left leaf */}
-            <Ellipse cx="80" cy="125" rx="18" ry="28" fill="#32CD32" stroke="#27AE60" strokeWidth="2" rotation="-35" origin="80,125" />
+            <Ellipse cx="80" cy="125" rx="18" ry="28" fill="#32CD32" stroke="#27AE60" strokeWidth="2" transform="rotate(-35 80 125)" />
             {/* Right leaf */}
-            <Ellipse cx="120" cy="105" rx="18" ry="28" fill="#32CD32" stroke="#27AE60" strokeWidth="2" rotation="35" origin="120,105" />
+            <Ellipse cx="120" cy="105" rx="18" ry="28" fill="#32CD32" stroke="#27AE60" strokeWidth="2" transform="rotate(35 120 105)" />
             {/* Flower center */}
             <Circle cx="100" cy="58" r="16" fill="#FFD700" stroke="#FFA500" strokeWidth="2" />
             {/* Petals top/bottom */}
@@ -866,10 +866,10 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             <Ellipse cx="69" cy="58" rx="20" ry="11" fill="#FF69B4" stroke="#FF1493" strokeWidth="1.5" />
             <Ellipse cx="131" cy="58" rx="20" ry="11" fill="#FF69B4" stroke="#FF1493" strokeWidth="1.5" />
             {/* Diagonal petals */}
-            <Ellipse cx="79" cy="37" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" rotation="-45" origin="79,37" />
-            <Ellipse cx="121" cy="37" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" rotation="45" origin="121,37" />
-            <Ellipse cx="79" cy="79" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" rotation="45" origin="79,79" />
-            <Ellipse cx="121" cy="79" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" rotation="-45" origin="121,79" />
+            <Ellipse cx="79" cy="37" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" transform="rotate(-45 79 37)" />
+            <Ellipse cx="121" cy="37" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" transform="rotate(45 121 37)" />
+            <Ellipse cx="79" cy="79" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" transform="rotate(45 79 79)" />
+            <Ellipse cx="121" cy="79" rx="13" ry="18" fill="#FF85C1" stroke="#FF1493" strokeWidth="1.5" transform="rotate(-45 121 79)" />
             {/* Center dot */}
             <Circle cx="100" cy="58" r="6" fill="#FFA500" stroke="#000000" strokeWidth="1" />
           </Svg>
@@ -885,7 +885,7 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Dorsal fin */}
             <Path d="M 88 65 Q 105 42 125 65" fill="#FFD700" stroke="#000000" strokeWidth="2" />
             {/* Pectoral fin */}
-            <Ellipse cx="115" cy="118" rx="18" ry="10" fill="#FFD700" stroke="#000000" strokeWidth="2" rotation="30" origin="115,118" />
+            <Ellipse cx="115" cy="118" rx="18" ry="10" fill="#FFD700" stroke="#000000" strokeWidth="2" transform="rotate(30 115 118)" />
             {/* Eye ring */}
             <Circle cx="72" cy="92" r="12" fill="#FFFFFF" stroke="#000000" strokeWidth="2" />
             {/* Eye */}
@@ -977,9 +977,9 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Smile */}
             <Path d="M 78 105 Q 100 118 122 105" stroke="#2E7D32" strokeWidth="2.5" fill="none" strokeLinecap="round" />
             {/* Left back leg */}
-            <Ellipse cx="52" cy="152" rx="22" ry="13" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" rotation="-25" origin="52,152" />
+            <Ellipse cx="52" cy="152" rx="22" ry="13" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" transform="rotate(-25 52 152)" />
             {/* Right back leg */}
-            <Ellipse cx="148" cy="152" rx="22" ry="13" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" rotation="25" origin="148,152" />
+            <Ellipse cx="148" cy="152" rx="22" ry="13" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" transform="rotate(25 148 152)" />
           </Svg>
         );
 
@@ -1025,7 +1025,7 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Eye shine */}
             <Circle cx="132" cy="71" r="2" fill="#FFFFFF" />
             {/* Wing */}
-            <Ellipse cx="75" cy="115" rx="32" ry="20" fill="#F9A825" stroke="#FF8C00" strokeWidth="2" rotation="-15" origin="75,115" />
+            <Ellipse cx="75" cy="115" rx="32" ry="20" fill="#F9A825" stroke="#FF8C00" strokeWidth="2" transform="rotate(-15 75 115)" />
             {/* Tail feather */}
             <Polygon points="47,118 22,108 22,128" fill="#F9A825" stroke="#FF8C00" strokeWidth="2" />
             {/* Left foot */}
@@ -1117,9 +1117,9 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Beak */}
             <Polygon points="100,72 92,80 108,80" fill="#FF9800" stroke="#E65100" strokeWidth="1.5" />
             {/* Left wing */}
-            <Ellipse cx="53" cy="118" rx="18" ry="35" fill="#212121" stroke="#000000" strokeWidth="1.5" rotation="10" origin="53,118" />
+            <Ellipse cx="53" cy="118" rx="18" ry="35" fill="#212121" stroke="#000000" strokeWidth="1.5" transform="rotate(10 53 118)" />
             {/* Right wing */}
-            <Ellipse cx="147" cy="118" rx="18" ry="35" fill="#212121" stroke="#000000" strokeWidth="1.5" rotation="-10" origin="147,118" />
+            <Ellipse cx="147" cy="118" rx="18" ry="35" fill="#212121" stroke="#000000" strokeWidth="1.5" transform="rotate(-10 147 118)" />
             {/* Feet */}
             <Ellipse cx="100" cy="178" rx="25" ry="8" fill="#FF9800" stroke="#E65100" strokeWidth="1.5" />
           </Svg>
@@ -1241,9 +1241,9 @@ function renderSvgForImage(image: LevelImage, svgSize: number, viewBox: string):
             {/* Nose */}
             <Circle cx="100" cy="86" r="4" fill="#1A1A1A" />
             {/* Bushy tail */}
-            <Ellipse cx="153" cy="152" rx="35" ry="25" fill="#FF6F00" stroke="#E65100" strokeWidth="2" rotation="30" origin="153,152" />
+            <Ellipse cx="153" cy="152" rx="35" ry="25" fill="#FF6F00" stroke="#E65100" strokeWidth="2" transform="rotate(30 153 152)" />
             {/* Tail tip white */}
-            <Ellipse cx="153" cy="152" rx="20" ry="14" fill="#FFFFFF" stroke="none" rotation="30" origin="153,152" />
+            <Ellipse cx="153" cy="152" rx="20" ry="14" fill="#FFFFFF" stroke="none" transform="rotate(30 153 152)" />
             {/* Front left leg */}
             <Rect x="78" y="160" width="12" height="28" fill="#FF6F00" stroke="#E65100" strokeWidth="2" rx="3" />
             {/* Front right leg */}
