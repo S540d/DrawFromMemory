@@ -47,8 +47,7 @@ export function TimerArc({ timeRemaining, totalTime }: TimerArcProps) {
           strokeDasharray={CIRCUMFERENCE}
           strokeDashoffset={strokeDashoffset}
           strokeLinecap="round"
-          rotation={-90}
-          origin={`${CENTER}, ${CENTER}`}
+          transform={`rotate(-90 ${CENTER} ${CENTER})`}
           // @ts-ignore — web-only CSS transition
           style={{ transition: 'stroke-dashoffset 0.9s linear, stroke 0.3s' }}
         />
