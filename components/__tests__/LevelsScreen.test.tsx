@@ -5,6 +5,27 @@ jest.mock('expo-router', () => ({
   useRouter: () => ({ back: jest.fn(), push: jest.fn() }),
 }));
 
+jest.mock('react-native-reanimated', () => {
+  const { View, Text: RNText } = require('react-native');
+  return {
+    __esModule: true,
+    default: {
+      View,
+      Text: RNText,
+      createAnimatedComponent: (c: any) => c,
+      call: () => {},
+    },
+    useSharedValue: (v: any) => ({ value: v }),
+    useAnimatedStyle: (_fn: any) => ({}),
+    withSpring: (v: any) => v,
+    withTiming: (v: any) => v,
+    withDelay: (_d: any, v: any) => v,
+    withSequence: (...args: any[]) => args[args.length - 1],
+    Easing: { out: () => () => {}, ease: {} },
+    runOnJS: (fn: any) => fn,
+  };
+});
+
 jest.mock('../../services/i18n', () => ({
   useTranslation: () => ({
     t: (key: string, opts?: any) => (opts?.number !== null && opts?.number !== undefined ? `Level ${opts.number}` : key),

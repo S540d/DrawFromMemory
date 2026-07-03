@@ -10,9 +10,13 @@ import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../cons
 import { GlassCard } from '@components/AnimatedPrimitives';
 import { Badge } from '@components/Badge';
 import { FloatingStars } from '@components/FloatingStars';
+import { ChipGroup } from '@components/Chip';
+import type { GameVariant } from '../types';
 
 // Default card width for SSR (will be recalculated on client)
 const DEFAULT_CARD_WIDTH = 150;
+
+const VARIANT_KEYS: GameVariant[] = ['normal', 'outline', 'mirror'];
 
 /**
  * Levels Screen - Level-Auswahl
@@ -24,6 +28,7 @@ export default function LevelsScreen() {
   const { colors, theme } = useTheme();
   const levels = useMemo(() => getAllLevels(), []);
   const [ratings, setRatings] = useState<Record<number, number | null>>({});
+  const [variant, setVariant] = useState<GameVariant>('normal');
   // Use hook for responsive dimensions (SSR-safe)
   const { width: screenWidth } = useWindowDimensions();
   const cardWidth = screenWidth > 0 ? (screenWidth - Spacing.lg * 3) / 2 : DEFAULT_CARD_WIDTH;
@@ -67,7 +72,7 @@ export default function LevelsScreen() {
     return (
       <GlassCard
         index={index}
-        onPress={() => router.push(`/game?level=${item.number}`)}
+        onPress={() => router.push(`/game?level=${item.number}&variant=${variant}`)}
         accessibilityLabel={`${t('levels.level', { number: item.number })} — ${difficultyText}`}
         style={[
           styles.levelCard,
@@ -108,6 +113,21 @@ export default function LevelsScreen() {
         <Text style={[styles.title, { color: colors.text.primary }]}>{t('levels.title')}</Text>
       </View>
 
+      {/* Spielvariante */}
+      <View style={styles.variantSection}>
+        <Text style={[styles.variantLabel, { color: colors.text.secondary }]}>
+          {t('levels.variant.title')}
+        </Text>
+        <ChipGroup
+          options={VARIANT_KEYS.map((v) => t(`levels.variant.${v}`))}
+          selected={t(`levels.variant.${variant}`)}
+          onSelect={(label) => {
+            const match = VARIANT_KEYS.find((v) => t(`levels.variant.${v}`) === label);
+            if (match) setVariant(match);
+          }}
+        />
+      </View>
+
       {/* Level-Grid */}
       <FlatList
         data={levels}
@@ -142,6 +162,15 @@ const styles = StyleSheet.create({
     fontSize: FontSize.xxl,
     fontWeight: FontWeight.bold,
     fontFamily: FontFamily.extraBold,
+  },
+  variantSection: {
+    paddingHorizontal: Spacing.lg,
+    paddingTop: Spacing.md,
+    gap: Spacing.xs,
+  },
+  variantLabel: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
   },
   listContent: {
     padding: Spacing.lg,

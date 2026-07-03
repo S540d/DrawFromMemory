@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useScreenLayout } from '@utils/useScreenLayout';
@@ -15,6 +15,8 @@ import SettingsModal from '@components/SettingsModal';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import ConfettiBurst from '@components/ConfettiBurst';
 import BadgeUnlockToast from '@components/BadgeUnlockToast';
+import TutorialOverlay from '@components/TutorialOverlay';
+import { markOnboardingDone } from '@services/OnboardingManager';
 import SoundManager from '@services/SoundManager';
 import { useGamePhase } from '@services/useGamePhase';
 import {
@@ -26,6 +28,15 @@ import storageManager from '@services/StorageManager';
 import MemorizePhase from '@components/game/MemorizePhase';
 import DrawPhase from '@components/game/DrawPhase';
 import ResultPhase from '@components/game/ResultPhase';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  runOnJS,
+} from 'react-native-reanimated';
+import { useReduceMotion } from '../utils/useReduceMotion';
+import type { GamePhase, GameVariant } from '../types';
+import type { ConfettiIntensity } from '@components/ConfettiBurst';
 
 export default function GameScreen() {
   const { t } = useTranslation();
@@ -35,13 +46,21 @@ export default function GameScreen() {
   const insets = useSafeAreaInsets();
   const layout = useScreenLayout();
   const { screenWidth, isSmall } = layout;
+  const reduceMotion = useReduceMotion();
   const [showSettings, setShowSettings] = useState(false);
   const [showHintModal, setShowHintModal] = useState(false);
   const [hasUsedHint, setHasUsedHint] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [celebrationEnabled, setCelebrationEnabled] = useState(true);
+  const [confettiIntensity, setConfettiIntensity] = useState<ConfettiIntensity>('full');
   const [unlockedBadge, setUnlockedBadge] = useState<AchievementDef | null>(null);
-  const lastCheckedRatingRef = React.useRef<number>(0);
+  const lastCheckedRatingRef = useRef<number>(0);
   const handleBadgeToastHide = useCallback(() => setUnlockedBadge(null), []);
+
+  // Phase crossfade
+  const [visiblePhase, setVisiblePhase] = useState<GamePhase>('memorize');
+  const phaseOpacity = useSharedValue(1);
+  const phaseAnimStyle = useAnimatedStyle(() => ({ opacity: phaseOpacity.value, flex: 1 }));
 
   const drawing = useDrawingCanvas();
   const currentLang = getLanguage();
@@ -54,6 +73,10 @@ export default function GameScreen() {
       : 1;
 
   const isDailyChallenge = params.daily === '1';
+  const variant: GameVariant =
+    params.variant === 'outline' || params.variant === 'mirror' ? params.variant : 'normal';
+  const [isTutorial, setIsTutorial] = useState(params.tutorial === '1');
+  const [tutorialHintVisible, setTutorialHintVisible] = useState(true);
 
   const {
     phase,
@@ -61,6 +84,7 @@ export default function GameScreen() {
     levelNumber,
     currentImage,
     timeRemaining,
+    displayDuration,
     userRating,
     revealStep,
     savedToGallery,
@@ -80,6 +104,23 @@ export default function GameScreen() {
     isDailyChallenge,
   });
 
+  useEffect(() => {
+    if (phase === visiblePhase) return;
+
+    if (reduceMotion) {
+      setVisiblePhase(phase);
+      return;
+    }
+
+    phaseOpacity.value = withTiming(0, { duration: 150 }, (finished) => {
+      'worklet';
+      if (finished) {
+        runOnJS(setVisiblePhase)(phase);
+        phaseOpacity.value = withTiming(1, { duration: 250 });
+      }
+    });
+  }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleRestartCurrentLevel = () => {
     setHasUsedHint(false);
     restartCurrentLevel();
@@ -96,21 +137,43 @@ export default function GameScreen() {
   };
 
   useEffect(() => {
-    SoundManager.init();
+    async function init() {
+      await SoundManager.init();
+      const enabled = await storageManager.getSetting('celebrationEnabled');
+      setCelebrationEnabled(enabled);
+    }
+    init();
   }, []);
+
+  // Reset tutorial hint when phase changes so each phase shows its own hint
+  useEffect(() => {
+    if (isTutorial) setTutorialHintVisible(true);
+  }, [phase, isTutorial]);
+
+  // Complete tutorial after first rating is submitted
+  useEffect(() => {
+    if (isTutorial && userRating > 0) {
+      markOnboardingDone();
+      setIsTutorial(false);
+    }
+  }, [isTutorial, userRating]);
 
   useEffect(() => {
     if (userRating === 0 || userRating === lastCheckedRatingRef.current) return;
     lastCheckedRatingRef.current = userRating;
 
-    if (userRating === 5 && FeatureFlags.ENABLE_CONFETTI) {
+    if (userRating >= 4 && FeatureFlags.ENABLE_CONFETTI && celebrationEnabled) {
+      const intensity: ConfettiIntensity = userRating === 5 ? 'full' : 'light';
+      const clearAfter = userRating === 5 ? 2700 : 1700;
+      setConfettiIntensity(intensity);
       setShowConfetti(true);
-      const timer = setTimeout(() => setShowConfetti(false), 2700);
+      SoundManager.playCelebration();
+      const timer = setTimeout(() => setShowConfetti(false), clearAfter);
       checkAchievements(userRating);
       return () => clearTimeout(timer);
     }
     checkAchievements(userRating);
-  }, [userRating]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [userRating, celebrationEnabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const checkAchievements = async (rating: number) => {
     try {
@@ -227,75 +290,98 @@ export default function GameScreen() {
             </View>
             {currentImage && (
               <ErrorBoundary>
-                <LevelImageDisplay image={currentImage} size={Math.min(screenWidth - 80, 280)} />
+                <LevelImageDisplay
+                  image={currentImage}
+                  size={Math.min(screenWidth - 80, 280)}
+                  mode={variant === 'outline' ? 'outline' : 'normal'}
+                  mirror={variant === 'mirror'}
+                />
               </ErrorBoundary>
             )}
           </View>
         </TouchableOpacity>
       </Modal>
 
-      {/* Phase Content */}
-      {phase === 'memorize' && (
-        <MemorizePhase
-          timeRemaining={timeRemaining}
-          currentImage={currentImage}
-          levelNumber={levelNumber}
-          currentLang={currentLang}
-          memorizeImageSize={layout.memorizeImageSize}
-          imagePlaceholderMinSize={layout.imagePlaceholderMinSize}
-          revealStep={revealStep}
-        />
-      )}
-      {phase === 'draw' && (
-        <DrawPhase
-          currentImage={currentImage}
-          currentLang={currentLang}
-          hasUsedHint={hasUsedHint}
-          onUseHint={() => setHasUsedHint(true)}
-          onShowHintModal={() => setShowHintModal(true)}
-          drawing={drawing}
-          layout={{
-            canvasMaxHeight: layout.canvasMaxHeight,
-            canvasMinHeight: layout.canvasMinHeight,
-            canvasMarginVertical: layout.canvasMarginVertical,
-            toolbarMarginVertical: layout.toolbarMarginVertical,
-            buttonMinHeight: layout.buttonMinHeight,
-            buttonPaddingVertical: layout.buttonPaddingVertical,
-            isSmall,
-          }}
-          onDone={() => {
-            SoundManager.playPhaseTransition();
-            setPhase('result');
-          }}
-        />
-      )}
-      {phase === 'result' && (
-        <ResultPhase
-          currentImage={currentImage}
-          levelNumber={levelNumber}
-          userRating={userRating}
-          savedToGallery={savedToGallery}
-          isReplaying={isReplaying}
-          replayPaths={replayPaths}
-          drawingPaths={drawing.paths}
-          screenWidth={screenWidth}
-          isSmall={isSmall}
-          onRatingSubmit={handleRatingSubmit}
-          onSaveToGallery={saveToGallery}
-          onStartReplay={startReplay}
-          onStopReplay={() => setIsReplaying(false)}
-          onNextLevel={handleStartNextLevel}
-          onRestartFromLevel1={handleRestartFromLevel1}
-        />
-      )}
+      {/* Phase Content — crossfade on transition */}
+      <Animated.View style={phaseAnimStyle}>
+        {visiblePhase === 'memorize' && (
+          <MemorizePhase
+            timeRemaining={timeRemaining}
+            totalTime={displayDuration}
+            currentImage={currentImage}
+            levelNumber={levelNumber}
+            currentLang={currentLang}
+            memorizeImageSize={layout.memorizeImageSize}
+            imagePlaceholderMinSize={layout.imagePlaceholderMinSize}
+            revealStep={revealStep}
+            variant={variant}
+          />
+        )}
+        {visiblePhase === 'draw' && (
+          <DrawPhase
+            currentImage={currentImage}
+            currentLang={currentLang}
+            hasUsedHint={hasUsedHint}
+            onUseHint={() => setHasUsedHint(true)}
+            onShowHintModal={() => setShowHintModal(true)}
+            drawing={drawing}
+            layout={{
+              canvasMaxHeight: layout.canvasMaxHeight,
+              canvasMinHeight: layout.canvasMinHeight,
+              canvasMarginVertical: layout.canvasMarginVertical,
+              toolbarMarginVertical: layout.toolbarMarginVertical,
+              buttonMinHeight: layout.buttonMinHeight,
+              buttonPaddingVertical: layout.buttonPaddingVertical,
+              isSmall,
+            }}
+            onDone={() => {
+              SoundManager.playPhaseTransition();
+              setPhase('result');
+            }}
+          />
+        )}
+        {visiblePhase === 'result' && (
+          <ResultPhase
+            currentImage={currentImage}
+            levelNumber={levelNumber}
+            currentLang={currentLang}
+            userRating={userRating}
+            savedToGallery={savedToGallery}
+            isReplaying={isReplaying}
+            replayPaths={replayPaths}
+            drawingPaths={drawing.paths}
+            screenWidth={screenWidth}
+            isSmall={isSmall}
+            onRatingSubmit={handleRatingSubmit}
+            onSaveToGallery={saveToGallery}
+            onStartReplay={startReplay}
+            onStopReplay={() => setIsReplaying(false)}
+            onNextLevel={handleStartNextLevel}
+            onRestartFromLevel1={handleRestartFromLevel1}
+          />
+        )}
+      </Animated.View>
 
       {/* Delight overlays */}
       {phase === 'result' && (
         <View pointerEvents="none" style={StyleSheet.absoluteFill}>
-          <ConfettiBurst width={screenWidth} height={layout.canvasMaxHeight + 200} active={showConfetti} />
+          <ConfettiBurst
+            width={screenWidth}
+            height={layout.canvasMaxHeight + 200}
+            active={showConfetti}
+            intensity={confettiIntensity}
+          />
         </View>
       )}
       <BadgeUnlockToast achievement={unlockedBadge} onHide={handleBadgeToastHide} />
+
+      {/* Tutorial Coach Mark */}
+      {isTutorial && tutorialHintVisible && (phase === 'memorize' || phase === 'draw' || phase === 'result') && (
+        <TutorialOverlay
+          phase={phase}
+          onDismiss={() => setTutorialHintVisible(false)}
+        />
+      )}
     </View>
   );
 }

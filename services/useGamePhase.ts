@@ -279,6 +279,7 @@ export function useGamePhase({
     levelNumber,
     currentImage,
     timeRemaining,
+    displayDuration: getDisplayDuration(levelNumber, extraTimeMode),
     userRating,
     revealStep,
     savedToGallery,

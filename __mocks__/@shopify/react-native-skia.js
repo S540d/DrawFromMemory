@@ -31,6 +31,7 @@ module.exports = {
         moveTo: jest.fn(),
         lineTo: jest.fn(),
         close: jest.fn(),
+        addArc: jest.fn(),
       })),
     },
     Paint: jest.fn(() => ({

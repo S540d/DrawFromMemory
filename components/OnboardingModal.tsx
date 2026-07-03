@@ -1,14 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Dimensions,
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import { useReduceMotion } from '../utils/useReduceMotion';
+import React, { useEffect } from 'react';
+import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   cancelAnimation,
   Easing,
@@ -22,92 +13,84 @@ import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import { markOnboardingDone } from '@services/OnboardingManager';
 import Colors from '../constants/Colors';
-import { BorderRadius, FontSize, FontWeight, Spacing } from '../constants/Layout';
+import { BorderRadius, FontFamily, FontSize, FontWeight, Spacing } from '../constants/Layout';
+import { useReduceMotion } from '../utils/useReduceMotion';
 
 interface Props {
   visible: boolean;
   onClose: () => void;
+  onStartTutorial: () => void;
 }
 
-interface Step {
-  emoji: string;
-  titleKey: string;
-  descKey: string;
-}
-
-const STEPS: Step[] = [
-  { emoji: '👀', titleKey: 'onboarding.step1.title', descKey: 'onboarding.step1.desc' },
-  { emoji: '✏️', titleKey: 'onboarding.step2.title', descKey: 'onboarding.step2.desc' },
-  { emoji: '⭐', titleKey: 'onboarding.step3.title', descKey: 'onboarding.step3.desc' },
+const PREVIEW_STEPS = [
+  { emoji: '👀', labelKey: 'onboarding.step1.title' },
+  { emoji: '✏️', labelKey: 'onboarding.step2.title' },
+  { emoji: '⭐', labelKey: 'onboarding.step3.title' },
 ];
 
-function PulsingEmoji({ char, animate }: { char: string; animate: boolean }) {
+function PaintEmoji({ animate }: { animate: boolean }) {
   const scale = useSharedValue(1);
+  const rotate = useSharedValue(0);
   useEffect(() => {
     if (!animate) {
       cancelAnimation(scale);
+      cancelAnimation(rotate);
       scale.value = 1;
+      rotate.value = 0;
       return;
     }
     scale.value = withRepeat(
       withSequence(
-        withTiming(1.15, { duration: 900, easing: Easing.inOut(Easing.ease) }),
-        withTiming(1.0,  { duration: 900, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1.12, { duration: 950, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1.0,  { duration: 950, easing: Easing.inOut(Easing.ease) }),
+      ),
+      -1,
+      false,
+    );
+    rotate.value = withRepeat(
+      withSequence(
+        withTiming(-6, { duration: 800, easing: Easing.inOut(Easing.ease) }),
+        withTiming(6,  { duration: 800, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0,  { duration: 400, easing: Easing.inOut(Easing.ease) }),
       ),
       -1,
       false,
     );
     return () => {
       cancelAnimation(scale);
-      scale.value = 1;
+      cancelAnimation(rotate);
     };
-  }, [animate, scale]);
-  const style = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+  }, [animate, scale, rotate]);
+
+  const style = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }, { rotate: `${rotate.value}deg` }],
+  }));
+
   return (
     <Animated.View style={style}>
-      <Text style={styles.emoji}>{char}</Text>
+      <Text style={styles.heroEmoji}>🎨</Text>
     </Animated.View>
   );
 }
 
-export default function OnboardingModal({ visible, onClose }: Props) {
+export default function OnboardingModal({ visible, onClose, onStartTutorial }: Props) {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const [stepIndex, setStepIndex] = useState(0);
   const animate = !useReduceMotion();
-  const { width } = Dimensions.get('window');
-  const scrollRef = React.useRef<ScrollView>(null);
-
-  useEffect(() => {
-    if (visible) setStepIndex(0);
-  }, [visible]);
-
-  const handleNext = async () => {
-    if (stepIndex < STEPS.length - 1) {
-      const next = stepIndex + 1;
-      setStepIndex(next);
-      scrollRef.current?.scrollTo({ x: next * width, animated: animate });
-    } else {
-      await markOnboardingDone();
-      onClose();
-    }
-  };
 
   const handleSkip = async () => {
     await markOnboardingDone();
     onClose();
   };
 
-  const handleScroll = (e: { nativeEvent: { contentOffset: { x: number } } }) => {
-    const newIndex = Math.round(e.nativeEvent.contentOffset.x / width);
-    if (newIndex !== stepIndex && newIndex >= 0 && newIndex < STEPS.length) {
-      setStepIndex(newIndex);
-    }
+  const handleStart = () => {
+    onStartTutorial();
   };
 
   return (
     <Modal visible={visible} animationType="fade" onRequestClose={handleSkip} testID="onboarding-modal">
       <View style={[styles.container, { backgroundColor: colors.background }]}>
+        {/* Skip */}
         <View style={styles.topBar}>
           <Pressable
             onPress={handleSkip}
@@ -122,50 +105,40 @@ export default function OnboardingModal({ visible, onClose }: Props) {
           </Pressable>
         </View>
 
-        <ScrollView
-          ref={scrollRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={handleScroll}
-          style={styles.pager}
-          testID="onboarding-pager"
-        >
-          {STEPS.map((step, i) => (
-            <View key={step.titleKey} style={[styles.page, { width }]}>
-              <View style={styles.iconCircle}>
-                <PulsingEmoji char={step.emoji} animate={animate && i === stepIndex} />
-              </View>
-              <Text style={[styles.title, { color: colors.text.primary }]}>
-                {t(step.titleKey)}
-              </Text>
-              <Text style={[styles.desc, { color: colors.text.secondary }]}>
-                {t(step.descKey)}
+        {/* Hero */}
+        <View style={styles.heroSection}>
+          <View style={[styles.iconCircle, { backgroundColor: Colors.primary + '18' }]}>
+            <PaintEmoji animate={animate} />
+          </View>
+          <Text style={[styles.welcomeTitle, { color: colors.text.primary }]}>
+            {t('onboarding.welcomeTitle')}
+          </Text>
+          <Text style={[styles.welcomeDesc, { color: colors.text.secondary }]}>
+            {t('onboarding.welcomeDesc')}
+          </Text>
+        </View>
+
+        {/* Step preview chips */}
+        <View style={styles.stepsRow}>
+          {PREVIEW_STEPS.map((step, i) => (
+            <View key={i} style={[styles.stepChip, { backgroundColor: colors.surfaceAlt }]}>
+              <Text style={styles.stepChipEmoji}>{step.emoji}</Text>
+              <Text style={[styles.stepChipLabel, { color: colors.text.secondary }]}>
+                {t(step.labelKey)}
               </Text>
             </View>
           ))}
-        </ScrollView>
-
-        <View style={styles.dotsRow} testID="onboarding-dots">
-          {STEPS.map((_, i) => (
-            <View
-              key={i}
-              style={[
-                styles.dot,
-                i === stepIndex && styles.dotActive,
-              ]}
-            />
-          ))}
         </View>
 
+        {/* CTA */}
         <Pressable
-          onPress={handleNext}
-          style={styles.nextButton}
+          onPress={handleStart}
+          style={styles.startButton}
           accessibilityRole="button"
-          testID="onboarding-next"
+          testID="onboarding-start"
         >
-          <Text style={styles.nextButtonText}>
-            {stepIndex < STEPS.length - 1 ? t('onboarding.next') : t('onboarding.start')}
+          <Text style={styles.startButtonText}>
+            {t('onboarding.startButton')} 🎮
           </Text>
         </Pressable>
       </View>
@@ -177,12 +150,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Spacing.xxl,
-    paddingBottom: Spacing.lg,
+    paddingBottom: Spacing.xl,
+    paddingHorizontal: Spacing.xl,
+    justifyContent: 'space-between',
   },
   topBar: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    paddingHorizontal: Spacing.lg,
   },
   skipButton: {
     padding: Spacing.sm,
@@ -191,67 +165,71 @@ const styles = StyleSheet.create({
     fontSize: FontSize.md,
     fontWeight: FontWeight.semibold,
   },
-  pager: {
-    flexGrow: 0,
-  },
-  page: {
+  heroSection: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: Spacing.xl,
-    paddingVertical: Spacing.xxl,
+    gap: Spacing.lg,
+    paddingVertical: Spacing.xl,
   },
   iconCircle: {
     width: 160,
     height: 160,
     borderRadius: 80,
-    backgroundColor: Colors.primary + '15',
     alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: Spacing.sm,
+  },
+  heroEmoji: {
+    fontSize: 88,
+  },
+  welcomeTitle: {
+    fontSize: FontSize.xxl,
+    fontWeight: FontWeight.bold,
+    fontFamily: FontFamily.bold,
+    textAlign: 'center',
+  },
+  welcomeDesc: {
+    fontSize: FontSize.md,
+    textAlign: 'center',
+    lineHeight: FontSize.md * 1.5,
+    maxWidth: 300,
+  },
+  stepsRow: {
+    flexDirection: 'row',
+    gap: Spacing.sm,
     justifyContent: 'center',
     marginBottom: Spacing.xl,
   },
-  emoji: {
-    fontSize: 96,
-  },
-  title: {
-    fontSize: FontSize.xl,
-    fontWeight: FontWeight.bold,
-    textAlign: 'center',
-    marginBottom: Spacing.md,
-  },
-  desc: {
-    fontSize: FontSize.md,
-    textAlign: 'center',
-    lineHeight: FontSize.md * 1.4,
-    maxWidth: 320,
-  },
-  dotsRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: Spacing.sm,
-    marginVertical: Spacing.lg,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: Colors.text.light,
-    opacity: 0.4,
-  },
-  dotActive: {
-    backgroundColor: Colors.primary,
-    opacity: 1,
-    width: 24,
-  },
-  nextButton: {
-    marginHorizontal: Spacing.lg,
-    paddingVertical: Spacing.md,
-    borderRadius: BorderRadius.lg,
-    backgroundColor: Colors.primary,
+  stepChip: {
+    flex: 1,
     alignItems: 'center',
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.sm,
+    borderRadius: BorderRadius.lg,
+    gap: Spacing.xs,
+    maxWidth: 100,
   },
-  nextButtonText: {
+  stepChipEmoji: {
+    fontSize: 28,
+  },
+  stepChipLabel: {
+    fontSize: FontSize.xs,
+    fontWeight: FontWeight.semibold,
+    textAlign: 'center',
+  },
+  startButton: {
+    backgroundColor: Colors.primary,
+    borderRadius: BorderRadius.round,
+    paddingVertical: Spacing.lg,
+    alignItems: 'center',
+    ...Colors.shadow.large,
+  },
+  startButtonText: {
     color: '#fff',
-    fontSize: FontSize.md,
+    fontSize: FontSize.lg,
     fontWeight: FontWeight.bold,
+    fontFamily: FontFamily.bold,
+    letterSpacing: 0.4,
   },
 });

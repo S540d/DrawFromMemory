@@ -136,7 +136,7 @@ export default function HomeScreen() {
           </View>
         </TouchableOpacity>
 
-        {/* Levels + Galerie — Side-by-Side statt untereinander */}
+        {/* Levels + Galerie + Kreativ — Side-by-Side */}
         <View style={styles.secondaryRow}>
           <TouchableOpacity
             style={[styles.secondaryTile, { backgroundColor: colors.surface, borderColor: colors.primary }]}
@@ -153,6 +153,14 @@ export default function HomeScreen() {
           >
             <Text style={[styles.secondaryTileText, { color: colors.primary }]}>{t('home.galleryButton')}</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.secondaryTile, { backgroundColor: colors.surface, borderColor: colors.primary }]}
+            onPress={() => router.push('/creative')}
+            accessibilityRole="button"
+          >
+            <Text style={[styles.secondaryTileText, { color: colors.primary }]}>🎨 {t('home.creativeButton')}</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Quick Stats — dezent am unteren Rand */}
@@ -160,7 +168,14 @@ export default function HomeScreen() {
       </View>
 
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
-      <OnboardingModal visible={showOnboarding} onClose={() => setShowOnboarding(false)} />
+      <OnboardingModal
+        visible={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        onStartTutorial={() => {
+          setShowOnboarding(false);
+          router.push('/game?tutorial=1&level=1');
+        }}
+      />
     </View>
   );
 }

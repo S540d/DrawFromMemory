@@ -9,6 +9,7 @@
     "continueButton": "Continue",
     "levelsButton": "Select Level",
     "galleryButton": "My Gallery",
+    "creativeButton": "Creative",
     "settingsButton": "Settings",
     "streakBadge": "🔥 {{count}}",
     "stats": {
@@ -27,7 +28,13 @@
     "displayTime": "{{seconds}}s display time",
     "stars": "{{count}} stars",
     "locked": "Locked",
-    "unlockHint": "Complete level {{prev}}"
+    "unlockHint": "Complete level {{prev}}",
+    "variant": {
+      "title": "Game mode",
+      "normal": "Normal",
+      "outline": "Outline only",
+      "mirror": "Mirror image"
+    }
   },
   "game": {
     "memorize": {
@@ -120,7 +127,9 @@
     "licenseLabel": "License",
     "error": "Error",
     "about": "About",
-    "version": "Version"
+    "version": "Version",
+    "personalize": "Personalize",
+    "celebration": "Celebration moment (Confetti & Sound)"
   },
   "difficulty": {
     "1": "Very easy",
@@ -137,7 +146,14 @@
     "delete": "Delete",
     "deleteTitle": "Delete drawing",
     "deleteConfirm": "Do you really want to delete this drawing?",
-    "dailyChallengeLabel": "Daily Challenge"
+    "dailyChallengeLabel": "Daily Challenge",
+    "creativeLabel": "Free Drawing",
+    "share": "Share",
+    "shareError": "Share failed."
+  },
+  "creative": {
+    "title": "Free Drawing",
+    "imageName": "Creative Drawing"
   },
   "dailyChallenge": {
     "title": "Daily Challenge",
@@ -173,9 +189,21 @@
     "skip": "Skip",
     "next": "Next",
     "start": "Let's go!",
-    "step1": { "title": "Remember", "desc": "Look at the picture carefully for a few seconds." },
-    "step2": { "title": "Draw",     "desc": "Try to draw it from memory." },
-    "step3": { "title": "Stars",    "desc": "Compare your drawing and earn stars." }
+    "step1": {
+      "title": "Remember",
+      "desc": "Look at the picture carefully for a few seconds."
+    },
+    "step2": {
+      "title": "Draw",
+      "desc": "Try to draw it from memory."
+    },
+    "step3": {
+      "title": "Stars",
+      "desc": "Compare your drawing and earn stars."
+    },
+    "welcomeTitle": "Ready to play?",
+    "welcomeDesc": "Remember a picture, then draw it from memory. We will guide you through the first round!",
+    "startButton": "Play!"
   },
   "parentDashboard": {
     "menuLabel": "Parent Area",
@@ -197,11 +225,39 @@
     "menuLabel": "Show trophies",
     "unlocked": "New trophy!",
     "progress": "{{unlocked}} of {{total}} unlocked",
-    "first_5_stars":    { "title": "First 5 Stars",     "desc": "Reach 5 stars in a level for the first time." },
-    "gallery_10":       { "title": "Gallery Artist",    "desc": "Save 10 drawings to your gallery." },
-    "streak_7":         { "title": "7-Day Streak",      "desc": "Play 7 days in a row." },
-    "all_levels_done":  { "title": "All Levels",        "desc": "Complete all 10 base levels." },
-    "daily_5":          { "title": "Daily Champion",    "desc": "Beat the daily challenge 5 times." },
-    "all_difficulties": { "title": "All-Rounder",       "desc": "Play every difficulty level at least once." }
+    "first_5_stars": {
+      "title": "First 5 Stars",
+      "desc": "Reach 5 stars in a level for the first time."
+    },
+    "gallery_10": {
+      "title": "Gallery Artist",
+      "desc": "Save 10 drawings to your gallery."
+    },
+    "streak_7": {
+      "title": "7-Day Streak",
+      "desc": "Play 7 days in a row."
+    },
+    "all_levels_done": {
+      "title": "All Levels",
+      "desc": "Complete all 10 base levels."
+    },
+    "daily_5": {
+      "title": "Daily Champion",
+      "desc": "Beat the daily challenge 5 times."
+    },
+    "all_difficulties": {
+      "title": "All-Rounder",
+      "desc": "Play every difficulty level at least once."
+    }
+  },
+  "tutorial": {
+    "memorize": "Look at the picture carefully — you only have a few seconds!",
+    "draw": "Draw what you saw from memory. No stress! 😊",
+    "result": "Tap the stars — how well did you do?",
+    "tap": "Tap to continue",
+    "step": "Step {{current}} of {{total}}",
+    "badgeMemorize": "Remember",
+    "badgeDraw": "Draw",
+    "badgeResult": "Rate"
   }
 }

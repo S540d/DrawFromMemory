@@ -1,0 +1,263 @@
+{
+  "app": {
+    "name": "Recuerda y Dibuja"
+  },
+  "home": {
+    "title": "Recuerda y Dibuja",
+    "subtitle": "¡Entrena tu memoria!",
+    "startButton": "Empezar a jugar",
+    "continueButton": "Continuar",
+    "levelsButton": "Elegir nivel",
+    "galleryButton": "Mi galería",
+    "creativeButton": "Creativo",
+    "settingsButton": "Ajustes",
+    "streakBadge": "🔥 {{count}}",
+    "stats": {
+      "stars": "Estrellas",
+      "streak": "Racha",
+      "levels": "Niveles",
+      "streakDay": "día",
+      "streakDays": "días",
+      "levelOf": "de {{total}}"
+    }
+  },
+  "levels": {
+    "title": "Elegir nivel",
+    "level": "Nivel {{number}}",
+    "difficulty": "Dificultad: {{diff}}",
+    "displayTime": "{{seconds}}s de visualización",
+    "stars": "{{count}} estrellas",
+    "locked": "Bloqueado",
+    "unlockHint": "Completa el nivel {{prev}}",
+    "variant": {
+      "title": "Modo de juego",
+      "normal": "Normal",
+      "outline": "Solo contorno",
+      "mirror": "Imagen espejo"
+    }
+  },
+  "game": {
+    "memorize": {
+      "title": "¡Memoriza la imagen!",
+      "timeLeft": "{{seconds}}s",
+      "imageInfo": "Nivel {{level}} • {{strokeCount}} trazos"
+    },
+    "draw": {
+      "title": "¡Dibuja la imagen!",
+      "hint": "Usa los colores y dibuja lo que recuerdes",
+      "tool": "Herramienta",
+      "toolBrush": "🖊️ Pincel",
+      "toolFill": "💧 Rellenar",
+      "strokeWidth": "Grosor del trazo",
+      "strokeWidthThin": "Fino",
+      "strokeWidthNormal": "Normal",
+      "strokeWidthThick": "Grueso",
+      "color": "Color",
+      "selectColor": "Elegir color",
+      "undo": "Deshacer",
+      "clear": "Borrar todo",
+      "clearConfirm": "¿Seguro que quieres borrar todo?",
+      "done": "Listo",
+      "hintButton": "👁 1x",
+      "hintUsed": "Pista usada",
+      "hintModalTitle": "Referencia",
+      "drawFromMemory": "Dibuja el",
+      "referenceLabel": "Ver referencia"
+    },
+    "tabs": {
+      "draw": "Dibujar",
+      "result": "Resultado"
+    },
+    "result": {
+      "title": "Puntúate:",
+      "howWell": "¿Qué tal lo hiciste?",
+      "tapStars": "¡Toca las estrellas para puntuarte!",
+      "starAccessibilityLabel": "{{rating}} estrella{{plural}}",
+      "template": "Referencia",
+      "feedback5": "¡Perfecto! ¡Eres un maestro de la memoria!",
+      "feedback4": "¡Muy bien! ¡Casi perfecto!",
+      "feedback3": "¡Bien hecho! ¡Sigue así!",
+      "feedback1": "Ya fue mejor que antes, ¿quieres intentarlo de nuevo?",
+      "yourDrawing": "Tu dibujo",
+      "original": "Original",
+      "rating": "Tu puntuación",
+      "retry": "Otra vez",
+      "nextLevel": "Siguiente",
+      "backToMenu": "Menú",
+      "allLevelsComplete": "¡Todos los niveles completados!",
+      "allLevelsCompleteMessage": "Has superado los 20 niveles. ¡Eres un verdadero campeón de la memoria!",
+      "playAgain": "Reiniciar",
+      "replay": "▶ Repetir",
+      "replayStop": "⏹ Parar"
+    }
+  },
+  "settings": {
+    "title": "Ajustes",
+    "appearance": "Apariencia",
+    "theme": "Tema",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro",
+    "themeSystem": "Sistema",
+    "language": "Idioma",
+    "sound": "Efectos de sonido",
+    "soundOn": "Activado",
+    "soundOff": "Desactivado",
+    "music": "Música de fondo",
+    "dataSection": "Datos",
+    "resetProgress": "Restablecer progreso",
+    "resetConfirm": "¿Seguro que quieres borrar todo el progreso?",
+    "resetConfirmMessage": "¿De verdad quieres restablecer tu progreso? Esta acción no se puede deshacer.",
+    "resetSuccess": "Progreso restablecido",
+    "resetSuccessMessage": "Tu progreso de juego se ha restablecido correctamente.",
+    "languageChanged": "Idioma cambiado",
+    "languageChangedMessage": "El idioma se ha cambiado a español. Reinicia la aplicación para que los cambios surtan efecto en todas partes.",
+    "feedbackEmailSubject": "Comentarios: Recuerda y Dibuja",
+    "feedbackEmailBody": "Hola,\n\nTengo comentarios sobre Recuerda y Dibuja:\n\n",
+    "feedbackEmailError": "No se pudo abrir el cliente de correo. Envía tus comentarios a: devsven@posteo.de",
+    "browserError": "No se pudo abrir el navegador. Visita: https://ko-fi.com/s540d",
+    "browserErrorGeneric": "No se pudo abrir el navegador.",
+    "shareMessage": "Prueba esta genial app de entrenamiento de memoria: ¡Recuerda y Dibuja! https://github.com/S540d/DrawFromMemory",
+    "aboutSupport": "Acerca de y soporte",
+    "feedback": "Comentarios",
+    "support": "Soporte",
+    "share": "Compartir",
+    "aboutButton": "Acerca de",
+    "aboutTitle": "Acerca de Recuerda y Dibuja",
+    "versionLabel": "Versión",
+    "licenseLabel": "Licencia",
+    "error": "Error",
+    "about": "Acerca de la app",
+    "version": "Versión",
+    "personalize": "Personalizar",
+    "celebration": "Momento de celebración (confeti y sonido)"
+  },
+  "difficulty": {
+    "1": "Muy fácil",
+    "2": "Fácil",
+    "3": "Medio",
+    "4": "Difícil",
+    "5": "Muy difícil"
+  },
+  "gallery": {
+    "title": "Mi galería",
+    "empty": "Todavía no hay dibujos guardados. ¡Dibuja algo y toca \"Guardar\"!",
+    "save": "Guardar en galería",
+    "saved": "¡Guardado!",
+    "delete": "Eliminar",
+    "deleteTitle": "Eliminar dibujo",
+    "deleteConfirm": "¿Seguro que quieres eliminar este dibujo?",
+    "dailyChallengeLabel": "Reto diario",
+    "creativeLabel": "Dibujo libre",
+    "share": "Compartir",
+    "shareError": "No se pudo compartir."
+  },
+  "creative": {
+    "title": "Dibujo libre",
+    "imageName": "Dibujo creativo"
+  },
+  "dailyChallenge": {
+    "title": "Reto diario",
+    "subtitle": "Imagen del día",
+    "start": "Empezar reto",
+    "completed": "Completado hoy ✓",
+    "countdown": "Nuevo en {{hours}}h {{minutes}}m",
+    "level": "Nivel {{number}}"
+  },
+  "errors": {
+    "skiaUnavailableTitle": "Superficie de dibujo no disponible",
+    "skiaUnavailableMessage": "No se pudo cargar la función de dibujo.\nInténtalo de nuevo o reinicia la app.",
+    "skiaLoading": "Cargando superficie de dibujo…",
+    "skiaRetry": "Intentar de nuevo"
+  },
+  "common": {
+    "yes": "Sí",
+    "no": "No",
+    "cancel": "Cancelar",
+    "ok": "OK",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "settings": "Ajustes"
+  },
+  "parentalGate": {
+    "title": "Control parental",
+    "message": "Este enlace lleva fuera de la app. Resuelve el reto para continuar:",
+    "placeholder": "Escribe la respuesta",
+    "confirm": "Abrir",
+    "wrongAnswer": "Respuesta incorrecta. Inténtalo de nuevo."
+  },
+  "onboarding": {
+    "skip": "Omitir",
+    "next": "Siguiente",
+    "start": "¡Vamos!",
+    "step1": {
+      "title": "Memoriza",
+      "desc": "Mira la imagen con atención durante unos segundos."
+    },
+    "step2": {
+      "title": "Dibuja",
+      "desc": "Intenta dibujarla de memoria."
+    },
+    "step3": {
+      "title": "Estrellas",
+      "desc": "Compara tu dibujo y gana estrellas."
+    },
+    "welcomeTitle": "¿Listo para jugar?",
+    "welcomeDesc": "Memoriza una imagen y luego dibújala de memoria. ¡Te guiaremos en la primera ronda!",
+    "startButton": "¡Jugar!"
+  },
+  "parentDashboard": {
+    "menuLabel": "Área de padres",
+    "title": "Panel de padres",
+    "subtitle": "Uso del juego en las últimas 4 semanas",
+    "privacyHint": "Todos los datos permanecen en este dispositivo.",
+    "loading": "Cargando estadísticas…",
+    "empty": "Todavía no hay sesiones de juego registradas.",
+    "totalSessions": "Sesiones",
+    "totalTime": "Tiempo total",
+    "avgStars": "Media de estrellas",
+    "streak": "Racha (actual/mejor)",
+    "favoriteLevels": "Niveles favoritos",
+    "dailyBreakdown": "Por día (últimos 14)",
+    "levelLine": "Nivel {{level}} · jugado {{count}}×"
+  },
+  "achievements": {
+    "title": "Trofeos",
+    "menuLabel": "Ver trofeos",
+    "unlocked": "¡Nuevo trofeo!",
+    "progress": "{{unlocked}} de {{total}} desbloqueados",
+    "first_5_stars": {
+      "title": "Primeras 5 estrellas",
+      "desc": "Consigue 5 estrellas en un nivel por primera vez."
+    },
+    "gallery_10": {
+      "title": "Artista de galería",
+      "desc": "Guarda 10 dibujos en tu galería."
+    },
+    "streak_7": {
+      "title": "Racha de 7 días",
+      "desc": "Juega 7 días seguidos."
+    },
+    "all_levels_done": {
+      "title": "Todos los niveles",
+      "desc": "Completa los 10 niveles base."
+    },
+    "daily_5": {
+      "title": "Campeón diario",
+      "desc": "Supera el reto diario 5 veces."
+    },
+    "all_difficulties": {
+      "title": "Todoterreno",
+      "desc": "Juega cada nivel de dificultad al menos una vez."
+    }
+  },
+  "tutorial": {
+    "memorize": "Mira la imagen con atención — ¡solo tienes unos segundos!",
+    "draw": "Dibuja lo que has visto de memoria. ¡Sin estrés! 😊",
+    "result": "Toca las estrellas — ¿qué tal lo hiciste?",
+    "tap": "Toca para continuar",
+    "step": "Paso {{current}} de {{total}}",
+    "badgeMemorize": "Memoriza",
+    "badgeDraw": "Dibuja",
+    "badgeResult": "Puntúa"
+  }
+}

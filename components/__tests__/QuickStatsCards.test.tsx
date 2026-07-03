@@ -82,15 +82,23 @@ jest.mock('react-native-reanimated', () => {
   };
 });
 
+jest.mock('../../utils/useReduceMotion', () => ({
+  useReduceMotion: () => false,
+}));
+
 const getAllTexts = (getAllByType: (type: any) => any[]) =>
   getAllByType(Text).map((n: any) => n.props.children).flat();
 
 import QuickStatsCards from '../QuickStatsCards';
 
 describe('QuickStatsCards', () => {
+  beforeEach(() => jest.useFakeTimers());
+  afterEach(() => jest.useRealTimers());
+
   it('renders stat labels for stars, streak, and levels', async () => {
     const { UNSAFE_getAllByType } = render(<QuickStatsCards />);
     await act(async () => {});
+    act(() => { jest.advanceTimersByTime(700); });
     const texts = getAllTexts(UNSAFE_getAllByType);
     expect(texts).toContain('home.stats.stars');
     expect(texts).toContain('home.stats.streak');
@@ -100,6 +108,7 @@ describe('QuickStatsCards', () => {
   it('displays correct values after data load', async () => {
     const { UNSAFE_getAllByType } = render(<QuickStatsCards />);
     await act(async () => {});
+    act(() => { jest.advanceTimersByTime(700); });
     const texts = getAllTexts(UNSAFE_getAllByType);
     // Total stars: 4 + 3 = 7
     expect(texts).toContain('7');
@@ -112,6 +121,7 @@ describe('QuickStatsCards', () => {
   it('shows streak days label when streak > 0', async () => {
     const { UNSAFE_getAllByType } = render(<QuickStatsCards />);
     await act(async () => {});
+    act(() => { jest.advanceTimersByTime(700); });
     const texts = getAllTexts(UNSAFE_getAllByType);
     expect(texts).toContain('home.stats.streakDays');
   });
@@ -119,6 +129,7 @@ describe('QuickStatsCards', () => {
   it('shows level-of sub label for the levels card', async () => {
     const { UNSAFE_getAllByType } = render(<QuickStatsCards />);
     await act(async () => {});
+    act(() => { jest.advanceTimersByTime(700); });
     const texts = getAllTexts(UNSAFE_getAllByType);
     // t('home.stats.levelOf', { total: '10' }) → key unchanged since key has no {{total}} placeholder
     expect(texts).toContain('home.stats.levelOf');
