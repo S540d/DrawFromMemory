@@ -20,10 +20,10 @@ export function AnimatedHero() {
   const { height } = useWindowDimensions();
   const emojiSize = height < 600 ? 44 : height < 750 ? 54 : 64;
 
-  const brainScale       = useSharedValue(1);
-  const pencilRotate     = useSharedValue(0);
+  const brainScale = useSharedValue(1);
+  const pencilRotate = useSharedValue(0);
   const pencilTranslateX = useSharedValue(0);
-  const sparkleOpacity   = useSharedValue(0.2);
+  const sparkleOpacity = useSharedValue(0.2);
 
   const reduceMotion = useReduceMotion();
 
@@ -41,39 +41,39 @@ export function AnimatedHero() {
     }
 
     brainScale.value = withRepeat(
-        withSequence(
-          withTiming(1.08, { duration: 900, easing: Easing.inOut(Easing.ease) }),
-          withTiming(1.0,  { duration: 900, easing: Easing.inOut(Easing.ease) }),
-        ),
-        -1,
-        false
-      );
+      withSequence(
+        withTiming(1.08, { duration: 900, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1.0, { duration: 900, easing: Easing.inOut(Easing.ease) }),
+      ),
+      -1,
+      false,
+    );
 
-      pencilRotate.value = withRepeat(
-        withSequence(
-          withTiming(-10, { duration: 600, easing: Easing.inOut(Easing.ease) }),
-          withTiming( 10, { duration: 600, easing: Easing.inOut(Easing.ease) }),
-        ),
-        -1,
-        false
-      );
+    pencilRotate.value = withRepeat(
+      withSequence(
+        withTiming(-10, { duration: 600, easing: Easing.inOut(Easing.ease) }),
+        withTiming(10, { duration: 600, easing: Easing.inOut(Easing.ease) }),
+      ),
+      -1,
+      false,
+    );
 
-      pencilTranslateX.value = withRepeat(
-        withSequence(
-          withTiming(-6, { duration: 600, easing: Easing.inOut(Easing.ease) }),
-          withTiming( 6, { duration: 600, easing: Easing.inOut(Easing.ease) }),
-        ),
-        -1,
-        false
-      );
+    pencilTranslateX.value = withRepeat(
+      withSequence(
+        withTiming(-6, { duration: 600, easing: Easing.inOut(Easing.ease) }),
+        withTiming(6, { duration: 600, easing: Easing.inOut(Easing.ease) }),
+      ),
+      -1,
+      false,
+    );
 
     sparkleOpacity.value = withRepeat(
       withSequence(
-        withTiming(1,   { duration: 1200, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
         withTiming(0.2, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
       ),
       -1,
-      false
+      false,
     );
   }, [reduceMotion, brainScale, pencilRotate, pencilTranslateX, sparkleOpacity]);
 
@@ -82,10 +82,7 @@ export function AnimatedHero() {
   }));
 
   const pencilAnimStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: pencilTranslateX.value },
-      { rotate: `${pencilRotate.value}deg` },
-    ],
+    transform: [{ translateX: pencilTranslateX.value }, { rotate: `${pencilRotate.value}deg` }],
   }));
 
   const sparkleAnimStyle = useAnimatedStyle(() => ({
@@ -109,7 +106,7 @@ export function AnimatedHero() {
       </View>
       <Animated.View style={[styles.sparkleRow, sparkleAnimStyle]} pointerEvents="none">
         <Text style={styles.sparkle}>✨</Text>
-        <Text style={styles.sparkle}>  </Text>
+        <Text style={styles.sparkle}> </Text>
         <Text style={styles.sparkle}>✨</Text>
       </Animated.View>
     </View>

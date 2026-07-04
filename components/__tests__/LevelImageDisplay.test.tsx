@@ -55,14 +55,16 @@ describe('LevelImageDisplay', () => {
     const flipped = UNSAFE_root.findAll(
       (node: any) =>
         Array.isArray(node.props.style) &&
-        node.props.style.some((s: any) => s && Array.isArray(s.transform) && s.transform[0]?.scaleX === -1)
+        node.props.style.some(
+          (s: any) => s && Array.isArray(s.transform) && s.transform[0]?.scaleX === -1,
+        ),
     );
     expect(flipped.length).toBeGreaterThan(0);
   });
 
   it('combines outline mode with progressive reveal without crashing', () => {
     expect(() =>
-      render(<LevelImageDisplay image={sunImage} mode="outline" revealStep={2} />)
+      render(<LevelImageDisplay image={sunImage} mode="outline" revealStep={2} />),
     ).not.toThrow();
   });
 

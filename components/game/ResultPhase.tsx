@@ -64,11 +64,18 @@ export default function ResultPhase({
         <View style={styles.completionOverlay}>
           <View style={[styles.completionModalBox, { backgroundColor: colors.surface }]}>
             <Text style={styles.completionEmoji}>🏆</Text>
-            <Text style={[styles.completionTitle, { color: colors.text.primary }]}>{t('game.result.allLevelsComplete')}</Text>
-            <Text style={[styles.completionMessage, { color: colors.text.secondary }]}>{t('game.result.allLevelsCompleteMessage')}</Text>
+            <Text style={[styles.completionTitle, { color: colors.text.primary }]}>
+              {t('game.result.allLevelsComplete')}
+            </Text>
+            <Text style={[styles.completionMessage, { color: colors.text.secondary }]}>
+              {t('game.result.allLevelsCompleteMessage')}
+            </Text>
             <TouchableOpacity
               style={styles.completionButton}
-              onPress={() => { setShowCompletionModal(false); onRestartFromLevel1(); }}
+              onPress={() => {
+                setShowCompletionModal(false);
+                onRestartFromLevel1();
+              }}
               accessibilityRole="button"
             >
               <Text style={styles.completionButtonText}>🔄 {t('game.result.playAgain')}</Text>
@@ -78,112 +85,156 @@ export default function ResultPhase({
               onPress={() => setShowCompletionModal(false)}
               accessibilityRole="button"
             >
-              <Text style={[styles.completionCloseText, { color: colors.text.secondary }]}>{t('common.close')}</Text>
+              <Text style={[styles.completionCloseText, { color: colors.text.secondary }]}>
+                {t('common.close')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
-    <ScrollView
-      style={styles.resultScrollView}
-      contentContainerStyle={styles.resultContent}
-      showsVerticalScrollIndicator={false}
-    >
-      {/* 1. Side-by-side Vergleich */}
-      <View style={styles.comparisonContainer}>
-        {/* Vorlage */}
-        <View style={[styles.comparisonCard, { width: imageSize, backgroundColor: colors.surface, borderColor: colors.border }]}>
-          <View style={[styles.comparisonCardHeader, styles.comparisonCardHeaderTemplate]}>
-            <Text style={[styles.comparisonCardLabel, { color: Colors.primary }]}>
-              {t('game.result.template').toUpperCase()}
-            </Text>
-          </View>
-          <View style={[styles.comparisonImage, { width: imageSize, height: imageSize }]}>
-            {currentImage && (
-              <LevelImageDisplay image={currentImage} size={imageSize} />
-            )}
-          </View>
-        </View>
-
-        {/* Deine Zeichnung + kontextuelle Aktionen */}
-        <View style={{ width: imageSize, gap: Spacing.xs }}>
-          <View style={[styles.comparisonCard, { width: imageSize, backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <View style={[styles.comparisonCardHeader, styles.comparisonCardHeaderDrawing]}>
-              <Text style={[styles.comparisonCardLabel, { color: Colors.secondary }]}>
-                {t('game.result.yourDrawing').toUpperCase()}
+      <ScrollView
+        style={styles.resultScrollView}
+        contentContainerStyle={styles.resultContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* 1. Side-by-side Vergleich */}
+        <View style={styles.comparisonContainer}>
+          {/* Vorlage */}
+          <View
+            style={[
+              styles.comparisonCard,
+              { width: imageSize, backgroundColor: colors.surface, borderColor: colors.border },
+            ]}
+          >
+            <View style={[styles.comparisonCardHeader, styles.comparisonCardHeaderTemplate]}>
+              <Text style={[styles.comparisonCardLabel, { color: Colors.primary }]}>
+                {t('game.result.template').toUpperCase()}
               </Text>
             </View>
             <View style={[styles.comparisonImage, { width: imageSize, height: imageSize }]}>
-              <DrawingCanvas
-                width={imageSize}
-                height={imageSize}
-                paths={isReplaying ? replayPaths : drawingPaths}
-                strokeColor={Colors.drawing.black}
-                strokeWidth={2}
-              />
+              {currentImage && <LevelImageDisplay image={currentImage} size={imageSize} />}
             </View>
           </View>
 
-          {/* Replay + Speichern direkt unter der eigenen Zeichnung */}
-          <View style={styles.drawingActionRow}>
-            <TouchableOpacity
-              style={[styles.drawingActionButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
-              onPress={isReplaying ? onStopReplay : onStartReplay}
-              accessibilityRole="button"
+          {/* Deine Zeichnung + kontextuelle Aktionen */}
+          <View style={{ width: imageSize, gap: Spacing.xs }}>
+            <View
+              style={[
+                styles.comparisonCard,
+                { width: imageSize, backgroundColor: colors.surface, borderColor: colors.border },
+              ]}
             >
-              <Text style={styles.drawingActionIcon}>{isReplaying ? '⏹' : '🎬'}</Text>
-              <Text style={[styles.drawingActionLabel, { color: colors.text.secondary }]}>
-                {isReplaying ? t('game.result.replayStop') : t('game.result.replay')}
-              </Text>
-            </TouchableOpacity>
+              <View style={[styles.comparisonCardHeader, styles.comparisonCardHeaderDrawing]}>
+                <Text style={[styles.comparisonCardLabel, { color: Colors.secondary }]}>
+                  {t('game.result.yourDrawing').toUpperCase()}
+                </Text>
+              </View>
+              <View style={[styles.comparisonImage, { width: imageSize, height: imageSize }]}>
+                <DrawingCanvas
+                  width={imageSize}
+                  height={imageSize}
+                  paths={isReplaying ? replayPaths : drawingPaths}
+                  strokeColor={Colors.drawing.black}
+                  strokeWidth={2}
+                />
+              </View>
+            </View>
 
-            <TouchableOpacity
-              style={[styles.drawingActionButton, { backgroundColor: colors.surface, borderColor: colors.border }, savedToGallery && styles.drawingActionSaved]}
-              onPress={onSaveToGallery}
-              disabled={savedToGallery}
-              accessibilityRole="button"
-              accessibilityLabel={savedToGallery ? t('gallery.saved') : t('gallery.save')}
-              accessibilityState={{ disabled: savedToGallery }}
-            >
-              <Text style={styles.drawingActionIcon}>{savedToGallery ? '✓' : '🖼'}</Text>
-              <Text style={[styles.drawingActionLabel, { color: colors.text.secondary }, savedToGallery && styles.drawingActionLabelSaved]}>
-                {savedToGallery ? t('gallery.saved') : t('gallery.save')}
-              </Text>
-            </TouchableOpacity>
+            {/* Replay + Speichern direkt unter der eigenen Zeichnung */}
+            <View style={styles.drawingActionRow}>
+              <TouchableOpacity
+                style={[
+                  styles.drawingActionButton,
+                  { backgroundColor: colors.surface, borderColor: colors.border },
+                ]}
+                onPress={isReplaying ? onStopReplay : onStartReplay}
+                accessibilityRole="button"
+              >
+                <Text style={styles.drawingActionIcon}>{isReplaying ? '⏹' : '🎬'}</Text>
+                <Text style={[styles.drawingActionLabel, { color: colors.text.secondary }]}>
+                  {isReplaying ? t('game.result.replayStop') : t('game.result.replay')}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.drawingActionButton,
+                  { backgroundColor: colors.surface, borderColor: colors.border },
+                  savedToGallery && styles.drawingActionSaved,
+                ]}
+                onPress={onSaveToGallery}
+                disabled={savedToGallery}
+                accessibilityRole="button"
+                accessibilityLabel={savedToGallery ? t('gallery.saved') : t('gallery.save')}
+                accessibilityState={{ disabled: savedToGallery }}
+              >
+                <Text style={styles.drawingActionIcon}>{savedToGallery ? '✓' : '🖼'}</Text>
+                <Text
+                  style={[
+                    styles.drawingActionLabel,
+                    { color: colors.text.secondary },
+                    savedToGallery && styles.drawingActionLabelSaved,
+                  ]}
+                >
+                  {savedToGallery ? t('gallery.saved') : t('gallery.save')}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
 
-      {/* 2. Sterne-Bewertung */}
-      <View style={[styles.starsContainer, { backgroundColor: colors.surface }, isSmall && styles.starsContainerSmall]}>
-        <Text style={[styles.starsTitle, { color: colors.text.primary }]}>{t('game.result.howWell')}</Text>
-        <View style={styles.starsRow} testID="stars-container">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <AnimatedStar
-              key={star}
-              filled={star <= userRating}
-              index={star - 1}
-              onPress={() => onRatingSubmit(star)}
-              accessibilityLabel={t('game.result.starAccessibilityLabel', { rating: star, plural: star !== 1 ? 's' : '' })}
-            />
-          ))}
+        {/* 2. Sterne-Bewertung */}
+        <View
+          style={[
+            styles.starsContainer,
+            { backgroundColor: colors.surface },
+            isSmall && styles.starsContainerSmall,
+          ]}
+        >
+          <Text style={[styles.starsTitle, { color: colors.text.primary }]}>
+            {t('game.result.howWell')}
+          </Text>
+          <View style={styles.starsRow} testID="stars-container">
+            {[1, 2, 3, 4, 5].map(star => (
+              <AnimatedStar
+                key={star}
+                filled={star <= userRating}
+                index={star - 1}
+                onPress={() => onRatingSubmit(star)}
+                accessibilityLabel={t('game.result.starAccessibilityLabel', {
+                  rating: star,
+                  plural: star !== 1 ? 's' : '',
+                })}
+              />
+            ))}
+          </View>
+          <AnimatedFeedback visible={userRating > 0}>
+            <Text style={[styles.feedbackText, { color: colors.text.secondary }]}>
+              {getFeedbackText(userRating)}
+            </Text>
+          </AnimatedFeedback>
         </View>
-        <AnimatedFeedback visible={userRating > 0}>
-          <Text style={[styles.feedbackText, { color: colors.text.secondary }]}>{getFeedbackText(userRating)}</Text>
-        </AnimatedFeedback>
-      </View>
 
-      {/* 3. Weiter — prominenter primärer CTA */}
-      {levelNumber < getTotalLevels() ? (
-        <TouchableOpacity style={styles.nextLevelButton} onPress={onNextLevel} accessibilityRole="button">
-          <Text style={styles.nextLevelButtonText}>{t('game.result.nextLevel')} →</Text>
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity style={styles.nextLevelButton} onPress={onRestartFromLevel1} accessibilityRole="button">
-          <Text style={styles.nextLevelButtonText}>🔄 {t('game.result.playAgain')}</Text>
-        </TouchableOpacity>
-      )}
-    </ScrollView>
+        {/* 3. Weiter — prominenter primärer CTA */}
+        {levelNumber < getTotalLevels() ? (
+          <TouchableOpacity
+            style={styles.nextLevelButton}
+            onPress={onNextLevel}
+            accessibilityRole="button"
+          >
+            <Text style={styles.nextLevelButtonText}>{t('game.result.nextLevel')} →</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.nextLevelButton}
+            onPress={onRestartFromLevel1}
+            accessibilityRole="button"
+          >
+            <Text style={styles.nextLevelButtonText}>🔄 {t('game.result.playAgain')}</Text>
+          </TouchableOpacity>
+        )}
+      </ScrollView>
     </>
   );
 }

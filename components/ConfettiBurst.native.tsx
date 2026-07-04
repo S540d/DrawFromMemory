@@ -37,10 +37,7 @@ export function ConfettiBurst({ width, height, active, intensity = 'full' }: Con
       return;
     }
     progress.value = 0;
-    progress.value = withDelay(
-      0,
-      withTiming(1, { duration, easing: Easing.out(Easing.cubic) }),
-    );
+    progress.value = withDelay(0, withTiming(1, { duration, easing: Easing.out(Easing.cubic) }));
   }, [active, reduceMotion, progress, duration]);
 
   const particles = useMemo(

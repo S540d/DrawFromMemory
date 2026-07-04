@@ -37,11 +37,11 @@ export function AnimatedCard({
     } else {
       opacity.value = withDelay(
         index * 50,
-        withTiming(1, { duration: 350, easing: Easing.out(Easing.ease) })
+        withTiming(1, { duration: 350, easing: Easing.out(Easing.ease) }),
       );
       translateY.value = withDelay(
         index * 50,
-        withTiming(0, { duration: 350, easing: Easing.out(Easing.ease) })
+        withTiming(0, { duration: 350, easing: Easing.out(Easing.ease) }),
       );
     }
   }, [reduceMotion, opacity, translateY, index]);
@@ -51,11 +51,7 @@ export function AnimatedCard({
     transform: [{ translateY: translateY.value }],
   }));
 
-  return (
-    <Animated.View style={[animatedStyle, style]}>
-      {children}
-    </Animated.View>
-  );
+  return <Animated.View style={[animatedStyle, style]}>{children}</Animated.View>;
 }
 
 /**
@@ -89,11 +85,11 @@ export function GlassCard({
     } else {
       opacity.value = withDelay(
         index * 50,
-        withTiming(1, { duration: 350, easing: Easing.out(Easing.ease) })
+        withTiming(1, { duration: 350, easing: Easing.out(Easing.ease) }),
       );
       translateY.value = withDelay(
         index * 50,
-        withTiming(0, { duration: 350, easing: Easing.out(Easing.ease) })
+        withTiming(0, { duration: 350, easing: Easing.out(Easing.ease) }),
       );
     }
   }, [reduceMotion, opacity, translateY, index]);
@@ -128,11 +124,7 @@ export function GlassCard({
     );
   }
 
-  return (
-    <Animated.View style={[animatedStyle, style]}>
-      {children}
-    </Animated.View>
-  );
+  return <Animated.View style={[animatedStyle, style]}>{children}</Animated.View>;
 }
 
 /**
@@ -223,11 +215,7 @@ export function AnimatedFeedback({
 
   if (!visible) return null;
 
-  return (
-    <Animated.View style={[animatedStyle, style]}>
-      {children}
-    </Animated.View>
-  );
+  return <Animated.View style={[animatedStyle, style]}>{children}</Animated.View>;
 }
 
 /**
@@ -260,7 +248,7 @@ export function AnimatedStar({
       } else {
         scale.value = withDelay(
           index * 80,
-          withSpring(1, { damping: 5, stiffness: 200, mass: 0.8 })
+          withSpring(1, { damping: 5, stiffness: 200, mass: 0.8 }),
         );
       }
     } else if (filled) {

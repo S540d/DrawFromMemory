@@ -34,7 +34,7 @@ export function Skeleton({ width, height, borderRadius = 8, style }: SkeletonPro
     translateX.value = withRepeat(
       withTiming(width, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
       -1,
-      false
+      false,
     );
   }, [reduceMotion, translateX, width]);
 
@@ -84,7 +84,7 @@ export function GalleryCardSkeleton() {
 export function GallerySkeleton() {
   return (
     <View style={skeletonStyles.grid}>
-      {[0, 1, 2, 3].map((i) => (
+      {[0, 1, 2, 3].map(i => (
         <GalleryCardSkeleton key={i} />
       ))}
     </View>

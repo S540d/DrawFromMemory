@@ -29,7 +29,7 @@ let isInitialized = false;
 const listeners: Set<LanguageChangeListener> = new Set();
 
 function notifyListeners(lang: Language): void {
-  listeners.forEach((fn) => {
+  listeners.forEach(fn => {
     try {
       fn(lang);
     } catch (error) {
@@ -85,7 +85,7 @@ export function getDeviceLanguage(): Language {
  */
 export async function initLanguage(): Promise<void> {
   if (isInitialized) return;
-  
+
   try {
     const savedLanguage = await storageManager.getSetting('language');
     // Only update if we got a valid language value
@@ -182,4 +182,12 @@ export function useTranslation() {
   return { t, language: currentLanguage, setLanguage };
 }
 
-export default { t, setLanguage, getLanguage, useTranslation, initLanguage, getDeviceLanguage, addLanguageChangeListener };
+export default {
+  t,
+  setLanguage,
+  getLanguage,
+  useTranslation,
+  initLanguage,
+  getDeviceLanguage,
+  addLanguageChangeListener,
+};

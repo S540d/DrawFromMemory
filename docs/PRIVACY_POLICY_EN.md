@@ -36,18 +36,19 @@ The app does not collect any personal information. In standard releases, no data
 
 The following data is stored **exclusively locally** on your device:
 
-| Data Type | Purpose | Storage Location |
-|-----------|---------|------------------|
-| Game Progress | Saving unlocked levels | Device storage |
-| Settings | Language, theme, brush size | Device storage |
-| Game Sessions | Date, duration, stars, level — for the Parent Dashboard. Auto-deleted after 28 days. | Device storage |
-| Onboarding flag | Remember whether the first-launch tour was completed | Device storage |
+| Data Type       | Purpose                                                                              | Storage Location |
+| --------------- | ------------------------------------------------------------------------------------ | ---------------- |
+| Game Progress   | Saving unlocked levels                                                               | Device storage   |
+| Settings        | Language, theme, brush size                                                          | Device storage   |
+| Game Sessions   | Date, duration, stars, level — for the Parent Dashboard. Auto-deleted after 28 days. | Device storage   |
+| Onboarding flag | Remember whether the first-launch tour was completed                                 | Device storage   |
 
 **Important:** This data never leaves your device and is only used for app functionality. The Parent Dashboard (reachable behind the Parental Gate) shows these locally-stored statistics — no transmission takes place.
 
 ### 2.2 No Permissions Required
 
 The app requires **none** of the following permissions:
+
 - ❌ No internet permission
 - ❌ No location access
 - ❌ No camera access
@@ -73,9 +74,11 @@ Since the app does not collect data, no data can be shared with third parties.
 ## 4. Data Security
 
 ### 4.1 Local Data Storage
+
 All app data is stored exclusively in your device's local storage. This data is protected by your operating system's (Android/iOS) security mechanisms.
 
 ### 4.2 No Network Connection
+
 The app does not establish any internet connection. Therefore, no data can be intercepted or compromised.
 
 ---
@@ -85,20 +88,25 @@ The app does not establish any internet connection. Therefore, no data can be in
 The app is specifically designed for children and meets the highest privacy standards:
 
 ### 5.1 COPPA Compliance (USA)
+
 The app complies with the Children's Online Privacy Protection Act (COPPA):
+
 - ✅ No collection of personal data from children under 13
 - ✅ No sharing of information
 - ✅ No advertising
 - ✅ No in-app purchases
 
 ### 5.2 GDPR Compliance (EU)
+
 The app complies with the EU General Data Protection Regulation (GDPR):
+
 - ✅ No processing of personal data
 - ✅ No profiling
 - ✅ No automated decision-making
 - ✅ Transparent privacy policy
 
 ### 5.3 Play Families Policy
+
 The app complies with Google Play Families Policy for children's apps.
 
 ---
@@ -108,13 +116,16 @@ The app complies with Google Play Families Policy for children's apps.
 Since the app does not collect personal data, most GDPR rights are not applicable. However, you have:
 
 ### 6.1 Right to Deletion
+
 **How to delete all app data:**
+
 1. **Android:** Settings → Apps → Remember and Draw → Storage → Clear Data
 2. **iOS:** Uninstall the app
 
 Uninstalling the app completely removes all locally stored data from the device.
 
 ### 6.2 Right to Information
+
 Since no data is collected, there is no data we could provide information about.
 
 ---
@@ -130,6 +141,7 @@ The app includes an optional integration of **Sentry** for crash reporting. Sent
 If a release is built with Sentry enabled, anonymous crash reports (stack traces, device OS version, app version) may be sent to Sentry, Inc. servers. These reports contain no personal data, device identifiers, or user-generated content. Sentry's privacy policy is available at https://sentry.io/privacy/.
 
 Specifically, the app contains:
+
 - ❌ No analytics tools (e.g., Google Analytics, Firebase Analytics)
 - ❌ No advertising networks
 - ❌ No social media SDKs
@@ -149,6 +161,7 @@ Specifically, the app contains:
 We reserve the right to update this privacy policy to reflect changes in the app or legal requirements.
 
 For significant changes, we will:
+
 - Update the "Last Updated" date above
 - Publish the new version on GitHub
 - Inform users at the next app start if necessary

@@ -10,7 +10,9 @@ import storageManager from './StorageManager';
 export type Theme = 'light' | 'dark' | 'system';
 
 /** Maps ColorSchemeName (which can be null or "unspecified") to a concrete light/dark value. */
-function normalizeColorScheme(scheme: ReturnType<typeof Appearance.getColorScheme>): 'light' | 'dark' {
+function normalizeColorScheme(
+  scheme: ReturnType<typeof Appearance.getColorScheme>,
+): 'light' | 'dark' {
   return scheme === 'dark' ? 'dark' : 'light';
 }
 
@@ -225,8 +227,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     };
   }, []);
 
-  const currentTheme: 'light' | 'dark' =
-    themeSetting === 'system' ? systemTheme : themeSetting;
+  const currentTheme: 'light' | 'dark' = themeSetting === 'system' ? systemTheme : themeSetting;
 
   const colors = currentTheme === 'dark' ? DARK_COLORS : LIGHT_COLORS;
 
@@ -242,9 +243,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     setTheme: handleSetTheme,
   };
 
-  return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };
 
 export const useTheme = (): ThemeContextType => {

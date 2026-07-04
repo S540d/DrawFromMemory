@@ -40,7 +40,7 @@ jobs:
 
       - name: Apply branch protection via GitHub API
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         run: |
           if [ -z "$GITHUB_TOKEN" ]; then
             echo "GITHUB_TOKEN is not available. The workflow cannot update branch protection without a token with repo administration privileges."

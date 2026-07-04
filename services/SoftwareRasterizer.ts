@@ -25,7 +25,7 @@ export function rasterizePathIntoBuffer(
   height: number,
   scale: number,
   offsetX: number,
-  offsetY: number
+  offsetY: number,
 ): void {
   if (path.type === 'fill') return;
   if (path.points.length < 2) return;
@@ -60,7 +60,7 @@ export function rasterizeStrokes(
   height: number,
   scale: number,
   offsetX: number,
-  offsetY: number
+  offsetY: number,
 ): Uint8ClampedArray {
   const buffer = createWhitePixelBuffer(width, height);
 
@@ -81,7 +81,7 @@ function drawThickLine(
   x1: number,
   y1: number,
   radius: number,
-  color: RGBAColor
+  color: RGBAColor,
 ): void {
   const dx = Math.abs(x1 - x0);
   const dy = Math.abs(y1 - y0);
@@ -116,7 +116,7 @@ function fillCircle(
   cx: number,
   cy: number,
   radius: number,
-  color: RGBAColor
+  color: RGBAColor,
 ): void {
   const r2 = radius * radius;
   const yMin = Math.max(0, cy - radius);

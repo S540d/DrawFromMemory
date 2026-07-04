@@ -26,8 +26,8 @@ const PHASE_ORDER: GamePhase[] = ['memorize', 'draw', 'result'];
 
 const PHASE_CONFIG: Record<GamePhase, { emoji: string; textKey: string; badgeKey: string }> = {
   memorize: { emoji: '👀', textKey: 'tutorial.memorize', badgeKey: 'tutorial.badgeMemorize' },
-  draw:     { emoji: '✏️', textKey: 'tutorial.draw',     badgeKey: 'tutorial.badgeDraw' },
-  result:   { emoji: '⭐', textKey: 'tutorial.result',   badgeKey: 'tutorial.badgeResult' },
+  draw: { emoji: '✏️', textKey: 'tutorial.draw', badgeKey: 'tutorial.badgeDraw' },
+  result: { emoji: '⭐', textKey: 'tutorial.result', badgeKey: 'tutorial.badgeResult' },
 };
 
 const AUTO_DISMISS_MS = 6000;
@@ -76,9 +76,7 @@ export default function TutorialOverlay({ phase, onDismiss }: Props) {
 
   const containerStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
-    transform: [
-      { translateY: translateY.value + bounce.value },
-    ],
+    transform: [{ translateY: translateY.value + bounce.value }],
   }));
 
   const handleDismiss = () => {
@@ -102,19 +100,14 @@ export default function TutorialOverlay({ phase, onDismiss }: Props) {
           {PHASE_ORDER.map((_, i) => (
             <View
               key={i}
-              style={[
-                styles.stepDot,
-                i < currentStep ? styles.stepDotDone : styles.stepDotPending,
-              ]}
+              style={[styles.stepDot, i < currentStep ? styles.stepDotDone : styles.stepDotPending]}
             />
           ))}
         </View>
 
         {/* Emoji + text */}
         <Text style={styles.emoji}>{config.emoji}</Text>
-        <Text style={[styles.text, { color: colors.text.primary }]}>
-          {t(config.textKey)}
-        </Text>
+        <Text style={[styles.text, { color: colors.text.primary }]}>{t(config.textKey)}</Text>
 
         {/* Phase badge */}
         <View style={styles.badgeRow}>
@@ -140,9 +133,7 @@ export default function TutorialOverlay({ phase, onDismiss }: Props) {
           ))}
         </View>
 
-        <Text style={[styles.tapHint, { color: colors.text.secondary }]}>
-          {t('tutorial.tap')}
-        </Text>
+        <Text style={[styles.tapHint, { color: colors.text.secondary }]}>{t('tutorial.tap')}</Text>
       </Pressable>
     </Animated.View>
   );

@@ -70,13 +70,7 @@ export function Badge({
 /**
  * CountBadge – runder Zähler (z. B. für ungelesene Meldungen).
  */
-export function CountBadge({
-  count,
-  style,
-}: {
-  count: number;
-  style?: ViewStyle;
-}) {
+export function CountBadge({ count, style }: { count: number; style?: ViewStyle }) {
   const reduceMotion = useReduceMotion();
   const scale = useSharedValue(1);
 
@@ -85,7 +79,7 @@ export function CountBadge({
     scale.value = withSpring(1.3, { damping: 6, stiffness: 300 }, () => {
       scale.value = withSpring(1, { damping: 10, stiffness: 200 });
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count, reduceMotion]);
 
   const animatedStyle = useAnimatedStyle(() => ({

@@ -84,7 +84,10 @@ describe('computeNativeFillLayers', () => {
         type: 'fill',
       },
       {
-        points: [{ x: 2, y: 0 }, { x: 2, y: 3 }],
+        points: [
+          { x: 2, y: 0 },
+          { x: 2, y: 3 },
+        ],
         color: '#000000',
         strokeWidth: 1,
         type: 'stroke',

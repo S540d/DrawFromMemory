@@ -35,8 +35,7 @@ type MockSM = {
 
 const sm = storageManager as unknown as MockSM;
 
-const daysAgo = (days: number) =>
-  new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+const daysAgo = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
 
 describe('ReviewManager', () => {
   beforeEach(() => {

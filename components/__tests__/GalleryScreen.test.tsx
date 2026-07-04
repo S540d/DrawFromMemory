@@ -42,9 +42,13 @@ jest.mock('../../components/AnimatedPrimitives', () => {
     GlassCard: ({ children, style }: any) => <View style={style}>{children}</View>,
     AnimatedButton: ({ children, onPress, style, disabled }: any) => {
       const { Pressable } = require('react-native');
-      return <Pressable onPress={onPress} style={style} disabled={disabled}>{children}</Pressable>;
+      return (
+        <Pressable onPress={onPress} style={style} disabled={disabled}>
+          {children}
+        </Pressable>
+      );
     },
-    AnimatedFeedback: ({ children, visible }: any) => visible ? <View>{children}</View> : null,
+    AnimatedFeedback: ({ children, visible }: any) => (visible ? <View>{children}</View> : null),
   };
 });
 
@@ -87,7 +91,9 @@ const mockGallery: GalleryEntry[] = [
 
 const getAllTexts = (getAllByType: (type: any) => any[]) => {
   const { Text } = require('react-native');
-  return getAllByType(Text).map((n: any) => n.props.children).flat();
+  return getAllByType(Text)
+    .map((n: any) => n.props.children)
+    .flat();
 };
 
 describe('GalleryScreen', () => {

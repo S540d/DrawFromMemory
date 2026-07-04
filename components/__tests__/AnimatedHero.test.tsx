@@ -34,7 +34,10 @@ import { AnimatedHero } from '../AnimatedHero';
 import { Text } from 'react-native';
 
 const getAllTexts = (getAllByType: (t: any) => any[]) =>
-  getAllByType(Text).map((n: any) => n.props.children).flat().map(String);
+  getAllByType(Text)
+    .map((n: any) => n.props.children)
+    .flat()
+    .map(String);
 
 describe('AnimatedHero', () => {
   beforeEach(() => {

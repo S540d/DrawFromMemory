@@ -40,7 +40,10 @@ export default function BadgeUnlockToast({ achievement, onHide }: Props) {
     } else {
       translateY.value = withSequence(
         withTiming(0, { duration: FADE_MS, easing: Easing.out(Easing.ease) }),
-        withDelay(VISIBLE_MS, withTiming(-80, { duration: FADE_MS, easing: Easing.in(Easing.ease) })),
+        withDelay(
+          VISIBLE_MS,
+          withTiming(-80, { duration: FADE_MS, easing: Easing.in(Easing.ease) }),
+        ),
       );
     }
     opacity.value = withSequence(
@@ -60,11 +63,19 @@ export default function BadgeUnlockToast({ achievement, onHide }: Props) {
   if (!achievement) return null;
 
   return (
-    <Animated.View style={[styles.toast, animStyle]} pointerEvents="none" testID="badge-unlock-toast">
+    <Animated.View
+      style={[styles.toast, animStyle]}
+      pointerEvents="none"
+      testID="badge-unlock-toast"
+    >
       <Text style={styles.emoji}>{achievement.emoji}</Text>
       <View style={styles.textCol}>
-        <Text style={styles.title} numberOfLines={1}>{t('achievements.unlocked')}</Text>
-        <Text style={styles.subtitle} numberOfLines={1}>{t(achievement.titleKey)}</Text>
+        <Text style={styles.title} numberOfLines={1}>
+          {t('achievements.unlocked')}
+        </Text>
+        <Text style={styles.subtitle} numberOfLines={1}>
+          {t(achievement.titleKey)}
+        </Text>
       </View>
     </Animated.View>
   );

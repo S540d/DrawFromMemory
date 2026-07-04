@@ -19,10 +19,7 @@ import TutorialOverlay from '@components/TutorialOverlay';
 import { markOnboardingDone } from '@services/OnboardingManager';
 import SoundManager from '@services/SoundManager';
 import { useGamePhase } from '@services/useGamePhase';
-import {
-  checkAndUnlock,
-  type AchievementDef,
-} from '@services/AchievementManager';
+import { checkAndUnlock, type AchievementDef } from '@services/AchievementManager';
 import { getStreakData } from '@services/StreakManager';
 import storageManager from '@services/StorageManager';
 import MemorizePhase from '@components/game/MemorizePhase';
@@ -68,9 +65,7 @@ export default function GameScreen() {
   const parsedLevel = params.level ? parseInt(params.level as string, 10) : 1;
   const totalLevels = getTotalLevels();
   const initialLevel =
-    !isNaN(parsedLevel) && parsedLevel >= 1 && parsedLevel <= totalLevels
-      ? parsedLevel
-      : 1;
+    !isNaN(parsedLevel) && parsedLevel >= 1 && parsedLevel <= totalLevels ? parsedLevel : 1;
 
   const isDailyChallenge = params.daily === '1';
   const variant: GameVariant =
@@ -112,7 +107,7 @@ export default function GameScreen() {
       return;
     }
 
-    phaseOpacity.value = withTiming(0, { duration: 150 }, (finished) => {
+    phaseOpacity.value = withTiming(0, { duration: 150 }, finished => {
       'worklet';
       if (finished) {
         runOnJS(setVisiblePhase)(phase);
@@ -182,13 +177,13 @@ export default function GameScreen() {
         storageManager.getProgress(),
         getStreakData(),
       ]);
-      const dailyChallengesCompleted = gallery.filter((g) => g.isDailyChallenge).length;
+      const dailyChallengesCompleted = gallery.filter(g => g.isDailyChallenge).length;
       const difficultiesPlayed = Array.from(
         new Set(
           Object.keys(progress.levels ?? {})
-            .map((n) => parseInt(n, 10))
-            .filter((n) => !isNaN(n))
-            .map((n) => getDifficultyForLevel(n)),
+            .map(n => parseInt(n, 10))
+            .filter(n => !isNaN(n))
+            .map(n => getDifficultyForLevel(n)),
         ),
       );
       const newly = await checkAndUnlock({
@@ -208,16 +203,33 @@ export default function GameScreen() {
   const levelName = currentLang === 'en' ? currentImage?.displayNameEn : currentImage?.displayName;
 
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom, backgroundColor: colors.background }]}>
+    <View
+      style={[
+        styles.container,
+        { paddingBottom: insets.bottom, backgroundColor: colors.background },
+      ]}
+    >
       {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 8, paddingHorizontal: layout.headerPaddingHorizontal, paddingBottom: Spacing.sm }]}>
+      <View
+        style={[
+          styles.header,
+          {
+            paddingTop: insets.top + 8,
+            paddingHorizontal: layout.headerPaddingHorizontal,
+            paddingBottom: Spacing.sm,
+          },
+        ]}
+      >
         <TouchableOpacity
           style={styles.headerLeft}
           onPress={() => router.back()}
           accessibilityRole="button"
           accessibilityLabel={t('common.back')}
         >
-          <Text style={[styles.headerTitle, { color: colors.text.primary }]}>Level {levelNumber}{levelName ? ` · ${levelName}` : ''}</Text>
+          <Text style={[styles.headerTitle, { color: colors.text.primary }]}>
+            Level {levelNumber}
+            {levelName ? ` · ${levelName}` : ''}
+          </Text>
         </TouchableOpacity>
         <View style={styles.headerRight}>
           <View style={styles.progressDots}>
@@ -247,18 +259,40 @@ export default function GameScreen() {
       {FeatureFlags.ENABLE_GAME_PHASE_TABS && (phase === 'draw' || phase === 'result') && (
         <View style={[styles.tabBar, { backgroundColor: colors.surfaceAlt }]}>
           <TouchableOpacity
-            style={[styles.tab, phase === 'draw' && [styles.tabActive, { backgroundColor: colors.surface }]]}
+            style={[
+              styles.tab,
+              phase === 'draw' && [styles.tabActive, { backgroundColor: colors.surface }],
+            ]}
             onPress={() => phase === 'result' && setPhase('draw')}
             accessibilityRole="tab"
           >
-            <Text style={[styles.tabText, { color: colors.text.secondary }, phase === 'draw' && [styles.tabTextActive, { color: colors.text.primary }]]}>✏️ {t('game.tabs.draw')}</Text>
+            <Text
+              style={[
+                styles.tabText,
+                { color: colors.text.secondary },
+                phase === 'draw' && [styles.tabTextActive, { color: colors.text.primary }],
+              ]}
+            >
+              ✏️ {t('game.tabs.draw')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.tab, phase === 'result' && [styles.tabActive, { backgroundColor: colors.surface }]]}
+            style={[
+              styles.tab,
+              phase === 'result' && [styles.tabActive, { backgroundColor: colors.surface }],
+            ]}
             onPress={() => phase === 'draw' && setPhase('result')}
             accessibilityRole="tab"
           >
-            <Text style={[styles.tabText, { color: colors.text.secondary }, phase === 'result' && [styles.tabTextActive, { color: colors.text.primary }]]}>🎨 {t('game.tabs.result')}</Text>
+            <Text
+              style={[
+                styles.tabText,
+                { color: colors.text.secondary },
+                phase === 'result' && [styles.tabTextActive, { color: colors.text.primary }],
+              ]}
+            >
+              🎨 {t('game.tabs.result')}
+            </Text>
           </TouchableOpacity>
         </View>
       )}
@@ -283,7 +317,9 @@ export default function GameScreen() {
         >
           <View style={[styles.hintModal, { backgroundColor: colors.background }]}>
             <View style={styles.hintModalHeader}>
-              <Text style={[styles.hintModalTitle, { color: colors.text.primary }]}>{t('game.draw.hintModalTitle')}</Text>
+              <Text style={[styles.hintModalTitle, { color: colors.text.primary }]}>
+                {t('game.draw.hintModalTitle')}
+              </Text>
               <TouchableOpacity onPress={() => setShowHintModal(false)} style={styles.closeButton}>
                 <Text style={[styles.closeText, { color: colors.text.secondary }]}>✕</Text>
               </TouchableOpacity>
@@ -376,12 +412,11 @@ export default function GameScreen() {
       <BadgeUnlockToast achievement={unlockedBadge} onHide={handleBadgeToastHide} />
 
       {/* Tutorial Coach Mark */}
-      {isTutorial && tutorialHintVisible && (phase === 'memorize' || phase === 'draw' || phase === 'result') && (
-        <TutorialOverlay
-          phase={phase}
-          onDismiss={() => setTutorialHintVisible(false)}
-        />
-      )}
+      {isTutorial &&
+        tutorialHintVisible &&
+        (phase === 'memorize' || phase === 'draw' || phase === 'result') && (
+          <TutorialOverlay phase={phase} onDismiss={() => setTutorialHintVisible(false)} />
+        )}
     </View>
   );
 }

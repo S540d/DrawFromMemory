@@ -34,9 +34,9 @@ export interface ScreenLayout {
 
   // Hilfs-Booleans für einfache Abfragen
   isXSmall: boolean; // size === 'xs'
-  isSmall: boolean;  // size === 'xs' | 'sm'
+  isSmall: boolean; // size === 'xs' | 'sm'
   isMedium: boolean; // size === 'md'
-  isLarge: boolean;  // size === 'lg'
+  isLarge: boolean; // size === 'lg'
 
   // ── Header ──────────────────────────────────────────────────────────
   /** Vertikales Innen-Padding des Headers */
@@ -91,36 +91,34 @@ export function useScreenLayout(): ScreenLayout {
 
   // Größenklasse ermitteln
   const size: ScreenSize =
-    safeHeight < 500 ? 'xs' :
-    safeHeight < 640 ? 'sm' :
-    safeHeight < 768 ? 'md' : 'lg';
+    safeHeight < 500 ? 'xs' : safeHeight < 640 ? 'sm' : safeHeight < 768 ? 'md' : 'lg';
 
   const isXSmall = size === 'xs';
-  const isSmall  = size === 'xs' || size === 'sm';
+  const isSmall = size === 'xs' || size === 'sm';
   const isMedium = size === 'md';
-  const isLarge  = size === 'lg';
+  const isLarge = size === 'lg';
 
   // ── Header ──────────────────────────────────────────────────────────
-  const headerPaddingVertical   = isXSmall ? 4  : isSmall ? 8  : 24;
+  const headerPaddingVertical = isXSmall ? 4 : isSmall ? 8 : 24;
   const headerPaddingHorizontal = isXSmall ? 12 : isSmall ? 16 : 24;
 
   // ── Toolbar ─────────────────────────────────────────────────────────
-  const toolbarButtonMinHeight      = isXSmall ? 36 : isSmall ? 40 : 60;
-  const toolbarButtonPaddingVertical = isXSmall ? 4  : isSmall ? 6  : 8;
-  const toolbarMarginVertical        = isXSmall ? 2  : isSmall ? 4  : 8;
+  const toolbarButtonMinHeight = isXSmall ? 36 : isSmall ? 40 : 60;
+  const toolbarButtonPaddingVertical = isXSmall ? 4 : isSmall ? 6 : 8;
+  const toolbarMarginVertical = isXSmall ? 2 : isSmall ? 4 : 8;
 
   // ── Aktions-Buttons ─────────────────────────────────────────────────
-  const buttonMinHeight      = isXSmall ? 34 : isSmall ? 38 : 44;
-  const buttonPaddingVertical = isXSmall ? 4  : isSmall ? 6  : isMedium ? 8 : 10;
+  const buttonMinHeight = isXSmall ? 34 : isSmall ? 38 : 44;
+  const buttonPaddingVertical = isXSmall ? 4 : isSmall ? 6 : isMedium ? 8 : 10;
 
   // ── Canvas ───────────────────────────────────────────────────────────
   // Schätzung des Platzes, der von festen Elementen verbraucht wird:
   //   Header + phaseContainer-Padding + Toolbar + Buttons + Gaps
-  const headerHeight   = headerPaddingVertical * 2 + 44; // content ~44 px
-  const phasePadding   = (isXSmall ? 8 : 16) * 2;
-  const toolbarHeight  = toolbarButtonMinHeight + toolbarMarginVertical * 2;
-  const buttonHeight   = buttonMinHeight + buttonPaddingVertical * 2;
-  const gapTotal       = isXSmall ? 8 : 16;
+  const headerHeight = headerPaddingVertical * 2 + 44; // content ~44 px
+  const phasePadding = (isXSmall ? 8 : 16) * 2;
+  const toolbarHeight = toolbarButtonMinHeight + toolbarMarginVertical * 2;
+  const buttonHeight = buttonMinHeight + buttonPaddingVertical * 2;
+  const gapTotal = isXSmall ? 8 : 16;
 
   const reservedHeight = headerHeight + phasePadding + toolbarHeight + buttonHeight + gapTotal;
   const remainingHeight = Math.max(safeHeight - reservedHeight, 0);
@@ -132,15 +130,12 @@ export function useScreenLayout(): ScreenLayout {
   const baseCanvasMinHeight = isXSmall ? 90 : isSmall ? 120 : 160;
   const canvasMinHeight = Math.min(baseCanvasMinHeight, remainingHeight);
   const canvasUpperLimit = Math.min(isLarge ? 400 : 320, remainingHeight);
-  const canvasMaxHeight = Math.min(
-    Math.max(rawCanvasHeight, canvasMinHeight),
-    canvasUpperLimit,
-  );
+  const canvasMaxHeight = Math.min(Math.max(rawCanvasHeight, canvasMinHeight), canvasUpperLimit);
   const canvasMarginVertical = isXSmall ? 2 : 4;
 
   // ── Merke-Phase ───────────────────────────────────────────────────
   // Bild bekommt ~40 % der sicheren Höhe, eingegrenzt auf [140 px, 280 px]
-  const memorizeImageSize      = Math.min(Math.max(safeHeight * 0.40, 140), 280);
+  const memorizeImageSize = Math.min(Math.max(safeHeight * 0.4, 140), 280);
   const imagePlaceholderMinSize = Math.min(Math.max(safeHeight * 0.42, 150), 280);
 
   return {

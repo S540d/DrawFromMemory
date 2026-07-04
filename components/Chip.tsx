@@ -1,11 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, ViewStyle } from 'react-native';
 import { useReduceMotion } from '../utils/useReduceMotion';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { Pressable } from 'react-native';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
@@ -58,15 +54,16 @@ export function Chip({
     backgroundColor: isFilledSelected
       ? Colors.primary
       : variant === 'filled'
-      ? Colors.surface
-      : 'transparent',
+        ? Colors.surface
+        : 'transparent',
     borderColor: isOutlinedSelected ? Colors.primary : Colors.border,
     opacity: disabled ? 0.4 : 1,
   };
 
-  const textColor = isFilledSelected || (variant === 'outlined' && isOutlinedSelected)
-    ? Colors.primary
-    : Colors.text.secondary;
+  const textColor =
+    isFilledSelected || (variant === 'outlined' && isOutlinedSelected)
+      ? Colors.primary
+      : Colors.text.secondary;
 
   const finalTextColor = isFilledSelected ? Colors.drawing.white : textColor;
 
@@ -110,7 +107,7 @@ export function ChipGroup({
 }) {
   return (
     <Animated.View style={[styles.group, style ?? {}]}>
-      {options.map((option) => (
+      {options.map(option => (
         <Chip
           key={option}
           label={option}

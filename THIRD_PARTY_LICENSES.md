@@ -7,12 +7,14 @@ This document lists the open-source libraries used in DrawFromMemory (Merke und 
 ## Core Runtime Dependencies
 
 ### React & React Native
+
 - **react** — MIT License — https://github.com/facebook/react
 - **react-dom** — MIT License — https://github.com/facebook/react
 - **react-native** — MIT License — https://github.com/facebook/react-native
 - **react-native-web** — MIT License — https://github.com/necolas/react-native-web
 
 ### Expo Platform
+
 - **expo** — MIT License — https://github.com/expo/expo
 - **expo-asset** — MIT License — https://github.com/expo/expo
 - **expo-constants** — MIT License — https://github.com/expo/expo
@@ -25,21 +27,26 @@ This document lists the open-source libraries used in DrawFromMemory (Merke und 
 - **@expo/metro-runtime** — MIT License — https://github.com/expo/expo
 
 ### Drawing / Graphics
+
 - **@shopify/react-native-skia** — MIT License — https://github.com/Shopify/react-native-skia
   - Wraps the Skia graphics library (BSD 3-Clause) — https://skia.org/
 
 ### Animations
+
 - **react-native-reanimated** — MIT License — https://github.com/software-mansion/react-native-reanimated
 - **react-native-worklets** — MIT License — https://github.com/margelo/react-native-worklets
 
 ### Navigation & Layout
+
 - **react-native-screens** — MIT License — https://github.com/software-mansion/react-native-screens
 - **react-native-safe-area-context** — MIT License — https://github.com/th3rdwave/react-native-safe-area-context
 
 ### Storage
+
 - **@react-native-async-storage/async-storage** — MIT License — https://github.com/react-native-async-storage/async-storage
 
 ### SVG Rendering
+
 - **react-native-svg** — MIT License — https://github.com/software-mansion/react-native-svg
 - **react-native-svg-web** — MIT License — https://github.com/bacons/react-native-svg-web
 
@@ -48,6 +55,7 @@ This document lists the open-source libraries used in DrawFromMemory (Merke und 
 ## Optional / Conditional Dependencies
 
 ### Crash Reporting
+
 - **@sentry/react-native** — MIT License — https://github.com/getsentry/sentry-react-native
   - Only active when `EXPO_PUBLIC_SENTRY_DSN` environment variable is set at build time.
   - Sentry Privacy Policy: https://sentry.io/privacy/
@@ -97,4 +105,4 @@ SOFTWARE.
 
 ---
 
-*Last updated: April 5, 2026*
+_Last updated: April 5, 2026_

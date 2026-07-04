@@ -22,10 +22,15 @@ function buildOffscreenCanvas(paths: DrawingPath[]): HTMLCanvasElement {
 
   // Scale/offset: fit drawing into the export canvas (same logic as DrawingCanvas.web.tsx preview mode)
   const strokePaths = paths.filter(p => p.type !== 'fill');
-  let scale = 1, offsetX = 0, offsetY = 0;
+  let scale = 1,
+    offsetX = 0,
+    offsetY = 0;
 
   if (strokePaths.length > 0) {
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
     for (const path of strokePaths) {
       for (const pt of path.points) {
         if (pt.x < minX) minX = pt.x;
@@ -51,7 +56,14 @@ function buildOffscreenCanvas(paths: DrawingPath[]): HTMLCanvasElement {
       const px = path.points[0].x * scale + offsetX;
       const py = path.points[0].y * scale + offsetY;
       const imageData = ctx.getImageData(0, 0, EXPORT_SIZE, EXPORT_SIZE); // platform-safe
-      const changed = floodFillPixels(imageData.data, EXPORT_SIZE, EXPORT_SIZE, px, py, hexToRgb(path.color));
+      const changed = floodFillPixels(
+        imageData.data,
+        EXPORT_SIZE,
+        EXPORT_SIZE,
+        px,
+        py,
+        hexToRgb(path.color),
+      );
       if (changed) ctx.putImageData(imageData, 0, 0); // platform-safe
     } else if (path.points.length >= 2) {
       ctx.strokeStyle = path.color;
@@ -75,7 +87,8 @@ export async function shareDrawing(paths: DrawingPath[], _title?: string): Promi
   const filename = `zeichnung-${Date.now()}.png`;
 
   return new Promise<void>((resolve, reject) => {
-    canvas.toBlob(async (blob) => { // platform-safe
+    canvas.toBlob(async blob => {
+      // platform-safe
       if (!blob) {
         reject(new Error('Canvas export failed'));
         return;
@@ -108,7 +121,8 @@ export async function shareDrawing(paths: DrawingPath[], _title?: string): Promi
       a.download = filename;
       document.body.appendChild(a); // platform-safe
       a.click();
-      requestAnimationFrame(() => { // platform-safe
+      requestAnimationFrame(() => {
+        // platform-safe
         document.body.removeChild(a); // platform-safe
         URL.revokeObjectURL(url); // platform-safe
       });

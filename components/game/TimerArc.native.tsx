@@ -1,12 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Canvas, Path, Skia } from '@shopify/react-native-skia';
-import {
-  Easing,
-  useSharedValue,
-  useDerivedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import { Easing, useSharedValue, useDerivedValue, withTiming } from 'react-native-reanimated';
 import { useReduceMotion } from '../../utils/useReduceMotion';
 import Colors from '../../constants/Colors';
 import { FontSize, FontWeight } from '../../constants/Layout';

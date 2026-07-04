@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  Platform,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
@@ -46,18 +54,15 @@ export default function GalleryScreen() {
     };
 
     if (Platform.OS === 'web') {
-      if (window.confirm(t('gallery.deleteConfirm'))) { // platform-safe
+      if (window.confirm(t('gallery.deleteConfirm'))) {
+        // platform-safe
         doDelete();
       }
     } else {
-      Alert.alert(
-        t('gallery.deleteTitle'),
-        t('gallery.deleteConfirm'),
-        [
-          { text: t('common.cancel'), style: 'cancel' },
-          { text: t('common.yes'), style: 'destructive', onPress: doDelete },
-        ]
-      );
+      Alert.alert(t('gallery.deleteTitle'), t('gallery.deleteConfirm'), [
+        { text: t('common.cancel'), style: 'cancel' },
+        { text: t('common.yes'), style: 'destructive', onPress: doDelete },
+      ]);
     }
   };
 
@@ -71,13 +76,9 @@ export default function GalleryScreen() {
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text style={[styles.backButton, { color: colors.primary }]}>
-            ← {t('common.back')}
-          </Text>
+          <Text style={[styles.backButton, { color: colors.primary }]}>← {t('common.back')}</Text>
         </TouchableOpacity>
-        <Text style={[styles.title, { color: colors.text.primary }]}>
-          {t('gallery.title')}
-        </Text>
+        <Text style={[styles.title, { color: colors.text.primary }]}>{t('gallery.title')}</Text>
         <View style={{ width: 80 }} />
       </View>
 
@@ -96,7 +97,15 @@ export default function GalleryScreen() {
         {/* Gallery Grid */}
         <View style={styles.grid}>
           {entries.map((entry, index) => (
-            <GlassCard key={entry.id} index={index} style={[styles.card, { backgroundColor: glassSurface, borderColor: glassBorder }, glassShadow]}>
+            <GlassCard
+              key={entry.id}
+              index={index}
+              style={[
+                styles.card,
+                { backgroundColor: glassSurface, borderColor: glassBorder },
+                glassShadow,
+              ]}
+            >
               <View style={styles.cardPreview}>
                 <DrawingCanvas
                   width={140}

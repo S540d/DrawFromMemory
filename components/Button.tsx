@@ -1,11 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, ViewStyle, TextStyle, ActivityIndicator } from 'react-native';
 import { useReduceMotion } from '../utils/useReduceMotion';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../constants/Colors';
@@ -160,15 +156,15 @@ export function Button({
         )}
         {loading ? (
           <ActivityIndicator
-            color={variant === 'primary' || variant === 'danger' ? Colors.drawing.white : Colors.primary}
+            color={
+              variant === 'primary' || variant === 'danger' ? Colors.drawing.white : Colors.primary
+            }
             size="small"
           />
         ) : (
           <>
             {leftIcon}
-            <Text style={[styles.label, variantStyle.text, sizeStyle.text]}>
-              {label}
-            </Text>
+            <Text style={[styles.label, variantStyle.text, sizeStyle.text]}>{label}</Text>
           </>
         )}
       </Pressable>

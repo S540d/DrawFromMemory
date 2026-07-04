@@ -79,7 +79,11 @@ export function createPersistedJson<T>(opts: CreateOptions<T>): PersistedJsonSto
     // raw is present but corrupt — clean it up immediately, even if memory fallback succeeds
     if (raw !== null && raw !== undefined) {
       memory = undefined;
-      try { await AsyncStorage.removeItem(key); } catch { /* best-effort */ }
+      try {
+        await AsyncStorage.removeItem(key);
+      } catch {
+        /* best-effort */
+      }
     }
 
     const memParsed = safeParse(memory);

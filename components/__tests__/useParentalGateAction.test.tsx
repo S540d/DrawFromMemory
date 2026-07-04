@@ -16,10 +16,14 @@ describe('useParentalGateAction', () => {
     const run = jest.fn();
     const { result } = renderHook(() => useParentalGateAction());
 
-    act(() => { result.current.openWithAction(run); });
+    act(() => {
+      result.current.openWithAction(run);
+    });
     expect(result.current.gateVisible).toBe(true);
 
-    await act(async () => { await result.current.onSuccess(); });
+    await act(async () => {
+      await result.current.onSuccess();
+    });
     expect(run).toHaveBeenCalled();
     expect(result.current.gateVisible).toBe(false);
   });
@@ -32,7 +36,9 @@ describe('useParentalGateAction', () => {
     act(() => {
       result.current.openWithUrl('https://example.com', { errorTitle: 'E', errorMessage: 'M' });
     });
-    await act(async () => { await result.current.onSuccess(); });
+    await act(async () => {
+      await result.current.onSuccess();
+    });
 
     expect(canOpen).toHaveBeenCalledWith('https://example.com');
     expect(open).toHaveBeenCalledWith('https://example.com');
@@ -46,7 +52,9 @@ describe('useParentalGateAction', () => {
     act(() => {
       result.current.openWithUrl('https://x', { errorTitle: 'Err', errorMessage: 'Msg' });
     });
-    await act(async () => { await result.current.onSuccess(); });
+    await act(async () => {
+      await result.current.onSuccess();
+    });
 
     expect(alert).toHaveBeenCalledWith('Err', 'Msg');
   });
@@ -55,11 +63,17 @@ describe('useParentalGateAction', () => {
     const run = jest.fn();
     const { result } = renderHook(() => useParentalGateAction());
 
-    act(() => { result.current.openWithAction(run); });
-    act(() => { result.current.onCancel(); });
+    act(() => {
+      result.current.openWithAction(run);
+    });
+    act(() => {
+      result.current.onCancel();
+    });
     expect(result.current.gateVisible).toBe(false);
 
-    await act(async () => { await result.current.onSuccess(); });
+    await act(async () => {
+      await result.current.onSuccess();
+    });
     expect(run).not.toHaveBeenCalled();
   });
 });

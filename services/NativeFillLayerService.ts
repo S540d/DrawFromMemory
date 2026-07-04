@@ -13,7 +13,7 @@ export function computeNativeFillLayers(
   height: number,
   scale: number,
   offsetX: number,
-  offsetY: number
+  offsetY: number,
 ): NativeFillLayer[] {
   // Canvas dimensions must be integers — float widths (e.g. 363.428...) corrupt
   // buffer addressing and cause floodFillPixels to always return false.
@@ -27,15 +27,7 @@ export function computeNativeFillLayers(
       const fillX = path.points[0].x * scale + offsetX;
       const fillY = path.points[0].y * scale + offsetY;
       const spans: FloodFillSpan[] = [];
-      const changed = floodFillPixels(
-        buffer,
-        w,
-        h,
-        fillX,
-        fillY,
-        hexToRgb(path.color),
-        spans
-      );
+      const changed = floodFillPixels(buffer, w, h, fillX, fillY, hexToRgb(path.color), spans);
 
       if (changed && spans.length > 0) {
         fillLayers.push({ color: path.color, spans });

@@ -18,8 +18,8 @@ const lowRatingMessages = {
   en: [
     'That was better than before, do you want to try again?',
     'Practice makes perfect! Try again?',
-    'Almost there! You\'ll get it next time for sure!',
-    'Don\'t give up! You can do it!',
+    "Almost there! You'll get it next time for sure!",
+    "Don't give up! You can do it!",
   ],
 };
 
@@ -47,9 +47,9 @@ const highRatingMessages = {
     ],
     en: [
       'Great job! You have an amazing memory!',
-      'Wow, almost perfect! You\'re getting better and better!',
+      "Wow, almost perfect! You're getting better and better!",
       'Awesome! Your drawing looks really great!',
-      'Nearly perfect — you\'re a true drawing talent!',
+      "Nearly perfect — you're a true drawing talent!",
       'Incredible how well you remembered that!',
     ],
   },
@@ -64,8 +64,8 @@ const highRatingMessages = {
     en: [
       'Perfect! You are a true memory master!',
       'Incredible! You remembered everything correctly!',
-      'Wow, that\'s amazing! 5 stars well earned!',
-      'Outstanding — you\'re simply unbeatable!',
+      "Wow, that's amazing! 5 stars well earned!",
+      "Outstanding — you're simply unbeatable!",
       'Fantastic! Your memory is super strong!',
     ],
   },

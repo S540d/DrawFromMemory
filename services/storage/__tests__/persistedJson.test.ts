@@ -12,15 +12,18 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 
 const mockStorage = AsyncStorage as jest.Mocked<typeof AsyncStorage>;
 
-interface Foo { n: number }
+interface Foo {
+  n: number;
+}
 const isFoo = (v: unknown): v is Foo =>
   typeof v === 'object' && v !== null && typeof (v as any).n === 'number';
 
-const makeStore = () => createPersistedJson<Foo>({
-  key: '@test:foo',
-  defaultValue: { n: 0 },
-  isValid: isFoo,
-});
+const makeStore = () =>
+  createPersistedJson<Foo>({
+    key: '@test:foo',
+    defaultValue: { n: 0 },
+    isValid: isFoo,
+  });
 
 describe('createPersistedJson', () => {
   beforeEach(() => {

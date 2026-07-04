@@ -34,15 +34,14 @@ const CONFETTI_COLORS = [
   Colors.gradient.teal[0],
 ];
 
-const CONFETTI_LIGHT_COLORS = [
-  '#C8C8E8',
-  '#E8E8F8',
-  '#FFFFFF',
-  '#D4C8FF',
-  '#B8B4E0',
-];
+const CONFETTI_LIGHT_COLORS = ['#C8C8E8', '#E8E8F8', '#FFFFFF', '#D4C8FF', '#B8B4E0'];
 
-export function buildParticles(width: number, height: number, seed = 0, intensity: ConfettiIntensity = 'full'): ConfettiParticle[] {
+export function buildParticles(
+  width: number,
+  height: number,
+  seed = 0,
+  intensity: ConfettiIntensity = 'full',
+): ConfettiParticle[] {
   // simple deterministic PRNG so tests / SSR stay stable
   let s = seed || 1;
   const rand = () => {

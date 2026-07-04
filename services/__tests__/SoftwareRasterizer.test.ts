@@ -21,7 +21,10 @@ describe('SoftwareRasterizer', () => {
   it('draws a horizontal stroke in the correct color', () => {
     const paths: DrawingPath[] = [
       {
-        points: [{ x: 2, y: 10 }, { x: 18, y: 10 }],
+        points: [
+          { x: 2, y: 10 },
+          { x: 18, y: 10 },
+        ],
         color: '#FF0000',
         strokeWidth: 2,
         type: 'stroke',
@@ -32,9 +35,9 @@ describe('SoftwareRasterizer', () => {
 
     // The center of the line (x=10, y=10) should be red
     const idx = (10 * W + 10) * 4;
-    expect(buffer[idx]).toBe(255);     // R
-    expect(buffer[idx + 1]).toBe(0);   // G
-    expect(buffer[idx + 2]).toBe(0);   // B
+    expect(buffer[idx]).toBe(255); // R
+    expect(buffer[idx + 1]).toBe(0); // G
+    expect(buffer[idx + 2]).toBe(0); // B
     expect(buffer[idx + 3]).toBe(255); // A
   });
 
@@ -60,7 +63,10 @@ describe('SoftwareRasterizer', () => {
   it('applies scale and offset correctly', () => {
     const paths: DrawingPath[] = [
       {
-        points: [{ x: 0, y: 0 }, { x: 5, y: 0 }],
+        points: [
+          { x: 0, y: 0 },
+          { x: 5, y: 0 },
+        ],
         color: '#0000FF',
         strokeWidth: 2,
         type: 'stroke',
@@ -72,8 +78,8 @@ describe('SoftwareRasterizer', () => {
 
     // Pixel at (7, 3) should be blue (center of scaled line)
     const idx = (3 * W + 7) * 4;
-    expect(buffer[idx]).toBe(0);       // R
-    expect(buffer[idx + 1]).toBe(0);   // G
+    expect(buffer[idx]).toBe(0); // R
+    expect(buffer[idx + 1]).toBe(0); // G
     expect(buffer[idx + 2]).toBe(255); // B
     expect(buffer[idx + 3]).toBe(255); // A
   });
@@ -100,7 +106,10 @@ describe('SoftwareRasterizer', () => {
   it('does not write outside canvas bounds', () => {
     const paths: DrawingPath[] = [
       {
-        points: [{ x: -5, y: 10 }, { x: 25, y: 10 }],
+        points: [
+          { x: -5, y: 10 },
+          { x: 25, y: 10 },
+        ],
         color: '#FF0000',
         strokeWidth: 4,
         type: 'stroke',

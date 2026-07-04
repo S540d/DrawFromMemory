@@ -37,12 +37,14 @@ DrawFromMemory/
 ## Test Coverage
 
 ### Current Coverage
+
 - **StorageManager**: ~95% (all critical paths)
 - **LevelManager**: 100% (all functions)
 - **i18n Service**: ~85% (language switching)
 - **Platform Utils**: ~95% (platform detection)
 
 ### Coverage Goals
+
 - Services: ≥90%
 - Utils: ≥90%
 - Components: ≥75%
@@ -51,22 +53,26 @@ DrawFromMemory/
 ## Running Tests
 
 ### All Tests
+
 ```bash
 npm test
 ```
 
 ### Specific Test File
+
 ```bash
 npm test -- StorageManager.test.ts
 npm test -- LevelManager
 ```
 
 ### Watch Mode (Auto-rerun on changes)
+
 ```bash
 npm run test:watch
 ```
 
 ### Coverage Report
+
 ```bash
 npm run test:coverage
 ```
@@ -75,6 +81,7 @@ Coverage report will be generated in `coverage/` directory.
 Open `coverage/lcov-report/index.html` in browser for detailed view.
 
 ### CI Mode
+
 ```bash
 npm run test:ci
 ```
@@ -84,6 +91,7 @@ Used in GitHub Actions. Runs once with coverage, no watch mode.
 ## Writing Tests
 
 ### Test File Naming
+
 - Component tests: `ComponentName.test.tsx`
 - Service tests: `ServiceName.test.ts`
 - Util tests: `utilName.test.ts`
@@ -136,6 +144,7 @@ describe('LevelManager', () => {
 ## Mocking
 
 ### AsyncStorage Mock
+
 Already configured in `jest.setup.js`:
 
 ```typescript
@@ -148,6 +157,7 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 ```
 
 ### Skia Canvas Mock
+
 Already configured in `__mocks__/@shopify/react-native-skia.js`.
 
 ### Custom Mocks
@@ -167,6 +177,7 @@ mockFunction.mockRejectedValue(new Error('error'));
 ## Best Practices
 
 ### ✅ DO
+
 - Write descriptive test names
 - Test one thing per test
 - Use AAA pattern (Arrange, Act, Assert)
@@ -176,6 +187,7 @@ mockFunction.mockRejectedValue(new Error('error'));
 - Use `waitFor` instead of hardcoded timeouts
 
 ### ❌ DON'T
+
 - Don't test implementation details
 - Don't hardcode timeouts
 - Don't have tests depend on each other
@@ -198,9 +210,7 @@ it('should handle async operation', async () => {
 
 ```typescript
 it('should handle errors gracefully', async () => {
-  const consoleErrorSpy = jest
-    .spyOn(console, 'error')
-    .mockImplementation();
+  const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
 
   await functionThatLogs();
 
@@ -213,9 +223,7 @@ it('should handle errors gracefully', async () => {
 
 ```typescript
 beforeEach(() => {
-  (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
-    JSON.stringify({ test: 'data' })
-  );
+  (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify({ test: 'data' }));
 });
 
 it('should use mocked data', async () => {
@@ -227,11 +235,13 @@ it('should use mocked data', async () => {
 ## Debugging Tests
 
 ### Run Single Test
+
 ```bash
 npm test -- -t "test name"
 ```
 
 ### Debug in VS Code
+
 Add to `.vscode/launch.json`:
 
 ```json
@@ -247,6 +257,7 @@ Add to `.vscode/launch.json`:
 ```
 
 ### Verbose Output
+
 ```bash
 npm test -- --verbose
 ```
@@ -254,16 +265,19 @@ npm test -- --verbose
 ## Coverage Reports
 
 ### Generate Coverage
+
 ```bash
 npm run test:coverage
 ```
 
 ### View Coverage
+
 - Terminal: Shows coverage summary
 - HTML: `coverage/lcov-report/index.html`
 - VS Code: Use Coverage Gutters extension
 
 ### Coverage Thresholds
+
 Configured in `jest.config.js`:
 
 ```javascript
@@ -280,11 +294,13 @@ coverageThreshold: {
 ## CI/CD Integration
 
 Tests run automatically on:
+
 - Every push to any branch
 - Every pull request
 - Before deployment
 
 ### GitHub Actions Workflow
+
 `.github/workflows/ci-cd.yml`:
 
 ```yaml
@@ -298,18 +314,22 @@ Tests run automatically on:
 ## Troubleshooting
 
 ### Tests Fail with "Cannot find module"
+
 - Run `npm install`
 - Check jest.config.js `moduleNameMapper`
 
 ### AsyncStorage Mock Not Working
+
 - Ensure jest.setup.js is loaded
 - Check `setupFilesAfterEnv` in jest.config.js
 
 ### Skia Canvas Errors
+
 - Check `__mocks__/@shopify/react-native-skia.js` exists
 - Verify `moduleNameMapper` in jest.config.js
 
 ### Flaky Tests
+
 - Remove hardcoded timeouts
 - Use `waitFor` from testing-library
 - Check for race conditions
@@ -318,6 +338,7 @@ Tests run automatically on:
 ## Test Utilities
 
 ### Testing Library Queries
+
 ```typescript
 import { render, screen } from '@testing-library/react-native';
 
@@ -332,6 +353,7 @@ const element = await findByText('Loaded');
 ```
 
 ### User Events
+
 ```typescript
 import { fireEvent } from '@testing-library/react-native';
 
@@ -349,6 +371,7 @@ fireEvent.changeText(input, 'new text');
 ## Support
 
 For questions or issues:
+
 - Check existing tests for examples
 - Review [TESTING_STRATEGY.md](./TESTING_STRATEGY.md)
 - Open an issue on GitHub

@@ -63,16 +63,11 @@ export class ErrorBoundary extends Component<Props, State> {
 
             {typeof __DEV__ !== 'undefined' && __DEV__ && this.state.error && (
               <View style={styles.errorDetails}>
-                <Text style={styles.errorText}>
-                  {this.state.error.toString()}
-                </Text>
+                <Text style={styles.errorText}>{this.state.error.toString()}</Text>
               </View>
             )}
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={this.handleReset}
-            >
+            <TouchableOpacity style={styles.button} onPress={this.handleReset}>
               <Text style={styles.buttonText}>Neu starten</Text>
             </TouchableOpacity>
           </View>

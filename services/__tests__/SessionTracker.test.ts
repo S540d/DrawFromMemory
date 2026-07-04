@@ -42,10 +42,12 @@ describe('SessionTracker', () => {
     const now = Date.now();
     const old = new Date(now - FOUR_WEEKS_MS - 60_000).toISOString();
     const fresh = new Date(now - 5_000).toISOString();
-    mockStorage.getItem.mockResolvedValue(JSON.stringify([
-      { date: old,   durationMs: 10_000, stars: 3, levelId: 1 },
-      { date: fresh, durationMs: 20_000, stars: 5, levelId: 2 },
-    ]));
+    mockStorage.getItem.mockResolvedValue(
+      JSON.stringify([
+        { date: old, durationMs: 10_000, stars: 3, levelId: 1 },
+        { date: fresh, durationMs: 20_000, stars: 5, levelId: 2 },
+      ]),
+    );
     const sessions = await getSessions(now);
     expect(sessions).toHaveLength(1);
     expect(sessions[0].levelId).toBe(2);
@@ -91,7 +93,7 @@ describe('SessionTracker', () => {
         ...Array(1).fill({ date: '2026-05-01T10:00:00.000Z', durationMs: 0, stars: 0, levelId: 4 }),
       ];
       const s = computeStats(records);
-      expect(s.favoriteLevels.map((f) => f.levelId)).toEqual([1, 2, 3]);
+      expect(s.favoriteLevels.map(f => f.levelId)).toEqual([1, 2, 3]);
       expect(s.favoriteLevels[0].count).toBe(5);
     });
 
@@ -100,14 +102,16 @@ describe('SessionTracker', () => {
         { date: '2026-05-02T10:00:00.000Z', durationMs: 60_000, stars: 5, levelId: 1 },
         { date: '2026-05-01T10:00:00.000Z', durationMs: 30_000, stars: 3, levelId: 1 },
       ]);
-      expect(s.dailyBreakdown.map((d) => d.date)).toEqual(['2026-05-01', '2026-05-02']);
+      expect(s.dailyBreakdown.map(d => d.date)).toEqual(['2026-05-01', '2026-05-02']);
     });
   });
 
   it('getSessionStats integrates loading + computing', async () => {
-    mockStorage.getItem.mockResolvedValue(JSON.stringify([
-      { date: new Date().toISOString(), durationMs: 60_000, stars: 5, levelId: 1 },
-    ]));
+    mockStorage.getItem.mockResolvedValue(
+      JSON.stringify([
+        { date: new Date().toISOString(), durationMs: 60_000, stars: 5, levelId: 1 },
+      ]),
+    );
     const s = await getSessionStats();
     expect(s.totalSessions).toBe(1);
     expect(s.averageStars).toBe(5);

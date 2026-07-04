@@ -26,7 +26,8 @@ console.log('🔄 Updating cache versions for DrawFromMemory...');
  * This forces browsers to fetch fresh files instead of using cached versions
  */
 function updateHtmlFiles() {
-  const htmlFiles = fs.readdirSync(distPath)
+  const htmlFiles = fs
+    .readdirSync(distPath)
     .filter(file => file.endsWith('.html'))
     .map(file => path.join(distPath, file));
 
@@ -38,21 +39,18 @@ function updateHtmlFiles() {
 
     // Add cache-busting to all script tags (including Expo bundle)
     const originalScripts = content.match(/src="[^"]+\.js(\?v=[^"]*)?"/g) || [];
-    content = content.replace(
-      /src="([^"]+\.js)(\?v=[^"]*)?"/g,
-      `src="$1?v=${buildTime}"`
-    );
+    content = content.replace(/src="([^"]+\.js)(\?v=[^"]*)?"/g, `src="$1?v=${buildTime}"`);
 
     // Add cache-busting to all link tags (CSS)
     content = content.replace(
       /href="([^"]+\.(css|woff2|ttf))(\?v=[^"]*)?"/g,
-      `href="$1?v=${buildTime}"`
+      `href="$1?v=${buildTime}"`,
     );
 
     // Add cache-busting to image sources
     content = content.replace(
       /src="([^"]+\.(png|jpg|jpeg|svg|webp|gif))(\?v=[^"]*)?"/g,
-      `src="$1?v=${buildTime}"`
+      `src="$1?v=${buildTime}"`,
     );
 
     fs.writeFileSync(filePath, content);
@@ -70,7 +68,7 @@ function createVersionInfo() {
     buildDate: buildDate,
     buildTime: buildTime,
     timestamp: now.toISOString(),
-    commit: process.env.GITHUB_SHA || 'local'
+    commit: process.env.GITHUB_SHA || 'local',
   };
 
   const versionPath = path.join(distPath, 'version.json');
@@ -119,10 +117,7 @@ function addCacheMetaTags() {
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />`;
 
-  content = content.replace(
-    /(<meta charset=[^>]+>)/,
-    `$1\n    ${metaTags}`
-  );
+  content = content.replace(/(<meta charset=[^>]+>)/, `$1\n    ${metaTags}`);
 
   fs.writeFileSync(indexPath, content);
   console.log('✅ Cache-control meta tags added to index.html');
@@ -141,7 +136,6 @@ try {
   console.log(`📦 Version: ${versionInfo.version}`);
   console.log(`\n💡 All static assets now have unique cache-busting parameters`);
   console.log(`   Users will receive fresh content on next visit!`);
-
 } catch (error) {
   console.error('❌ Cache update failed:', error.message);
   process.exit(1);

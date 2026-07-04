@@ -11,19 +11,14 @@
 const fs = require('fs');
 const path = require('path');
 
-const TARGET_FILE = path.resolve(
-  __dirname,
-  '../components/LevelImageDisplay.tsx'
-);
+const TARGET_FILE = path.resolve(__dirname, '../components/LevelImageDisplay.tsx');
 
 // SVG primitive elements counted as individual drawable steps
 const SVG_PRIMITIVES = ['Circle', 'Ellipse', 'Rect', 'Line', 'Path', 'Polygon'];
 
 function extractImageElementCounts(source) {
   const counts = {};
-  const mapMatch = source.match(
-    /const IMAGE_ELEMENT_COUNTS[^=]*=\s*\{([^}]+)\}/
-  );
+  const mapMatch = source.match(/const IMAGE_ELEMENT_COUNTS[^=]*=\s*\{([^}]+)\}/);
   if (!mapMatch) {
     throw new Error('Could not find IMAGE_ELEMENT_COUNTS map in source');
   }
@@ -94,12 +89,14 @@ function validate() {
   // Check every declared entry matches actual count
   for (const [filename, declaredCount] of Object.entries(declared)) {
     if (!(filename in actual)) {
-      failures.push(`  MISSING case: '${filename}' is in IMAGE_ELEMENT_COUNTS but has no case in renderSvgForImage`);
+      failures.push(
+        `  MISSING case: '${filename}' is in IMAGE_ELEMENT_COUNTS but has no case in renderSvgForImage`,
+      );
       continue;
     }
     if (actual[filename] !== declaredCount) {
       failures.push(
-        `  MISMATCH '${filename}': IMAGE_ELEMENT_COUNTS=${declaredCount}, actual elements=${actual[filename]}`
+        `  MISMATCH '${filename}': IMAGE_ELEMENT_COUNTS=${declaredCount}, actual elements=${actual[filename]}`,
       );
     }
   }
@@ -107,7 +104,9 @@ function validate() {
   // Check every case has a declared entry
   for (const filename of Object.keys(actual)) {
     if (!(filename in declared)) {
-      failures.push(`  UNDECLARED case: '${filename}' has a case but is missing from IMAGE_ELEMENT_COUNTS`);
+      failures.push(
+        `  UNDECLARED case: '${filename}' has a case but is missing from IMAGE_ELEMENT_COUNTS`,
+      );
     }
   }
 

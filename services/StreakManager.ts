@@ -68,7 +68,9 @@ export async function updateStreakAfterGame(date: Date = new Date()): Promise<vo
     let newStreak: number;
 
     if (state.lastPlayedDate !== null) {
-      const yesterday = getLocalDateKey(new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1));
+      const yesterday = getLocalDateKey(
+        new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1),
+      );
       if (state.lastPlayedDate === yesterday) {
         // Gestern gespielt → Streak verlängern
         newStreak = state.currentStreak + 1;

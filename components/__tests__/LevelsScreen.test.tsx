@@ -28,7 +28,8 @@ jest.mock('react-native-reanimated', () => {
 
 jest.mock('../../services/i18n', () => ({
   useTranslation: () => ({
-    t: (key: string, opts?: any) => (opts?.number !== null && opts?.number !== undefined ? `Level ${opts.number}` : key),
+    t: (key: string, opts?: any) =>
+      opts?.number !== null && opts?.number !== undefined ? `Level ${opts.number}` : key,
   }),
 }));
 
@@ -130,9 +131,7 @@ describe('LevelsScreen', () => {
     storageManager.getLevelRating.mockResolvedValue(null);
     const { UNSAFE_getAllByProps } = render(<LevelsScreen />);
     await act(async () => {});
-    const containers = [1, 2, 3].map(n =>
-      getStarNodes(UNSAFE_getAllByProps, `stars-level-${n}`)
-    );
+    const containers = [1, 2, 3].map(n => getStarNodes(UNSAFE_getAllByProps, `stars-level-${n}`));
     expect(containers.every(c => c.length === 1)).toBe(true);
   });
 
@@ -144,6 +143,6 @@ describe('LevelsScreen', () => {
     const filledStars = getStarNodes(UNSAFE_getAllByProps, 'star-filled');
     const emptyStars = getStarNodes(UNSAFE_getAllByProps, 'star-empty');
     expect(filledStars.length).toBe(6); // 3 levels × 2 stars
-    expect(emptyStars.length).toBe(3);  // 3 levels × 1 star
+    expect(emptyStars.length).toBe(3); // 3 levels × 1 star
   });
 });

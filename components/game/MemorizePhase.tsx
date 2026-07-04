@@ -25,13 +25,24 @@ export default function MemorizePhase({
 
   return (
     <View style={styles.phaseContainer}>
-      <Text style={[styles.phaseTitle, { color: colors.text.primary }]}>{t('game.memorize.title')}</Text>
+      <Text style={[styles.phaseTitle, { color: colors.text.primary }]}>
+        {t('game.memorize.title')}
+      </Text>
 
       <TimerArc timeRemaining={timeRemaining} totalTime={totalTime} />
 
       <View style={styles.imageContainer}>
         {currentImage && (
-          <View style={[styles.imagePlaceholder, { minWidth: imagePlaceholderMinSize, minHeight: imagePlaceholderMinSize, backgroundColor: colors.surface }]}>
+          <View
+            style={[
+              styles.imagePlaceholder,
+              {
+                minWidth: imagePlaceholderMinSize,
+                minHeight: imagePlaceholderMinSize,
+                backgroundColor: colors.surface,
+              },
+            ]}
+          >
             <ErrorBoundary>
               <LevelImageDisplay
                 image={currentImage}
@@ -45,7 +56,10 @@ export default function MemorizePhase({
               {currentLang === 'en' ? currentImage.displayNameEn : currentImage.displayName}
             </Text>
             <Text style={[styles.imageInfo, { color: colors.text.secondary }]}>
-              {t('game.memorize.imageInfo', { level: levelNumber, strokeCount: currentImage.strokeCount })}
+              {t('game.memorize.imageInfo', {
+                level: levelNumber,
+                strokeCount: currentImage.strokeCount,
+              })}
             </Text>
           </View>
         )}

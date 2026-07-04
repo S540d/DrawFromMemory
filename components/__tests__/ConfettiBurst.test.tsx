@@ -13,7 +13,7 @@ describe('ConfettiBurst.shared', () => {
 
   it('keeps particles roughly inside the canvas X range', () => {
     const particles = buildParticles(400, 800, 7);
-    particles.forEach((p) => {
+    particles.forEach(p => {
       expect(p.x).toBeGreaterThanOrEqual(0);
       expect(p.x).toBeLessThanOrEqual(400);
     });
@@ -28,7 +28,7 @@ describe('ConfettiBurst.shared', () => {
 
   it('produces particles that fall from above into the canvas', () => {
     const particles = buildParticles(300, 600, 5);
-    particles.forEach((p) => {
+    particles.forEach(p => {
       expect(p.startY).toBeLessThan(0);
       expect(p.endY).toBeGreaterThan(600);
     });
