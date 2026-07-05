@@ -50,7 +50,9 @@ export default function ParentDashboard({ visible, onClose }: Props) {
         });
         setStreak({ currentStreak: 0, longestStreak: 0, lastPlayedDate: null });
       });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [visible]);
 
   const cardBg = colors.surface ?? Colors.surface;
@@ -125,10 +127,13 @@ export default function ParentDashboard({ visible, onClose }: Props) {
                     <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>
                       {t('parentDashboard.favoriteLevels')}
                     </Text>
-                    {stats.favoriteLevels.map((f) => (
+                    {stats.favoriteLevels.map(f => (
                       <View key={f.levelId} style={styles.listRow}>
                         <Text style={[styles.listText, { color: colors.text.primary }]}>
-                          {t('parentDashboard.levelLine', { level: String(f.levelId), count: String(f.count) })}
+                          {t('parentDashboard.levelLine', {
+                            level: String(f.levelId),
+                            count: String(f.count),
+                          })}
                         </Text>
                       </View>
                     ))}
@@ -140,16 +145,20 @@ export default function ParentDashboard({ visible, onClose }: Props) {
                     <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>
                       {t('parentDashboard.dailyBreakdown')}
                     </Text>
-                    {stats.dailyBreakdown.slice(-14).reverse().map((d) => (
-                      <View key={d.date} style={styles.listRow}>
-                        <Text style={[styles.listText, { color: colors.text.primary }]}>
-                          {d.date}
-                        </Text>
-                        <Text style={[styles.listSub, { color: colors.text.secondary }]}>
-                          {d.sessions}× · {formatDuration(d.totalDurationMs)} · {d.avgStars.toFixed(1)}★
-                        </Text>
-                      </View>
-                    ))}
+                    {stats.dailyBreakdown
+                      .slice(-14)
+                      .reverse()
+                      .map(d => (
+                        <View key={d.date} style={styles.listRow}>
+                          <Text style={[styles.listText, { color: colors.text.primary }]}>
+                            {d.date}
+                          </Text>
+                          <Text style={[styles.listSub, { color: colors.text.secondary }]}>
+                            {d.sessions}× · {formatDuration(d.totalDurationMs)} ·{' '}
+                            {d.avgStars.toFixed(1)}★
+                          </Text>
+                        </View>
+                      ))}
                   </View>
                 )}
               </>

@@ -24,24 +24,35 @@ export default function DrawPhase({
 
   const levelName = currentLang === 'en' ? currentImage?.displayNameEn : currentImage?.displayName;
 
-  const dynCanvasContainer = useMemo(() => ({
-    maxHeight: layout.canvasMaxHeight,
-    minHeight: layout.canvasMinHeight,
-    marginVertical: layout.canvasMarginVertical,
-  }), [layout.canvasMaxHeight, layout.canvasMinHeight, layout.canvasMarginVertical]);
+  const dynCanvasContainer = useMemo(
+    () => ({
+      maxHeight: layout.canvasMaxHeight,
+      minHeight: layout.canvasMinHeight,
+      marginVertical: layout.canvasMarginVertical,
+    }),
+    [layout.canvasMaxHeight, layout.canvasMinHeight, layout.canvasMarginVertical],
+  );
 
-  const dynToolbar = useMemo(() => ({
-    marginVertical: layout.toolbarMarginVertical,
-  }), [layout.toolbarMarginVertical]);
+  const dynToolbar = useMemo(
+    () => ({
+      marginVertical: layout.toolbarMarginVertical,
+    }),
+    [layout.toolbarMarginVertical],
+  );
 
   return (
     <View style={styles.phaseContainer}>
       {/* Info-Streifen: Aufgabe + Hint-Joker */}
-      <View style={[styles.infoStrip, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+      <View
+        style={[styles.infoStrip, { backgroundColor: colors.surface, borderColor: colors.border }]}
+      >
         <View style={styles.infoStripCenter}>
-          <Text style={[styles.infoStripLabel, { color: colors.text.secondary }]}>{t('game.draw.referenceLabel')}</Text>
+          <Text style={[styles.infoStripLabel, { color: colors.text.secondary }]}>
+            {t('game.draw.referenceLabel')}
+          </Text>
           <Text style={[styles.infoStripText, { color: colors.text.primary }]} numberOfLines={2}>
-            {t('game.draw.drawFromMemory')}{levelName ? ` — ${levelName}` : ''}
+            {t('game.draw.drawFromMemory')}
+            {levelName ? ` — ${levelName}` : ''}
           </Text>
         </View>
         <TouchableOpacity
@@ -56,7 +67,9 @@ export default function DrawPhase({
           accessibilityLabel={hasUsedHint ? t('game.draw.hintUsed') : t('game.draw.hintButton')}
           accessibilityRole="button"
         >
-          <Text style={[styles.hintButtonIcon, hasUsedHint && styles.hintButtonIconUsed]}>{hasUsedHint ? '👁' : t('game.draw.hintButton')}</Text>
+          <Text style={[styles.hintButtonIcon, hasUsedHint && styles.hintButtonIconUsed]}>
+            {hasUsedHint ? '👁' : t('game.draw.hintButton')}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -79,7 +92,7 @@ export default function DrawPhase({
         {/* Reihe 1: Inline-Farbreihe */}
         <FlatList
           data={DrawingColors}
-          keyExtractor={(item) => item.hex}
+          keyExtractor={item => item.hex}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.colorRowContent}
@@ -95,9 +108,7 @@ export default function DrawPhase({
               accessibilityRole="button"
             >
               <View style={[styles.inlineColorSwatchInner, { backgroundColor: item.hex }]} />
-              {drawing.color === item.hex && (
-                <Text style={styles.inlineColorCheckmark}>✓</Text>
-              )}
+              {drawing.color === item.hex && <Text style={styles.inlineColorCheckmark}>✓</Text>}
             </TouchableOpacity>
           )}
         />
@@ -107,7 +118,11 @@ export default function DrawPhase({
         {/* Reihe 2: Pen/Fill + Strichstärken */}
         <View style={styles.toolRow}>
           <TouchableOpacity
-            style={[styles.toolToggleButton, { backgroundColor: colors.surface, borderColor: colors.border }, drawing.tool === 'brush' && styles.toolToggleButtonActive]}
+            style={[
+              styles.toolToggleButton,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+              drawing.tool === 'brush' && styles.toolToggleButtonActive,
+            ]}
             onPress={() => drawing.setTool('brush')}
             accessibilityLabel={t('game.draw.toolBrush')}
             accessibilityRole="button"
@@ -115,7 +130,11 @@ export default function DrawPhase({
             <Text style={styles.toolToggleIcon}>✏️</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.toolToggleButton, { backgroundColor: colors.surface, borderColor: colors.border }, drawing.tool === 'fill' && styles.toolToggleButtonActive]}
+            style={[
+              styles.toolToggleButton,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+              drawing.tool === 'fill' && styles.toolToggleButtonActive,
+            ]}
             onPress={() => drawing.setTool('fill')}
             accessibilityLabel={t('game.draw.toolFill')}
             accessibilityRole="button"
@@ -125,28 +144,33 @@ export default function DrawPhase({
 
           <View style={[styles.toolRowSeparator, { backgroundColor: colors.border }]} />
 
-          {([2, 3, 5] as const).map((size) => (
+          {([2, 3, 5] as const).map(size => (
             <TouchableOpacity
               key={size}
               style={[
                 styles.strokeCircleButton,
                 drawing.tool === 'fill' && styles.strokeCircleDisabled,
               ]}
-              onPress={() => { if (drawing.tool !== 'fill') drawing.setStrokeWidth(size); }}
+              onPress={() => {
+                if (drawing.tool !== 'fill') drawing.setStrokeWidth(size);
+              }}
               disabled={drawing.tool === 'fill'}
               accessibilityLabel={`${t('game.draw.strokeWidth')} ${size}`}
               accessibilityRole="button"
             >
-              <View style={[
-                styles.strokeCircle,
-                {
-                  width: size === 2 ? 10 : size === 3 ? 16 : 22,
-                  height: size === 2 ? 10 : size === 3 ? 16 : 22,
-                  backgroundColor: drawing.strokeWidth === size && drawing.tool !== 'fill'
-                    ? drawing.color
-                    : colors.text.secondary,
-                },
-              ]} />
+              <View
+                style={[
+                  styles.strokeCircle,
+                  {
+                    width: size === 2 ? 10 : size === 3 ? 16 : 22,
+                    height: size === 2 ? 10 : size === 3 ? 16 : 22,
+                    backgroundColor:
+                      drawing.strokeWidth === size && drawing.tool !== 'fill'
+                        ? drawing.color
+                        : colors.text.secondary,
+                  },
+                ]}
+              />
             </TouchableOpacity>
           ))}
         </View>
@@ -155,7 +179,10 @@ export default function DrawPhase({
       {/* Buttons */}
       <View style={styles.buttonRow}>
         <TouchableOpacity
-          style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: Colors.primary }]}
+          style={[
+            styles.secondaryButton,
+            { backgroundColor: colors.surface, borderColor: Colors.primary },
+          ]}
           onPress={drawing.undo}
           disabled={drawing.paths.length === 0}
           accessibilityLabel={t('game.draw.undo')}
@@ -166,27 +193,36 @@ export default function DrawPhase({
             numberOfLines={1}
             adjustsFontSizeToFit
             minimumFontScale={0.7}
-          >{t('game.draw.undo')}</Text>
+          >
+            {t('game.draw.undo')}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: Colors.primary }, drawing.paths.length === 0 && styles.buttonDisabled]}
+          style={[
+            styles.secondaryButton,
+            { backgroundColor: colors.surface, borderColor: Colors.primary },
+            drawing.paths.length === 0 && styles.buttonDisabled,
+          ]}
           accessibilityLabel={t('game.draw.clear')}
           accessibilityRole="button"
           onPress={() => {
             if (Platform.OS === 'web') {
-              if (drawing.paths.length > 0 && window.confirm(t('game.draw.clearConfirm'))) { // platform-safe
+              if (drawing.paths.length > 0 && window.confirm(t('game.draw.clearConfirm'))) {
+                // platform-safe
                 drawing.setPaths([]);
               }
             } else {
               if (drawing.paths.length === 0) return;
-              Alert.alert(
-                t('game.draw.clear'),
-                t('game.draw.clearConfirm'),
-                [
-                  { text: t('common.cancel'), style: 'cancel' },
-                  { text: t('common.yes'), style: 'destructive', onPress: () => { drawing.setPaths([]); } },
-                ]
-              );
+              Alert.alert(t('game.draw.clear'), t('game.draw.clearConfirm'), [
+                { text: t('common.cancel'), style: 'cancel' },
+                {
+                  text: t('common.yes'),
+                  style: 'destructive',
+                  onPress: () => {
+                    drawing.setPaths([]);
+                  },
+                },
+              ]);
             }
           }}
           disabled={drawing.paths.length === 0}
@@ -196,18 +232,19 @@ export default function DrawPhase({
             numberOfLines={1}
             adjustsFontSizeToFit
             minimumFontScale={0.7}
-          >{t('game.draw.clear')}</Text>
+          >
+            {t('game.draw.clear')}
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.primaryButton}
-          onPress={onDone}
-        >
+        <TouchableOpacity style={styles.primaryButton} onPress={onDone}>
           <Text
             style={[styles.primaryButtonText, layout.isSmall && styles.buttonTextSmall]}
             numberOfLines={1}
             adjustsFontSizeToFit
             minimumFontScale={0.7}
-          >{t('game.draw.done')}</Text>
+          >
+            {t('game.draw.done')}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -69,6 +69,7 @@ assignees: ''
 ### Empfohlene Tools
 
 1. **Expo/React Native**
+
    ```bash
    # Device mit Expo Go öffnen
    expo start
@@ -76,6 +77,7 @@ assignees: ''
    ```
 
 2. **Android Emulator**
+
    ```bash
    # Emulator starten
    npm run android
@@ -90,6 +92,7 @@ assignees: ''
 ### Screenshot Guidelines
 
 **Best Practices:**
+
 - Zeige die App in Aktion
 - Verwende echte App-Screenshots (keine Mockups)
 - Zeige verschiedene Features
@@ -98,6 +101,7 @@ assignees: ''
 - Screenshots sollten selbsterklärend sein
 
 **Was zeigen:**
+
 1. Hauptfeature (Drawing Canvas)
 2. Level-Auswahl
 3. Erfolgs-Screen
@@ -106,12 +110,14 @@ assignees: ''
 ## Icon Design Guidelines
 
 ### App Icon
+
 - **Wiedererkennbar:** Sollte auch in kleiner Größe gut erkennbar sein
 - **Einfach:** Nicht zu viele Details
 - **Farbschema:** Sollte zur App passen (#60D5FA Primary Color)
 - **Einzigartig:** Von anderen Apps unterscheidbar
 
 ### Feature Graphic
+
 - **App Name** deutlich sichtbar
 - **Tagline:** "Gedächtnistraining für Kinder"
 - **Visual:** App Icon oder Character
@@ -121,6 +127,7 @@ assignees: ''
 ## Asset Export Checklist
 
 Vor dem Export sicherstellen:
+
 - [ ] Richtige Größen verwendet
 - [ ] Richtige Formate (PNG-24 für Transparenz)
 - [ ] Komprimierung angewendet (aber Qualität erhalten)

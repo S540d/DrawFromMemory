@@ -19,12 +19,15 @@ jest.mock('../../services/DailyChallengeManager', () => ({
 }));
 
 jest.mock('../../services/StreakManager', () => ({
-  getStreakData: () => Promise.resolve({ currentStreak: 0, longestStreak: 0, lastPlayedDate: null }),
+  getStreakData: () =>
+    Promise.resolve({ currentStreak: 0, longestStreak: 0, lastPlayedDate: null }),
 }));
 
 jest.mock('../../components/QuickStatsCards', () => {
   const { View } = require('react-native');
-  return function QuickStatsCards() { return <View />; };
+  return function QuickStatsCards() {
+    return <View />;
+  };
 });
 
 jest.mock('react-native-safe-area-context', () => ({
@@ -40,7 +43,9 @@ jest.mock('expo-linear-gradient', () => {
 
 jest.mock('../../components/SettingsModal', () => {
   const { View } = require('react-native');
-  return function SettingsModal() { return <View />; };
+  return function SettingsModal() {
+    return <View />;
+  };
 });
 
 jest.mock('../../components/FloatingStars', () => {
@@ -83,7 +88,9 @@ import HomeScreen from '../../app/index';
 
 const getAllTexts = (getAllByType: (type: any) => any[]) => {
   const { Text } = require('react-native');
-  return getAllByType(Text).map((n: any) => n.props.children).flat();
+  return getAllByType(Text)
+    .map((n: any) => n.props.children)
+    .flat();
 };
 
 describe('HomeScreen', () => {

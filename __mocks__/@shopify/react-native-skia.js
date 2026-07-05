@@ -43,7 +43,7 @@ module.exports = {
       setAntiAlias: jest.fn(),
       setAlphaf: jest.fn(),
     })),
-    Color: jest.fn((c) => c),
+    Color: jest.fn(c => c),
     XYWHRect: jest.fn((x, y, w, h) => ({ x, y, width: w, height: h })),
     Surface: {
       Make: jest.fn(() => mockSurface),

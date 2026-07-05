@@ -91,7 +91,7 @@ describe('SentryService – native platform, with DSN (active)', () => {
       expect.objectContaining({
         dsn: 'https://test@sentry.io/123',
         tracesSampleRate: 0.2,
-      })
+      }),
     );
   });
 
@@ -106,7 +106,7 @@ describe('SentryService – native platform, with DSN (active)', () => {
   it('captureException sets context tags on scope', () => {
     const mockSetTag = jest.fn();
     mockWithScope.mockImplementationOnce((cb: (scope: { setTag: jest.Mock }) => void) =>
-      cb({ setTag: mockSetTag })
+      cb({ setTag: mockSetTag }),
     );
     const { captureException } = require('../SentryService');
     captureException(new Error('crash'), { platform: 'android', version: '1.2.1' });
@@ -121,10 +121,7 @@ describe('SentryService – native platform, with DSN (active)', () => {
     });
     const { initSentry } = require('../SentryService');
     expect(() => initSentry()).not.toThrow();
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Failed to initialize Sentry:',
-      expect.any(Error)
-    );
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to initialize Sentry:', expect.any(Error));
     consoleErrorSpy.mockRestore();
   });
 });

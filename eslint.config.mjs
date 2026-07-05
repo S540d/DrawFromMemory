@@ -24,17 +24,10 @@ export default [
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'warn',
       'no-var': 'error',
-      'eqeqeq': ['error', 'always'],
+      eqeqeq: ['error', 'always'],
     },
   },
   {
-    ignores: [
-      'node_modules/**',
-      'dist/**',
-      '.expo/**',
-      'build/**',
-      '*.config.js',
-      '*.config.mjs',
-    ],
+    ignores: ['node_modules/**', 'dist/**', '.expo/**', 'build/**', '*.config.js', '*.config.mjs'],
   },
 ];

@@ -108,7 +108,12 @@ export interface GalleryEntry {
   levelNumber: number;
   imageFilename: string;
   imageName: string;
-  paths: { points: { x: number; y: number }[]; color: string; strokeWidth: number; type?: 'stroke' | 'fill' }[];
+  paths: {
+    points: { x: number; y: number }[];
+    color: string;
+    strokeWidth: number;
+    type?: 'stroke' | 'fill';
+  }[];
   rating: number;
   savedAt: string; // ISO timestamp
   isDailyChallenge?: boolean;
@@ -137,10 +142,7 @@ class StorageManager {
   /**
    * Speichert Fortschritt für ein Level
    */
-  async saveLevelProgress(
-    levelNumber: number,
-    rating: number
-  ): Promise<void> {
+  async saveLevelProgress(levelNumber: number, rating: number): Promise<void> {
     try {
       const progress = await this.getProgress();
 
@@ -164,8 +166,7 @@ class StorageManager {
 
       // Calculate average rating
       const ratings = Object.values(progress.levels).map(l => l.bestRating);
-      progress.averageRating =
-        ratings.reduce((a, b) => a + b, 0) / ratings.length;
+      progress.averageRating = ratings.reduce((a, b) => a + b, 0) / ratings.length;
 
       await safeStorageOps.setItem(KEYS.PROGRESS, JSON.stringify(progress));
     } catch (error) {
@@ -185,7 +186,10 @@ class StorageManager {
         } catch (parseError) {
           // Invalid JSON — return defaults but KEEP the raw data so a later
           // version or manual recovery can still access it. Don't wipe.
-          console.error('Failed to parse progress data, using defaults (raw data kept):', parseError);
+          console.error(
+            'Failed to parse progress data, using defaults (raw data kept):',
+            parseError,
+          );
         }
       }
     } catch (error) {
@@ -236,21 +240,12 @@ class StorageManager {
       const updated = { ...current, ...settings };
       await safeStorageOps.setItem(KEYS.THEME, updated.theme);
       await safeStorageOps.setItem(KEYS.LANGUAGE, updated.language);
-      await safeStorageOps.setItem(
-        KEYS.SOUND_ENABLED,
-        JSON.stringify(updated.soundEnabled)
-      );
-      await safeStorageOps.setItem(
-        KEYS.MUSIC_ENABLED,
-        JSON.stringify(updated.musicEnabled)
-      );
-      await safeStorageOps.setItem(
-        KEYS.EXTRA_TIME_MODE,
-        JSON.stringify(updated.extraTimeMode)
-      );
+      await safeStorageOps.setItem(KEYS.SOUND_ENABLED, JSON.stringify(updated.soundEnabled));
+      await safeStorageOps.setItem(KEYS.MUSIC_ENABLED, JSON.stringify(updated.musicEnabled));
+      await safeStorageOps.setItem(KEYS.EXTRA_TIME_MODE, JSON.stringify(updated.extraTimeMode));
       await safeStorageOps.setItem(
         KEYS.CELEBRATION_ENABLED,
-        JSON.stringify(updated.celebrationEnabled)
+        JSON.stringify(updated.celebrationEnabled),
       );
     } catch (error) {
       console.error('Error saving settings:', error);
@@ -307,19 +302,14 @@ class StorageManager {
   /**
    * Speichert einzelne Einstellung
    */
-  async setSetting<K extends keyof AppSettings>(
-    key: K,
-    value: AppSettings[K]
-  ): Promise<void> {
+  async setSetting<K extends keyof AppSettings>(key: K, value: AppSettings[K]): Promise<void> {
     await this.saveSettings({ [key]: value });
   }
 
   /**
    * Lädt einzelne Einstellung
    */
-  async getSetting<K extends keyof AppSettings>(
-    key: K
-  ): Promise<AppSettings[K]> {
+  async getSetting<K extends keyof AppSettings>(key: K): Promise<AppSettings[K]> {
     const settings = await this.getSettings();
     return settings[key];
   }
@@ -365,7 +355,10 @@ class StorageManager {
         } catch (parseError) {
           // Invalid JSON — return empty but KEEP the raw data so a later
           // version or manual recovery can still access it. Don't wipe.
-          console.error('Failed to parse gallery data, using empty list (raw data kept):', parseError);
+          console.error(
+            'Failed to parse gallery data, using empty list (raw data kept):',
+            parseError,
+          );
         }
       }
     } catch (error) {

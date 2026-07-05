@@ -48,9 +48,7 @@ export function getSystemDarkModePreference(): boolean {
  * @param callback - Wird aufgerufen wenn sich das Theme ändert
  * @returns Cleanup-Funktion
  */
-export function addSystemThemeChangeListener(
-  callback: (isDark: boolean) => void
-): () => void {
+export function addSystemThemeChangeListener(callback: (isDark: boolean) => void): () => void {
   if (!supportsMatchMedia()) {
     // Noop für Mobile - könnte Appearance.addChangeListener verwenden
     return () => {};
@@ -111,7 +109,7 @@ export function assertWebAPI(apiName: string): void {
   if (!isWeb) {
     throw new Error(
       `Web API "${apiName}" is not available on ${Platform.OS}. ` +
-      `Use Platform-specific code or polyfills.`
+        `Use Platform-specific code or polyfills.`,
     );
   }
 }
@@ -119,11 +117,7 @@ export function assertWebAPI(apiName: string): void {
 /**
  * Sichere Web API Calls mit Fallback
  */
-export function safeWebAPI<T>(
-  callback: () => T,
-  fallback: T,
-  apiName?: string
-): T {
+export function safeWebAPI<T>(callback: () => T, fallback: T, apiName?: string): T {
   if (!isWeb) {
     if (apiName && __DEV__) {
       console.warn(`Web API "${apiName}" not available on ${Platform.OS}, using fallback`);

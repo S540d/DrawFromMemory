@@ -41,7 +41,14 @@ export default function DrawingCanvas({
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
     const imageData = ctx.getImageData(0, 0, width, height);
-    const changed = floodFillPixels(imageData.data, width, height, startX, startY, hexToRgb(fillColor));
+    const changed = floodFillPixels(
+      imageData.data,
+      width,
+      height,
+      startX,
+      startY,
+      hexToRgb(fillColor),
+    );
     if (changed) ctx.putImageData(imageData, 0, 0);
   };
 
@@ -55,9 +62,14 @@ export default function DrawingCanvas({
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, width, height);
 
-    let scale = 1, offsetX = 0, offsetY = 0;
+    let scale = 1,
+      offsetX = 0,
+      offsetY = 0;
     if (!onDrawingChange && paths.length > 0) {
-      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      let minX = Infinity,
+        minY = Infinity,
+        maxX = -Infinity,
+        maxY = -Infinity;
       paths.forEach(path => {
         if (path.type === 'fill') return;
         path.points.forEach(point => {
@@ -84,14 +96,21 @@ export default function DrawingCanvas({
       }
     }
 
-    paths.forEach((path) => {
+    paths.forEach(path => {
       if (path.type === 'fill' && path.points.length > 0) {
         const point = {
           x: path.points[0].x * scale + offsetX,
           y: path.points[0].y * scale + offsetY,
         };
         const imageData = ctx.getImageData(0, 0, width, height);
-        const changed = floodFillPixels(imageData.data, width, height, point.x, point.y, hexToRgb(path.color));
+        const changed = floodFillPixels(
+          imageData.data,
+          width,
+          height,
+          point.x,
+          point.y,
+          hexToRgb(path.color),
+        );
         if (changed) ctx.putImageData(imageData, 0, 0);
       } else if (path.points.length >= 2) {
         ctx.strokeStyle = path.color;
@@ -142,13 +161,18 @@ export default function DrawingCanvas({
     return { x: clientX - rect.left, y: clientY - rect.top };
   };
 
-  const handleStart = (event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const handleStart = (
+    event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>,
+  ) => {
     if (!onDrawingChange) return;
     const pos = getPosition(event);
 
     if (tool === 'fill') {
       floodFill(pos.x, pos.y, strokeColor);
-      onDrawingChange([...paths, { points: [pos], color: strokeColor, strokeWidth: 0, type: 'fill' }]);
+      onDrawingChange([
+        ...paths,
+        { points: [pos], color: strokeColor, strokeWidth: 0, type: 'fill' },
+      ]);
     } else {
       const initial = [pos];
       currentPathRef.current = initial;
@@ -157,7 +181,9 @@ export default function DrawingCanvas({
     }
   };
 
-  const handleMove = (event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const handleMove = (
+    event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>,
+  ) => {
     if (!onDrawingChange || !isDrawingRef.current || tool === 'fill') return;
     const pos = getPosition(event);
     const next = [...currentPathRef.current, pos];
@@ -175,7 +201,15 @@ export default function DrawingCanvas({
     }
 
     if (isDrawingRef.current && currentPathRef.current.length > 1) {
-      const newPaths = [...paths, { points: currentPathRef.current, color: strokeColor, strokeWidth, type: 'stroke' as const }];
+      const newPaths = [
+        ...paths,
+        {
+          points: currentPathRef.current,
+          color: strokeColor,
+          strokeWidth,
+          type: 'stroke' as const,
+        },
+      ];
       currentPathRef.current = [];
       isDrawingRef.current = false;
       setCurrentPath([]);
@@ -203,8 +237,14 @@ export default function DrawingCanvas({
         onMouseMove={handleMove}
         onMouseUp={handleEnd}
         onMouseLeave={handleEnd}
-        onTouchStart={(e) => { e.preventDefault(); handleStart(e); }}
-        onTouchMove={(e) => { e.preventDefault(); handleMove(e); }}
+        onTouchStart={e => {
+          e.preventDefault();
+          handleStart(e);
+        }}
+        onTouchMove={e => {
+          e.preventDefault();
+          handleMove(e);
+        }}
         onTouchEnd={handleEnd}
       />
     </View>

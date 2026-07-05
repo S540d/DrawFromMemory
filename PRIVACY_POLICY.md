@@ -9,9 +9,11 @@ Welcome to Merke und Male ("we", "our", "us"). This Privacy Policy explains how 
 ## Information We Collect
 
 ### Data Storage
+
 Merke und Male is designed with privacy in mind. All game data is stored locally on your device using AsyncStorage. We do not collect, transmit, or store any personal information on external servers.
 
 The following data is stored locally on your device:
+
 - Game progress (completed levels)
 - Settings preferences (language, theme)
 - Game sessions (date, duration, stars, level) — used by the Parent Dashboard, auto-deleted after 28 days
@@ -22,6 +24,7 @@ The following data is stored locally on your device:
 ## Data We DO NOT Collect
 
 We do not collect:
+
 - Personal information (name, email, phone number)
 - Location data
 - Device identifiers
@@ -45,6 +48,7 @@ Merke und Male is suitable for children. Since we do not collect any personal in
 ## Data Security
 
 All data remains on your device and is subject to your device's security measures. We recommend:
+
 - Using device lock screen protection
 - Keeping your device software up to date
 - Using secure device settings
@@ -52,6 +56,7 @@ All data remains on your device and is subject to your device's security measure
 ## Data Retention and Deletion
 
 Since all data is stored locally on your device:
+
 - Data persists until you uninstall the App
 - You can reset game progress through the App settings
 - Uninstalling the App removes all stored data
@@ -59,6 +64,7 @@ Since all data is stored locally on your device:
 ## Your Rights
 
 You have full control over your data:
+
 - Access: All data is stored locally and accessible through the App
 - Deletion: Uninstall the App to remove all data
 - Portability: Data is stored in standard formats on your device
@@ -66,6 +72,7 @@ You have full control over your data:
 ## Changes to This Privacy Policy
 
 We may update this Privacy Policy from time to time. We will notify you of any changes by:
+
 - Posting the new Privacy Policy in the App
 - Updating the "Effective Date" at the top of this policy
 
@@ -77,12 +84,14 @@ https://github.com/S540d/DrawFromMemory
 ## Contact Us
 
 If you have any questions about this Privacy Policy, please contact us:
+
 - GitHub Issues: https://github.com/S540d/DrawFromMemory/issues
 - Repository: https://github.com/S540d/DrawFromMemory
 
 ## Legal Compliance
 
 This App complies with:
+
 - GDPR (General Data Protection Regulation)
 - COPPA (Children's Online Privacy Protection Act)
 - Google Play Store data safety requirements

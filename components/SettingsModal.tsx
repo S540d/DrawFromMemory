@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, Linking, Share, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  Alert,
+  Linking,
+  Share,
+  ScrollView,
+} from 'react-native';
 import Constants from 'expo-constants';
 import { useTranslation, getLanguage, setLanguage, type Language } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
@@ -52,28 +62,21 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   };
 
   const handleResetProgress = () => {
-    Alert.alert(
-      t('settings.resetProgress'),
-      t('settings.resetConfirmMessage'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('common.yes'),
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await storageManager.resetProgress();
-              Alert.alert(
-                t('settings.resetSuccess'),
-                t('settings.resetSuccessMessage')
-              );
-            } catch (error) {
-              console.error('Error resetting progress:', error);
-            }
-          },
+    Alert.alert(t('settings.resetProgress'), t('settings.resetConfirmMessage'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('common.yes'),
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await storageManager.resetProgress();
+            Alert.alert(t('settings.resetSuccess'), t('settings.resetSuccessMessage'));
+          } catch (error) {
+            console.error('Error resetting progress:', error);
+          }
         },
-      ]
-    );
+      },
+    ]);
   };
 
   const openExternalUrl = (url: string) => {
@@ -142,26 +145,27 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             <Text style={[styles.modalLabel, { color: colors.text.light, marginTop: Spacing.md }]}>
               {t('settings.licenseLabel')}
             </Text>
-            <Text style={[styles.modalValue, { color: colors.text.primary }]}>Open Source • MIT</Text>
+            <Text style={[styles.modalValue, { color: colors.text.primary }]}>
+              Open Source • MIT
+            </Text>
 
             <Text style={[styles.modalLabel, { color: colors.text.light, marginTop: Spacing.md }]}>
               GitHub
             </Text>
-            <TouchableOpacity onPress={() => openExternalUrl('https://github.com/S540d/DrawFromMemory')}>
+            <TouchableOpacity
+              onPress={() => openExternalUrl('https://github.com/S540d/DrawFromMemory')}
+            >
               <Text style={[styles.modalLink, { color: colors.primary }]}>
                 S540d/DrawFromMemory ↗
               </Text>
             </TouchableOpacity>
-
           </View>
 
           <TouchableOpacity
             style={[styles.modalCloseButton, { backgroundColor: colors.primary }]}
             onPress={() => setShowAboutModal(false)}
           >
-            <Text style={styles.modalCloseButtonText}>
-              {t('common.close')}
-            </Text>
+            <Text style={styles.modalCloseButtonText}>{t('common.close')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -172,28 +176,27 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   const renderSegment = (
     options: { label: string; value: string }[],
     current: string,
-    onSelect: (value: string) => void
+    onSelect: (value: string) => void,
   ) => (
     <View style={[styles.segment, { backgroundColor: colors.surfaceElevated }]}>
-      {options.map((opt) => {
+      {options.map(opt => {
         const active = opt.value === current;
         return (
           <TouchableOpacity
             key={opt.value}
-            style={[
-              styles.segmentItem,
-              active && { backgroundColor: colors.primary },
-            ]}
+            style={[styles.segmentItem, active && { backgroundColor: colors.primary }]}
             onPress={() => onSelect(opt.value)}
             accessibilityRole="button"
             accessibilityLabel={opt.label}
             accessibilityState={{ selected: active }}
           >
-            <Text style={[
-              styles.segmentText,
-              { color: active ? Colors.drawing.white : colors.text.secondary },
-              active && styles.segmentTextActive,
-            ]}>
+            <Text
+              style={[
+                styles.segmentText,
+                { color: active ? Colors.drawing.white : colors.text.secondary },
+                active && styles.segmentTextActive,
+              ]}
+            >
               {opt.label}
             </Text>
           </TouchableOpacity>
@@ -212,10 +215,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
 
   /** Tap-Zeile (für Aktionen wie Feedback, About …) */
   const renderTapRow = (label: string, onPress: () => void, danger = false) => (
-    <TouchableOpacity
-      style={[styles.row, { borderBottomColor: colors.border }]}
-      onPress={onPress}
-    >
+    <TouchableOpacity style={[styles.row, { borderBottomColor: colors.border }]} onPress={onPress}>
       <Text style={[styles.rowLabel, { color: danger ? colors.error : colors.text.primary }]}>
         {label}
       </Text>
@@ -238,15 +238,18 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
         {t('settings.appearance')}
       </Text>
       <View style={[styles.card, { backgroundColor: colors.surface }]}>
-        {renderRow(t('settings.theme'), renderSegment(
-          [
-            { label: t('settings.themeLight'), value: 'light' },
-            { label: t('settings.themeDark'),  value: 'dark'  },
-            { label: t('settings.themeSystem'), value: 'system' },
-          ],
-          currentTheme,
-          (v) => handleThemeChange(v as 'light' | 'dark' | 'system')
-        ))}
+        {renderRow(
+          t('settings.theme'),
+          renderSegment(
+            [
+              { label: t('settings.themeLight'), value: 'light' },
+              { label: t('settings.themeDark'), value: 'dark' },
+              { label: t('settings.themeSystem'), value: 'system' },
+            ],
+            currentTheme,
+            v => handleThemeChange(v as 'light' | 'dark' | 'system'),
+          ),
+        )}
         <View style={[styles.row, styles.languageRow, { borderBottomColor: colors.border }]}>
           <Text style={[styles.rowLabel, { color: colors.text.primary, marginBottom: Spacing.xs }]}>
             {t('settings.language')}
@@ -262,22 +265,25 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               { label: 'PL', value: 'pl' },
             ],
             currentLang,
-            (v) => handleLanguageChange(v as Language)
+            v => handleLanguageChange(v as Language),
           )}
         </View>
-        {renderRow(t('settings.sound'), renderSegment(
-          [
-            { label: t('settings.soundOn'),  value: 'on'  },
-            { label: t('settings.soundOff'), value: 'off' },
-          ],
-          soundEnabled ? 'on' : 'off',
-          async (v) => {
-            const enabled = v === 'on';
-            setSoundEnabled(enabled);
-            SoundManager.setSoundEnabled(enabled);
-            await storageManager.setSetting('soundEnabled', enabled);
-          }
-        ))}
+        {renderRow(
+          t('settings.sound'),
+          renderSegment(
+            [
+              { label: t('settings.soundOn'), value: 'on' },
+              { label: t('settings.soundOff'), value: 'off' },
+            ],
+            soundEnabled ? 'on' : 'off',
+            async v => {
+              const enabled = v === 'on';
+              setSoundEnabled(enabled);
+              SoundManager.setSoundEnabled(enabled);
+              await storageManager.setSetting('soundEnabled', enabled);
+            },
+          ),
+        )}
       </View>
 
       {/* PERSONALISIEREN */}
@@ -285,18 +291,21 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
         {t('settings.personalize')}
       </Text>
       <View style={[styles.card, { backgroundColor: colors.surface }]}>
-        {renderRow(t('settings.celebration'), renderSegment(
-          [
-            { label: t('settings.soundOn'), value: 'on' },
-            { label: t('settings.soundOff'), value: 'off' },
-          ],
-          celebrationEnabled ? 'on' : 'off',
-          async (v) => {
-            const enabled = v === 'on';
-            setCelebrationEnabled(enabled);
-            await storageManager.setSetting('celebrationEnabled', enabled);
-          }
-        ))}
+        {renderRow(
+          t('settings.celebration'),
+          renderSegment(
+            [
+              { label: t('settings.soundOn'), value: 'on' },
+              { label: t('settings.soundOff'), value: 'off' },
+            ],
+            celebrationEnabled ? 'on' : 'off',
+            async v => {
+              const enabled = v === 'on';
+              setCelebrationEnabled(enabled);
+              await storageManager.setSetting('celebrationEnabled', enabled);
+            },
+          ),
+        )}
       </View>
 
       {/* INFO & SUPPORT + DATEN */}
@@ -305,14 +314,36 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
       </Text>
       <View style={[styles.card, { backgroundColor: colors.surface }]}>
         <View style={styles.actionGrid}>
-          {([
-            { id: 'trophies', label: t('achievements.menuLabel'),    icon: '🏆', onPress: () => setShowBadgesModal(true) },
-            { id: 'parents',  label: t('parentDashboard.menuLabel'), icon: '👨‍👩‍👧', onPress: openParentDashboard },
-            { id: 'feedback', label: t('settings.feedback'),         icon: '✉️', onPress: handleSendFeedback },
-            { id: 'support',  label: t('settings.support'),          icon: '☕',  onPress: handleSupport },
-            { id: 'share',    label: t('settings.share'),            icon: '↗',  onPress: handleShareApp },
-            { id: 'about',    label: t('settings.aboutButton'),      icon: 'ℹ',  onPress: () => setShowAboutModal(true) },
-          ] as const).map(({ id, label, icon, onPress }, idx) => (
+          {(
+            [
+              {
+                id: 'trophies',
+                label: t('achievements.menuLabel'),
+                icon: '🏆',
+                onPress: () => setShowBadgesModal(true),
+              },
+              {
+                id: 'parents',
+                label: t('parentDashboard.menuLabel'),
+                icon: '👨‍👩‍👧',
+                onPress: openParentDashboard,
+              },
+              {
+                id: 'feedback',
+                label: t('settings.feedback'),
+                icon: '✉️',
+                onPress: handleSendFeedback,
+              },
+              { id: 'support', label: t('settings.support'), icon: '☕', onPress: handleSupport },
+              { id: 'share', label: t('settings.share'), icon: '↗', onPress: handleShareApp },
+              {
+                id: 'about',
+                label: t('settings.aboutButton'),
+                icon: 'ℹ',
+                onPress: () => setShowAboutModal(true),
+              },
+            ] as const
+          ).map(({ id, label, icon, onPress }, idx) => (
             <TouchableOpacity
               key={id}
               style={[
@@ -329,7 +360,9 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
                 accessible={false}
                 importantForAccessibility="no"
                 style={[styles.actionGridIcon, { color: colors.primary }]}
-              >{icon}</Text>
+              >
+                {icon}
+              </Text>
               <Text style={[styles.actionGridLabel, { color: colors.text.primary }]}>{label}</Text>
             </TouchableOpacity>
           ))}
@@ -338,7 +371,10 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
       </View>
 
       {renderAboutModal()}
-      <ParentDashboard visible={showParentDashboard} onClose={() => setShowParentDashboard(false)} />
+      <ParentDashboard
+        visible={showParentDashboard}
+        onClose={() => setShowParentDashboard(false)}
+      />
       <BadgesModal visible={showBadgesModal} onClose={() => setShowBadgesModal(false)} />
     </View>
   );
@@ -352,34 +388,29 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
           onSuccess={parentalGate.onSuccess}
           onCancel={parentalGate.onCancel}
         />
-        <Modal
-        visible={visible}
-        transparent
-        animationType="fade"
-        onRequestClose={onClose}
-      >
-        <View style={[styles.modalOverlay, { backgroundColor: colors.modalOverlay }]}>
-          <View style={[styles.settingsModalContent, { backgroundColor: colors.background }]}>
-            {/* Header */}
-            <View style={[styles.settingsHeader, { borderBottomColor: colors.border }]}>
-              <Text style={[styles.settingsTitle, { color: colors.text.primary }]}>
-                {t('settings.title')}
-              </Text>
-              <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                <Text style={[styles.closeText, { color: colors.text.secondary }]}>✕</Text>
-              </TouchableOpacity>
-            </View>
+        <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+          <View style={[styles.modalOverlay, { backgroundColor: colors.modalOverlay }]}>
+            <View style={[styles.settingsModalContent, { backgroundColor: colors.background }]}>
+              {/* Header */}
+              <View style={[styles.settingsHeader, { borderBottomColor: colors.border }]}>
+                <Text style={[styles.settingsTitle, { color: colors.text.primary }]}>
+                  {t('settings.title')}
+                </Text>
+                <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                  <Text style={[styles.closeText, { color: colors.text.secondary }]}>✕</Text>
+                </TouchableOpacity>
+              </View>
 
-            <ScrollView
-              style={styles.settingsContent}
-              showsVerticalScrollIndicator={true}
-              contentContainerStyle={styles.settingsContentInner}
-            >
-              {renderContent()}
-            </ScrollView>
+              <ScrollView
+                style={styles.settingsContent}
+                showsVerticalScrollIndicator={true}
+                contentContainerStyle={styles.settingsContentInner}
+              >
+                {renderContent()}
+              </ScrollView>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
       </>
     );
   }

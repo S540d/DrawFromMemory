@@ -13,12 +13,15 @@ const EXPORT_SIZE = 600;
 
 function computeScaleOffset(
   paths: DrawingPath[],
-  size: number
+  size: number,
 ): { scale: number; offsetX: number; offsetY: number } {
   const strokePaths = paths.filter(p => p.type !== 'fill');
   if (strokePaths.length === 0) return { scale: 1, offsetX: 0, offsetY: 0 };
 
-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  let minX = Infinity,
+    minY = Infinity,
+    maxX = -Infinity,
+    maxY = -Infinity;
   for (const path of strokePaths) {
     for (const pt of path.points) {
       if (pt.x < minX) minX = pt.x;

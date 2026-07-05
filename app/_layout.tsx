@@ -38,7 +38,7 @@ function RootLayoutContent() {
   // Initialize language from storage, then re-render so all screens show the correct language
   useEffect(() => {
     const unsubscribe = addLanguageChangeListener(() => forceUpdate());
-    initLanguage().catch((error) => {
+    initLanguage().catch(error => {
       console.error('Failed to initialize language:', error);
     });
     return unsubscribe;
@@ -52,7 +52,7 @@ function RootLayoutContent() {
         <meta name="apple-mobile-web-app-title" content="Merke und Male" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </Head>
-      <StatusBar style={showSplash ? 'light' : (theme === 'dark' ? 'light' : 'dark')} />
+      <StatusBar style={showSplash ? 'light' : theme === 'dark' ? 'light' : 'dark'} />
       <Stack
         screenOptions={{
           headerShown: false,
@@ -65,9 +65,7 @@ function RootLayoutContent() {
         <Stack.Screen name="gallery" />
         <Stack.Screen name="settings" />
       </Stack>
-      {showSplash && (
-        <AnimatedSplashScreen onFinish={handleSplashFinish} />
-      )}
+      {showSplash && <AnimatedSplashScreen onFinish={handleSplashFinish} />}
     </>
   );
 }

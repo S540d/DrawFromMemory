@@ -34,7 +34,7 @@ describe('ErrorBoundary', () => {
     render(
       <ErrorBoundary>
         <Text>Hello</Text>
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
     expect(screen.getByText('Hello')).toBeTruthy();
   });
@@ -43,7 +43,7 @@ describe('ErrorBoundary', () => {
     render(
       <ErrorBoundary>
         <ThrowError message="Test crash" />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
     expect(screen.getByText('Ups! Etwas ist schiefgelaufen')).toBeTruthy();
     expect(screen.getByText(/Die App ist auf ein Problem gestoßen/)).toBeTruthy();
@@ -53,7 +53,7 @@ describe('ErrorBoundary', () => {
     render(
       <ErrorBoundary>
         <ThrowError message="Test crash" />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
     expect(screen.getByText('Neu starten')).toBeTruthy();
   });
@@ -62,7 +62,7 @@ describe('ErrorBoundary', () => {
     render(
       <ErrorBoundary>
         <ThrowError message="Detailed error" />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
     expect(screen.getByText(/Detailed error/)).toBeTruthy();
   });
@@ -71,23 +71,20 @@ describe('ErrorBoundary', () => {
     render(
       <ErrorBoundary>
         <ThrowError message="Logged error" />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
-    expect(console.error).toHaveBeenCalledWith(
-      'ErrorBoundary caught an error:',
-      expect.any(Error)
-    );
+    expect(console.error).toHaveBeenCalledWith('ErrorBoundary caught an error:', expect.any(Error));
   });
 
   it('calls captureException via componentDidCatch', () => {
     render(
       <ErrorBoundary>
         <ThrowError message="Reported error" />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
     expect(captureException).toHaveBeenCalledWith(
       expect.any(Error),
-      expect.objectContaining({ component: 'ErrorBoundary' })
+      expect.objectContaining({ component: 'ErrorBoundary' }),
     );
   });
 });

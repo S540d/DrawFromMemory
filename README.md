@@ -8,16 +8,16 @@ A memory training app for children — look at a picture, memorize it, draw it f
 
 ## Tech Stack
 
-| Technology                  | Role                          |
-| --------------------------- | ----------------------------- |
-| React Native + Expo         | Cross-platform framework      |
-| TypeScript                  | Type safety                   |
-| expo-router                 | File-based navigation         |
-| @shopify/react-native-skia  | Drawing canvas (Native)       |
-| HTML5 Canvas                | Drawing (Web)                 |
-| Web Audio API               | Sound effects                 |
-| expo-haptics                | Haptic feedback (Native)      |
-| AsyncStorage                | Progress saving               |
+| Technology                 | Role                     |
+| -------------------------- | ------------------------ |
+| React Native + Expo        | Cross-platform framework |
+| TypeScript                 | Type safety              |
+| expo-router                | File-based navigation    |
+| @shopify/react-native-skia | Drawing canvas (Native)  |
+| HTML5 Canvas               | Drawing (Web)            |
+| Web Audio API              | Sound effects            |
+| expo-haptics               | Haptic feedback (Native) |
+| AsyncStorage               | Progress saving          |
 
 ## How it Works
 

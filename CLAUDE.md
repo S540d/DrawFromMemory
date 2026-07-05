@@ -15,22 +15,22 @@ Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Er
 
 ## Tech Stack
 
-| Bereich | Technologie / Version |
-|---|---|
-| Framework | React Native 0.83.2 + Expo SDK 55 |
-| React | 19.2.0 |
-| Navigation | Expo Router ~55.0.5 (file-based) |
-| Native Drawing | `@shopify/react-native-skia` 2.4.18 |
-| Web Drawing | Canvas API (`DrawingCanvas.web.tsx`) |
-| Animationen | `react-native-reanimated` ~4.2.2 |
-| State | React Hooks + AsyncStorage |
-| Theming | ThemeContext (light / dark / system) |
-| Sound | Web Audio API (web) + `expo-haptics` (native) |
-| i18n | Custom `services/i18n.ts` (de/en/es/fr/it/nl/pl), Locales in `locales/`, automatische Geräte-Spracherkennung |
-| Tests | Jest 29 + jest-expo ~55 (373+ Tests, jsdom-Environment) |
-| CI | GitHub Actions (`.github/workflows/ci-cd.yml`) |
-| Build (Native) | EAS Build (`eas.json`) |
-| Crash Reporting | Sentry via `EXPO_PUBLIC_SENTRY_DSN` (optional, no-op on Web) |
+| Bereich         | Technologie / Version                                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------------------------ |
+| Framework       | React Native 0.83.2 + Expo SDK 55                                                                            |
+| React           | 19.2.0                                                                                                       |
+| Navigation      | Expo Router ~55.0.5 (file-based)                                                                             |
+| Native Drawing  | `@shopify/react-native-skia` 2.4.18                                                                          |
+| Web Drawing     | Canvas API (`DrawingCanvas.web.tsx`)                                                                         |
+| Animationen     | `react-native-reanimated` ~4.2.2                                                                             |
+| State           | React Hooks + AsyncStorage                                                                                   |
+| Theming         | ThemeContext (light / dark / system)                                                                         |
+| Sound           | Web Audio API (web) + `expo-haptics` (native)                                                                |
+| i18n            | Custom `services/i18n.ts` (de/en/es/fr/it/nl/pl), Locales in `locales/`, automatische Geräte-Spracherkennung |
+| Tests           | Jest 29 + jest-expo ~55 (373+ Tests, jsdom-Environment)                                                      |
+| CI              | GitHub Actions (`.github/workflows/ci-cd.yml`)                                                               |
+| Build (Native)  | EAS Build (`eas.json`)                                                                                       |
+| Crash Reporting | Sentry via `EXPO_PUBLIC_SENTRY_DSN` (optional, no-op on Web)                                                 |
 
 ---
 
@@ -151,16 +151,16 @@ npm run deploy:ghpages             # Deployment auf GitHub Pages
 
 Läuft auf `push` und `pull_request` gegen `main` und `testing`.
 
-| Job | Name | Inhalt |
-|---|---|---|
-| 1 | Code Quality & Linting | ESLint, kein `console.log` in `app/`/`components/`, Web-API-Guards prüfen, AsyncStorage-Usage, `validate:svg-counts`, TypeScript-Check (`npx tsc --noEmit \|\| true`, non-blocking) |
-| 2 | Unit Tests & Coverage | `npm run test:ci` (Coverage-Artefakt wird hochgeladen) |
-| 3 | Build Web | `expo export --platform web` |
-| 4 | Platform Checks | Versionskonsistenz: `package.json` vs. `app.json` müssen identische Version haben |
-| 5 | Security Audit | `npm audit --audit-level=high` — blockiert bei high/critical |
-| 6 | Docs Privacy Check | `docs/private/` darf nicht committed sein |
-| 7 | Keystore & Credential Scan | Keine `.keystore`/`.jks` Dateien, keine hardcodierten Passwörter |
-| 8 | Release Readiness Report | Nur bei Push auf `main`; generiert manuelles Checklist-Summary |
+| Job | Name                       | Inhalt                                                                                                                                                                              |
+| --- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Code Quality & Linting     | ESLint, kein `console.log` in `app/`/`components/`, Web-API-Guards prüfen, AsyncStorage-Usage, `validate:svg-counts`, TypeScript-Check (`npx tsc --noEmit \|\| true`, non-blocking) |
+| 2   | Unit Tests & Coverage      | `npm run test:ci` (Coverage-Artefakt wird hochgeladen)                                                                                                                              |
+| 3   | Build Web                  | `expo export --platform web`                                                                                                                                                        |
+| 4   | Platform Checks            | Versionskonsistenz: `package.json` vs. `app.json` müssen identische Version haben                                                                                                   |
+| 5   | Security Audit             | `npm audit --audit-level=high` — blockiert bei high/critical                                                                                                                        |
+| 6   | Docs Privacy Check         | `docs/private/` darf nicht committed sein                                                                                                                                           |
+| 7   | Keystore & Credential Scan | Keine `.keystore`/`.jks` Dateien, keine hardcodierten Passwörter                                                                                                                    |
+| 8   | Release Readiness Report   | Nur bei Push auf `main`; generiert manuelles Checklist-Summary                                                                                                                      |
 
 **Coverage-Schwellenwerte (jest.config.js):** branches 15 %, functions 25 %, lines 25 %, statements 25 %.
 
@@ -183,11 +183,11 @@ Bilderpool: `ImagePoolManager.ts` wählt zufällig nach Difficulty-Klasse aus. A
 
 Auf dem Level-Auswahl-Screen (`app/levels.tsx`) wählbar (`GameVariant` in `types/index.ts`), wird als `?variant=` Query-Param an `/game` übergeben:
 
-| Variante | Effekt |
-|---|---|
-| `normal` | Standard — Bild wird unverändert gezeigt |
+| Variante  | Effekt                                                                                                                                     |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `normal`  | Standard — Bild wird unverändert gezeigt                                                                                                   |
 | `outline` | Nur Umriss merken — `LevelImageDisplay` entfernt rekursiv alle Füllfarben (`mode="outline"`), nur eine einheitliche Kontur bleibt sichtbar |
-| `mirror` | Spiegelbild — `LevelImageDisplay` spiegelt die Anzeige horizontal (`mirror`, `transform: scaleX(-1)`) |
+| `mirror`  | Spiegelbild — `LevelImageDisplay` spiegelt die Anzeige horizontal (`mirror`, `transform: scaleX(-1)`)                                      |
 
 Wirkt in Memorize-Phase und im Hinweis-Modal der Draw-Phase gleichermaßen. Kreativ-Modus (freies Malen ohne Vorlage, `app/creative.tsx`) ist eine eigenständige Route, kein `GameVariant`.
 
@@ -195,15 +195,16 @@ Wirkt in Memorize-Phase und im Hinweis-Modal der Draw-Phase gleichermaßen. Krea
 
 ## DrawingCanvas-Architektur
 
-| Datei | Zweck |
-|---|---|
-| `DrawingCanvas.tsx` | Re-Export, öffentliches API (`DrawingCanvas`, `useDrawingCanvas`) |
-| `DrawingCanvas.hooks.ts` | `useDrawingCanvas()` Hook: color, strokeWidth, tool, paths, undo, clearCanvas |
-| `DrawingCanvas.shared.ts` | `DrawingPath` Interface, Shared-Styles |
-| `DrawingCanvas.native.tsx` | Skia-Implementierung: `<Path>` für Strokes, `<Rect>`-Spans für Fills |
-| `DrawingCanvas.web.tsx` | HTML5-Canvas-Implementierung |
+| Datei                      | Zweck                                                                         |
+| -------------------------- | ----------------------------------------------------------------------------- |
+| `DrawingCanvas.tsx`        | Re-Export, öffentliches API (`DrawingCanvas`, `useDrawingCanvas`)             |
+| `DrawingCanvas.hooks.ts`   | `useDrawingCanvas()` Hook: color, strokeWidth, tool, paths, undo, clearCanvas |
+| `DrawingCanvas.shared.ts`  | `DrawingPath` Interface, Shared-Styles                                        |
+| `DrawingCanvas.native.tsx` | Skia-Implementierung: `<Path>` für Strokes, `<Rect>`-Spans für Fills          |
+| `DrawingCanvas.web.tsx`    | HTML5-Canvas-Implementierung                                                  |
 
 **DrawingPath-Typ:**
+
 ```typescript
 interface DrawingPath {
   points: { x: number; y: number }[];
@@ -231,6 +232,7 @@ CPU-Flood-Fill auf alten Android-Geräten (Nexus 6 / Adreno 420) — die GPU-Pip
 ## Theming
 
 `ThemeContext.tsx` stellt `useTheme()` bereit:
+
 - `theme`: aktuell aktives Schema (`'light' | 'dark'`)
 - `themeSetting`: gespeicherte Präferenz (`'light' | 'dark' | 'system'`)
 - `colors`: typisiertes `ThemeColors`-Objekt (primary, background, text, drawing, difficulty, stars, …)
@@ -254,26 +256,29 @@ Gespeicherte Felder: `progress`, `theme`, `language`, `sound_enabled`, `music_en
 Stand `testing`: Phase A, B, C und E abgeschlossen, Phase D (Konfetti + Jubel-Sound, TimerArc, Phasen-Crossfade, Stats-Counter) größtenteils umgesetzt — nur Lottie offen.
 
 ### Phase-Übersicht
-| Phase | Status | Branch/PR |
-|---|---|---|
-| **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie | ✅ in `testing` | PR merged |
-| **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in `testing` | PR #178 merged |
-| **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh | ✅ in `testing` | PR #257 merged |
-| **D: Delight** — Lottie, Konfetti, Mikro-Sounds | 🔶 größtenteils (Konfetti + Jubel-Sound PR #253, TimerArc/Phasen-Crossfade/Stats-Counter PR #257) — Lottie offen | — |
-| **E: Onboarding** — First-Run-Tour | ✅ in `testing` | PR #261 merged (In-Game Coach-Marks) |
+
+| Phase                                                                       | Status                                                                                                           | Branch/PR                            |
+| --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie         | ✅ in `testing`                                                                                                  | PR merged                            |
+| **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in `testing`                                                                                                  | PR #178 merged                       |
+| **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh        | ✅ in `testing`                                                                                                  | PR #257 merged                       |
+| **D: Delight** — Lottie, Konfetti, Mikro-Sounds                             | 🔶 größtenteils (Konfetti + Jubel-Sound PR #253, TimerArc/Phasen-Crossfade/Stats-Counter PR #257) — Lottie offen | —                                    |
+| **E: Onboarding** — First-Run-Tour                                          | ✅ in `testing`                                                                                                  | PR #261 merged (In-Game Coach-Marks) |
 
 ### Neue Primitiven (Phase B)
 
 **`AnimatedPrimitives.tsx`** exportiert:
-| Komponente | Zweck |
-|---|---|
-| `AnimatedCard` | Fade-in + Slide-up Eingangs-Animation mit Stagger (50 ms/Item) |
-| `GlassCard` | Glassmorphism + Eingangs-Animation + optionaler Press-Lift (scale 0.97, Spring) — `prefers-reduced-motion`-aware |
-| `AnimatedButton` | Scale-Spring bei Press |
-| `AnimatedFeedback` | Scale + Fade beim Erscheinen (z.B. Feedback-Text) |
-| `AnimatedStar` | Spring-Bounce-Pop beim Füllen, Stagger 80 ms/Stern, goldener Textglow — `prefers-reduced-motion`-aware |
+
+| Komponente         | Zweck                                                                                                            |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `AnimatedCard`     | Fade-in + Slide-up Eingangs-Animation mit Stagger (50 ms/Item)                                                   |
+| `GlassCard`        | Glassmorphism + Eingangs-Animation + optionaler Press-Lift (scale 0.97, Spring) — `prefers-reduced-motion`-aware |
+| `AnimatedButton`   | Scale-Spring bei Press                                                                                           |
+| `AnimatedFeedback` | Scale + Fade beim Erscheinen (z.B. Feedback-Text)                                                                |
+| `AnimatedStar`     | Spring-Bounce-Pop beim Füllen, Stagger 80 ms/Stern, goldener Textglow — `prefers-reduced-motion`-aware           |
 
 **`GlassCard` verwenden:**
+
 ```tsx
 import { GlassCard } from '@components/AnimatedPrimitives';
 import Colors from '../constants/Colors';
@@ -293,13 +298,14 @@ const glassShadow  = theme === 'dark' ? Colors.glass.darkShadow  : Colors.glass.
 ```
 
 **`Colors.glass`-Tokens:**
+
 ```ts
-Colors.glass.lightSurface  // 'rgba(255,255,255,0.88)'
-Colors.glass.darkSurface   // 'rgba(42,35,64,0.88)'
-Colors.glass.lightBorder   // 'rgba(255,255,255,0.70)'
-Colors.glass.darkBorder    // 'rgba(255,255,255,0.10)'
-Colors.glass.lightShadow   // { boxShadow, elevation } — lila Tönung
-Colors.glass.darkShadow    // { boxShadow, elevation } — dunkel
+Colors.glass.lightSurface; // 'rgba(255,255,255,0.88)'
+Colors.glass.darkSurface; // 'rgba(42,35,64,0.88)'
+Colors.glass.lightBorder; // 'rgba(255,255,255,0.70)'
+Colors.glass.darkBorder; // 'rgba(255,255,255,0.10)'
+Colors.glass.lightShadow; // { boxShadow, elevation } — lila Tönung
+Colors.glass.darkShadow; // { boxShadow, elevation } — dunkel
 ```
 
 **`Colors.shadow.buttonPrimary`** — lila-getönter Schatten für primäre CTAs (`Button` variant=`primary` verwendet ihn intern).
@@ -310,9 +316,9 @@ Colors.glass.darkShadow    // { boxShadow, elevation } — dunkel
 
 Alle `EXPO_PUBLIC_*`-Flags sind zur Build-Zeit eingefroren (Expo bündelt sie statisch).
 
-| Env-Var | Default | Bedeutung |
-|---|---|---|
-| `EXPO_PUBLIC_SENTRY_DSN` | — | Sentry-Reporting aktivieren (leer = no-op) |
+| Env-Var                            | Default | Bedeutung                                                                                                       |
+| ---------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------- |
+| `EXPO_PUBLIC_SENTRY_DSN`           | —       | Sentry-Reporting aktivieren (leer = no-op)                                                                      |
 | `EXPO_PUBLIC_ENABLE_IN_APP_REVIEW` | `false` | In-App-Review-Prompt via `expo-store-review` — **deaktiviert bis Play-Store-Listing auditiert** (Issue #219 P0) |
 
 > **Aktivieren:** In `.env` oder EAS-Build-Profil `EXPO_PUBLIC_ENABLE_IN_APP_REVIEW=true` setzen.  
@@ -323,24 +329,30 @@ Alle `EXPO_PUBLIC_*`-Flags sind zur Build-Zeit eingefroren (Expo bündelt sie st
 ## Konventionen für AI-Assistenten
 
 ### Verboten (wird von CI geprüft)
+
 - `console.log` / `console.debug` in `app/` oder `components/`
 - `window.*` ohne `Platform.OS === 'web'`-Guard oder `// platform-safe`-Kommentar
 - `localStorage.*` ohne Platform-Check (AsyncStorage verwenden)
 - `.keystore` / `.jks` Dateien committen
 
 ### Pflicht bei neuen SVG-Bildern
+
 `IMAGE_ELEMENT_COUNTS` in `LevelImageDisplay.tsx` muss um den neuen Dateinamen ergänzt werden, sonst schlägt `npm run validate:svg-counts` fehl.
 
 ### Imports
+
 Path-Aliase nutzen: `@services/...`, `@components/...`, `@utils/...`.
 
 ### Plattform-spezifischer Code
+
 Web-APIs über `utils/platform.ts` absichern (`safeWebAPI`, `isWeb`-Guard). Für Storage stets `StorageManager` nutzen — nicht direkt `AsyncStorage` oder `localStorage`.
 
 ### react-native-svg auf Web
+
 Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerendert werden — sie erzeugen ein ungültiges `transform-origin`-DOM-Attribut (React DOM erwartet `transformOrigin`) → Console-Error bei jedem Render. Stattdessen Standard-SVG `transform={`rotate(angle cx cy)`}` verwenden (Fix: PR #265).
 
 ### Tests
+
 - Test-Dateien liegen bei `services/__tests__/`, `components/__tests__/`, `utils/__tests__/`, `__tests__/`
 - Jest-Umgebung: `jsdom`; Skia wird gemockt via `__mocks__/@shopify/react-native-skia.js`
 - `@testing-library/dom` muss installiert sein (Peer-Dep von `@testing-library/react` v16)
@@ -362,34 +374,38 @@ Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerend
 Stand: `main` @ v1.7.0 / versionCode 66 — `testing` synchron. Enthält Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten, weitere Sprachen, Sentry-ErrorBoundary (#264) und den transform-origin Web-Fix (#265). **Play Store noch nicht auf v1.7.0** — Release-Aufgabe in Issue #267.
 
 ### P0 — Foundation für Wachstum
-| Task | Status |
-|---|---|
-| Galerie-Persistenz (#215) | ✅ erledigt (v1.6.3) |
-| Play-Store-Listing-Audit | ⏭ extern — teilweise umgesetzt |
-| **In-App-Review-Prompt** (`expo-store-review`) | ✅ in main (v1.7.0) — per Feature-Flag deaktiviert (`EXPO_PUBLIC_ENABLE_IN_APP_REVIEW`) |
-| Analytics-Setup (COPPA-konform) | 🔲 offen — Tool-Entscheidung nötig |
-| Crash-Rate-Baseline (Sentry) | 🟡 teilweise — ErrorBoundary meldet an Sentry, initSentry abgesichert (PR #264); noch offen: `EXPO_PUBLIC_SENTRY_DSN` für Produktions-Build setzen |
+
+| Task                                           | Status                                                                                                                                             |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Galerie-Persistenz (#215)                      | ✅ erledigt (v1.6.3)                                                                                                                               |
+| Play-Store-Listing-Audit                       | ⏭ extern — teilweise umgesetzt                                                                                                                     |
+| **In-App-Review-Prompt** (`expo-store-review`) | ✅ in main (v1.7.0) — per Feature-Flag deaktiviert (`EXPO_PUBLIC_ENABLE_IN_APP_REVIEW`)                                                            |
+| Analytics-Setup (COPPA-konform)                | 🔲 offen — Tool-Entscheidung nötig                                                                                                                 |
+| Crash-Rate-Baseline (Sentry)                   | 🟡 teilweise — ErrorBoundary meldet an Sentry, initSentry abgesichert (PR #264); noch offen: `EXPO_PUBLIC_SENTRY_DSN` für Produktions-Build setzen |
 
 ### P1 — Content & Retention
-| Task | Status |
-|---|---|
-| **Themen-Pack Tiere v1** (10 Bilder, #222) | ✅ in main (v1.7.0) |
-| **Themen-Pack Fahrzeuge v1** (10 Bilder, PR #254) | ✅ in main (v1.7.0) |
-| Themen-Pack Natur / Märchen / weitere | 🔲 offen |
+
+| Task                                                                     | Status              |
+| ------------------------------------------------------------------------ | ------------------- |
+| **Themen-Pack Tiere v1** (10 Bilder, #222)                               | ✅ in main (v1.7.0) |
+| **Themen-Pack Fahrzeuge v1** (10 Bilder, PR #254)                        | ✅ in main (v1.7.0) |
+| Themen-Pack Natur / Märchen / weitere                                    | 🔲 offen            |
 | **Spielvarianten** (Nur Umriss merken, Spiegelbild, Kreativ-Modus, #247) | ✅ in main (v1.7.0) |
-| Avatar & Personalisierung | 🔲 offen |
-| XP- & Level-System | 🔲 offen |
-| Wöchentliche Challenge | 🔲 offen |
+| Avatar & Personalisierung                                                | 🔲 offen            |
+| XP- & Level-System                                                       | 🔲 offen            |
+| Wöchentliche Challenge                                                   | 🔲 offen            |
 
 ### P2 — Reichweite & Trust
-| Task | Status |
-|---|---|
-| Designed for Families Programm | 🔲 offen |
-| **Weitere Sprachen** (ES/FR/IT/NL/PL, #247) | ✅ in main (v1.7.0) — automatische Geräte-Spracherkennung |
-| **Sharing-Feature / PNG-Export** (ShareService, PR #255) | ✅ in main (v1.7.0) |
-| Push-Notifications (opt-in) | 🔲 offen |
+
+| Task                                                     | Status                                                    |
+| -------------------------------------------------------- | --------------------------------------------------------- |
+| Designed for Families Programm                           | 🔲 offen                                                  |
+| **Weitere Sprachen** (ES/FR/IT/NL/PL, #247)              | ✅ in main (v1.7.0) — automatische Geräte-Spracherkennung |
+| **Sharing-Feature / PNG-Export** (ShareService, PR #255) | ✅ in main (v1.7.0)                                       |
+| Push-Notifications (opt-in)                              | 🔲 offen                                                  |
 
 ### Themen-Pack Architektur (ab PR #221)
+
 - `LevelImage.pack?: string` — optionaler Tag (z.B. `'tiere-v1'`)
 - Bilder ohne `minLevel` sind ab dem passenden Difficulty-Level verfügbar
 - Neue Packs: einfach neue Cases in `LevelImageDisplay.tsx` + Einträge in `ImagePoolManager.ts` + `IMAGE_ELEMENT_COUNTS`

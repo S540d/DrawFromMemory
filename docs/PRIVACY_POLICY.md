@@ -36,18 +36,19 @@ Die App sammelt keinerlei persönliche Informationen. In Standard-Releases werde
 
 Die folgenden Daten werden **ausschließlich lokal** auf Ihrem Gerät gespeichert:
 
-| Datentyp | Zweck | Speicherort |
-|----------|-------|-------------|
-| Spielfortschritt | Speichern von freigeschalteten Leveln | Gerätespeicher |
-| Einstellungen | Sprache, Theme, Pinselgröße | Gerätespeicher |
-| Spielsessions | Datum, Dauer, Sterne, Level — für Eltern-Dashboard. Automatische Löschung nach 28 Tagen. | Gerätespeicher |
-| Onboarding-Flag | Merken, ob die Erst-Start-Tour abgeschlossen wurde | Gerätespeicher |
+| Datentyp         | Zweck                                                                                    | Speicherort    |
+| ---------------- | ---------------------------------------------------------------------------------------- | -------------- |
+| Spielfortschritt | Speichern von freigeschalteten Leveln                                                    | Gerätespeicher |
+| Einstellungen    | Sprache, Theme, Pinselgröße                                                              | Gerätespeicher |
+| Spielsessions    | Datum, Dauer, Sterne, Level — für Eltern-Dashboard. Automatische Löschung nach 28 Tagen. | Gerätespeicher |
+| Onboarding-Flag  | Merken, ob die Erst-Start-Tour abgeschlossen wurde                                       | Gerätespeicher |
 
 **Wichtig:** Diese Daten verlassen niemals Ihr Gerät und werden nur zur Funktion der App verwendet. Das Eltern-Dashboard (hinter Eltern-Sperre erreichbar) zeigt diese lokal gespeicherten Statistiken — es findet keine Übertragung statt.
 
 ### 2.2 Keine Berechtigungen erforderlich
 
 Die App benötigt **keine** der folgenden Berechtigungen:
+
 - ❌ Keine Internet-Berechtigung
 - ❌ Kein Zugriff auf Standort
 - ❌ Kein Zugriff auf Kamera
@@ -73,9 +74,11 @@ Da die App keine Daten sammelt, können auch keine Daten an Dritte weitergegeben
 ## 4. Datensicherheit
 
 ### 4.1 Lokale Datenspeicherung
+
 Alle App-Daten werden ausschließlich im lokalen Speicher Ihres Geräts abgelegt. Diese Daten sind durch die Sicherheitsmechanismen Ihres Betriebssystems (Android/iOS) geschützt.
 
 ### 4.2 Keine Netzwerkverbindung
+
 Die App stellt keine Verbindung zum Internet her. Es können daher keine Daten abgefangen oder kompromittiert werden.
 
 ---
@@ -85,20 +88,25 @@ Die App stellt keine Verbindung zum Internet her. Es können daher keine Daten a
 Die App ist speziell für Kinder konzipiert und erfüllt die höchsten Datenschutzstandards:
 
 ### 5.1 COPPA Konformität (USA)
+
 Die App entspricht dem Children's Online Privacy Protection Act (COPPA):
+
 - ✅ Keine Sammlung von persönlichen Daten von Kindern unter 13 Jahren
 - ✅ Keine Weitergabe von Informationen
 - ✅ Keine Werbung
 - ✅ Keine In-App-Käufe
 
 ### 5.2 DSGVO/GDPR Konformität (EU)
+
 Die App entspricht der EU-Datenschutz-Grundverordnung (DSGVO):
+
 - ✅ Keine Verarbeitung personenbezogener Daten
 - ✅ Kein Profiling
 - ✅ Keine automatisierte Entscheidungsfindung
 - ✅ Transparente Datenschutzerklärung
 
 ### 5.3 Play Families Policy
+
 Die App erfüllt die Google Play Families Policy für Kinder-Apps.
 
 ---
@@ -108,13 +116,16 @@ Die App erfüllt die Google Play Families Policy für Kinder-Apps.
 Da die App keine personenbezogenen Daten sammelt, sind die meisten DSGVO-Rechte nicht anwendbar. Dennoch haben Sie:
 
 ### 6.1 Recht auf Löschung
+
 **So löschen Sie alle App-Daten:**
+
 1. **Android:** Einstellungen → Apps → Merke und Male → Speicher → Daten löschen
 2. **iOS:** App deinstallieren
 
 Durch Deinstallation der App werden alle lokal gespeicherten Daten vollständig vom Gerät entfernt.
 
 ### 6.2 Recht auf Auskunft
+
 Da keine Daten gesammelt werden, gibt es keine Daten, über die wir Auskunft geben könnten.
 
 ---
@@ -130,6 +141,7 @@ Die App enthält eine optionale Integration von **Sentry** für Absturzberichte.
 Falls ein Release mit aktiviertem Sentry erstellt wird, können anonyme Absturzberichte (Stack Traces, Gerätebetriebssystem-Version, App-Version) an Server von Sentry, Inc. übermittelt werden. Diese Berichte enthalten keine personenbezogenen Daten, Gerätekennungen oder nutzergenerierte Inhalte. Die Datenschutzerklärung von Sentry ist unter https://sentry.io/privacy/ einsehbar.
 
 Insbesondere enthält die App:
+
 - ❌ Keine Analyse-Tools (z.B. Google Analytics, Firebase Analytics)
 - ❌ Keine Werbe-Netzwerke
 - ❌ Keine Social Media SDKs
@@ -149,6 +161,7 @@ Insbesondere enthält die App:
 Wir behalten uns vor, diese Datenschutzerklärung zu aktualisieren, um Änderungen in der App oder gesetzliche Anforderungen widerzuspiegeln.
 
 Bei wesentlichen Änderungen werden wir:
+
 - Das Datum "Letzte Aktualisierung" oben aktualisieren
 - Die neue Version auf GitHub veröffentlichen
 - Nutzer ggf. beim nächsten App-Start informieren

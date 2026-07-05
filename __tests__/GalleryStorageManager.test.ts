@@ -69,11 +69,34 @@ describe('StorageManager – Gallery', () => {
       };
       const mixed = [
         validEntry,
-        { id: 'no-paths', levelNumber: 1, imageFilename: 'x.svg', imageName: 'X', rating: 2, savedAt: 'x' }, // missing paths
-        { id: 'bad-rating', levelNumber: 1, imageFilename: 'x.svg', imageName: 'X', paths: [], rating: 'oops', savedAt: 'x' }, // rating not a number
+        {
+          id: 'no-paths',
+          levelNumber: 1,
+          imageFilename: 'x.svg',
+          imageName: 'X',
+          rating: 2,
+          savedAt: 'x',
+        }, // missing paths
+        {
+          id: 'bad-rating',
+          levelNumber: 1,
+          imageFilename: 'x.svg',
+          imageName: 'X',
+          paths: [],
+          rating: 'oops',
+          savedAt: 'x',
+        }, // rating not a number
         null,
         'not-an-object',
-        { id: 42, levelNumber: 1, imageFilename: 'x.svg', imageName: 'X', paths: [], rating: 2, savedAt: 'x' }, // id not a string
+        {
+          id: 42,
+          levelNumber: 1,
+          imageFilename: 'x.svg',
+          imageName: 'X',
+          paths: [],
+          rating: 2,
+          savedAt: 'x',
+        }, // id not a string
       ];
       mockAsyncStorage.getItem.mockResolvedValueOnce(JSON.stringify(mixed));
       const gallery = await storageManager.getGallery();

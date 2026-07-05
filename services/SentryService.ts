@@ -34,7 +34,7 @@ export function initSentry() {
 export function captureException(error: unknown, context?: Record<string, string>) {
   if (!Sentry || !DSN) return;
 
-  Sentry.withScope((scope) => {
+  Sentry.withScope(scope => {
     if (context) {
       Object.entries(context).forEach(([key, value]) => scope.setTag(key, value));
     }

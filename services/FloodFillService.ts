@@ -73,7 +73,7 @@ export function floodFillPixels(
   startX: number,
   startY: number,
   targetColor: RGBAColor,
-  spans?: FloodFillSpan[]
+  spans?: FloodFillSpan[],
 ): boolean {
   const x0 = Math.floor(startX);
   const y0 = Math.floor(startY);
@@ -106,7 +106,7 @@ export function floodFillPixels(
   for (let i = 0; i < totalPixels; i++) {
     const p = i * 4;
     if (
-      Math.abs(pixels[p]     - startR) <= 2 &&
+      Math.abs(pixels[p] - startR) <= 2 &&
       Math.abs(pixels[p + 1] - startG) <= 2 &&
       Math.abs(pixels[p + 2] - startB) <= 2 &&
       Math.abs(pixels[p + 3] - startA) <= 2
@@ -147,7 +147,11 @@ export function floodFillPixels(
 
     // Expand right
     let right = seedX;
-    while (right < width - 1 && !bfGet(queued, rowStart + right + 1) && bfGet(matches, rowStart + right + 1)) {
+    while (
+      right < width - 1 &&
+      !bfGet(queued, rowStart + right + 1) &&
+      bfGet(matches, rowStart + right + 1)
+    ) {
       right++;
     }
 

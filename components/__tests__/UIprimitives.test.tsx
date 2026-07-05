@@ -34,7 +34,10 @@ import { Button } from '../Button';
 
 /** Hilfsfunktion: alle Text-Inhalte als flaches Array */
 const getAllTexts = (getAllByType: (t: any) => any[]) =>
-  getAllByType(Text).map((n: any) => n.props.children).flat().map(String);
+  getAllByType(Text)
+    .map((n: any) => n.props.children)
+    .flat()
+    .map(String);
 
 // ---------------------------------------------------------------------------
 // Badge
@@ -47,7 +50,7 @@ describe('Badge', () => {
 
   it('renders difficulty variant', () => {
     const { UNSAFE_getAllByType } = render(
-      <Badge label="Sehr einfach" variant="difficulty" difficulty={1} />
+      <Badge label="Sehr einfach" variant="difficulty" difficulty={1} />,
     );
     expect(getAllTexts(UNSAFE_getAllByType)).toContain('Sehr einfach');
   });
@@ -110,7 +113,7 @@ describe('Chip', () => {
 describe('ChipGroup', () => {
   it('renders all options', () => {
     const { UNSAFE_getAllByType } = render(
-      <ChipGroup options={['Alle', 'Einfach', 'Schwer']} selected="Alle" onSelect={jest.fn()} />
+      <ChipGroup options={['Alle', 'Einfach', 'Schwer']} selected="Alle" onSelect={jest.fn()} />,
     );
     const texts = getAllTexts(UNSAFE_getAllByType);
     expect(texts).toContain('Alle');
@@ -121,7 +124,7 @@ describe('ChipGroup', () => {
   it('calls onSelect with the tapped option', () => {
     const onSelect = jest.fn();
     const { UNSAFE_getAllByType } = render(
-      <ChipGroup options={['Alle', 'Einfach']} selected="Alle" onSelect={onSelect} />
+      <ChipGroup options={['Alle', 'Einfach']} selected="Alle" onSelect={onSelect} />,
     );
     // Second Pressable corresponds to 'Einfach'
     const { Pressable } = require('react-native');

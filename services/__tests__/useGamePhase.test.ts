@@ -66,7 +66,7 @@ describe('useGamePhase', () => {
         drawingPaths: defaultPaths,
         clearCanvas,
         ...overrides,
-      })
+      }),
     );
 
   beforeEach(() => {
@@ -111,7 +111,9 @@ describe('useGamePhase', () => {
     const { result } = renderGamePhase();
     expect(result.current.phase).toBe('memorize');
 
-    act(() => { result.current.setPhase('draw'); });
+    act(() => {
+      result.current.setPhase('draw');
+    });
     expect(result.current.phase).toBe('draw');
   });
 
@@ -158,9 +160,7 @@ describe('useGamePhase', () => {
   it('saves to gallery', async () => {
     const storageManager = require('../StorageManager').default;
     const SoundManager = require('../SoundManager').default;
-    const paths: DrawingPath[] = [
-      { points: [{ x: 0, y: 0 }], color: '#000', strokeWidth: 2 },
-    ];
+    const paths: DrawingPath[] = [{ points: [{ x: 0, y: 0 }], color: '#000', strokeWidth: 2 }];
 
     const { result } = renderGamePhase({ drawingPaths: paths });
 
@@ -194,9 +194,7 @@ describe('useGamePhase', () => {
     const storageManager = require('../StorageManager').default;
     storageManager.saveToGallery.mockRejectedValueOnce(new Error('Gallery error'));
     const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    const paths: DrawingPath[] = [
-      { points: [{ x: 0, y: 0 }], color: '#000', strokeWidth: 2 },
-    ];
+    const paths: DrawingPath[] = [{ points: [{ x: 0, y: 0 }], color: '#000', strokeWidth: 2 }];
 
     const { result } = renderGamePhase({ drawingPaths: paths });
 
@@ -214,7 +212,9 @@ describe('useGamePhase', () => {
   it('starts next level', () => {
     const { result } = renderGamePhase();
 
-    act(() => { result.current.startNextLevel(); });
+    act(() => {
+      result.current.startNextLevel();
+    });
 
     expect(result.current.levelNumber).toBe(2);
     expect(result.current.phase).toBe('memorize');
@@ -225,7 +225,9 @@ describe('useGamePhase', () => {
   it('does not go beyond total levels', () => {
     const { result } = renderGamePhase({ initialLevel: 10 });
 
-    act(() => { result.current.startNextLevel(); });
+    act(() => {
+      result.current.startNextLevel();
+    });
 
     expect(result.current.levelNumber).toBe(10);
   });
@@ -233,7 +235,9 @@ describe('useGamePhase', () => {
   it('starts previous level', () => {
     const { result } = renderGamePhase({ initialLevel: 3 });
 
-    act(() => { result.current.startPreviousLevel(); });
+    act(() => {
+      result.current.startPreviousLevel();
+    });
 
     expect(result.current.levelNumber).toBe(2);
     expect(result.current.phase).toBe('memorize');
@@ -243,7 +247,9 @@ describe('useGamePhase', () => {
   it('does not go below level 1', () => {
     const { result } = renderGamePhase({ initialLevel: 1 });
 
-    act(() => { result.current.startPreviousLevel(); });
+    act(() => {
+      result.current.startPreviousLevel();
+    });
 
     expect(result.current.levelNumber).toBe(1);
   });
@@ -251,7 +257,9 @@ describe('useGamePhase', () => {
   it('restarts current level with new image', () => {
     const { result } = renderGamePhase();
 
-    act(() => { result.current.restartCurrentLevel(); });
+    act(() => {
+      result.current.restartCurrentLevel();
+    });
 
     expect(result.current.phase).toBe('memorize');
     expect(result.current.userRating).toBe(0);
@@ -262,7 +270,9 @@ describe('useGamePhase', () => {
   it('restarts from level 1', () => {
     const { result } = renderGamePhase({ initialLevel: 5 });
 
-    act(() => { result.current.restartFromLevel1(); });
+    act(() => {
+      result.current.restartFromLevel1();
+    });
 
     expect(result.current.levelNumber).toBe(1);
     expect(result.current.phase).toBe('memorize');
@@ -273,11 +283,20 @@ describe('useGamePhase', () => {
 
   it('starts replay', () => {
     const paths: DrawingPath[] = [
-      { points: [{ x: 0, y: 0 }, { x: 1, y: 1 }], color: '#000', strokeWidth: 2 },
+      {
+        points: [
+          { x: 0, y: 0 },
+          { x: 1, y: 1 },
+        ],
+        color: '#000',
+        strokeWidth: 2,
+      },
     ];
     const { result } = renderGamePhase({ drawingPaths: paths });
 
-    act(() => { result.current.startReplay(); });
+    act(() => {
+      result.current.startReplay();
+    });
 
     expect(result.current.isReplaying).toBe(true);
   });
@@ -285,21 +304,25 @@ describe('useGamePhase', () => {
   it('does not start replay with empty paths', () => {
     const { result } = renderGamePhase({ drawingPaths: [] });
 
-    act(() => { result.current.startReplay(); });
+    act(() => {
+      result.current.startReplay();
+    });
 
     expect(result.current.isReplaying).toBe(false);
   });
 
   it('can stop replay manually', () => {
-    const paths: DrawingPath[] = [
-      { points: [{ x: 0, y: 0 }], color: '#000', strokeWidth: 2 },
-    ];
+    const paths: DrawingPath[] = [{ points: [{ x: 0, y: 0 }], color: '#000', strokeWidth: 2 }];
     const { result } = renderGamePhase({ drawingPaths: paths });
 
-    act(() => { result.current.startReplay(); });
+    act(() => {
+      result.current.startReplay();
+    });
     expect(result.current.isReplaying).toBe(true);
 
-    act(() => { result.current.setIsReplaying(false); });
+    act(() => {
+      result.current.setIsReplaying(false);
+    });
     expect(result.current.isReplaying).toBe(false);
   });
 
@@ -309,7 +332,9 @@ describe('useGamePhase', () => {
     const { result, unmount } = renderGamePhase();
 
     // Trigger timer expire to create timeout
-    act(() => { jest.advanceTimersByTime(3000); });
+    act(() => {
+      jest.advanceTimersByTime(3000);
+    });
 
     unmount();
     // Should not throw when pending timeouts fire

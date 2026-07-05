@@ -48,12 +48,14 @@ afterEach(() => {
 });
 
 const getAllTexts = (getAllByType: (type: any) => any[]) =>
-  getAllByType(Text).map((n: any) => n.props.children).flat();
+  getAllByType(Text)
+    .map((n: any) => n.props.children)
+    .flat();
 
 describe('TutorialOverlay', () => {
   it('renders memorize phase hint text', () => {
     const { UNSAFE_getAllByType, unmount } = render(
-      <TutorialOverlay phase="memorize" onDismiss={jest.fn()} />
+      <TutorialOverlay phase="memorize" onDismiss={jest.fn()} />,
     );
     const texts = getAllTexts(UNSAFE_getAllByType);
     expect(texts).toContain('tutorial.memorize');
@@ -62,7 +64,7 @@ describe('TutorialOverlay', () => {
 
   it('renders draw phase hint text', () => {
     const { UNSAFE_getAllByType, unmount } = render(
-      <TutorialOverlay phase="draw" onDismiss={jest.fn()} />
+      <TutorialOverlay phase="draw" onDismiss={jest.fn()} />,
     );
     const texts = getAllTexts(UNSAFE_getAllByType);
     expect(texts).toContain('tutorial.draw');
@@ -71,7 +73,7 @@ describe('TutorialOverlay', () => {
 
   it('renders result phase hint text', () => {
     const { UNSAFE_getAllByType, unmount } = render(
-      <TutorialOverlay phase="result" onDismiss={jest.fn()} />
+      <TutorialOverlay phase="result" onDismiss={jest.fn()} />,
     );
     const texts = getAllTexts(UNSAFE_getAllByType);
     expect(texts).toContain('tutorial.result');
@@ -80,7 +82,7 @@ describe('TutorialOverlay', () => {
 
   it('renders tap hint in every phase', () => {
     const { UNSAFE_getAllByType, unmount } = render(
-      <TutorialOverlay phase="memorize" onDismiss={jest.fn()} />
+      <TutorialOverlay phase="memorize" onDismiss={jest.fn()} />,
     );
     const texts = getAllTexts(UNSAFE_getAllByType);
     expect(texts).toContain('tutorial.tap');
@@ -89,7 +91,7 @@ describe('TutorialOverlay', () => {
 
   it('renders badge labels for all three phases', () => {
     const { UNSAFE_getAllByType, unmount } = render(
-      <TutorialOverlay phase="draw" onDismiss={jest.fn()} />
+      <TutorialOverlay phase="draw" onDismiss={jest.fn()} />,
     );
     const texts = getAllTexts(UNSAFE_getAllByType).join(' ');
     expect(texts).toMatch('tutorial.badgeMemorize');
@@ -99,9 +101,7 @@ describe('TutorialOverlay', () => {
   });
 
   it('cleans up timers on unmount without crashing', () => {
-    const { unmount } = render(
-      <TutorialOverlay phase="memorize" onDismiss={jest.fn()} />
-    );
+    const { unmount } = render(<TutorialOverlay phase="memorize" onDismiss={jest.fn()} />);
     expect(() => unmount()).not.toThrow();
   });
 });

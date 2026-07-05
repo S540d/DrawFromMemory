@@ -121,7 +121,7 @@ describe('StorageManager', () => {
       };
 
       (AsyncStorage.getItem as jest.Mock).mockImplementation(() =>
-        Promise.resolve(JSON.stringify(currentProgress))
+        Promise.resolve(JSON.stringify(currentProgress)),
       );
 
       (AsyncStorage.setItem as jest.Mock).mockImplementation((key: string, value: string) => {
@@ -298,7 +298,7 @@ describe('StorageManager', () => {
           '@merke_male:sound_enabled',
           '@merke_male:music_enabled',
           '@merke_male:extra_time_mode',
-        ])
+        ]),
       );
     });
 
@@ -343,7 +343,7 @@ describe('StorageManager', () => {
       };
 
       (AsyncStorage.getItem as jest.Mock).mockImplementation(() =>
-        Promise.resolve(JSON.stringify(currentProgress))
+        Promise.resolve(JSON.stringify(currentProgress)),
       );
 
       (AsyncStorage.setItem as jest.Mock).mockImplementation((key: string, value: string) => {

@@ -12,7 +12,7 @@ import {
 } from '../StreakManager';
 
 jest.mock('@react-native-async-storage/async-storage', () =>
-  require('@react-native-async-storage/async-storage/jest/async-storage-mock')
+  require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 );
 
 describe('StreakManager', () => {
@@ -106,14 +106,14 @@ describe('StreakManager', () => {
 
     it('handles month boundary correctly', async () => {
       await updateStreakAfterGame(new Date(2026, 3, 30)); // Apr 30
-      await updateStreakAfterGame(new Date(2026, 4, 1));  // May 1
+      await updateStreakAfterGame(new Date(2026, 4, 1)); // May 1
       const data = await getStreakData();
       expect(data.currentStreak).toBe(2);
     });
 
     it('handles year boundary correctly', async () => {
       await updateStreakAfterGame(new Date(2025, 11, 31)); // Dec 31
-      await updateStreakAfterGame(new Date(2026, 0, 1));   // Jan 1
+      await updateStreakAfterGame(new Date(2026, 0, 1)); // Jan 1
       const data = await getStreakData();
       expect(data.currentStreak).toBe(2);
     });

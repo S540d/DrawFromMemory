@@ -47,7 +47,12 @@ export function useParentalGateAction(): UseParentalGateActionResult {
 
   const openWithUrl = useCallback(
     (url: string, opts: { errorMessage: string; errorTitle: string }) => {
-      setPending({ type: 'url', url, errorMessage: opts.errorMessage, errorTitle: opts.errorTitle });
+      setPending({
+        type: 'url',
+        url,
+        errorMessage: opts.errorMessage,
+        errorTitle: opts.errorTitle,
+      });
       setGateVisible(true);
     },
     [],

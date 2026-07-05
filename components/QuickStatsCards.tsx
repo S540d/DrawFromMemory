@@ -31,8 +31,8 @@ export default function QuickStatsCards() {
   const [displayStats, setDisplayStats] = useState<Stats>(ZERO_STATS);
 
   const glassSurface = theme === 'dark' ? Colors.glass.darkSurface : Colors.glass.lightSurface;
-  const glassBorder  = theme === 'dark' ? Colors.glass.darkBorder  : Colors.glass.lightBorder;
-  const glassShadow  = theme === 'dark' ? Colors.glass.darkShadow  : Colors.glass.lightShadow;
+  const glassBorder = theme === 'dark' ? Colors.glass.darkBorder : Colors.glass.lightBorder;
+  const glassShadow = theme === 'dark' ? Colors.glass.darkShadow : Colors.glass.lightShadow;
 
   useFocusEffect(
     useCallback(() => {
@@ -43,10 +43,7 @@ export default function QuickStatsCards() {
           getStreakData(),
         ]);
         if (!mounted) return;
-        const totalStars = Object.values(progress.levels).reduce(
-          (sum, l) => sum + l.bestRating,
-          0
-        );
+        const totalStars = Object.values(progress.levels).reduce((sum, l) => sum + l.bestRating, 0);
         setStats({
           totalStars,
           currentStreak: streakData.currentStreak,
@@ -54,8 +51,10 @@ export default function QuickStatsCards() {
         });
       };
       load();
-      return () => { mounted = false; };
-    }, [])
+      return () => {
+        mounted = false;
+      };
+    }, []),
   );
 
   // Animate displayed values from 0 to the loaded targets
@@ -64,7 +63,10 @@ export default function QuickStatsCards() {
   useEffect(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
-    if (reduceMotion || (stats.totalStars === 0 && stats.currentStreak === 0 && stats.levelsCompleted === 0)) {
+    if (
+      reduceMotion ||
+      (stats.totalStars === 0 && stats.currentStreak === 0 && stats.levelsCompleted === 0)
+    ) {
       setDisplayStats(stats);
       return;
     }
@@ -114,9 +116,10 @@ export default function QuickStatsCards() {
       emoji: '🔥',
       label: t('home.stats.streak'),
       value: String(displayStats.currentStreak),
-      sub: stats.currentStreak > 0
-        ? t(stats.currentStreak === 1 ? 'home.stats.streakDay' : 'home.stats.streakDays')
-        : null,
+      sub:
+        stats.currentStreak > 0
+          ? t(stats.currentStreak === 1 ? 'home.stats.streakDay' : 'home.stats.streakDays')
+          : null,
       onPress: () => router.push('/levels'),
       index: 1,
     },
@@ -132,7 +135,7 @@ export default function QuickStatsCards() {
 
   return (
     <View style={[styles.row, narrow && styles.rowWrap]}>
-      {cards.map((card) => (
+      {cards.map(card => (
         <GlassCard
           key={card.label}
           index={card.index}
@@ -141,10 +144,31 @@ export default function QuickStatsCards() {
           accessibilityLabel={`${card.label}: ${card.value}${card.sub ? ' ' + card.sub : ''}`}
         >
           <Text style={styles.emoji}>{card.emoji}</Text>
-          <Text style={[styles.value, { color: colors.text.primary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{card.value}</Text>
-          <Text style={[styles.label, { color: colors.text.secondary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{card.label}</Text>
+          <Text
+            style={[styles.value, { color: colors.text.primary }]}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.7}
+          >
+            {card.value}
+          </Text>
+          <Text
+            style={[styles.label, { color: colors.text.secondary }]}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.7}
+          >
+            {card.label}
+          </Text>
           {card.sub !== null && (
-            <Text style={[styles.sub, { color: colors.text.secondary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{card.sub}</Text>
+            <Text
+              style={[styles.sub, { color: colors.text.secondary }]}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.7}
+            >
+              {card.sub}
+            </Text>
           )}
         </GlassCard>
       ))}

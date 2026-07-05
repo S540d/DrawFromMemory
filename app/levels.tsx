@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, useWindowDimensions } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
@@ -41,12 +48,16 @@ export default function LevelsScreen() {
     let mounted = true;
     Promise.all(
       levels.map(level =>
-        storageManager.getLevelRating(level.number).then(r => [level.number, r] as [number, number | null])
-      )
+        storageManager
+          .getLevelRating(level.number)
+          .then(r => [level.number, r] as [number, number | null]),
+      ),
     ).then(entries => {
       if (mounted) setRatings(Object.fromEntries(entries));
     });
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, [levels]);
 
   const renderStars = (rating: number | null, levelNumber: number) => {
@@ -66,7 +77,7 @@ export default function LevelsScreen() {
     );
   };
 
-  const renderLevelCard = ({ item, index }: { item: typeof levels[0]; index: number }) => {
+  const renderLevelCard = ({ item, index }: { item: (typeof levels)[0]; index: number }) => {
     const difficultyText = t(`difficulty.${item.difficulty}`);
 
     return (
@@ -97,7 +108,6 @@ export default function LevelsScreen() {
 
         {/* Sterne-Bewertung */}
         {renderStars(ratings[item.number] ?? null, item.number)}
-
       </GlassCard>
     );
   };
@@ -119,10 +129,10 @@ export default function LevelsScreen() {
           {t('levels.variant.title')}
         </Text>
         <ChipGroup
-          options={VARIANT_KEYS.map((v) => t(`levels.variant.${v}`))}
+          options={VARIANT_KEYS.map(v => t(`levels.variant.${v}`))}
           selected={t(`levels.variant.${variant}`)}
-          onSelect={(label) => {
-            const match = VARIANT_KEYS.find((v) => t(`levels.variant.${v}`) === label);
+          onSelect={label => {
+            const match = VARIANT_KEYS.find(v => t(`levels.variant.${v}`) === label);
             if (match) setVariant(match);
           }}
         />
@@ -132,7 +142,7 @@ export default function LevelsScreen() {
       <FlatList
         data={levels}
         renderItem={renderLevelCard}
-        keyExtractor={(item) => `level-${item.number}`}
+        keyExtractor={item => `level-${item.number}`}
         numColumns={2}
         columnWrapperStyle={styles.row}
         contentContainerStyle={styles.listContent}
@@ -141,7 +151,6 @@ export default function LevelsScreen() {
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {

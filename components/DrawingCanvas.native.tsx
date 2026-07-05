@@ -1,5 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, Platform, useWindowDimensions } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  Platform,
+  useWindowDimensions,
+} from 'react-native';
 import { t } from '@services/i18n';
 import { styles, DEFAULT_CANVAS_WIDTH } from './DrawingCanvas.shared';
 import type { DrawingPath } from './DrawingCanvas.shared';
@@ -74,7 +81,11 @@ interface Props {
  * On some Android devices, the native module isn't ready on first load
  * but works after a short delay or app restart.
  */
-function SkiaFallback({ width, height, onRetrySuccess }: {
+function SkiaFallback({
+  width,
+  height,
+  onRetrySuccess,
+}: {
   width: number;
   height: number;
   onRetrySuccess: () => void;
@@ -99,7 +110,7 @@ function SkiaFallback({ width, height, onRetrySuccess }: {
       if (tryLoadSkia()) {
         onRetrySuccessRef.current();
       } else {
-        setRetryCount((c) => c + 1);
+        setRetryCount(c => c + 1);
       }
     }, RETRY_DELAY_MS);
 
@@ -183,8 +194,13 @@ export default function DrawingCanvas({
     const { locationX, locationY } = event.nativeEvent;
 
     if (tool === 'fill') {
-      const newPath = { points: [{ x: locationX, y: locationY }], color: strokeColor, strokeWidth: 0, type: 'fill' as const };
-      setNativePaths((prev) => {
+      const newPath = {
+        points: [{ x: locationX, y: locationY }],
+        color: strokeColor,
+        strokeWidth: 0,
+        type: 'fill' as const,
+      };
+      setNativePaths(prev => {
         const newPaths = [...prev, newPath];
         onDrawingChange(newPaths);
         return newPaths;
@@ -197,13 +213,18 @@ export default function DrawingCanvas({
   const handleTouchMove = (event: { nativeEvent: { locationX: number; locationY: number } }) => {
     if (!onDrawingChange || currentNativePath.length === 0 || tool === 'fill') return;
     const { locationX, locationY } = event.nativeEvent;
-    setCurrentNativePath((prev) => [...prev, { x: locationX, y: locationY }]);
+    setCurrentNativePath(prev => [...prev, { x: locationX, y: locationY }]);
   };
 
   const handleTouchEnd = () => {
     if (!onDrawingChange || currentNativePath.length === 0 || tool === 'fill') return;
-    const finishedPath = { points: currentNativePath, color: strokeColor, strokeWidth, type: 'stroke' as const };
-    setNativePaths((prev) => {
+    const finishedPath = {
+      points: currentNativePath,
+      color: strokeColor,
+      strokeWidth,
+      type: 'stroke' as const,
+    };
+    setNativePaths(prev => {
       const newPaths = [...prev, finishedPath];
       onDrawingChange(newPaths);
       return newPaths;
@@ -216,7 +237,10 @@ export default function DrawingCanvas({
     const strokePaths = nativePaths.filter(p => p.type !== 'fill');
     if (strokePaths.length === 0) return { scale: 1, offsetX: 0, offsetY: 0 };
 
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
     strokePaths.forEach(path => {
       path.points.forEach(point => {
         minX = Math.min(minX, point.x);
@@ -232,7 +256,11 @@ export default function DrawingCanvas({
     if (drawingWidth <= 0 || drawingHeight <= 0) return { scale: 1, offsetX: 0, offsetY: 0 };
 
     const padding = 10;
-    const scale = Math.min((width - 2 * padding) / drawingWidth, (height - 2 * padding) / drawingHeight, 1);
+    const scale = Math.min(
+      (width - 2 * padding) / drawingWidth,
+      (height - 2 * padding) / drawingHeight,
+      1,
+    );
     const scaledWidth = drawingWidth * scale;
     const scaledHeight = drawingHeight * scale;
     const offsetX = (width - scaledWidth) / 2 - minX * scale;
@@ -247,7 +275,7 @@ export default function DrawingCanvas({
     strokeW: number,
     scale: number = 1,
     offsetX: number = 0,
-    offsetY: number = 0
+    offsetY: number = 0,
   ) => {
     if (points.length < 2) return null;
 
@@ -260,7 +288,9 @@ export default function DrawingCanvas({
     return { path, color, width: strokeW * scale };
   };
 
-  const { scale, offsetX, offsetY } = !onDrawingChange ? getScaledPaths() : { scale: 1, offsetX: 0, offsetY: 0 };
+  const { scale, offsetX, offsetY } = !onDrawingChange
+    ? getScaledPaths()
+    : { scale: 1, offsetX: 0, offsetY: 0 };
 
   const hasFillPaths = nativePaths.some(p => p.type === 'fill');
 
@@ -300,25 +330,33 @@ export default function DrawingCanvas({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        >
-          {hasFillPaths ? (
+      >
+        {hasFillPaths ? (
           // On older Android GPUs, Skia image creation from CPU flood-fill buffers can
           // render invisibly. Render fills as rect spans instead, then draw strokes above.
           <>
-            {SkiaRect && fillLayers.flatMap((layer, layerIndex) =>
-              layer.spans.map((span, spanIndex) => (
-                <SkiaRect
-                  key={`fill-${layerIndex}-${span.y}-${span.x}-${spanIndex}`}
-                  x={span.x}
-                  y={span.y}
-                  width={span.width}
-                  height={1}
-                  color={layer.color}
-                />
-              ))
-            )}
+            {SkiaRect &&
+              fillLayers.flatMap((layer, layerIndex) =>
+                layer.spans.map((span, spanIndex) => (
+                  <SkiaRect
+                    key={`fill-${layerIndex}-${span.y}-${span.x}-${spanIndex}`}
+                    x={span.x}
+                    y={span.y}
+                    width={span.width}
+                    height={1}
+                    color={layer.color}
+                  />
+                )),
+              )}
             {nativePaths.map((pathData, index) => {
-              const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth, scale, offsetX, offsetY);
+              const skiaPath = createSkiaPath(
+                pathData.points,
+                pathData.color,
+                pathData.strokeWidth,
+                scale,
+                offsetX,
+                offsetY,
+              );
               if (!skiaPath) return null;
               return (
                 <SkiaPath
@@ -336,7 +374,14 @@ export default function DrawingCanvas({
         ) : (
           // No fills – render stroke paths directly as Skia paths (faster, no CPU round-trip)
           nativePaths.map((pathData, index) => {
-            const skiaPath = createSkiaPath(pathData.points, pathData.color, pathData.strokeWidth, scale, offsetX, offsetY);
+            const skiaPath = createSkiaPath(
+              pathData.points,
+              pathData.color,
+              pathData.strokeWidth,
+              scale,
+              offsetX,
+              offsetY,
+            );
             if (!skiaPath) return null;
             return (
               <SkiaPath
@@ -352,20 +397,22 @@ export default function DrawingCanvas({
           })
         )}
 
-        {onDrawingChange && currentNativePath.length > 1 && (() => {
-          const skiaPath = createSkiaPath(currentNativePath, strokeColor, strokeWidth, 1, 0, 0);
-          if (!skiaPath) return null;
-          return (
-            <SkiaPath
-              path={skiaPath.path}
-              color={skiaPath.color}
-              style="stroke"
-              strokeWidth={skiaPath.width}
-              strokeCap="round"
-              strokeJoin="round"
-            />
-          );
-        })()}
+        {onDrawingChange &&
+          currentNativePath.length > 1 &&
+          (() => {
+            const skiaPath = createSkiaPath(currentNativePath, strokeColor, strokeWidth, 1, 0, 0);
+            if (!skiaPath) return null;
+            return (
+              <SkiaPath
+                path={skiaPath.path}
+                color={skiaPath.color}
+                style="stroke"
+                strokeWidth={skiaPath.width}
+                strokeCap="round"
+                strokeJoin="round"
+              />
+            );
+          })()}
       </SkiaCanvas>
     </View>
   );

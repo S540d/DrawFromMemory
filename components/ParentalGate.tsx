@@ -96,7 +96,7 @@ export default function ParentalGate({ visible, onSuccess, onCancel }: ParentalG
             ]}
             keyboardType="number-pad"
             value={input}
-            onChangeText={(v) => {
+            onChangeText={v => {
               setInput(v);
               setShowError(false);
             }}

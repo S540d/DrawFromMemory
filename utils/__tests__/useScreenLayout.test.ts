@@ -118,7 +118,9 @@ describe('useScreenLayout', () => {
         mockWindowDimensions = { width, height };
         mockInsets = { top, bottom, left: 0, right: 0 };
         const { result } = renderHook(() => useScreenLayout());
-        expect(result.current.canvasMaxHeight).toBeGreaterThanOrEqual(result.current.canvasMinHeight);
+        expect(result.current.canvasMaxHeight).toBeGreaterThanOrEqual(
+          result.current.canvasMinHeight,
+        );
       });
     });
   });
@@ -145,7 +147,9 @@ describe('useScreenLayout', () => {
       mockInsets = { top: 50, bottom: 34, left: 0, right: 0 };
       const { result: lgResult } = renderHook(() => useScreenLayout());
 
-      expect(xsResult.current.toolbarButtonMinHeight).toBeLessThan(lgResult.current.toolbarButtonMinHeight);
+      expect(xsResult.current.toolbarButtonMinHeight).toBeLessThan(
+        lgResult.current.toolbarButtonMinHeight,
+      );
     });
   });
 
@@ -191,7 +195,9 @@ describe('useScreenLayout', () => {
       mockInsets = { top: 50, bottom: 34, left: 0, right: 0 };
       const { result: lgResult } = renderHook(() => useScreenLayout());
 
-      expect(xsResult.current.headerPaddingVertical).toBeLessThan(lgResult.current.headerPaddingVertical);
+      expect(xsResult.current.headerPaddingVertical).toBeLessThan(
+        lgResult.current.headerPaddingVertical,
+      );
     });
   });
 });

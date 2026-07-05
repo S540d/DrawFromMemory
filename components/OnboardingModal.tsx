@@ -42,7 +42,7 @@ function PaintEmoji({ animate }: { animate: boolean }) {
     scale.value = withRepeat(
       withSequence(
         withTiming(1.12, { duration: 950, easing: Easing.inOut(Easing.ease) }),
-        withTiming(1.0,  { duration: 950, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1.0, { duration: 950, easing: Easing.inOut(Easing.ease) }),
       ),
       -1,
       false,
@@ -50,8 +50,8 @@ function PaintEmoji({ animate }: { animate: boolean }) {
     rotate.value = withRepeat(
       withSequence(
         withTiming(-6, { duration: 800, easing: Easing.inOut(Easing.ease) }),
-        withTiming(6,  { duration: 800, easing: Easing.inOut(Easing.ease) }),
-        withTiming(0,  { duration: 400, easing: Easing.inOut(Easing.ease) }),
+        withTiming(6, { duration: 800, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0, { duration: 400, easing: Easing.inOut(Easing.ease) }),
       ),
       -1,
       false,
@@ -88,7 +88,12 @@ export default function OnboardingModal({ visible, onClose, onStartTutorial }: P
   };
 
   return (
-    <Modal visible={visible} animationType="fade" onRequestClose={handleSkip} testID="onboarding-modal">
+    <Modal
+      visible={visible}
+      animationType="fade"
+      onRequestClose={handleSkip}
+      testID="onboarding-modal"
+    >
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         {/* Skip */}
         <View style={styles.topBar}>
@@ -137,9 +142,7 @@ export default function OnboardingModal({ visible, onClose, onStartTutorial }: P
           accessibilityRole="button"
           testID="onboarding-start"
         >
-          <Text style={styles.startButtonText}>
-            {t('onboarding.startButton')} 🎮
-          </Text>
+          <Text style={styles.startButtonText}>{t('onboarding.startButton')} 🎮</Text>
         </Pressable>
       </View>
     </Modal>

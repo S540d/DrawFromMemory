@@ -47,27 +47,44 @@ export default function CreativeScreen() {
   const handleClear = () => {
     if (drawing.paths.length === 0) return;
     if (Platform.OS === 'web') {
-      if (window.confirm(t('game.draw.clearConfirm'))) { // platform-safe
+      if (window.confirm(t('game.draw.clearConfirm'))) {
+        // platform-safe
         drawing.setPaths([]);
         setSavedToGallery(false);
       }
     } else {
-      Alert.alert(
-        t('game.draw.clear'),
-        t('game.draw.clearConfirm'),
-        [
-          { text: t('common.cancel'), style: 'cancel' },
-          { text: t('common.yes'), style: 'destructive', onPress: () => { drawing.setPaths([]); setSavedToGallery(false); } },
-        ]
-      );
+      Alert.alert(t('game.draw.clear'), t('game.draw.clearConfirm'), [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.yes'),
+          style: 'destructive',
+          onPress: () => {
+            drawing.setPaths([]);
+            setSavedToGallery(false);
+          },
+        },
+      ]);
     }
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.background,
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+        },
+      ]}
+    >
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton} accessibilityRole="button">
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backButton}
+          accessibilityRole="button"
+        >
           <Text style={[styles.backText, { color: colors.primary }]}>← {t('common.back')}</Text>
         </TouchableOpacity>
         <Text style={[styles.title, { color: colors.text.primary }]}>{t('creative.title')}</Text>
@@ -77,7 +94,7 @@ export default function CreativeScreen() {
       {/* Canvas — nimmt den gesamten freien Platz ein */}
       <View
         style={styles.canvasContainer}
-        onLayout={(e) => {
+        onLayout={e => {
           const { width, height } = e.nativeEvent.layout;
           setCanvasSize({ width: Math.floor(width), height: Math.floor(height) });
         }}
@@ -90,7 +107,10 @@ export default function CreativeScreen() {
             strokeWidth={drawing.strokeWidth}
             tool={drawing.tool}
             paths={drawing.paths}
-            onDrawingChange={(paths) => { drawing.setPaths(paths); setSavedToGallery(false); }}
+            onDrawingChange={paths => {
+              drawing.setPaths(paths);
+              setSavedToGallery(false);
+            }}
           />
         </ErrorBoundary>
       </View>
@@ -99,7 +119,7 @@ export default function CreativeScreen() {
       <View style={[styles.toolbarGroup, { backgroundColor: colors.surfaceAlt }]}>
         <FlatList
           data={DrawingColors}
-          keyExtractor={(item) => item.hex}
+          keyExtractor={item => item.hex}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.colorRowContent}
@@ -123,7 +143,11 @@ export default function CreativeScreen() {
 
         <View style={styles.toolRow}>
           <TouchableOpacity
-            style={[styles.toolButton, { backgroundColor: colors.surface, borderColor: colors.border }, drawing.tool === 'brush' && styles.toolButtonActive]}
+            style={[
+              styles.toolButton,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+              drawing.tool === 'brush' && styles.toolButtonActive,
+            ]}
             onPress={() => drawing.setTool('brush')}
             accessibilityRole="button"
             accessibilityLabel={t('game.draw.toolBrush')}
@@ -131,7 +155,11 @@ export default function CreativeScreen() {
             <Text style={styles.toolIcon}>✏️</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.toolButton, { backgroundColor: colors.surface, borderColor: colors.border }, drawing.tool === 'fill' && styles.toolButtonActive]}
+            style={[
+              styles.toolButton,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+              drawing.tool === 'fill' && styles.toolButtonActive,
+            ]}
             onPress={() => drawing.setTool('fill')}
             accessibilityRole="button"
             accessibilityLabel={t('game.draw.toolFill')}
@@ -141,24 +169,29 @@ export default function CreativeScreen() {
 
           <View style={[styles.toolRowSeparator, { backgroundColor: colors.border }]} />
 
-          {([2, 3, 5] as const).map((size) => (
+          {([2, 3, 5] as const).map(size => (
             <TouchableOpacity
               key={size}
               style={[styles.strokeButton, drawing.tool === 'fill' && styles.strokeButtonDisabled]}
-              onPress={() => { if (drawing.tool !== 'fill') drawing.setStrokeWidth(size); }}
+              onPress={() => {
+                if (drawing.tool !== 'fill') drawing.setStrokeWidth(size);
+              }}
               disabled={drawing.tool === 'fill'}
               accessibilityRole="button"
             >
-              <View style={[
-                styles.strokeCircle,
-                {
-                  width: size === 2 ? 10 : size === 3 ? 16 : 22,
-                  height: size === 2 ? 10 : size === 3 ? 16 : 22,
-                  backgroundColor: drawing.strokeWidth === size && drawing.tool !== 'fill'
-                    ? drawing.color
-                    : colors.text.secondary,
-                },
-              ]} />
+              <View
+                style={[
+                  styles.strokeCircle,
+                  {
+                    width: size === 2 ? 10 : size === 3 ? 16 : 22,
+                    height: size === 2 ? 10 : size === 3 ? 16 : 22,
+                    backgroundColor:
+                      drawing.strokeWidth === size && drawing.tool !== 'fill'
+                        ? drawing.color
+                        : colors.text.secondary,
+                  },
+                ]}
+              />
             </TouchableOpacity>
           ))}
         </View>
@@ -167,33 +200,51 @@ export default function CreativeScreen() {
       {/* Action buttons */}
       <View style={styles.buttonRow}>
         <TouchableOpacity
-          style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: Colors.primary }, drawing.paths.length === 0 && styles.buttonDisabled]}
+          style={[
+            styles.secondaryButton,
+            { backgroundColor: colors.surface, borderColor: Colors.primary },
+            drawing.paths.length === 0 && styles.buttonDisabled,
+          ]}
           onPress={drawing.undo}
           disabled={drawing.paths.length === 0}
           accessibilityRole="button"
           accessibilityLabel={t('game.draw.undo')}
         >
-          <Text style={[styles.secondaryButtonText, { color: Colors.primary }]}>{t('game.draw.undo')}</Text>
+          <Text style={[styles.secondaryButtonText, { color: Colors.primary }]}>
+            {t('game.draw.undo')}
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: Colors.primary }, drawing.paths.length === 0 && styles.buttonDisabled]}
+          style={[
+            styles.secondaryButton,
+            { backgroundColor: colors.surface, borderColor: Colors.primary },
+            drawing.paths.length === 0 && styles.buttonDisabled,
+          ]}
           onPress={handleClear}
           disabled={drawing.paths.length === 0}
           accessibilityRole="button"
           accessibilityLabel={t('game.draw.clear')}
         >
-          <Text style={[styles.secondaryButtonText, { color: Colors.primary }]}>{t('game.draw.clear')}</Text>
+          <Text style={[styles.secondaryButtonText, { color: Colors.primary }]}>
+            {t('game.draw.clear')}
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: Colors.primary }, drawing.paths.length === 0 && styles.buttonDisabled]}
+          style={[
+            styles.secondaryButton,
+            { backgroundColor: colors.surface, borderColor: Colors.primary },
+            drawing.paths.length === 0 && styles.buttonDisabled,
+          ]}
           onPress={handleShare}
           disabled={drawing.paths.length === 0}
           accessibilityRole="button"
           accessibilityLabel={t('gallery.share')}
         >
-          <Text style={[styles.secondaryButtonText, { color: Colors.primary }]}>{t('gallery.share')}</Text>
+          <Text style={[styles.secondaryButtonText, { color: Colors.primary }]}>
+            {t('gallery.share')}
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity

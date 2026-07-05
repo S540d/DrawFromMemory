@@ -29,7 +29,7 @@ export default function HomeScreen() {
   const [dailyCompleted, setDailyCompleted] = useState(false);
 
   useEffect(() => {
-    isOnboardingDone().then((done) => {
+    isOnboardingDone().then(done => {
       if (!done) setShowOnboarding(true);
     });
   }, []);
@@ -45,10 +45,7 @@ export default function HomeScreen() {
       const refresh = async () => {
         setSecondsLeft(getSecondsUntilMidnight());
         setDailyLevel(getDailyChallengeLevel());
-        const [completed, streakData] = await Promise.all([
-          isTodayCompleted(),
-          getStreakData(),
-        ]);
+        const [completed, streakData] = await Promise.all([isTodayCompleted(), getStreakData()]);
         setDailyCompleted(completed);
         setCurrentStreak(streakData.currentStreak);
       };
@@ -56,27 +53,39 @@ export default function HomeScreen() {
 
       const id = setInterval(refresh, 60_000);
       return () => clearInterval(id);
-    }, [])
+    }, []),
   );
-
 
   const countdownHours = Math.floor(secondsLeft / 3600);
   const countdownMinutes = Math.floor((secondsLeft % 3600) / 60);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top + Spacing.sm, paddingBottom: insets.bottom + Spacing.lg }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.background,
+          paddingTop: insets.top + Spacing.sm,
+          paddingBottom: insets.bottom + Spacing.lg,
+        },
+      ]}
+    >
       <FloatingStars />
 
       {/* Top bar */}
       <View style={styles.topBar}>
         <View>
           <Text style={[styles.appTitle, { color: colors.text.primary }]}>{t('app.name')}</Text>
-          <Text style={[styles.appTagline, { color: colors.text.secondary }]}>{t('home.subtitle')}</Text>
+          <Text style={[styles.appTagline, { color: colors.text.secondary }]}>
+            {t('home.subtitle')}
+          </Text>
         </View>
         <View style={styles.topBarRight}>
           {currentStreak >= 2 && (
             <View style={styles.streakBadge}>
-              <Text style={styles.streakBadgeText}>{t('home.streakBadge', { count: String(currentStreak) })}</Text>
+              <Text style={styles.streakBadgeText}>
+                {t('home.streakBadge', { count: String(currentStreak) })}
+              </Text>
             </View>
           )}
           <Pressable
@@ -116,7 +125,10 @@ export default function HomeScreen() {
         <TouchableOpacity
           style={[
             styles.dailyChallengeButton,
-            { backgroundColor: colors.surface, borderColor: dailyCompleted ? colors.text.light : '#F59E0B' },
+            {
+              backgroundColor: colors.surface,
+              borderColor: dailyCompleted ? colors.text.light : '#F59E0B',
+            },
             dailyCompleted && styles.dailyChallengeCompleted,
           ]}
           onPress={() => !dailyCompleted && router.push(`/game?level=${dailyLevel}&daily=1`)}
@@ -125,7 +137,12 @@ export default function HomeScreen() {
         >
           <Text style={styles.dailyChallengeEmoji}>⚡</Text>
           <View style={styles.dailyChallengeInfo}>
-            <Text style={[styles.dailyChallengeTitle, { color: dailyCompleted ? colors.text.secondary : '#D97706' }]}>
+            <Text
+              style={[
+                styles.dailyChallengeTitle,
+                { color: dailyCompleted ? colors.text.secondary : '#D97706' },
+              ]}
+            >
               {t('dailyChallenge.title')}
             </Text>
             <Text style={[styles.dailyChallengeMeta, { color: colors.text.secondary }]}>
@@ -139,27 +156,42 @@ export default function HomeScreen() {
         {/* Levels + Galerie + Kreativ — Side-by-Side */}
         <View style={styles.secondaryRow}>
           <TouchableOpacity
-            style={[styles.secondaryTile, { backgroundColor: colors.surface, borderColor: colors.primary }]}
+            style={[
+              styles.secondaryTile,
+              { backgroundColor: colors.surface, borderColor: colors.primary },
+            ]}
             onPress={() => router.push('/levels')}
             accessibilityRole="button"
           >
-            <Text style={[styles.secondaryTileText, { color: colors.primary }]}>{t('home.levelsButton')}</Text>
+            <Text style={[styles.secondaryTileText, { color: colors.primary }]}>
+              {t('home.levelsButton')}
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.secondaryTile, { backgroundColor: colors.surface, borderColor: colors.primary }]}
+            style={[
+              styles.secondaryTile,
+              { backgroundColor: colors.surface, borderColor: colors.primary },
+            ]}
             onPress={() => router.push('/gallery')}
             accessibilityRole="button"
           >
-            <Text style={[styles.secondaryTileText, { color: colors.primary }]}>{t('home.galleryButton')}</Text>
+            <Text style={[styles.secondaryTileText, { color: colors.primary }]}>
+              {t('home.galleryButton')}
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.secondaryTile, { backgroundColor: colors.surface, borderColor: colors.primary }]}
+            style={[
+              styles.secondaryTile,
+              { backgroundColor: colors.surface, borderColor: colors.primary },
+            ]}
             onPress={() => router.push('/creative')}
             accessibilityRole="button"
           >
-            <Text style={[styles.secondaryTileText, { color: colors.primary }]}>🎨 {t('home.creativeButton')}</Text>
+            <Text style={[styles.secondaryTileText, { color: colors.primary }]}>
+              🎨 {t('home.creativeButton')}
+            </Text>
           </TouchableOpacity>
         </View>
 

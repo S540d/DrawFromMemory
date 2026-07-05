@@ -51,7 +51,9 @@ jest.mock('../../services/ThemeContext', () => ({
 
 jest.mock('../../components/LevelImageDisplay', () => {
   const { View } = require('react-native');
-  return function LevelImageDisplay() { return <View />; };
+  return function LevelImageDisplay() {
+    return <View />;
+  };
 });
 
 jest.mock('../../components/DrawingCanvas', () => {
@@ -77,7 +79,9 @@ jest.mock('../../components/DrawingCanvas', () => {
 
 jest.mock('../../components/SettingsModal', () => {
   const { View } = require('react-native');
-  return function SettingsModal() { return <View />; };
+  return function SettingsModal() {
+    return <View />;
+  };
 });
 
 jest.mock('../../components/ErrorBoundary', () => ({
@@ -90,7 +94,7 @@ jest.mock('../../components/ErrorBoundary', () => ({
 jest.mock('../../components/AnimatedPrimitives', () => {
   const { View } = require('react-native');
   return {
-    AnimatedFeedback: ({ children, visible }: any) => visible ? <View>{children}</View> : null,
+    AnimatedFeedback: ({ children, visible }: any) => (visible ? <View>{children}</View> : null),
   };
 });
 
@@ -144,7 +148,11 @@ jest.mock('../../services/AchievementManager', () => ({
 }));
 
 jest.mock('../../services/StreakManager', () => ({
-  getStreakData: jest.fn(async () => ({ currentStreak: 0, longestStreak: 0, lastPlayedDate: null })),
+  getStreakData: jest.fn(async () => ({
+    currentStreak: 0,
+    longestStreak: 0,
+    lastPlayedDate: null,
+  })),
 }));
 
 jest.mock('../../services/StorageManager', () => ({
@@ -183,7 +191,9 @@ import GameScreen from '../../app/game';
 
 const getAllTexts = (getAllByType: (type: any) => any[]) => {
   const { Text } = require('react-native');
-  return getAllByType(Text).map((n: any) => n.props.children).flat();
+  return getAllByType(Text)
+    .map((n: any) => n.props.children)
+    .flat();
 };
 
 describe('GameScreen', () => {

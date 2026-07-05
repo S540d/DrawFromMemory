@@ -39,7 +39,9 @@ jest.mock('../../services/LevelManager', () => ({
 
 jest.mock('../../components/LevelImageDisplay', () => {
   const { View } = require('react-native');
-  return function LevelImageDisplay() { return <View testID="level-image-display" />; };
+  return function LevelImageDisplay() {
+    return <View testID="level-image-display" />;
+  };
 });
 
 jest.mock('../../components/DrawingCanvas', () => {
@@ -73,7 +75,7 @@ jest.mock('../../components/ErrorBoundary', () => ({
 jest.mock('../../components/AnimatedPrimitives', () => {
   const { View } = require('react-native');
   return {
-    AnimatedFeedback: ({ children, visible }: any) => visible ? <View>{children}</View> : null,
+    AnimatedFeedback: ({ children, visible }: any) => (visible ? <View>{children}</View> : null),
     AnimatedStar: ({ onPress, accessibilityLabel, index }: any) => {
       const { TouchableOpacity, Text } = require('react-native');
       return (
@@ -90,10 +92,14 @@ jest.mock('../../components/game/TimerArc', () => {
   return {
     __esModule: true,
     default: ({ timeRemaining }: any) => (
-      <View testID="timer-arc-container"><Text testID="timer-arc">{String(Math.max(0, Math.ceil(timeRemaining)))}</Text></View>
+      <View testID="timer-arc-container">
+        <Text testID="timer-arc">{String(Math.max(0, Math.ceil(timeRemaining)))}</Text>
+      </View>
     ),
     TimerArc: ({ timeRemaining }: any) => (
-      <View testID="timer-arc-container"><Text testID="timer-arc">{String(Math.max(0, Math.ceil(timeRemaining)))}</Text></View>
+      <View testID="timer-arc-container">
+        <Text testID="timer-arc">{String(Math.max(0, Math.ceil(timeRemaining)))}</Text>
+      </View>
     ),
   };
 });
@@ -115,7 +121,9 @@ const mockImage = {
 
 const getAllTexts = (UNSAFE_getAllByType: any): any[] => {
   const { Text } = require('react-native');
-  return UNSAFE_getAllByType(Text).map((n: any) => n.props.children).flat();
+  return UNSAFE_getAllByType(Text)
+    .map((n: any) => n.props.children)
+    .flat();
 };
 
 describe('MemorizePhase', () => {
@@ -131,7 +139,9 @@ describe('MemorizePhase', () => {
   };
 
   it('renders timer arc countdown value', () => {
-    const { UNSAFE_getAllByType } = render(<MemorizePhase {...baseProps} timeRemaining={3} totalTime={5} />);
+    const { UNSAFE_getAllByType } = render(
+      <MemorizePhase {...baseProps} timeRemaining={3} totalTime={5} />,
+    );
     const texts = getAllTexts(UNSAFE_getAllByType);
     expect(texts).toContain('3');
   });
@@ -143,14 +153,16 @@ describe('MemorizePhase', () => {
   });
 
   it('renders image info when image is provided', () => {
-    const { UNSAFE_getAllByType } = render(<MemorizePhase {...baseProps} currentImage={mockImage} />);
+    const { UNSAFE_getAllByType } = render(
+      <MemorizePhase {...baseProps} currentImage={mockImage} />,
+    );
     const texts = getAllTexts(UNSAFE_getAllByType);
     expect(texts).toContain('Sun');
   });
 
   it('shows displayName when lang is de', () => {
     const { UNSAFE_getAllByType } = render(
-      <MemorizePhase {...baseProps} currentImage={mockImage} currentLang="de" />
+      <MemorizePhase {...baseProps} currentImage={mockImage} currentLang="de" />,
     );
     const texts = getAllTexts(UNSAFE_getAllByType);
     expect(texts).toContain('Sonne');
@@ -250,15 +262,19 @@ describe('ResultPhase', () => {
     const { UNSAFE_getAllByType } = render(<ResultPhase {...resultProps} />);
     const texts = getAllTexts(UNSAFE_getAllByType);
     // t() returns key as-is; .toUpperCase() is applied in JSX, so we match uppercased form
-    expect(texts.some((t: any) => typeof t === 'string' && t.includes('GAME.RESULT.TEMPLATE'))).toBeTruthy();
-    expect(texts.some((t: any) => typeof t === 'string' && t.includes('GAME.RESULT.YOURDRAWING'))).toBeTruthy();
+    expect(
+      texts.some((t: any) => typeof t === 'string' && t.includes('GAME.RESULT.TEMPLATE')),
+    ).toBeTruthy();
+    expect(
+      texts.some((t: any) => typeof t === 'string' && t.includes('GAME.RESULT.YOURDRAWING')),
+    ).toBeTruthy();
   });
 
   it('renders 5 star buttons', () => {
     const { UNSAFE_getAllByType } = render(<ResultPhase {...resultProps} />);
     const { TouchableOpacity } = require('react-native');
     const starButtons = UNSAFE_getAllByType(TouchableOpacity).filter(
-      (b: any) => b.props.index !== undefined
+      (b: any) => b.props.index !== undefined,
     );
     expect(starButtons).toHaveLength(5);
   });

@@ -77,7 +77,9 @@ export function useGamePhase({
     storageManager.getSettings().then(settings => {
       if (mounted) setExtraTimeMode(settings.extraTimeMode);
     });
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Initialize image on levelNumber change only — keeps image stable when extraTimeMode loads.
@@ -129,7 +131,7 @@ export function useGamePhase({
 
     const totalPoints = drawingPaths.reduce(
       (sum, p) => sum + (p.type === 'fill' ? 1 : p.points.length),
-      0
+      0,
     );
     const totalFrames = Math.ceil(REPLAY_DURATION_MS / REPLAY_FRAME_MS);
     const pointsPerFrame = Math.max(1, Math.ceil(totalPoints / totalFrames));
@@ -191,7 +193,8 @@ export function useGamePhase({
         stars: rating,
         levelId: levelNumber,
       });
-      const isThisDailyChallenge = dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel;
+      const isThisDailyChallenge =
+        dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel;
       if (isThisDailyChallenge) {
         await markTodayCompleted();
       }
@@ -211,7 +214,8 @@ export function useGamePhase({
         imageName: currentImage.displayName,
         paths: drawingPaths,
         rating: userRating,
-        isDailyChallenge: (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) || undefined,
+        isDailyChallenge:
+          (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) || undefined,
       });
       SoundManager.playSuccess();
       setSavedToGallery(true);

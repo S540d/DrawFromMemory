@@ -35,10 +35,14 @@ describe('useReduceMotion', () => {
     await act(async () => {});
     expect(result.current).toBe(false);
 
-    await act(async () => { capturedHandler?.(true); });
+    await act(async () => {
+      capturedHandler?.(true);
+    });
     expect(result.current).toBe(true);
 
-    await act(async () => { capturedHandler?.(false); });
+    await act(async () => {
+      capturedHandler?.(false);
+    });
     expect(result.current).toBe(false);
   });
 

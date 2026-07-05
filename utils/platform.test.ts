@@ -88,7 +88,8 @@ describe('platform.ts - System Dark Mode Detection', () => {
   });
 
   it('should detect dark mode when prefers-color-scheme is dark', () => {
-    const mockMatchMedia = jest.fn((query: string) => ({ // platform-safe
+    const mockMatchMedia = jest.fn((query: string) => ({
+      // platform-safe
       matches: query === '(prefers-color-scheme: dark)',
       media: query,
       onchange: null,
@@ -107,7 +108,8 @@ describe('platform.ts - System Dark Mode Detection', () => {
   });
 
   it('should detect light mode when prefers-color-scheme is light', () => {
-    const mockMatchMedia = jest.fn((query: string) => ({ // platform-safe
+    const mockMatchMedia = jest.fn((query: string) => ({
+      // platform-safe
       matches: false,
       media: query,
       onchange: null,
@@ -135,7 +137,8 @@ describe('platform.ts - System Dark Mode Detection', () => {
   it('should handle matchMedia errors gracefully', () => {
     const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
-    (window as any).matchMedia = jest.fn(() => { // platform-safe
+    (window as any).matchMedia = jest.fn(() => {
+      // platform-safe
       throw new Error('matchMedia error');
     });
 
@@ -163,7 +166,8 @@ describe('platform.ts - Theme Change Listener', () => {
   it('should add and remove theme change listener successfully', () => {
     const mockRemoveEventListener = jest.fn();
     const mockAddEventListener = jest.fn();
-    const mockMediaQuery = { // platform-safe
+    const mockMediaQuery = {
+      // platform-safe
       matches: false,
       media: '(prefers-color-scheme: dark)',
       onchange: null,
@@ -194,13 +198,16 @@ describe('platform.ts - Theme Change Listener', () => {
 
   it('should call callback when theme changes', () => {
     let changeHandler: ((e: MediaQueryListEvent) => void) | undefined;
-    const mockAddEventListener = jest.fn((event: string, handler: (e: MediaQueryListEvent) => void) => {
-      if (event === 'change') {
-        changeHandler = handler;
-      }
-    });
+    const mockAddEventListener = jest.fn(
+      (event: string, handler: (e: MediaQueryListEvent) => void) => {
+        if (event === 'change') {
+          changeHandler = handler;
+        }
+      },
+    );
 
-    const mockMediaQuery = { // platform-safe
+    const mockMediaQuery = {
+      // platform-safe
       matches: false,
       media: '(prefers-color-scheme: dark)',
       onchange: null,
@@ -242,7 +249,8 @@ describe('platform.ts - Storage Adapter', () => {
     const mockSetItem = jest.fn();
     const mockRemoveItem = jest.fn();
 
-    Object.defineProperty(window, 'localStorage', { // platform-safe
+    Object.defineProperty(window, 'localStorage', {
+      // platform-safe
       value: {
         getItem: mockGetItem,
         setItem: mockSetItem,
@@ -274,9 +282,13 @@ describe('platform.ts - Web API Safety', () => {
   });
 
   it('should return fallback on error', () => {
-    const result = safeWebAPI(() => {
-      throw new Error('API Error');
-    }, 'fallback', 'testAPI');
+    const result = safeWebAPI(
+      () => {
+        throw new Error('API Error');
+      },
+      'fallback',
+      'testAPI',
+    );
     expect(result).toBe('fallback');
   });
 });

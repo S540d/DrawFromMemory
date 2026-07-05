@@ -22,8 +22,8 @@ export default function BadgesModal({ visible, onClose }: Props) {
 
   useEffect(() => {
     if (!visible) return;
-    getUnlockedAchievements().then((list) => {
-      setUnlockedIds(new Set(list.map((u) => u.id)));
+    getUnlockedAchievements().then(list => {
+      setUnlockedIds(new Set(list.map(u => u.id)));
     });
   }, [visible]);
 
@@ -39,12 +39,15 @@ export default function BadgesModal({ visible, onClose }: Props) {
               {t('achievements.title')}
             </Text>
             <Text style={[styles.subtitle, { color: colors.text.secondary }]}>
-              {t('achievements.progress', { unlocked: String(unlockedCount), total: String(total) })}
+              {t('achievements.progress', {
+                unlocked: String(unlockedCount),
+                total: String(total),
+              })}
             </Text>
           </View>
 
           <ScrollView contentContainerStyle={styles.list}>
-            {ACHIEVEMENTS.map((a) => {
+            {ACHIEVEMENTS.map(a => {
               const isUnlocked = unlockedIds.has(a.id);
               return (
                 <View

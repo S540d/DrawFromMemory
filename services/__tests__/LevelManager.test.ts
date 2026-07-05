@@ -95,18 +95,18 @@ describe('LevelManager', () => {
     });
 
     it('should return difficulty-based durations without extraTimeMode', () => {
-      expect(getDisplayDuration(1)).toBe(5);  // difficulty 1
-      expect(getDisplayDuration(2)).toBe(4);  // difficulty 2
-      expect(getDisplayDuration(5)).toBe(3);  // difficulty 3
-      expect(getDisplayDuration(9)).toBe(2);  // difficulty 4
+      expect(getDisplayDuration(1)).toBe(5); // difficulty 1
+      expect(getDisplayDuration(2)).toBe(4); // difficulty 2
+      expect(getDisplayDuration(5)).toBe(3); // difficulty 3
+      expect(getDisplayDuration(9)).toBe(2); // difficulty 4
       expect(getDisplayDuration(14)).toBe(2); // difficulty 5
     });
 
     it('should add exactly +3 s with extraTimeMode for each difficulty', () => {
-      expect(getDisplayDuration(1, true)).toBe(8);  // 5 + 3
-      expect(getDisplayDuration(2, true)).toBe(7);  // 4 + 3
-      expect(getDisplayDuration(5, true)).toBe(6);  // 3 + 3
-      expect(getDisplayDuration(9, true)).toBe(5);  // 2 + 3
+      expect(getDisplayDuration(1, true)).toBe(8); // 5 + 3
+      expect(getDisplayDuration(2, true)).toBe(7); // 4 + 3
+      expect(getDisplayDuration(5, true)).toBe(6); // 3 + 3
+      expect(getDisplayDuration(9, true)).toBe(5); // 2 + 3
       expect(getDisplayDuration(14, true)).toBe(5); // 2 + 3
     });
 

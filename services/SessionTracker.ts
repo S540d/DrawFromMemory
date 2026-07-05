@@ -14,9 +14,9 @@ export const FOUR_WEEKS_MS = 28 * 24 * 60 * 60 * 1000;
 const MAX_ENTRIES = 1000; // hard cap, defensiv
 
 export interface SessionRecord {
-  date: string;       // ISO timestamp
+  date: string; // ISO timestamp
   durationMs: number;
-  stars: number;      // 0..5
+  stars: number; // 0..5
   levelId: number;
 }
 
@@ -36,7 +36,7 @@ const store = createPersistedJson<SessionRecord[]>({
 
 function pruneOld(records: SessionRecord[], now: number = Date.now()): SessionRecord[] {
   const cutoff = now - FOUR_WEEKS_MS;
-  const fresh = records.filter((r) => {
+  const fresh = records.filter(r => {
     const t = Date.parse(r.date);
     return Number.isFinite(t) && t >= cutoff;
   });
@@ -44,7 +44,9 @@ function pruneOld(records: SessionRecord[], now: number = Date.now()): SessionRe
   return fresh.length > MAX_ENTRIES ? fresh.slice(-MAX_ENTRIES) : fresh;
 }
 
-export async function recordSession(record: Omit<SessionRecord, 'date'> & { date?: string }): Promise<void> {
+export async function recordSession(
+  record: Omit<SessionRecord, 'date'> & { date?: string },
+): Promise<void> {
   try {
     const records = await store.load();
     const next: SessionRecord = {
@@ -103,15 +105,18 @@ export function computeStats(records: SessionRecord[]): SessionStats {
 
   // Favorite levels (top 3 by play count)
   const levelCounts = new Map<number, number>();
-  records.forEach((r) => levelCounts.set(r.levelId, (levelCounts.get(r.levelId) ?? 0) + 1));
+  records.forEach(r => levelCounts.set(r.levelId, (levelCounts.get(r.levelId) ?? 0) + 1));
   const favoriteLevels = Array.from(levelCounts.entries())
     .map(([levelId, count]) => ({ levelId, count }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 3);
 
   // Daily breakdown (chronological)
-  const dailyMap = new Map<string, { sessions: number; totalDurationMs: number; starsSum: number }>();
-  records.forEach((r) => {
+  const dailyMap = new Map<
+    string,
+    { sessions: number; totalDurationMs: number; starsSum: number }
+  >();
+  records.forEach(r => {
     const key = localDateKey(r.date);
     const entry = dailyMap.get(key) ?? { sessions: 0, totalDurationMs: 0, starsSum: 0 };
     entry.sessions += 1;

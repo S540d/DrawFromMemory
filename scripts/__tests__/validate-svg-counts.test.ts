@@ -13,10 +13,7 @@ const fs = require('fs');
 const path = require('path');
 /* eslint-enable */
 
-const LEVEL_IMAGE_DISPLAY = path.resolve(
-  __dirname,
-  '../../components/LevelImageDisplay.tsx'
-);
+const LEVEL_IMAGE_DISPLAY = path.resolve(__dirname, '../../components/LevelImageDisplay.tsx');
 
 describe('extractImageElementCounts', () => {
   it('parses IMAGE_ELEMENT_COUNTS map from source', () => {
@@ -32,7 +29,7 @@ describe('extractImageElementCounts', () => {
 
   it('throws if IMAGE_ELEMENT_COUNTS map is missing', () => {
     expect(() => extractImageElementCounts('no map here')).toThrow(
-      'Could not find IMAGE_ELEMENT_COUNTS map in source'
+      'Could not find IMAGE_ELEMENT_COUNTS map in source',
     );
   });
 });
@@ -119,14 +116,16 @@ describe('IMAGE_ELEMENT_COUNTS vs. actual renderSvgForImage elements', () => {
       }
       if (actual[filename] !== declaredCount) {
         mismatches.push(
-          `MISMATCH '${filename}': IMAGE_ELEMENT_COUNTS=${declaredCount}, actual=${actual[filename]}`
+          `MISMATCH '${filename}': IMAGE_ELEMENT_COUNTS=${declaredCount}, actual=${actual[filename]}`,
         );
       }
     }
 
     for (const filename of Object.keys(actual)) {
       if (!(filename in declared)) {
-        mismatches.push(`UNDECLARED: '${filename}' has a case but is missing from IMAGE_ELEMENT_COUNTS`);
+        mismatches.push(
+          `UNDECLARED: '${filename}' has a case but is missing from IMAGE_ELEMENT_COUNTS`,
+        );
       }
     }
 

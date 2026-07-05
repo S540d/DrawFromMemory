@@ -6,33 +6,33 @@
 
 export const Colors = {
   // Primärfarben - Gradient-ready
-  primary: '#7C5CFF',      // Vivid Purple - kräftiger, kinderfreundlicher (Issue #176)
+  primary: '#7C5CFF', // Vivid Purple - kräftiger, kinderfreundlicher (Issue #176)
   primaryLight: '#9E84FF', // Hellere Variante
-  primaryDark: '#5A3FE0',  // Dunklere Variante
-  secondary: '#F093FB',    // Rosa - Spielerisch & Warm
-  accent: '#4ECDC4',       // Mint-Teal - frischer Akzent
-  accentWarm: '#FFB547',   // Apricot - spielerisch warm
+  primaryDark: '#5A3FE0', // Dunklere Variante
+  secondary: '#F093FB', // Rosa - Spielerisch & Warm
+  accent: '#4ECDC4', // Mint-Teal - frischer Akzent
+  accentWarm: '#FFB547', // Apricot - spielerisch warm
 
   // Gradient-Kombinationen (für LinearGradient)
   gradient: {
-    primary:   ['#7C5CFF', '#F093FB'] as const,
+    primary: ['#7C5CFF', '#F093FB'] as const,
     secondary: ['#F093FB', '#f5576c'] as const,
-    warm:      ['#FFB547', '#FF6B6B'] as const,
-    cta:       ['#7C5CFF', '#F093FB'] as const,
-    teal:      ['#4ECDC4', '#44CF6C'] as const,
+    warm: ['#FFB547', '#FF6B6B'] as const,
+    cta: ['#7C5CFF', '#F093FB'] as const,
+    teal: ['#4ECDC4', '#44CF6C'] as const,
   },
 
   // UI Farben - "Warm Paper"
-  background: '#f7f2eb',   // Warmes Cremeweiß - Papierton
-  surface: '#ffffff',      // Rein weiß - Cards/Container
+  background: '#f7f2eb', // Warmes Cremeweiß - Papierton
+  surface: '#ffffff', // Rein weiß - Cards/Container
   surfaceElevated: '#fdfaf5', // Leicht warmes Weiß für erhöhte Elemente
-  surfaceAlt: '#ede7dd',   // Warmes Graubeige - Toolbar-Gruppen, Tab-Switcher
-  border: '#e8e0d5',       // Warmes Graubeige - Rahmen
+  surfaceAlt: '#ede7dd', // Warmes Graubeige - Toolbar-Gruppen, Tab-Switcher
+  border: '#e8e0d5', // Warmes Graubeige - Rahmen
   modalOverlay: 'rgba(0, 0, 0, 0.5)', // Halbtransparenter Overlay
   text: {
-    primary: '#2c2c2c',    // Fast Schwarz - Haupttext (WCAG AAA)
-    secondary: '#9c8b7a',  // Warmes Graubraun - Sekundärtext
-    light: '#717171',      // Grau - Platzhalter (WCAG AA compliant)
+    primary: '#2c2c2c', // Fast Schwarz - Haupttext (WCAG AAA)
+    secondary: '#9c8b7a', // Warmes Graubraun - Sekundärtext
+    light: '#717171', // Grau - Platzhalter (WCAG AA compliant)
   },
 
   // Shadow-System (Soft & Modern)
@@ -58,9 +58,9 @@ export const Colors = {
   // Glassmorphism-Tokens (für GlassCard in Levels/Gallery)
   glass: {
     lightSurface: 'rgba(255, 255, 255, 0.88)',
-    darkSurface:  'rgba(42, 35, 64, 0.88)',
-    lightBorder:  'rgba(255, 255, 255, 0.70)',
-    darkBorder:   'rgba(255, 255, 255, 0.10)',
+    darkSurface: 'rgba(42, 35, 64, 0.88)',
+    lightBorder: 'rgba(255, 255, 255, 0.70)',
+    darkBorder: 'rgba(255, 255, 255, 0.10)',
     lightShadow: {
       boxShadow: '0 6px 24px rgba(124, 92, 255, 0.14)',
       elevation: 5,
@@ -72,10 +72,10 @@ export const Colors = {
   },
 
   // Feedback Farben
-  success: '#27AE60',      // Grün - Erfolg
-  warning: '#F39C12',      // Orange - Warnung
-  error: '#E74C3C',        // Rot - Fehler
-  info: '#3498DB',         // Blau - Info
+  success: '#27AE60', // Grün - Erfolg
+  warning: '#F39C12', // Orange - Warnung
+  error: '#E74C3C', // Rot - Fehler
+  info: '#3498DB', // Blau - Info
 
   // Zeichen-Farben (für Canvas)
   drawing: {
@@ -96,17 +96,17 @@ export const Colors = {
 
   // Sternen-Bewertung
   stars: {
-    filled: '#FFD700',     // Gold - Gefüllter Stern
-    empty: '#E0E0E0',      // Hellgrau - Leerer Stern
+    filled: '#FFD700', // Gold - Gefüllter Stern
+    empty: '#E0E0E0', // Hellgrau - Leerer Stern
   },
 
   // Schwierigkeitsgrade (für Level-Anzeige)
   difficulty: {
-    1: '#27AE60',          // Grün - Sehr einfach
-    2: '#2ECC71',          // Hellgrün - Einfach
-    3: '#F39C12',          // Orange - Mittel
-    4: '#E67E22',          // Dunkles Orange - Schwierig
-    5: '#E74C3C',          // Rot - Sehr schwierig
+    1: '#27AE60', // Grün - Sehr einfach
+    2: '#2ECC71', // Hellgrün - Einfach
+    3: '#F39C12', // Orange - Mittel
+    4: '#E67E22', // Dunkles Orange - Schwierig
+    5: '#E74C3C', // Rot - Sehr schwierig
   },
 };
 

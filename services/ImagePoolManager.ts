@@ -17,7 +17,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Sonne',
     displayNameEn: 'Sun',
     strokeCount: 12,
-    colors: ['#000000', '#FFD700', '#FFA500']
+    colors: ['#000000', '#FFD700', '#FFA500'],
   },
   {
     filename: 'level-02-face.svg',
@@ -25,7 +25,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Gesicht',
     displayNameEn: 'Face',
     strokeCount: 10,
-    colors: ['#000000', '#FDBCB4']
+    colors: ['#000000', '#FDBCB4'],
   },
   {
     filename: 'extra-01-stick-figure.svg',
@@ -33,7 +33,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Strichmännchen',
     displayNameEn: 'Stick Figure',
     strokeCount: 6,
-    colors: ['#000000']
+    colors: ['#000000'],
   },
 
   // Einfach-Mittel (Schwierigkeit 2)
@@ -43,7 +43,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Wolke',
     displayNameEn: 'Cloud',
     strokeCount: 8,
-    colors: ['#FFFFFF']
+    colors: ['#FFFFFF'],
   },
   {
     filename: 'level-02-01-house.svg',
@@ -51,7 +51,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Haus',
     displayNameEn: 'House',
     strokeCount: 15,
-    colors: ['#000000', '#E74C3C', '#8B4513', '#87CEEB']
+    colors: ['#000000', '#E74C3C', '#8B4513', '#87CEEB'],
   },
   {
     filename: 'level-02-02-apple.svg',
@@ -59,7 +59,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Apfel',
     displayNameEn: 'Apple',
     strokeCount: 12,
-    colors: ['#E74C3C', '#27AE60', '#8B4513', '#FFFFFF']
+    colors: ['#E74C3C', '#27AE60', '#8B4513', '#FFFFFF'],
   },
   {
     filename: 'level-02-03-rocket.svg',
@@ -67,7 +67,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Rakete',
     displayNameEn: 'Rocket',
     strokeCount: 18,
-    colors: ['#FF6B6B', '#FFD700', '#3498DB']
+    colors: ['#FF6B6B', '#FFD700', '#3498DB'],
   },
   {
     filename: 'level-02-04-balloon.svg',
@@ -75,7 +75,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Luftballon',
     displayNameEn: 'Balloon',
     strokeCount: 14,
-    colors: ['#FF1493', '#000000', '#CD853F']
+    colors: ['#FF1493', '#000000', '#CD853F'],
   },
 
   // Mittel (Schwierigkeit 3)
@@ -85,7 +85,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Haus',
     displayNameEn: 'House',
     strokeCount: 15,
-    colors: ['#000000', '#E74C3C', '#8B4513', '#87CEEB']
+    colors: ['#000000', '#E74C3C', '#8B4513', '#87CEEB'],
   },
   {
     filename: 'level-05-tree.svg',
@@ -93,7 +93,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Baum',
     displayNameEn: 'Tree',
     strokeCount: 12,
-    colors: ['#000000', '#8B4513', '#27AE60']
+    colors: ['#000000', '#8B4513', '#27AE60'],
   },
   {
     filename: 'extra-02-car.svg',
@@ -101,7 +101,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Auto',
     displayNameEn: 'Car',
     strokeCount: 18,
-    colors: ['#000000', '#E74C3C', '#87CEEB', '#FFD700']
+    colors: ['#000000', '#E74C3C', '#87CEEB', '#FFD700'],
   },
 
   // Mittel-Schwer (Schwierigkeit 4)
@@ -111,7 +111,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Hund',
     displayNameEn: 'Dog',
     strokeCount: 22,
-    colors: ['#000000', '#8B4513', '#FFFFFF', '#E74C3C', '#FFD700']
+    colors: ['#000000', '#8B4513', '#FFFFFF', '#E74C3C', '#FFD700'],
   },
   {
     filename: 'level-07-cat.svg',
@@ -119,7 +119,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Katze',
     displayNameEn: 'Cat',
     strokeCount: 20,
-    colors: ['#000000', '#FFA500']
+    colors: ['#000000', '#FFA500'],
   },
   {
     filename: 'level-08-sheep.svg',
@@ -127,7 +127,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Schaf',
     displayNameEn: 'Sheep',
     strokeCount: 18,
-    colors: ['#FFFFFF', '#000000']
+    colors: ['#FFFFFF', '#000000'],
   },
   {
     filename: 'extra-03-flower.svg',
@@ -135,7 +135,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Blume',
     displayNameEn: 'Flower',
     strokeCount: 20,
-    colors: ['#000000', '#27AE60', '#FF69B4', '#FFD700']
+    colors: ['#000000', '#27AE60', '#FF69B4', '#FFD700'],
   },
   {
     filename: 'extra-04-bird.svg',
@@ -143,7 +143,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Vogel',
     displayNameEn: 'Bird',
     strokeCount: 18,
-    colors: ['#000000', '#3498DB', '#FFD700', '#FFA500']
+    colors: ['#000000', '#3498DB', '#FFD700', '#FFA500'],
   },
 
   // Tiere – Difficulty 3 (Level 11–13)
@@ -433,7 +433,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Fisch',
     displayNameEn: 'Fish',
     strokeCount: 25,
-    colors: ['#000000', '#FFA500', '#E74C3C', '#FFFFFF']
+    colors: ['#000000', '#FFA500', '#E74C3C', '#FFFFFF'],
   },
   {
     filename: 'level-10-butterfly.svg',
@@ -441,7 +441,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Schmetterling',
     displayNameEn: 'Butterfly',
     strokeCount: 35,
-    colors: ['#000000', '#9B59B6', '#FF69B4', '#FFD700', '#FFFFFF']
+    colors: ['#000000', '#9B59B6', '#FF69B4', '#FFD700', '#FFFFFF'],
   },
   {
     filename: 'level-05-01-lion.svg',
@@ -449,7 +449,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Löwe',
     displayNameEn: 'Lion',
     strokeCount: 40,
-    colors: ['#FFA500', '#CD853F', '#000000', '#8B6914', '#F4A460']
+    colors: ['#FFA500', '#CD853F', '#000000', '#8B6914', '#F4A460'],
   },
   {
     filename: 'level-05-02-landscape.svg',
@@ -457,7 +457,17 @@ const imagePool: LevelImage[] = [
     displayName: 'Landschaft',
     displayNameEn: 'Landscape',
     strokeCount: 50,
-    colors: ['#87CEEB', '#90EE90', '#8B7355', '#A0826D', '#FFD700', '#FFA500', '#27AE60', '#FFFFFF', '#3498DB']
+    colors: [
+      '#87CEEB',
+      '#90EE90',
+      '#8B7355',
+      '#A0826D',
+      '#FFD700',
+      '#FFA500',
+      '#27AE60',
+      '#FFFFFF',
+      '#3498DB',
+    ],
   },
   {
     filename: 'level-05-03-castle.svg',
@@ -465,7 +475,7 @@ const imagePool: LevelImage[] = [
     displayName: 'Burg',
     displayNameEn: 'Castle',
     strokeCount: 45,
-    colors: ['#D3D3D3', '#A9A9A9', '#8B4513', '#654321', '#87CEEB', '#FFD700', '#FF1493']
+    colors: ['#D3D3D3', '#A9A9A9', '#8B4513', '#654321', '#87CEEB', '#FFD700', '#FF1493'],
   },
 ];
 
@@ -483,12 +493,11 @@ let lastShownImages: string[] = [];
 export function getRandomImageForLevel(levelNumber: number): LevelImage {
   const targetDifficulty = getDifficultyForLevel(levelNumber);
   const isEligible = (img: LevelImage) =>
-    img.difficulty === targetDifficulty &&
-    (!img.minLevel || img.minLevel <= levelNumber);
+    img.difficulty === targetDifficulty && (!img.minLevel || img.minLevel <= levelNumber);
 
   // Filtere Bilder nach Schwierigkeit, minLevel-Guard UND nicht kürzlich gezeigt
-  let availableImages = imagePool.filter(img =>
-    isEligible(img) && !lastShownImages.includes(img.filename)
+  let availableImages = imagePool.filter(
+    img => isEligible(img) && !lastShownImages.includes(img.filename),
   );
 
   // Falls alle eligible Bilder kürzlich gezeigt wurden, reset
@@ -518,9 +527,8 @@ export function getRandomImageForLevel(levelNumber: number): LevelImage {
  */
 export function getSeededImageForLevel(levelNumber: number, seed: number): LevelImage {
   const targetDifficulty = getDifficultyForLevel(levelNumber);
-  const available = imagePool.filter(img =>
-    img.difficulty === targetDifficulty &&
-    (!img.minLevel || img.minLevel <= levelNumber)
+  const available = imagePool.filter(
+    img => img.difficulty === targetDifficulty && (!img.minLevel || img.minLevel <= levelNumber),
   );
   if (available.length === 0) return getRandomImageForLevel(levelNumber);
   if (!Number.isFinite(seed)) return getRandomImageForLevel(levelNumber);

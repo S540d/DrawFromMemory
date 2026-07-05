@@ -46,7 +46,7 @@ async function requestNativeReview(): Promise<void> {
  */
 export async function requestReviewIfEligible(
   hasFiveStar: boolean,
-  isDailyChallenge: boolean
+  isDailyChallenge: boolean,
 ): Promise<void> {
   if (!isReviewEnabled()) return;
   if (Platform.OS === 'web') return;

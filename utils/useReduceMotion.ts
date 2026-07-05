@@ -16,11 +16,15 @@ export function useReduceMotion(): boolean {
 
   useEffect(() => {
     let cancelled = false;
-    AccessibilityInfo.isReduceMotionEnabled().then((rm) => {
-      if (!cancelled) setReduceMotion(rm);
-    }).catch(() => { /* keep default false */ });
+    AccessibilityInfo.isReduceMotionEnabled()
+      .then(rm => {
+        if (!cancelled) setReduceMotion(rm);
+      })
+      .catch(() => {
+        /* keep default false */
+      });
     // addEventListener is undefined in some test/jsdom environments — guard it.
-    const sub = AccessibilityInfo.addEventListener?.('reduceMotionChanged', (rm) => {
+    const sub = AccessibilityInfo.addEventListener?.('reduceMotionChanged', rm => {
       if (!cancelled) setReduceMotion(rm);
     });
     return () => {

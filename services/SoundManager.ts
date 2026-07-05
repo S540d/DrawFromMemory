@@ -52,7 +52,7 @@ class SoundManager {
     frequency: number,
     duration: number,
     type: OscillatorType = 'sine',
-    volume: number = 0.3
+    volume: number = 0.3,
   ) {
     if (!this.soundEnabled) return;
     const ctx = this.getAudioContext();

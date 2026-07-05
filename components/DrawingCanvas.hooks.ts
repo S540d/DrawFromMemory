@@ -21,8 +21,10 @@ export function useDrawingCanvas() {
   };
 
   // Custom setPaths that auto-switches from fill to brush after fill is used
-  const setPathsWithAutoSwitch = (newPaths: DrawingPath[] | ((prev: DrawingPath[]) => DrawingPath[])) => {
-    setPaths((prevPaths) => {
+  const setPathsWithAutoSwitch = (
+    newPaths: DrawingPath[] | ((prev: DrawingPath[]) => DrawingPath[]),
+  ) => {
+    setPaths(prevPaths => {
       const updatedPaths = typeof newPaths === 'function' ? newPaths(prevPaths) : newPaths;
 
       // Check if a new fill path was just added (Issue #45)
