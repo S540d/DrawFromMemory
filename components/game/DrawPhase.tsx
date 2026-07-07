@@ -154,11 +154,9 @@ export default function DrawPhase({
 
           {([2, 3, 5] as const).map(size => {
             const isSelected = drawing.strokeWidth === size && drawing.tool !== 'fill';
-            // Nur der mittlere Punkt (size === 3) zeigt die aktuell gewählte Pinselfarbe —
-            // die beiden anderen bleiben neutral, damit die Farbvorschau eindeutig bleibt.
-            // Die Auswahl selbst wird über den Ring (borderColor) angezeigt.
-            const dotColor =
-              size === 3 && drawing.tool !== 'fill' ? drawing.color : colors.text.secondary;
+            // Alle drei Punkte zeigen die aktuell gewählte Pinselfarbe (unterscheiden sich
+            // nur in der Größe). Die Auswahl selbst wird über den Ring (borderColor) angezeigt.
+            const dotColor = drawing.tool !== 'fill' ? drawing.color : colors.text.secondary;
             return (
               <TouchableOpacity
                 key={size}
