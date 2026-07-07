@@ -34,6 +34,12 @@
       "normal": "Normal",
       "outline": "Nur Umriss",
       "mirror": "Spiegelbild"
+    },
+    "pack": {
+      "title": "Themen-Pack",
+      "all": "Alle",
+      "tiere": "Tiere",
+      "fahrzeuge": "Fahrzeuge"
     }
   },
   "game": {

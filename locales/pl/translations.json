@@ -34,6 +34,12 @@
       "normal": "Normalny",
       "outline": "Tylko kontur",
       "mirror": "Lustrzane odbicie"
+    },
+    "pack": {
+      "title": "Pakiet tematyczny",
+      "all": "Wszystkie",
+      "tiere": "Zwierzęta",
+      "fahrzeuge": "Pojazdy"
     }
   },
   "game": {

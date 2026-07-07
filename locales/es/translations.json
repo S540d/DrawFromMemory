@@ -34,6 +34,12 @@
       "normal": "Normal",
       "outline": "Solo contorno",
       "mirror": "Imagen espejo"
+    },
+    "pack": {
+      "title": "Paquete temático",
+      "all": "Todos",
+      "tiere": "Animales",
+      "fahrzeuge": "Vehículos"
     }
   },
   "game": {

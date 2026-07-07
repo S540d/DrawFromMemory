@@ -11,6 +11,7 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import { getAllLevels } from '@services/LevelManager';
+import { getAvailablePacks } from '@services/ImagePoolManager';
 import storageManager from '@services/StorageManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../constants/Layout';
@@ -21,9 +22,16 @@ import { ChipGroup } from '@components/Chip';
 import type { GameVariant } from '../types';
 
 // Default card width for SSR (will be recalculated on client)
-const DEFAULT_CARD_WIDTH = 150;
+const DEFAULT_CARD_WIDTH = 100;
+const NUM_COLUMNS = 3;
 
 const VARIANT_KEYS: GameVariant[] = ['normal', 'outline', 'mirror'];
+
+// Themen-Pack-ID (z.B. 'tiere-v1') → kurzer i18n-Key (ohne Versionssuffix)
+const PACK_LABEL_KEYS: Record<string, string> = {
+  'tiere-v1': 'tiere',
+  'fahrzeuge-v1': 'fahrzeuge',
+};
 
 /**
  * Levels Screen - Level-Auswahl
@@ -34,11 +42,16 @@ export default function LevelsScreen() {
   const router = useRouter();
   const { colors, theme } = useTheme();
   const levels = useMemo(() => getAllLevels(), []);
+  const packs = useMemo(() => ['all', ...getAvailablePacks()], []);
   const [ratings, setRatings] = useState<Record<number, number | null>>({});
   const [variant, setVariant] = useState<GameVariant>('normal');
+  const [pack, setPack] = useState<string>('all');
   // Use hook for responsive dimensions (SSR-safe)
   const { width: screenWidth } = useWindowDimensions();
-  const cardWidth = screenWidth > 0 ? (screenWidth - Spacing.lg * 3) / 2 : DEFAULT_CARD_WIDTH;
+  const cardWidth =
+    screenWidth > 0
+      ? (screenWidth - Spacing.lg * (NUM_COLUMNS + 1)) / NUM_COLUMNS
+      : DEFAULT_CARD_WIDTH;
 
   const glassSurface = theme === 'dark' ? Colors.glass.darkSurface : Colors.glass.lightSurface;
   const glassBorder = theme === 'dark' ? Colors.glass.darkBorder : Colors.glass.lightBorder;
@@ -83,7 +96,7 @@ export default function LevelsScreen() {
     return (
       <GlassCard
         index={index}
-        onPress={() => router.push(`/game?level=${item.number}&variant=${variant}`)}
+        onPress={() => router.push(`/game?level=${item.number}&variant=${variant}&pack=${pack}`)}
         accessibilityLabel={`${t('levels.level', { number: item.number })} — ${difficultyText}`}
         style={[
           styles.levelCard,
@@ -138,12 +151,29 @@ export default function LevelsScreen() {
         />
       </View>
 
+      {/* Themen-Pack */}
+      {packs.length > 1 && (
+        <View style={styles.variantSection}>
+          <Text style={[styles.variantLabel, { color: colors.text.secondary }]}>
+            {t('levels.pack.title')}
+          </Text>
+          <ChipGroup
+            options={packs.map(p => t(`levels.pack.${PACK_LABEL_KEYS[p] ?? p}`))}
+            selected={t(`levels.pack.${PACK_LABEL_KEYS[pack] ?? pack}`)}
+            onSelect={label => {
+              const match = packs.find(p => t(`levels.pack.${PACK_LABEL_KEYS[p] ?? p}`) === label);
+              if (match) setPack(match);
+            }}
+          />
+        </View>
+      )}
+
       {/* Level-Grid */}
       <FlatList
         data={levels}
         renderItem={renderLevelCard}
         keyExtractor={item => `level-${item.number}`}
-        numColumns={2}
+        numColumns={NUM_COLUMNS}
         columnWrapperStyle={styles.row}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
@@ -187,28 +217,28 @@ const styles = StyleSheet.create({
   },
   row: {
     justifyContent: 'space-between',
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.sm,
   },
   levelCard: {
-    borderRadius: BorderRadius.xxl,
-    padding: Spacing.md,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.sm,
     borderWidth: 1.5,
   },
   levelHeader: {
-    marginBottom: Spacing.sm,
+    marginBottom: Spacing.xs,
   },
   levelNumber: {
-    fontSize: FontSize.xl,
+    fontSize: FontSize.md,
     fontWeight: FontWeight.bold,
   },
   difficultyBadge: {
-    marginBottom: Spacing.sm,
+    marginBottom: Spacing.xs,
   },
   starsRow: {
     flexDirection: 'row',
     marginTop: Spacing.xs,
   },
   star: {
-    fontSize: FontSize.lg,
+    fontSize: FontSize.sm,
   },
 });

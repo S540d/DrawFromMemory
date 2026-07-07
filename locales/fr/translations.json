@@ -34,6 +34,12 @@
       "normal": "Normal",
       "outline": "Contour seulement",
       "mirror": "Image miroir"
+    },
+    "pack": {
+      "title": "Pack thématique",
+      "all": "Tous",
+      "tiere": "Animaux",
+      "fahrzeuge": "Véhicules"
     }
   },
   "game": {
