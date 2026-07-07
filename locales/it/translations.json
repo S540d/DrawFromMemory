@@ -34,6 +34,12 @@
       "normal": "Normale",
       "outline": "Solo contorno",
       "mirror": "Immagine speculare"
+    },
+    "pack": {
+      "title": "Pacchetto tematico",
+      "all": "Tutti",
+      "tiere": "Animali",
+      "fahrzeuge": "Veicoli"
     }
   },
   "game": {

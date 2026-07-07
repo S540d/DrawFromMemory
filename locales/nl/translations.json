@@ -34,6 +34,12 @@
       "normal": "Normaal",
       "outline": "Alleen omtrek",
       "mirror": "Spiegelbeeld"
+    },
+    "pack": {
+      "title": "Themapakket",
+      "all": "Alle",
+      "tiere": "Dieren",
+      "fahrzeuge": "Voertuigen"
     }
   },
   "game": {

@@ -488,14 +488,17 @@ let lastShownImages: string[] = [];
 /**
  * Wählt ein zufälliges Bild für ein Level aus
  * @param levelNumber Level-Nummer (1-10)
+ * @param pack Optionale Themen-Pack-Einschränkung (z.B. 'tiere-v1'). 'all' oder undefined = kein Filter.
  * @returns Zufälliges Bild aus dem passenden Schwierigkeitspool
  */
-export function getRandomImageForLevel(levelNumber: number): LevelImage {
+export function getRandomImageForLevel(levelNumber: number, pack?: string): LevelImage {
   const targetDifficulty = getDifficultyForLevel(levelNumber);
-  const isEligible = (img: LevelImage) =>
+  const matchesDifficulty = (img: LevelImage) =>
     img.difficulty === targetDifficulty && (!img.minLevel || img.minLevel <= levelNumber);
+  const matchesPack = (img: LevelImage) => !pack || pack === 'all' || img.pack === pack;
+  const isEligible = (img: LevelImage) => matchesDifficulty(img) && matchesPack(img);
 
-  // Filtere Bilder nach Schwierigkeit, minLevel-Guard UND nicht kürzlich gezeigt
+  // Filtere Bilder nach Schwierigkeit, Pack, minLevel-Guard UND nicht kürzlich gezeigt
   let availableImages = imagePool.filter(
     img => isEligible(img) && !lastShownImages.includes(img.filename),
   );
@@ -504,6 +507,11 @@ export function getRandomImageForLevel(levelNumber: number): LevelImage {
   if (availableImages.length === 0) {
     lastShownImages = [];
     availableImages = imagePool.filter(isEligible);
+  }
+
+  // Falls das gewählte Pack für diese Schwierigkeit keine Bilder hat, Pack-Filter ignorieren
+  if (availableImages.length === 0) {
+    availableImages = imagePool.filter(matchesDifficulty);
   }
 
   // Wähle zufällig aus verfügbaren Bildern
@@ -524,16 +532,38 @@ export function getRandomImageForLevel(levelNumber: number): LevelImage {
  * Wird für die Daily Challenge verwendet, damit das Bild des Tages konstant bleibt.
  * @param levelNumber Level-Nummer
  * @param seed Numerischer Seed (z. B. YYYYMMDD)
+ * @param pack Optionale Themen-Pack-Einschränkung (z.B. 'tiere-v1'). 'all' oder undefined = kein Filter.
  */
-export function getSeededImageForLevel(levelNumber: number, seed: number): LevelImage {
+export function getSeededImageForLevel(
+  levelNumber: number,
+  seed: number,
+  pack?: string,
+): LevelImage {
   const targetDifficulty = getDifficultyForLevel(levelNumber);
-  const available = imagePool.filter(
-    img => img.difficulty === targetDifficulty && (!img.minLevel || img.minLevel <= levelNumber),
-  );
-  if (available.length === 0) return getRandomImageForLevel(levelNumber);
-  if (!Number.isFinite(seed)) return getRandomImageForLevel(levelNumber);
+  const matchesDifficulty = (img: LevelImage) =>
+    img.difficulty === targetDifficulty && (!img.minLevel || img.minLevel <= levelNumber);
+  const matchesPack = (img: LevelImage) => !pack || pack === 'all' || img.pack === pack;
+
+  let available = imagePool.filter(img => matchesDifficulty(img) && matchesPack(img));
+  // Falls das gewählte Pack für diese Schwierigkeit keine Bilder hat, Pack-Filter ignorieren
+  if (available.length === 0) {
+    available = imagePool.filter(matchesDifficulty);
+  }
+  if (available.length === 0) return getRandomImageForLevel(levelNumber, pack);
+  if (!Number.isFinite(seed)) return getRandomImageForLevel(levelNumber, pack);
   const index = Math.abs(Math.floor(seed)) % available.length;
   return available[index];
+}
+
+/**
+ * Gibt alle im Bilderpool vorkommenden Themen-Pack-IDs zurück (z.B. ['fahrzeuge-v1', 'tiere-v1'])
+ */
+export function getAvailablePacks(): string[] {
+  const packs = new Set<string>();
+  imagePool.forEach(img => {
+    if (img.pack) packs.add(img.pack);
+  });
+  return Array.from(packs).sort();
 }
 
 /**

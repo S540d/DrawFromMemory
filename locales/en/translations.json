@@ -34,6 +34,12 @@
       "normal": "Normal",
       "outline": "Outline only",
       "mirror": "Mirror image"
+    },
+    "pack": {
+      "title": "Theme pack",
+      "all": "All",
+      "tiere": "Animals",
+      "fahrzeuge": "Vehicles"
     }
   },
   "game": {

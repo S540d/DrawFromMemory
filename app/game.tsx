@@ -70,6 +70,7 @@ export default function GameScreen() {
   const isDailyChallenge = params.daily === '1';
   const variant: GameVariant =
     params.variant === 'outline' || params.variant === 'mirror' ? params.variant : 'normal';
+  const pack = typeof params.pack === 'string' && params.pack !== 'all' ? params.pack : undefined;
   const [isTutorial, setIsTutorial] = useState(params.tutorial === '1');
   const [tutorialHintVisible, setTutorialHintVisible] = useState(true);
 
@@ -97,6 +98,7 @@ export default function GameScreen() {
     drawingPaths: drawing.paths,
     clearCanvas: drawing.clearCanvas,
     isDailyChallenge,
+    pack,
   });
 
   useEffect(() => {

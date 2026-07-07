@@ -18,16 +18,21 @@ interface UseGamePhaseOptions {
   drawingPaths: DrawingPath[];
   clearCanvas: () => void;
   isDailyChallenge?: boolean;
+  pack?: string;
 }
 
-function getImageForLevel(levelNumber: number, dailyChallengeLevel: number | null): LevelImage {
+function getImageForLevel(
+  levelNumber: number,
+  dailyChallengeLevel: number | null,
+  pack?: string,
+): LevelImage {
   if (dailyChallengeLevel !== null && levelNumber === dailyChallengeLevel) {
     const dateKey = getDailyChallengeKey();
     const rawSeed = parseInt(dateKey.replace(/-/g, ''), 10);
     const seed = Number.isFinite(rawSeed) ? Math.abs(rawSeed) : 0;
-    return getSeededImageForLevel(levelNumber, seed);
+    return getSeededImageForLevel(levelNumber, seed, pack);
   }
-  return getRandomImageForLevel(levelNumber);
+  return getRandomImageForLevel(levelNumber, pack);
 }
 
 export function useGamePhase({
@@ -35,6 +40,7 @@ export function useGamePhase({
   drawingPaths,
   clearCanvas,
   isDailyChallenge = false,
+  pack,
 }: UseGamePhaseOptions) {
   const router = useRouter();
   // dailyChallengeLevel is fixed at mount; only the initial level counts as the
@@ -86,7 +92,7 @@ export function useGamePhase({
   // For the daily challenge level, use a date-seeded image so it stays consistent all day.
   useEffect(() => {
     try {
-      const image: LevelImage = getImageForLevel(levelNumber, dailyChallengeLevel);
+      const image: LevelImage = getImageForLevel(levelNumber, dailyChallengeLevel, pack);
       currentImageRef.current = image;
       setCurrentImage(image);
       levelStartedAtRef.current = Date.now();
@@ -94,7 +100,7 @@ export function useGamePhase({
       console.error('Error initializing level:', error);
       router.back();
     }
-  }, [levelNumber, dailyChallengeLevel, router]);
+  }, [levelNumber, dailyChallengeLevel, pack, router]);
 
   // Update timer when levelNumber or extraTimeMode changes (separate from image init)
   useEffect(() => {
@@ -237,7 +243,7 @@ export function useGamePhase({
     // Re-trigger level-init useEffect by setting a fresh image + time directly
     // (levelNumber doesn't change, so we init manually here)
     try {
-      const image: LevelImage = getImageForLevel(levelNumber, dailyChallengeLevel);
+      const image: LevelImage = getImageForLevel(levelNumber, dailyChallengeLevel, pack);
       currentImageRef.current = image;
       setCurrentImage(image);
       setTimeRemaining(getDisplayDuration(levelNumber, extraTimeMode));
