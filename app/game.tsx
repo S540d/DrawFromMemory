@@ -234,17 +234,15 @@ export default function GameScreen() {
           </Text>
         </TouchableOpacity>
         <View style={styles.headerRight}>
-          <View style={styles.progressDots}>
-            {Array.from({ length: Math.min(getTotalLevels(), 5) }).map((_, i) => (
-              <View
-                key={i}
-                style={[
-                  styles.progressDot,
-                  i < levelNumber - 1 && styles.progressDotDone,
-                  i === levelNumber - 1 && styles.progressDotCurrent,
-                ]}
-              />
-            ))}
+          <View
+            style={styles.progressBarTrack}
+            accessibilityRole="progressbar"
+            accessibilityValue={{ min: 1, max: totalLevels, now: levelNumber }}
+            accessibilityLabel={t('levels.level', { number: levelNumber })}
+          >
+            <View
+              style={[styles.progressBarFill, { width: `${(levelNumber / totalLevels) * 100}%` }]}
+            />
           </View>
           <TouchableOpacity
             onPress={() => setShowSettings(true)}
@@ -446,28 +444,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.sm,
   },
-  progressDots: {
-    flexDirection: 'row',
-    gap: 4,
-    alignItems: 'center',
-  },
-  progressDot: {
-    width: 8,
+  progressBarTrack: {
+    width: 60,
     height: 8,
     borderRadius: 4,
     backgroundColor: '#ddd5c8',
+    overflow: 'hidden',
   },
-  progressDotDone: {
+  progressBarFill: {
+    height: '100%',
+    borderRadius: 4,
     backgroundColor: Colors.primary,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-  },
-  progressDotCurrent: {
-    backgroundColor: Colors.secondary,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
   },
   tabBar: {
     flexDirection: 'row',

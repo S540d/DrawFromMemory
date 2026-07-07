@@ -4,6 +4,7 @@ import DrawingCanvas from '@components/DrawingCanvas';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { DrawingColors } from '../../constants/Colors';
 import Colors from '../../constants/Colors';
+import { PenIcon, FillIcon, EyeIcon } from './ToolIcons';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../../constants/Layout';
 import type { DrawPhaseProps } from './game.shared';
 import { useTranslation } from '@services/i18n';
@@ -67,9 +68,10 @@ export default function DrawPhase({
           accessibilityLabel={hasUsedHint ? t('game.draw.hintUsed') : t('game.draw.hintButton')}
           accessibilityRole="button"
         >
-          <Text style={[styles.hintButtonIcon, hasUsedHint && styles.hintButtonIconUsed]}>
-            {hasUsedHint ? '👁' : t('game.draw.hintButton')}
-          </Text>
+          <View style={styles.hintButtonContent}>
+            <EyeIcon size={14} color={hasUsedHint ? colors.text.secondary : Colors.drawing.white} />
+            {!hasUsedHint && <Text style={styles.hintButtonIcon}>{t('game.draw.hintButton')}</Text>}
+          </View>
         </TouchableOpacity>
       </View>
 
@@ -127,7 +129,10 @@ export default function DrawPhase({
             accessibilityLabel={t('game.draw.toolBrush')}
             accessibilityRole="button"
           >
-            <Text style={styles.toolToggleIcon}>✏️</Text>
+            <PenIcon
+              size={20}
+              color={drawing.tool === 'brush' ? Colors.drawing.white : colors.text.secondary}
+            />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -139,40 +144,47 @@ export default function DrawPhase({
             accessibilityLabel={t('game.draw.toolFill')}
             accessibilityRole="button"
           >
-            <Text style={styles.toolToggleIcon}>🪣</Text>
+            <FillIcon
+              size={20}
+              color={drawing.tool === 'fill' ? Colors.drawing.white : colors.text.secondary}
+            />
           </TouchableOpacity>
 
           <View style={[styles.toolRowSeparator, { backgroundColor: colors.border }]} />
 
-          {([2, 3, 5] as const).map(size => (
-            <TouchableOpacity
-              key={size}
-              style={[
-                styles.strokeCircleButton,
-                drawing.tool === 'fill' && styles.strokeCircleDisabled,
-              ]}
-              onPress={() => {
-                if (drawing.tool !== 'fill') drawing.setStrokeWidth(size);
-              }}
-              disabled={drawing.tool === 'fill'}
-              accessibilityLabel={`${t('game.draw.strokeWidth')} ${size}`}
-              accessibilityRole="button"
-            >
-              <View
+          {([2, 3, 5] as const).map(size => {
+            const isSelected = drawing.strokeWidth === size && drawing.tool !== 'fill';
+            // Alle drei Punkte zeigen die aktuell gewählte Pinselfarbe (unterscheiden sich
+            // nur in der Größe). Die Auswahl selbst wird über den Ring (borderColor) angezeigt.
+            const dotColor = drawing.tool !== 'fill' ? drawing.color : colors.text.secondary;
+            return (
+              <TouchableOpacity
+                key={size}
                 style={[
-                  styles.strokeCircle,
-                  {
-                    width: size === 2 ? 10 : size === 3 ? 16 : 22,
-                    height: size === 2 ? 10 : size === 3 ? 16 : 22,
-                    backgroundColor:
-                      drawing.strokeWidth === size && drawing.tool !== 'fill'
-                        ? drawing.color
-                        : colors.text.secondary,
-                  },
+                  styles.strokeCircleButton,
+                  isSelected && styles.strokeCircleButtonSelected,
+                  drawing.tool === 'fill' && styles.strokeCircleDisabled,
                 ]}
-              />
-            </TouchableOpacity>
-          ))}
+                onPress={() => {
+                  if (drawing.tool !== 'fill') drawing.setStrokeWidth(size);
+                }}
+                disabled={drawing.tool === 'fill'}
+                accessibilityLabel={`${t('game.draw.strokeWidth')} ${size}`}
+                accessibilityRole="button"
+              >
+                <View
+                  style={[
+                    styles.strokeCircle,
+                    {
+                      width: size === 2 ? 10 : size === 3 ? 16 : 22,
+                      height: size === 2 ? 10 : size === 3 ? 16 : 22,
+                      backgroundColor: dotColor,
+                    },
+                  ]}
+                />
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </View>
 
@@ -297,13 +309,15 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.border,
     opacity: 0.5,
   },
+  hintButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
   hintButtonIcon: {
     fontSize: 16,
     fontWeight: FontWeight.bold,
     color: '#FFFFFF',
-  },
-  hintButtonIconUsed: {
-    color: Colors.text.secondary,
   },
   canvasContainer: {
     flex: 1,
@@ -370,13 +384,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     borderColor: Colors.primary,
   },
-  toolToggleIcon: {
-    fontSize: 20,
-    lineHeight: 24,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    includeFontPadding: false,
-  },
   toolRowSeparator: {
     width: 1,
     height: 28,
@@ -385,8 +392,14 @@ const styles = StyleSheet.create({
   strokeCircleButton: {
     width: 36,
     height: 36,
+    borderRadius: 999,
+    borderWidth: 2,
+    borderColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  strokeCircleButtonSelected: {
+    borderColor: Colors.primary,
   },
   strokeCircle: {
     borderRadius: 999,
