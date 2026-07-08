@@ -27,7 +27,7 @@ Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Er
 | Theming         | ThemeContext (light / dark / system)                                                                         |
 | Sound           | Web Audio API (web) + `expo-haptics` (native)                                                                |
 | i18n            | Custom `services/i18n.ts` (de/en/es/fr/it/nl/pl), Locales in `locales/`, automatische Geräte-Spracherkennung |
-| Tests           | Jest 29 + jest-expo ~55 (373+ Tests, jsdom-Environment)                                                      |
+| Tests           | Jest 29 + jest-expo ~55 (389+ Tests, jsdom-Environment)                                                      |
 | CI              | GitHub Actions (`.github/workflows/ci-cd.yml`)                                                               |
 | Build (Native)  | EAS Build (`eas.json`)                                                                                       |
 | Crash Reporting | Sentry via `EXPO_PUBLIC_SENTRY_DSN` (optional, no-op on Web)                                                 |
@@ -66,7 +66,7 @@ services/
   FloodFillService.ts        # Flood-Fill-Algorithmus (Scanline, 1-Bit-Palette)
   SoftwareRasterizer.ts      # CPU-Rasterizer für native Fill-Grenzenerkennung
   NativeFillLayerService.ts  # Konvertiert DrawingPath[] → native Skia Rect-Spans
-  ImagePoolManager.ts        # Bilderpool: wählt zufällige Bilder nach Schwierigkeit
+  ImagePoolManager.ts        # Bilderpool: wählt zufällige Bilder nach Schwierigkeit (+ optionaler Pack-Filter)
   LevelManager.ts            # Level-Definitionen (10 Level, Anzeigedauer, Difficulty)
   StorageManager.ts          # AsyncStorage-Wrapper mit In-Memory-Fallback für Web
   RatingManager.ts           # Stern-Bewertungen und rotierende Motivations-Nachrichten
@@ -179,6 +179,12 @@ memorize  →  draw  →  result
 Level-Anzahl: 20 (Difficulty 1–5). Alle Level haben 3 s Anzeigezeit.
 Bilderpool: `ImagePoolManager.ts` wählt zufällig nach Difficulty-Klasse aus. Aktuell **51 Bilder** (inkl. Tiere v1 Pack — 10 Tiere, PR #221 + Fahrzeuge v1 Pack — 10 Fahrzeuge, PR #254).
 
+Fortschrittsanzeige oben im Spielschirm (`app/game.tsx`): proportionaler Balken (`levelNumber / totalLevels`), kein Punkte-Indikator mehr (PR #272 — die vorherigen 5 fest codierten Punkte waren bei 20 Levels irreführend).
+
+### Themen-Pack-Auswahl (PR #271)
+
+Auf dem Level-Auswahl-Screen (`app/levels.tsx`) gibt es neben der Spielvarianten-Auswahl einen zweiten Chip-Filter „Themen-Pack" (Alle / Tiere / Fahrzeuge), sofern der Bilderpool getaggte Packs enthält (`getAvailablePacks()` in `ImagePoolManager.ts`). Die Auswahl wird als `?pack=`-Query-Param an `/game` durchgereicht und schränkt `getRandomImageForLevel()` / `getSeededImageForLevel()` auf Bilder mit passendem `pack`-Tag ein — mit Fallback auf den vollen Schwierigkeitspool, falls ein Pack für ein Level leer ist.
+
 ### Spielvarianten (Issue #247)
 
 Auf dem Level-Auswahl-Screen (`app/levels.tsx`) wählbar (`GameVariant` in `types/index.ts`), wird als `?variant=` Query-Param an `/game` übergeben:
@@ -213,6 +219,10 @@ interface DrawingPath {
   type?: 'stroke' | 'fill'; // default = 'stroke'
 }
 ```
+
+### Werkzeug-Icons in der Draw-Phase (PR #272)
+
+`components/game/ToolIcons.tsx` exportiert `PenIcon`, `FillIcon`, `EyeIcon` — abstrakte, einfarbige SVG-Piktogramme (via `react-native-svg`) für Pinsel/Füllen/Vorlage-ansehen in `DrawPhase.tsx`, statt bunter Emoji (✏️ 🪣 👁). Farbe wird komplett über den `color`-Prop gesteuert (aktiv = weiß, inaktiv = `colors.text.secondary`). Die Strichstärken-Auswahl (klein/mittel/groß) zeigt bei allen drei Punkten einheitlich `drawing.color`; die aktive Größe wird über einen Ring (`borderColor`) markiert, nicht über unterschiedliche Punktfarben.
 
 ---
 
@@ -354,7 +364,7 @@ Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerend
 ### Tests
 
 - Test-Dateien liegen bei `services/__tests__/`, `components/__tests__/`, `utils/__tests__/`, `__tests__/`
-- Jest-Umgebung: `jsdom`; Skia wird gemockt via `__mocks__/@shopify/react-native-skia.js`
+- Jest-Umgebung: `jsdom`; Skia wird gemockt via `__mocks__/@shopify/react-native-skia.js`, `react-native-svg` via `__mocks__/react-native-svg.js` (beide global, automatisch für alle Tests aktiv — kein `jest.mock()`-Aufruf nötig)
 - `@testing-library/dom` muss installiert sein (Peer-Dep von `@testing-library/react` v16)
 - `npm test` (kein `--runInBand` nötig, aber stabil)
 
@@ -371,7 +381,7 @@ Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerend
 ## Wachstums-Roadmap (Issue #219)
 
 Übergeordneter Plan, um aus der App eine dauerhaft wachsende Kids-App im Play Store zu machen.
-Stand: `main` @ v1.7.0 / versionCode 66 — `testing` synchron. Enthält Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten, weitere Sprachen, Sentry-ErrorBoundary (#264) und den transform-origin Web-Fix (#265). **Play Store noch nicht auf v1.7.0** — Release-Aufgabe in Issue #267.
+Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusätzlich die Themen-Pack-Auswahl-UI (PR #271) und die Draw-UX-Fixes (Icons/Strichstärken-Farbe/Fortschrittsbalken, PR #272) — noch nicht in `main` gemerged. Enthält Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten, weitere Sprachen, Sentry-ErrorBoundary (#264) und den transform-origin Web-Fix (#265). **Play Store noch nicht auf v1.7.0** — Release-Aufgabe in Issue #267.
 
 ### P0 — Foundation für Wachstum
 
@@ -389,6 +399,7 @@ Stand: `main` @ v1.7.0 / versionCode 66 — `testing` synchron. Enthält Fahrzeu
 | ------------------------------------------------------------------------ | ------------------- |
 | **Themen-Pack Tiere v1** (10 Bilder, #222)                               | ✅ in main (v1.7.0) |
 | **Themen-Pack Fahrzeuge v1** (10 Bilder, PR #254)                        | ✅ in main (v1.7.0) |
+| **Themen-Pack-Auswahl-UI** (Chip-Filter Alle/Tiere/Fahrzeuge, PR #271)   | ✅ in `testing`     |
 | Themen-Pack Natur / Märchen / weitere                                    | 🔲 offen            |
 | **Spielvarianten** (Nur Umriss merken, Spiegelbild, Kreativ-Modus, #247) | ✅ in main (v1.7.0) |
 | Avatar & Personalisierung                                                | 🔲 offen            |
@@ -404,12 +415,14 @@ Stand: `main` @ v1.7.0 / versionCode 66 — `testing` synchron. Enthält Fahrzeu
 | **Sharing-Feature / PNG-Export** (ShareService, PR #255) | ✅ in main (v1.7.0)                                       |
 | Push-Notifications (opt-in)                              | 🔲 offen                                                  |
 
-### Themen-Pack Architektur (ab PR #221)
+### Themen-Pack Architektur (ab PR #221, Auswahl-UI ab PR #271)
 
 - `LevelImage.pack?: string` — optionaler Tag (z.B. `'tiere-v1'`)
 - Bilder ohne `minLevel` sind ab dem passenden Difficulty-Level verfügbar
 - Neue Packs: einfach neue Cases in `LevelImageDisplay.tsx` + Einträge in `ImagePoolManager.ts` + `IMAGE_ELEMENT_COUNTS`
 - Pflicht nach jedem neuen SVG: `npm run validate:svg-counts` (derzeit 51 Einträge)
+- `getAvailablePacks()` (`ImagePoolManager.ts`) liefert alle im Pool vorkommenden Pack-IDs für die Chip-Filter-UI in `app/levels.tsx`
+- Neue Packs erscheinen automatisch als Filteroption — für ein sprechendes Label in der UI zusätzlich einen Eintrag in `PACK_LABEL_KEYS` (`app/levels.tsx`) sowie `levels.pack.<label>` in allen 7 Locale-Dateien ergänzen
 
 ---
 

@@ -34,6 +34,12 @@
       "normal": "Normal",
       "outline": "Nur Umriss",
       "mirror": "Spiegelbild"
+    },
+    "pack": {
+      "title": "Themen-Pack",
+      "all": "Alle",
+      "tiere": "Tiere",
+      "fahrzeuge": "Fahrzeuge"
     }
   },
   "game": {
@@ -58,7 +64,7 @@
       "clear": "Alles löschen",
       "clearConfirm": "Wirklich alles löschen?",
       "done": "Fertig",
-      "hintButton": "👁 1x",
+      "hintButton": "1x",
       "hintUsed": "Joker verbraucht",
       "hintModalTitle": "Vorlage",
       "drawFromMemory": "Male das",

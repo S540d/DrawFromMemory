@@ -34,6 +34,12 @@
       "normal": "Normal",
       "outline": "Contour seulement",
       "mirror": "Image miroir"
+    },
+    "pack": {
+      "title": "Pack thématique",
+      "all": "Tous",
+      "tiere": "Animaux",
+      "fahrzeuge": "Véhicules"
     }
   },
   "game": {
@@ -58,7 +64,7 @@
       "clear": "Tout effacer",
       "clearConfirm": "Vraiment tout effacer ?",
       "done": "Terminé",
-      "hintButton": "👁 1x",
+      "hintButton": "1x",
       "hintUsed": "Indice utilisé",
       "hintModalTitle": "Référence",
       "drawFromMemory": "Dessine le",

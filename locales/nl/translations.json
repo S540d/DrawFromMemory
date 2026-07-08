@@ -34,6 +34,12 @@
       "normal": "Normaal",
       "outline": "Alleen omtrek",
       "mirror": "Spiegelbeeld"
+    },
+    "pack": {
+      "title": "Themapakket",
+      "all": "Alle",
+      "tiere": "Dieren",
+      "fahrzeuge": "Voertuigen"
     }
   },
   "game": {
@@ -58,7 +64,7 @@
       "clear": "Alles wissen",
       "clearConfirm": "Echt alles wissen?",
       "done": "Klaar",
-      "hintButton": "👁 1x",
+      "hintButton": "1x",
       "hintUsed": "Hint gebruikt",
       "hintModalTitle": "Voorbeeld",
       "drawFromMemory": "Teken de",

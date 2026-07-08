@@ -34,6 +34,12 @@
       "normal": "Normale",
       "outline": "Solo contorno",
       "mirror": "Immagine speculare"
+    },
+    "pack": {
+      "title": "Pacchetto tematico",
+      "all": "Tutti",
+      "tiere": "Animali",
+      "fahrzeuge": "Veicoli"
     }
   },
   "game": {
@@ -58,7 +64,7 @@
       "clear": "Cancella tutto",
       "clearConfirm": "Vuoi davvero cancellare tutto?",
       "done": "Fatto",
-      "hintButton": "👁 1x",
+      "hintButton": "1x",
       "hintUsed": "Suggerimento usato",
       "hintModalTitle": "Riferimento",
       "drawFromMemory": "Disegna il",
