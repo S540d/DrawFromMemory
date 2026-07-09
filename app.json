@@ -72,7 +72,8 @@
           "autoUploadNativeSymbols": false,
           "url": "https://sentry.io/"
         }
-      ]
+      ],
+      "expo-sharing"
     ],
     "experiments": {
       "typedRoutes": true
