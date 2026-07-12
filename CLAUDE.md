@@ -328,12 +328,12 @@ Colors.glass.darkShadow; // { boxShadow, elevation } — dunkel
 
 Alle `EXPO_PUBLIC_*`-Flags sind zur Build-Zeit eingefroren (Expo bündelt sie statisch).
 
-| Env-Var                            | Default | Bedeutung                                                                                                       |
-| ---------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------- |
-| `EXPO_PUBLIC_SENTRY_DSN`           | —       | Sentry-Reporting aktivieren (leer = no-op)                                                                      |
-| `EXPO_PUBLIC_ENABLE_IN_APP_REVIEW` | `false` | In-App-Review-Prompt via `expo-store-review` — **deaktiviert bis Play-Store-Listing auditiert** (Issue #219 P0) |
-| `EXPO_PUBLIC_PLAUSIBLE_DOMAIN`     | —       | Privacy-freundliches, cookie-loses Web-Analytics (Plausible-kompatibel) — leer = no-op (Issue #279, 3.4)        |
-| `EXPO_PUBLIC_PLAUSIBLE_SCRIPT_SRC` | Plausible-Cloud-URL | Überschreibt die Script-Quelle für self-hosted Plausible/Umami-kompatible Instanzen                  |
+| Env-Var                            | Default             | Bedeutung                                                                                                       |
+| ---------------------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `EXPO_PUBLIC_SENTRY_DSN`           | —                   | Sentry-Reporting aktivieren (leer = no-op)                                                                      |
+| `EXPO_PUBLIC_ENABLE_IN_APP_REVIEW` | `false`             | In-App-Review-Prompt via `expo-store-review` — **deaktiviert bis Play-Store-Listing auditiert** (Issue #219 P0) |
+| `EXPO_PUBLIC_PLAUSIBLE_DOMAIN`     | —                   | Privacy-freundliches, cookie-loses Web-Analytics (Plausible-kompatibel) — leer = no-op (Issue #279, 3.4)        |
+| `EXPO_PUBLIC_PLAUSIBLE_SCRIPT_SRC` | Plausible-Cloud-URL | Überschreibt die Script-Quelle für self-hosted Plausible/Umami-kompatible Instanzen                             |
 
 > **Aktivieren:** In `.env` oder EAS-Build-Profil `EXPO_PUBLIC_ENABLE_IN_APP_REVIEW=true` setzen.  
 > Der Flag wird in `services/ReviewManager.ts` ausgewertet; kein Code-Change nötig.

@@ -4,7 +4,7 @@
     "slug": "merke-und-male",
     "version": "1.7.2",
     "platforms": ["ios", "android", "web"],
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icons/app-icon.png",
     "userInterfaceStyle": "light",
     "scheme": "merkeundmale",
@@ -73,6 +73,7 @@
           "url": "https://sentry.io/"
         }
       ],
+      "./plugins/withAndroidResizeableActivity.js",
       "expo-sharing"
     ],
     "experiments": {

@@ -26,18 +26,14 @@ export default function WebTrustFooter() {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.tagline, { color: colors.text.secondary }]}>
-        {t('footer.tagline')}
-      </Text>
+      <Text style={[styles.tagline, { color: colors.text.secondary }]}>{t('footer.tagline')}</Text>
       <View style={styles.linkRow}>
         <TouchableOpacity onPress={() => openUrl(PLAY_STORE_URL)} accessibilityRole="link">
           <Text style={[styles.link, { color: colors.primary }]}>{t('footer.playStore')}</Text>
         </TouchableOpacity>
         <Text style={[styles.separator, { color: colors.text.light }]}>·</Text>
         <TouchableOpacity onPress={() => openUrl(PRIVACY_POLICY_URL)} accessibilityRole="link">
-          <Text style={[styles.link, { color: colors.primary }]}>
-            {t('footer.privacyPolicy')}
-          </Text>
+          <Text style={[styles.link, { color: colors.primary }]}>{t('footer.privacyPolicy')}</Text>
         </TouchableOpacity>
       </View>
     </View>
