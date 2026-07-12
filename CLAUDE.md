@@ -61,6 +61,7 @@ components/
   Chip.tsx                   # UI-Primitiv: Chip
   Button.tsx                 # UI-Primitiv: Button (primary = LinearGradient cta, secondary = outlined, ghost = transparent, danger = solid)
   SkeletonLoader.tsx         # Skeleton Placeholder
+  WebTrustFooter.tsx         # Nur Web: Play-Store-Link + Datenschutz-Link am Ende der Startseite (Issue #279, 3.4)
 
 services/
   FloodFillService.ts        # Flood-Fill-Algorithmus (Scanline, 1-Bit-Palette)
@@ -72,6 +73,7 @@ services/
   RatingManager.ts           # Stern-Bewertungen und rotierende Motivations-Nachrichten
   SoundManager.ts            # Web Audio API (Web) + expo-haptics (Native)
   SentryService.ts           # Sentry-Wrapper (init, captureException, etc.)
+  AnalyticsService.ts        # Privacy-freundliches Web-Analytics (Plausible-kompatibel) — no-op ohne EXPO_PUBLIC_PLAUSIBLE_DOMAIN
   ThemeContext.tsx            # ThemeProvider + useTheme Hook (light/dark/system)
   i18n.ts                    # Übersetzungs-Service (de/en/es/fr/it/nl/pl) mit listener-basiertem Reload + automatischer Geräte-Spracherkennung
   ReviewManager.ts           # In-App-Review-Trigger: 5-Sterne oder 3. Daily Challenge, 90-Tage-Cooldown — deaktiviert via EXPO_PUBLIC_ENABLE_IN_APP_REVIEW
@@ -330,9 +332,13 @@ Alle `EXPO_PUBLIC_*`-Flags sind zur Build-Zeit eingefroren (Expo bündelt sie st
 | ---------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------- |
 | `EXPO_PUBLIC_SENTRY_DSN`           | —       | Sentry-Reporting aktivieren (leer = no-op)                                                                      |
 | `EXPO_PUBLIC_ENABLE_IN_APP_REVIEW` | `false` | In-App-Review-Prompt via `expo-store-review` — **deaktiviert bis Play-Store-Listing auditiert** (Issue #219 P0) |
+| `EXPO_PUBLIC_PLAUSIBLE_DOMAIN`     | —       | Privacy-freundliches, cookie-loses Web-Analytics (Plausible-kompatibel) — leer = no-op (Issue #279, 3.4)        |
+| `EXPO_PUBLIC_PLAUSIBLE_SCRIPT_SRC` | Plausible-Cloud-URL | Überschreibt die Script-Quelle für self-hosted Plausible/Umami-kompatible Instanzen                  |
 
 > **Aktivieren:** In `.env` oder EAS-Build-Profil `EXPO_PUBLIC_ENABLE_IN_APP_REVIEW=true` setzen.  
 > Der Flag wird in `services/ReviewManager.ts` ausgewertet; kein Code-Change nötig.
+>
+> **Analytics aktivieren:** `EXPO_PUBLIC_PLAUSIBLE_DOMAIN=s540d.github.io` (oder eigene Domain) setzen — Tool-Entscheidung (Plausible-Cloud vs. self-hosted) und Domain-Wahl liegen beim Team, der Flag ist nur die Infrastruktur dafür (`services/AnalyticsService.ts`, aufgerufen in `app/_layout.tsx`).
 
 ---
 
