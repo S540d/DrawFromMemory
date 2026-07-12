@@ -9,10 +9,10 @@ Quelle: Issue [#243](https://github.com/S540d/DrawFromMemory/issues/243) (Store-
 
 ## 1. Titel (max. 30 Zeichen)
 
-| Sprache | Titel                | Zeichen |
-| ------- | -------------------- | ------- |
-| DE      | Merke und Male       | 14      |
-| EN      | Merke und Male       | 14      |
+| Sprache | Titel          | Zeichen |
+| ------- | -------------- | ------- |
+| DE      | Merke und Male | 14      |
+| EN      | Merke und Male | 14      |
 
 > Der App-Name bleibt in allen Sprachen identisch (Markenname, entspricht `app.json` / Package `com.s540d.merkeundmale`). Keyword-Ergänzungen im Titel (z. B. „– Memory für Kinder") sind möglich, aber bewusst weggelassen: Der Titel bleibt kurz und einprägsam, Keywords stehen in Kurz- und Langbeschreibung.
 
