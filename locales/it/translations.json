@@ -21,6 +21,11 @@
       "levelOf": "di {{total}}"
     }
   },
+  "footer": {
+    "tagline": "Offline · senza pubblicità · nessuna raccolta dati",
+    "playStore": "Disponibile su Google Play",
+    "privacyPolicy": "Informativa sulla privacy"
+  },
   "levels": {
     "title": "Scegli livello",
     "level": "Livello {{number}}",

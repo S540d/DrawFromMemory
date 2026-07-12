@@ -2,7 +2,7 @@
   "expo": {
     "name": "Merke und Male",
     "slug": "merke-und-male",
-    "version": "1.7.0",
+    "version": "1.7.2",
     "platforms": ["ios", "android", "web"],
     "orientation": "default",
     "icon": "./assets/icons/app-icon.png",
@@ -37,7 +37,7 @@
       },
       "package": "com.s540d.merkeundmale",
       "permissions": [],
-      "versionCode": 66,
+      "versionCode": 68,
       "minSdkVersion": 26,
       "newArchEnabled": false,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.s540d.merkeundmale",
@@ -73,7 +73,8 @@
           "url": "https://sentry.io/"
         }
       ],
-      "./plugins/withAndroidResizeableActivity.js"
+      "./plugins/withAndroidResizeableActivity.js",
+      "expo-sharing"
     ],
     "experiments": {
       "typedRoutes": true

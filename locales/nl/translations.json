@@ -21,6 +21,11 @@
       "levelOf": "van {{total}}"
     }
   },
+  "footer": {
+    "tagline": "Offline · geen advertenties · geen gegevensverzameling",
+    "playStore": "Beschikbaar op Google Play",
+    "privacyPolicy": "Privacybeleid"
+  },
   "levels": {
     "title": "Level kiezen",
     "level": "Level {{number}}",

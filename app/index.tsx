@@ -18,6 +18,7 @@ import QuickStatsCards from '@components/QuickStatsCards';
 import { FloatingStars } from '@components/FloatingStars';
 import OnboardingModal from '@components/OnboardingModal';
 import { isOnboardingDone } from '@services/OnboardingManager';
+import WebTrustFooter from '@components/WebTrustFooter';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -197,6 +198,8 @@ export default function HomeScreen() {
 
         {/* Quick Stats — dezent am unteren Rand */}
         <QuickStatsCards />
+
+        <WebTrustFooter />
       </View>
 
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />

@@ -48,6 +48,13 @@ jest.mock('../../components/SettingsModal', () => {
   };
 });
 
+jest.mock('../../components/WebTrustFooter', () => {
+  const { View } = require('react-native');
+  return function WebTrustFooter() {
+    return <View />;
+  };
+});
+
 jest.mock('../../components/FloatingStars', () => {
   const { View } = require('react-native');
   return { FloatingStars: () => <View testID="floating-stars" /> };
