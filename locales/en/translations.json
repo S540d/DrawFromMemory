@@ -270,5 +270,34 @@
     "badgeMemorize": "Remember",
     "badgeDraw": "Draw",
     "badgeResult": "Rate"
+  },
+  "mascot": {
+    "greeting": {
+      "default": "Hi! I'm Mali. Ready to play?",
+      "streak": "Great to see you again! 🔥 {{count}} days in a row!",
+      "streakLong": "Wow, {{count}} days in a row! You're amazing!"
+    },
+    "nextUnlock": "{{count}} more stars until: {{item}}",
+    "accessory": {
+      "hat": "Hat",
+      "glasses": "Sunglasses",
+      "bowtie": "Bow tie",
+      "crown": "Crown"
+    },
+    "unlockToast": {
+      "title": "New accessory!",
+      "subtitle": "Mali is now wearing: {{item}}"
+    }
+  },
+  "ageGroup": {
+    "title": "How old is your child?",
+    "subtitle": "This helps us set the display time and difficulty just right.",
+    "group3to5": "3–5 years",
+    "group6to8": "6–8 years",
+    "group9plus": "9+ years",
+    "confirm": "Let's go!",
+    "changeLater": "You can change this anytime later in settings.",
+    "settingsLabel": "Age group",
+    "recommendedLevels": "Recommended for your child: Level {{from}}–{{to}}"
   }
 }

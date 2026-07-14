@@ -270,5 +270,34 @@
     "badgeMemorize": "Onthouden",
     "badgeDraw": "Tekenen",
     "badgeResult": "Beoordelen"
+  },
+  "mascot": {
+    "greeting": {
+      "default": "Hoi! Ik ben Mali. Klaar om te spelen?",
+      "streak": "Leuk dat je er weer bent! 🔥 {{count}} dagen op rij!",
+      "streakLong": "Wow, {{count}} dagen op rij! Je bent geweldig!"
+    },
+    "nextUnlock": "Nog {{count}} sterren tot: {{item}}",
+    "accessory": {
+      "hat": "Hoed",
+      "glasses": "Zonnebril",
+      "bowtie": "Vlinderdas",
+      "crown": "Kroon"
+    },
+    "unlockToast": {
+      "title": "Nieuw accessoire!",
+      "subtitle": "Mali draagt nu: {{item}}"
+    }
+  },
+  "ageGroup": {
+    "title": "Hoe oud is je kind?",
+    "subtitle": "Dit helpt ons de weergavetijd en moeilijkheidsgraad goed in te stellen.",
+    "group3to5": "3–5 jaar",
+    "group6to8": "6–8 jaar",
+    "group9plus": "9+ jaar",
+    "confirm": "Laten we beginnen!",
+    "changeLater": "Je kunt dit later altijd wijzigen in de instellingen.",
+    "settingsLabel": "Leeftijdsgroep",
+    "recommendedLevels": "Aanbevolen voor je kind: Level {{from}}–{{to}}"
   }
 }
