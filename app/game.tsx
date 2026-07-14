@@ -15,6 +15,7 @@ import SettingsModal from '@components/SettingsModal';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import ConfettiBurst from '@components/ConfettiBurst';
 import BadgeUnlockToast from '@components/BadgeUnlockToast';
+import MascotUnlockToast from '@components/MascotUnlockToast';
 import TutorialOverlay from '@components/TutorialOverlay';
 import { markOnboardingDone } from '@services/OnboardingManager';
 import SoundManager from '@services/SoundManager';
@@ -22,6 +23,7 @@ import { useGamePhase } from '@services/useGamePhase';
 import { checkAndUnlock, type AchievementDef } from '@services/AchievementManager';
 import { getStreakData } from '@services/StreakManager';
 import storageManager from '@services/StorageManager';
+import { getAgeGroup, getDefaultStrokeWidthForAgeGroup } from '@services/AgeGroupManager';
 import MemorizePhase from '@components/game/MemorizePhase';
 import DrawPhase from '@components/game/DrawPhase';
 import ResultPhase from '@components/game/ResultPhase';
@@ -87,6 +89,8 @@ export default function GameScreen() {
     isReplaying,
     setIsReplaying,
     replayPaths,
+    newMascotUnlock,
+    clearMascotUnlock,
     handleRatingSubmit,
     saveToGallery,
     startReplay,
@@ -140,6 +144,14 @@ export default function GameScreen() {
       setCelebrationEnabled(enabled);
     }
     init();
+  }, []);
+
+  // Altersgerechte Standard-Strichstärke beim Rundenstart (Issue #279, 1.3)
+  useEffect(() => {
+    getAgeGroup().then(ageGroup => {
+      drawing.setStrokeWidth(getDefaultStrokeWidthForAgeGroup(ageGroup));
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Reset tutorial hint when phase changes so each phase shows its own hint
@@ -410,6 +422,7 @@ export default function GameScreen() {
         </View>
       )}
       <BadgeUnlockToast achievement={unlockedBadge} onHide={handleBadgeToastHide} />
+      <MascotUnlockToast unlock={newMascotUnlock} onHide={clearMascotUnlock} />
 
       {/* Tutorial Coach Mark */}
       {isTutorial &&

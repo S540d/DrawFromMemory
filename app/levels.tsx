@@ -13,6 +13,7 @@ import { useTheme } from '@services/ThemeContext';
 import { getAllLevels } from '@services/LevelManager';
 import { getAvailablePacks } from '@services/ImagePoolManager';
 import storageManager from '@services/StorageManager';
+import { getAgeGroup, getRecommendedLevelRange } from '@services/AgeGroupManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../constants/Layout';
 import { GlassCard } from '@components/AnimatedPrimitives';
@@ -46,6 +47,7 @@ export default function LevelsScreen() {
   const [ratings, setRatings] = useState<Record<number, number | null>>({});
   const [variant, setVariant] = useState<GameVariant>('normal');
   const [pack, setPack] = useState<string>('all');
+  const [recommendedRange, setRecommendedRange] = useState<[number, number] | null>(null);
   // Use hook for responsive dimensions (SSR-safe)
   const { width: screenWidth } = useWindowDimensions();
   const cardWidth =
@@ -72,6 +74,16 @@ export default function LevelsScreen() {
       mounted = false;
     };
   }, [levels]);
+
+  useEffect(() => {
+    let mounted = true;
+    getAgeGroup().then(ageGroup => {
+      if (mounted && ageGroup) setRecommendedRange(getRecommendedLevelRange(ageGroup));
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const renderStars = (rating: number | null, levelNumber: number) => {
     const filled = rating === null ? 0 : Math.ceil(rating / 2);
@@ -134,6 +146,14 @@ export default function LevelsScreen() {
           <Text style={[styles.backButton, { color: colors.primary }]}>← {t('common.back')}</Text>
         </TouchableOpacity>
         <Text style={[styles.title, { color: colors.text.primary }]}>{t('levels.title')}</Text>
+        {recommendedRange && (
+          <Text style={[styles.recommendedHint, { color: colors.text.secondary }]}>
+            {t('ageGroup.recommendedLevels', {
+              from: String(recommendedRange[0]),
+              to: String(recommendedRange[1]),
+            })}
+          </Text>
+        )}
       </View>
 
       {/* Spielvariante */}
@@ -201,6 +221,11 @@ const styles = StyleSheet.create({
     fontSize: FontSize.xxl,
     fontWeight: FontWeight.bold,
     fontFamily: FontFamily.extraBold,
+  },
+  recommendedHint: {
+    fontSize: FontSize.xs,
+    fontWeight: FontWeight.medium,
+    marginTop: 2,
   },
   variantSection: {
     paddingHorizontal: Spacing.lg,
