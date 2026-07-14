@@ -11,7 +11,11 @@ import SoundManager from '@services/SoundManager';
 import { requestReviewIfEligible } from '@services/ReviewManager';
 import { useTimer } from '@services/useTimer';
 import { getAgeGroup, getExtraTimeForAgeGroup } from '@services/AgeGroupManager';
-import { getTotalStars, getNewlyUnlockedAccessories, type MascotUnlock } from '@services/MascotManager';
+import {
+  getTotalStars,
+  getNewlyUnlockedAccessories,
+  type MascotUnlock,
+} from '@services/MascotManager';
 import type { DrawingPath } from '@components/DrawingCanvas';
 import type { GamePhase, LevelImage } from '../types';
 

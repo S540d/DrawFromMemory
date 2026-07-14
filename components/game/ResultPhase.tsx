@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal } from 'rea
 import DrawingCanvas from '@components/DrawingCanvas';
 import LevelImageDisplay from '@components/LevelImageDisplay';
 import Mascot from '@components/Mascot';
+import MascotSparkle from '@components/MascotSparkle';
 import { AnimatedFeedback, AnimatedStar } from '@components/AnimatedPrimitives';
 import Colors from '../../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../../constants/Layout';
@@ -213,11 +214,14 @@ export default function ResultPhase({
           </View>
           <AnimatedFeedback visible={userRating > 0}>
             <View style={styles.mascotFeedbackRow}>
-              <Mascot
-                size={48}
-                mood={getResultMoodForStars(userRating)}
-                testID="result-mascot"
-              />
+              <View style={styles.mascotWithSparkle}>
+                <Mascot size={48} mood={getResultMoodForStars(userRating)} testID="result-mascot" />
+                {userRating >= 5 && (
+                  <View style={styles.sparkleOverlay}>
+                    <MascotSparkle size={56} testID="result-mascot-sparkle" />
+                  </View>
+                )}
+              </View>
               <Text style={[styles.feedbackText, { color: colors.text.secondary }]}>
                 {getFeedbackText(userRating)}
               </Text>
@@ -318,6 +322,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: Spacing.sm,
     paddingHorizontal: Spacing.md,
+  },
+  mascotWithSparkle: {
+    width: 48,
+    height: 48,
+  },
+  sparkleOverlay: {
+    position: 'absolute',
+    top: -14,
+    left: -4,
   },
   feedbackText: {
     flexShrink: 1,

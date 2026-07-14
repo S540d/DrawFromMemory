@@ -37,6 +37,16 @@ export interface ScreenLayout {
   isSmall: boolean; // size === 'xs' | 'sm'
   isMedium: boolean; // size === 'md'
   isLarge: boolean; // size === 'lg'
+  /** Breiter als hoch (Tablet/Handy im Querformat) */
+  isLandscape: boolean;
+  /** Kürzere Bildschirmkante ≥ 600 px — grobe Tablet-Erkennung */
+  isTablet: boolean;
+
+  // ── Draw-Phase Layout-Modus (Issue #279, 2.4) ─────────────────────
+  /** 'side' im Querformat (Zeichenfläche + Werkzeugleiste nebeneinander), sonst 'bottom' */
+  toolbarPosition: 'bottom' | 'side';
+  /** Breite der seitlichen Werkzeugleiste, wenn toolbarPosition === 'side' */
+  sideToolbarWidth: number;
 
   // ── Header ──────────────────────────────────────────────────────────
   /** Vertikales Innen-Padding des Headers */
@@ -88,6 +98,10 @@ export function useScreenLayout(): ScreenLayout {
 
   // Nutzbare Höhe ohne Systemelemente
   const safeHeight = height - insets.top - insets.bottom;
+  const safeWidth = width - insets.left - insets.right;
+
+  const isLandscape = width > height;
+  const isTablet = Math.min(width, height) >= 600;
 
   // Größenklasse ermitteln
   const size: ScreenSize =
@@ -97,6 +111,12 @@ export function useScreenLayout(): ScreenLayout {
   const isSmall = size === 'xs' || size === 'sm';
   const isMedium = size === 'md';
   const isLarge = size === 'lg';
+
+  // Werkzeugleiste wandert im Querformat neben die Zeichenfläche, statt
+  // darunter gestapelt zu werden — braucht ausreichend Breite dafür (sonst
+  // bleibt es beim vertikalen Stack, z.B. sehr schmales Querformat-Popup).
+  const toolbarPosition: 'bottom' | 'side' = isLandscape && safeWidth >= 480 ? 'side' : 'bottom';
+  const sideToolbarWidth = isXSmall ? 96 : isSmall ? 108 : 128;
 
   // ── Header ──────────────────────────────────────────────────────────
   const headerPaddingVertical = isXSmall ? 4 : isSmall ? 8 : 24;
@@ -114,9 +134,12 @@ export function useScreenLayout(): ScreenLayout {
   // ── Canvas ───────────────────────────────────────────────────────────
   // Schätzung des Platzes, der von festen Elementen verbraucht wird:
   //   Header + phaseContainer-Padding + Toolbar + Buttons + Gaps
+  // Im Querformat (toolbarPosition === 'side') steht die Werkzeugleiste
+  // neben statt unter der Zeichenfläche — sie kostet dann keine Höhe.
+  const isSideToolbar = toolbarPosition === 'side';
   const headerHeight = headerPaddingVertical * 2 + 44; // content ~44 px
   const phasePadding = (isXSmall ? 8 : 16) * 2;
-  const toolbarHeight = toolbarButtonMinHeight + toolbarMarginVertical * 2;
+  const toolbarHeight = isSideToolbar ? 0 : toolbarButtonMinHeight + toolbarMarginVertical * 2;
   const buttonHeight = buttonMinHeight + buttonPaddingVertical * 2;
   const gapTotal = isXSmall ? 8 : 16;
 
@@ -126,17 +149,25 @@ export function useScreenLayout(): ScreenLayout {
   // Canvas bekommt 95 % des verbleibenden Platzes, aber immer im Bereich [minH, maxH].
   // Min-Höhe und Obergrenze werden zusätzlich auf die tatsächlich verbleibende Höhe begrenzt,
   // damit keine vertikale Überlappung auf sehr kleinen / Split-Screen-Layouts entsteht.
+  // Im Querformat/Tablet darf die Zeichenfläche deutlich größer werden (mehr Bildschirmfläche
+  // durch die seitliche statt gestapelte Werkzeugleiste, siehe Issue #279, 2.4).
   const rawCanvasHeight = remainingHeight * 0.95;
   const baseCanvasMinHeight = isXSmall ? 90 : isSmall ? 120 : 160;
   const canvasMinHeight = Math.min(baseCanvasMinHeight, remainingHeight);
-  const canvasUpperLimit = Math.min(isLarge ? 400 : 320, remainingHeight);
+  const canvasUpperLimitBase = isSideToolbar || isTablet ? 640 : isLarge ? 400 : 320;
+  const canvasUpperLimit = Math.min(canvasUpperLimitBase, remainingHeight);
   const canvasMaxHeight = Math.min(Math.max(rawCanvasHeight, canvasMinHeight), canvasUpperLimit);
   const canvasMarginVertical = isXSmall ? 2 : 4;
 
   // ── Merke-Phase ───────────────────────────────────────────────────
-  // Bild bekommt ~40 % der sicheren Höhe, eingegrenzt auf [140 px, 280 px]
-  const memorizeImageSize = Math.min(Math.max(safeHeight * 0.4, 140), 280);
-  const imagePlaceholderMinSize = Math.min(Math.max(safeHeight * 0.42, 150), 280);
+  // Bild bekommt ~40 % der sicheren Höhe, eingegrenzt auf [140 px, 280 px].
+  // Im Querformat ist die Höhe der begrenzende Faktor, nicht die Breite —
+  // Obergrenze daher an min(Breite, Höhe) koppeln, damit Tablets im
+  // Querformat ein größeres Vorschaubild bekommen statt am Portrait-Limit
+  // von 280px zu kleben (Issue #279, 2.4).
+  const memorizeUpperBound = isLandscape ? Math.min(safeWidth * 0.5, 420) : 280;
+  const memorizeImageSize = Math.min(Math.max(safeHeight * 0.4, 140), memorizeUpperBound);
+  const imagePlaceholderMinSize = Math.min(Math.max(safeHeight * 0.42, 150), memorizeUpperBound);
 
   return {
     screenWidth: width,
@@ -147,6 +178,10 @@ export function useScreenLayout(): ScreenLayout {
     isSmall,
     isMedium,
     isLarge,
+    isLandscape,
+    isTablet,
+    toolbarPosition,
+    sideToolbarWidth,
     headerPaddingVertical,
     headerPaddingHorizontal,
     canvasMaxHeight,

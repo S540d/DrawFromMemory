@@ -381,6 +381,8 @@ export default function GameScreen() {
               buttonMinHeight: layout.buttonMinHeight,
               buttonPaddingVertical: layout.buttonPaddingVertical,
               isSmall,
+              toolbarPosition: layout.toolbarPosition,
+              sideToolbarWidth: layout.sideToolbarWidth,
             }}
             onDone={() => {
               SoundManager.playPhaseTransition();
