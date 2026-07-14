@@ -13,6 +13,7 @@ import { useTranslation } from '@services/i18n';
 import Colors from '../constants/Colors';
 import { BorderRadius, FontSize, FontWeight, Spacing } from '../constants/Layout';
 import type { MascotUnlock } from '@services/MascotManager';
+import MascotSparkle from './MascotSparkle';
 
 interface Props {
   unlock: MascotUnlock | null;
@@ -69,7 +70,10 @@ export default function MascotUnlockToast({ unlock, onHide }: Props) {
       pointerEvents="none"
       testID="mascot-unlock-toast"
     >
-      <Text style={styles.emoji}>🦎</Text>
+      <View style={styles.sparkleWrap}>
+        <MascotSparkle size={40} testID="mascot-unlock-sparkle" />
+        <Text style={styles.emoji}>🦎</Text>
+      </View>
       <View style={styles.textCol}>
         <Text style={styles.title} numberOfLines={1}>
           {t('mascot.unlockToast.title')}
@@ -103,9 +107,16 @@ const styles = StyleSheet.create({
     elevation: 6,
     zIndex: 1000,
   },
-  emoji: {
-    fontSize: 32,
+  sparkleWrap: {
+    width: 40,
+    height: 40,
     marginRight: Spacing.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emoji: {
+    position: 'absolute',
+    fontSize: 22,
   },
   textCol: {
     flex: 1,
