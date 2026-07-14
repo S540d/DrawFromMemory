@@ -44,7 +44,10 @@
       "title": "Pack thématique",
       "all": "Tous",
       "tiere": "Animaux",
-      "fahrzeuge": "Véhicules"
+      "fahrzeuge": "Véhicules",
+      "natur": "Nature",
+      "maerchen": "Contes",
+      "essen": "Nourriture"
     }
   },
   "game": {

@@ -44,7 +44,10 @@
       "title": "Theme pack",
       "all": "All",
       "tiere": "Animals",
-      "fahrzeuge": "Vehicles"
+      "fahrzeuge": "Vehicles",
+      "natur": "Nature",
+      "maerchen": "Fairy Tales",
+      "essen": "Food"
     }
   },
   "game": {

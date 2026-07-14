@@ -91,6 +91,39 @@ const IMAGE_ELEMENT_COUNTS: Record<string, number> = {
   'tiere-08-horse.svg': 14,
   'tiere-09-elephant.svg': 14,
   'tiere-10-fox.svg': 13,
+  // Natur v1 Pack
+  'natur-01-rainbow.svg': 9,
+  'natur-02-mushroom.svg': 9,
+  'natur-03-seashell.svg': 9,
+  'natur-04-cactus.svg': 10,
+  'natur-05-bee.svg': 11,
+  'natur-06-ladybug.svg': 11,
+  'natur-07-snowflake.svg': 11,
+  'natur-08-palmtree.svg': 14,
+  'natur-09-waterfall.svg': 13,
+  'natur-10-volcano.svg': 13,
+  // Märchen v1 Pack
+  'maerchen-01-crown.svg': 9,
+  'maerchen-02-wand.svg': 9,
+  'maerchen-03-wizardhat.svg': 8,
+  'maerchen-04-fairy.svg': 11,
+  'maerchen-05-frogprince.svg': 11,
+  'maerchen-06-pumpkincarriage.svg': 10,
+  'maerchen-07-spellbook.svg': 10,
+  'maerchen-08-unicorn.svg': 13,
+  'maerchen-09-dragon.svg': 13,
+  'maerchen-10-castletower.svg': 13,
+  // Essen v1 Pack
+  'essen-01-popsicle.svg': 8,
+  'essen-02-cookie.svg': 9,
+  'essen-03-strawberry.svg': 9,
+  'essen-04-pizza.svg': 10,
+  'essen-05-cupcake.svg': 11,
+  'essen-06-banana.svg': 10,
+  'essen-07-carrot.svg': 10,
+  'essen-08-cake.svg': 14,
+  'essen-09-hamburger.svg': 13,
+  'essen-10-watermelon.svg': 13,
 };
 
 /**
@@ -3947,6 +3980,837 @@ function renderSvgForImage(
           <Ellipse cx="112" cy="193" rx="7" ry="10" fill="#FFD700" stroke="none" />
           {/* Payload door line */}
           <Line x1="90" y1="88" x2="90" y2="155" stroke="#78909C" strokeWidth="1.5" />
+        </Svg>
+      );
+
+  // ===== natur-v1 Pack =====
+    case 'natur-01-rainbow.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* red arc */}
+          <Path d="M 30 150 A 70 70 0 0 1 170 150" fill="none" stroke="#E74C3C" strokeWidth="10" strokeLinecap="round" />
+          {/* orange arc */}
+          <Path d="M 42 150 A 58 58 0 0 1 158 150" fill="none" stroke="#FFA500" strokeWidth="10" strokeLinecap="round" />
+          {/* yellow arc */}
+          <Path d="M 54 150 A 46 46 0 0 1 146 150" fill="none" stroke="#FFD700" strokeWidth="10" strokeLinecap="round" />
+          {/* green arc */}
+          <Path d="M 66 150 A 34 34 0 0 1 134 150" fill="none" stroke="#27AE60" strokeWidth="10" strokeLinecap="round" />
+          {/* blue arc */}
+          <Path d="M 78 150 A 22 22 0 0 1 122 150" fill="none" stroke="#3498DB" strokeWidth="10" strokeLinecap="round" />
+          {/* left cloud */}
+          <Ellipse cx="28" cy="152" rx="22" ry="15" fill="#FFFFFF" stroke="#CFD8DC" strokeWidth="2" />
+          {/* right cloud */}
+          <Ellipse cx="172" cy="152" rx="22" ry="15" fill="#FFFFFF" stroke="#CFD8DC" strokeWidth="2" />
+          {/* sparkle1 */}
+          <Circle cx="60" cy="40" r="4" fill="#FFD700" />
+          {/* sparkle2 */}
+          <Circle cx="140" cy="55" r="3" fill="#FFD700" />
+        </Svg>
+      );
+
+    case 'natur-02-mushroom.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* stem */}
+          <Rect x="88" y="110" width="24" height="55" rx="8" fill="#FFF3E0" stroke="#D7A86E" strokeWidth="2" />
+          {/* cap */}
+          <Path d="M 40 112 Q 40 55 100 55 Q 160 55 160 112 Q 100 132 40 112 Z" fill="#E74C3C" stroke="#B71C1C" strokeWidth="2" />
+          {/* spot1 */}
+          <Circle cx="70" cy="88" r="9" fill="#FFFFFF" />
+          {/* spot2 */}
+          <Circle cx="105" cy="75" r="7" fill="#FFFFFF" />
+          {/* spot3 */}
+          <Circle cx="132" cy="92" r="8" fill="#FFFFFF" />
+          {/* grass */}
+          <Ellipse cx="100" cy="172" rx="60" ry="8" fill="#4CAF50" />
+          {/* grass blade1 */}
+          <Path d="M 40 172 Q 36 158 42 150" fill="none" stroke="#2E7D32" strokeWidth="3" strokeLinecap="round" />
+          {/* grass blade2 */}
+          <Path d="M 160 172 Q 166 158 158 150" fill="none" stroke="#2E7D32" strokeWidth="3" strokeLinecap="round" />
+          {/* sparkle1 */}
+          <Circle cx="96" cy="22" r="3" fill="#FFD700" />
+        </Svg>
+      );
+
+    case 'natur-03-seashell.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* shell body */}
+          <Path d="M 100 170 C 40 170 30 100 60 60 C 75 40 100 35 100 35 C 100 35 125 40 140 60 C 170 100 160 170 100 170 Z" fill="#FFB6C1" stroke="#D46A8C" strokeWidth="2" />
+          {/* ridge center */}
+          <Path d="M 100 168 L 100 42" stroke="#D46A8C" strokeWidth="2" strokeLinecap="round" />
+          {/* ridge left1 */}
+          <Path d="M 82 165 L 92 48" stroke="#D46A8C" strokeWidth="1.5" strokeLinecap="round" />
+          {/* ridge left2 */}
+          <Path d="M 62 155 L 82 60" stroke="#D46A8C" strokeWidth="1.5" strokeLinecap="round" />
+          {/* ridge right1 */}
+          <Path d="M 118 165 L 108 48" stroke="#D46A8C" strokeWidth="1.5" strokeLinecap="round" />
+          {/* ridge right2 */}
+          <Path d="M 138 155 L 118 60" stroke="#D46A8C" strokeWidth="1.5" strokeLinecap="round" />
+          {/* pearl */}
+          <Circle cx="100" cy="160" r="6" fill="#F8E1E7" stroke="none" />
+          {/* bubble1 */}
+          <Circle cx="45" cy="100" r="4" fill="#87CEEB" opacity="0.6" />
+          {/* bubble2 */}
+          <Circle cx="158" cy="90" r="3" fill="#87CEEB" opacity="0.6" />
+        </Svg>
+      );
+
+    case 'natur-04-cactus.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* pot base */}
+          <Ellipse cx="100" cy="175" rx="42" ry="12" fill="#D2691E" stroke="#8B4513" strokeWidth="2" />
+          {/* pot */}
+          <Path d="M 66 175 L 74 132 Q 76 128 82 128 L 118 128 Q 124 128 126 132 L 134 175 Z" fill="#CD853F" stroke="#8B4513" strokeWidth="2" />
+          {/* main body */}
+          <Rect x="86" y="55" width="28" height="90" rx="14" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" />
+          {/* left arm */}
+          <Path d="M 86 95 Q 55 95 55 75 Q 55 65 65 65 Q 75 65 75 78 L 75 100" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" />
+          {/* right arm */}
+          <Path d="M 114 110 Q 145 110 145 90 Q 145 80 135 80 Q 125 80 125 93 L 125 115" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" />
+          {/* spine line center */}
+          <Line x1="100" y1="60" x2="100" y2="140" stroke="#2E7D32" strokeWidth="1.5" />
+          {/* spine line left */}
+          <Line x1="90" y1="65" x2="90" y2="138" stroke="#2E7D32" strokeWidth="1" opacity="0.7" />
+          {/* spine line right */}
+          <Line x1="110" y1="65" x2="110" y2="138" stroke="#2E7D32" strokeWidth="1" opacity="0.7" />
+          {/* flower main */}
+          <Circle cx="100" cy="50" r="10" fill="#FF69B4" stroke="#C2185B" strokeWidth="2" />
+          {/* flower small */}
+          <Circle cx="65" cy="60" r="6" fill="#FF69B4" stroke="#C2185B" strokeWidth="1.5" />
+        </Svg>
+      );
+
+    case 'natur-05-bee.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* wing left */}
+          <Ellipse cx="90" cy="95" rx="22" ry="16" fill="#FFD700" stroke="#1A1A1A" strokeWidth="2" />
+          {/* wing right */}
+          <Ellipse cx="130" cy="95" rx="22" ry="16" fill="#E6F7FF" stroke="#90A4AE" strokeWidth="1.5" opacity="0.8" />
+          {/* body */}
+          <Ellipse cx="100" cy="118" rx="40" ry="26" fill="#FFD700" stroke="#1A1A1A" strokeWidth="2" />
+          {/* stripe1 */}
+          <Path d="M 66 106 L 134 106" stroke="#1A1A1A" strokeWidth="8" />
+          {/* stripe2 */}
+          <Path d="M 66 130 L 134 130" stroke="#1A1A1A" strokeWidth="8" />
+          {/* head */}
+          <Circle cx="100" cy="80" r="16" fill="#1A1A1A" />
+          {/* antenna left */}
+          <Line x1="92" y1="66" x2="84" y2="52" stroke="#1A1A1A" strokeWidth="2" strokeLinecap="round" />
+          {/* antenna right */}
+          <Line x1="108" y1="66" x2="116" y2="52" stroke="#1A1A1A" strokeWidth="2" strokeLinecap="round" />
+          {/* eye left */}
+          <Circle cx="95" cy="80" r="2.5" fill="#FFFFFF" />
+          {/* eye right */}
+          <Circle cx="105" cy="80" r="2.5" fill="#FFFFFF" />
+          {/* sparkle trail */}
+          <Circle cx="155" cy="55" r="3" fill="#FFD700" opacity="0.7" />
+        </Svg>
+      );
+
+    case 'natur-06-ladybug.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* body */}
+          <Ellipse cx="100" cy="115" rx="48" ry="40" fill="#E74C3C" stroke="#1A1A1A" strokeWidth="2.5" />
+          {/* wing split */}
+          <Line x1="100" y1="78" x2="100" y2="152" stroke="#1A1A1A" strokeWidth="2.5" />
+          {/* head */}
+          <Circle cx="100" cy="65" r="22" fill="#1A1A1A" />
+          {/* spot1 */}
+          <Circle cx="78" cy="100" r="8" fill="#1A1A1A" />
+          {/* spot2 */}
+          <Circle cx="122" cy="100" r="8" fill="#1A1A1A" />
+          {/* spot3 */}
+          <Circle cx="82" cy="132" r="7" fill="#1A1A1A" />
+          {/* spot4 */}
+          <Circle cx="118" cy="132" r="7" fill="#1A1A1A" />
+          {/* antenna left */}
+          <Line x1="90" y1="48" x2="82" y2="32" stroke="#1A1A1A" strokeWidth="2.5" strokeLinecap="round" />
+          {/* antenna right */}
+          <Line x1="110" y1="48" x2="118" y2="32" stroke="#1A1A1A" strokeWidth="2.5" strokeLinecap="round" />
+          {/* eye left */}
+          <Circle cx="91" cy="62" r="3" fill="#FFFFFF" />
+          {/* eye right */}
+          <Circle cx="109" cy="62" r="3" fill="#FFFFFF" />
+        </Svg>
+      );
+
+    case 'natur-07-snowflake.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* arm 1 */}
+          <Line x1="100" y1="30" x2="100" y2="170" stroke="#3498DB" strokeWidth="5" strokeLinecap="round" />
+          {/* arm 2 */}
+          <Line x1="30" y1="65" x2="170" y2="135" stroke="#3498DB" strokeWidth="5" strokeLinecap="round" />
+          {/* arm 3 */}
+          <Line x1="30" y1="135" x2="170" y2="65" stroke="#3498DB" strokeWidth="5" strokeLinecap="round" />
+          {/* branch top */}
+          <Path d="M 100 55 L 84 70 M 100 55 L 116 70" stroke="#3498DB" strokeWidth="4" strokeLinecap="round" />
+          {/* branch bottom */}
+          <Path d="M 100 145 L 84 130 M 100 145 L 116 130" stroke="#3498DB" strokeWidth="4" strokeLinecap="round" />
+          {/* branch left */}
+          <Path d="M 55 78 L 68 88 M 55 78 L 62 63" stroke="#3498DB" strokeWidth="4" strokeLinecap="round" />
+          {/* branch right */}
+          <Path d="M 145 122 L 132 112 M 145 122 L 138 137" stroke="#3498DB" strokeWidth="4" strokeLinecap="round" />
+          {/* center */}
+          <Circle cx="100" cy="100" r="10" fill="#87CEEB" stroke="#3498DB" strokeWidth="2" />
+          {/* tip top */}
+          <Circle cx="100" cy="32" r="3" fill="#87CEEB" />
+          {/* tip left */}
+          <Circle cx="33" cy="66" r="3" fill="#87CEEB" />
+          {/* tip right */}
+          <Circle cx="167" cy="66" r="3" fill="#87CEEB" />
+        </Svg>
+      );
+
+    case 'natur-08-palmtree.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* trunk */}
+          <Path d="M 92 175 C 88 130 108 100 112 65" fill="none" stroke="#8B5A2B" strokeWidth="12" strokeLinecap="round" />
+          {/* trunk ring1 */}
+          <Line x1="96" y1="155" x2="104" y2="153" stroke="#5D3A1A" strokeWidth="2" />
+          {/* trunk ring2 */}
+          <Line x1="94" y1="125" x2="104" y2="122" stroke="#5D3A1A" strokeWidth="2" />
+          {/* frond1 */}
+          <Path d="M 112 65 Q 60 45 30 70" fill="none" stroke="#2E7D32" strokeWidth="10" strokeLinecap="round" />
+          {/* frond2 */}
+          <Path d="M 112 65 Q 70 30 45 35" fill="none" stroke="#388E3C" strokeWidth="10" strokeLinecap="round" />
+          {/* frond3 */}
+          <Path d="M 112 65 Q 108 20 92 12" fill="none" stroke="#2E7D32" strokeWidth="10" strokeLinecap="round" />
+          {/* frond4 */}
+          <Path d="M 112 65 Q 140 25 155 32" fill="none" stroke="#388E3C" strokeWidth="10" strokeLinecap="round" />
+          {/* frond5 */}
+          <Path d="M 112 65 Q 160 50 178 72" fill="none" stroke="#2E7D32" strokeWidth="10" strokeLinecap="round" />
+          {/* coconut1 */}
+          <Circle cx="108" cy="70" r="7" fill="#8B5A2B" stroke="#5D3A1A" strokeWidth="1.5" />
+          {/* coconut2 */}
+          <Circle cx="122" cy="76" r="7" fill="#8B5A2B" stroke="#5D3A1A" strokeWidth="1.5" />
+          {/* coconut3 */}
+          <Circle cx="114" cy="82" r="6" fill="#8B5A2B" stroke="#5D3A1A" strokeWidth="1.5" />
+          {/* sand */}
+          <Ellipse cx="100" cy="180" rx="55" ry="8" fill="#F4D19B" />
+          {/* pebble1 */}
+          <Circle cx="150" cy="145" r="5" fill="#F4D19B" stroke="#D7A86E" strokeWidth="1" />
+          {/* pebble2 */}
+          <Circle cx="45" cy="150" r="4" fill="#F4D19B" stroke="#D7A86E" strokeWidth="1" />
+        </Svg>
+      );
+
+    case 'natur-09-waterfall.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* rock cliff */}
+          <Path d="M 40 20 L 130 20 L 145 60 L 100 60 L 115 100 L 70 100 L 70 175 L 40 175 Z" fill="#8D6E63" stroke="#5D4037" strokeWidth="2" />
+          {/* water fall */}
+          <Rect x="78" y="30" width="26" height="145" fill="#81D4FA" stroke="#0288D1" strokeWidth="2" opacity="0.85" />
+          {/* water line1 */}
+          <Path d="M 80 50 L 104 55" stroke="#FFFFFF" strokeWidth="2" opacity="0.7" />
+          {/* water line2 */}
+          <Path d="M 78 80 L 102 86" stroke="#FFFFFF" strokeWidth="2" opacity="0.7" />
+          {/* water line3 */}
+          <Path d="M 78 115 L 102 121" stroke="#FFFFFF" strokeWidth="2" opacity="0.7" />
+          {/* pool */}
+          <Ellipse cx="91" cy="172" rx="45" ry="14" fill="#B3E5FC" stroke="#0288D1" strokeWidth="2" />
+          {/* splash1 */}
+          <Circle cx="60" cy="168" r="5" fill="#FFFFFF" opacity="0.8" />
+          {/* splash2 */}
+          <Circle cx="118" cy="165" r="4" fill="#FFFFFF" opacity="0.8" />
+          {/* splash3 */}
+          <Circle cx="68" cy="178" r="3" fill="#FFFFFF" opacity="0.7" />
+          {/* bush1 */}
+          <Circle cx="40" cy="40" r="10" fill="#4CAF50" stroke="#2E7D32" strokeWidth="1.5" />
+          {/* bush2 */}
+          <Circle cx="150" cy="30" r="8" fill="#4CAF50" stroke="#2E7D32" strokeWidth="1.5" />
+          {/* bush3 */}
+          <Circle cx="160" cy="45" r="6" fill="#4CAF50" stroke="#2E7D32" strokeWidth="1.5" />
+          {/* cloud */}
+          <Circle cx="165" cy="20" r="12" fill="#ECEFF1" opacity="0.8" />
+        </Svg>
+      );
+
+    case 'natur-10-volcano.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* mountain */}
+          <Path d="M 100 30 L 165 170 L 35 170 Z" fill="#8D6E63" stroke="#5D4037" strokeWidth="2.5" />
+          {/* crater lava */}
+          <Path d="M 85 55 L 100 30 L 115 55 Z" fill="#E74C3C" stroke="#B71C1C" strokeWidth="2" />
+          {/* lava streak left */}
+          <Path d="M 75 90 L 100 65 L 60 100 Z" fill="#FF7043" opacity="0.85" />
+          {/* lava streak right */}
+          <Path d="M 125 90 L 100 65 L 140 100 Z" fill="#FF7043" opacity="0.85" />
+          {/* lava streak center */}
+          <Path d="M 95 120 L 100 100 L 108 125 Z" fill="#FFB74D" opacity="0.85" />
+          {/* smoke1 */}
+          <Circle cx="100" cy="5" r="12" fill="#CFD8DC" opacity="0.75" />
+          {/* smoke2 */}
+          <Circle cx="118" cy="12" r="10" fill="#CFD8DC" opacity="0.7" />
+          {/* smoke3 */}
+          <Circle cx="132" cy="0" r="7" fill="#CFD8DC" opacity="0.6" />
+          {/* smoke4 */}
+          <Circle cx="85" cy="-5" r="6" fill="#CFD8DC" opacity="0.6" />
+          {/* ground */}
+          <Ellipse cx="100" cy="172" rx="70" ry="8" fill="#2E7D32" />
+          {/* bush left */}
+          <Circle cx="40" cy="168" r="6" fill="#4CAF50" stroke="#2E7D32" strokeWidth="1.5" />
+          {/* bush right */}
+          <Circle cx="160" cy="168" r="6" fill="#4CAF50" stroke="#2E7D32" strokeWidth="1.5" />
+          {/* cloud */}
+          <Circle cx="20" cy="40" r="8" fill="#ECEFF1" opacity="0.7" />
+        </Svg>
+      );
+
+  // ===== maerchen-v1 Pack =====
+    case 'maerchen-01-crown.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* crown body */}
+          <Polygon points="40,150 40,95 65,120 100,70 135,120 160,95 160,150" fill="#FFD700" stroke="#B8860B" strokeWidth="2.5" />
+          {/* crown base */}
+          <Rect x="36" y="148" width="128" height="18" rx="4" fill="#FFD700" stroke="#B8860B" strokeWidth="2.5" />
+          {/* jewel center */}
+          <Circle cx="100" cy="88" r="9" fill="#E74C3C" stroke="#B71C1C" strokeWidth="1.5" />
+          {/* jewel left */}
+          <Circle cx="65" cy="112" r="6" fill="#3498DB" stroke="#1565C0" strokeWidth="1.5" />
+          {/* jewel right */}
+          <Circle cx="135" cy="112" r="6" fill="#3498DB" stroke="#1565C0" strokeWidth="1.5" />
+          {/* jewel far left */}
+          <Circle cx="40" cy="100" r="4" fill="#9B59B6" />
+          {/* jewel far right */}
+          <Circle cx="160" cy="100" r="4" fill="#9B59B6" />
+          {/* jewel base */}
+          <Circle cx="100" cy="157" r="5" fill="#FF69B4" stroke="none" />
+          {/* sparkle */}
+          <Circle cx="100" cy="45" r="3" fill="#FFD700" />
+        </Svg>
+      );
+
+    case 'maerchen-02-wand.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* stick */}
+          <Rect x="93" y="90" width="12" height="90" rx="6" fill="#8B5A2B" stroke="#5D3A1A" strokeWidth="2" transform="rotate(20 100 135)" />
+          {/* star tip */}
+          <Polygon points="100,25 110,55 140,58 116,78 124,108 100,90 76,108 84,78 60,58 90,55" fill="#FFD700" stroke="#B8860B" strokeWidth="2" />
+          {/* sparkle1 */}
+          <Circle cx="55" cy="45" r="4" fill="#87CEEB" />
+          {/* sparkle2 */}
+          <Circle cx="155" cy="40" r="5" fill="#FF69B4" />
+          {/* sparkle3 */}
+          <Circle cx="145" cy="90" r="3" fill="#87CEEB" />
+          {/* sparkle4 */}
+          <Circle cx="40" cy="75" r="3" fill="#FFD700" />
+          {/* sparkle5 */}
+          <Circle cx="165" cy="120" r="3.5" fill="#9B59B6" />
+          {/* sparkle6 */}
+          <Circle cx="60" cy="130" r="2.5" fill="#FF69B4" />
+          {/* trail swirl */}
+          <Path d="M 130 70 Q 145 85 135 100" fill="none" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
+        </Svg>
+      );
+
+    case 'maerchen-03-wizardhat.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* cone */}
+          <Polygon points="100,20 130,140 70,140" fill="#7C5CFF" stroke="#4A2FBF" strokeWidth="2.5" />
+          {/* brim */}
+          <Ellipse cx="100" cy="142" rx="55" ry="14" fill="#5A3FE0" stroke="#4A2FBF" strokeWidth="2.5" />
+          {/* band */}
+          <Rect x="78" y="100" width="44" height="12" fill="#FFD700" stroke="#B8860B" strokeWidth="1.5" />
+          {/* star large */}
+          <Polygon points="100,55 105,68 118,68 108,76 112,89 100,81 88,89 92,76 82,68 95,68" fill="#FFD700" stroke="none" />
+          {/* star small */}
+          <Polygon points="75,80 78,87 85,87 79,91 81,98 75,94 69,98 71,91 65,87 72,87" fill="#FFD700" stroke="none" />
+          {/* sparkle1 */}
+          <Circle cx="70" cy="45" r="3" fill="#FFD700" />
+          {/* sparkle2 */}
+          <Circle cx="128" cy="55" r="2.5" fill="#FFD700" />
+          {/* sparkle3 */}
+          <Circle cx="100" cy="30" r="2" fill="#FFD700" />
+        </Svg>
+      );
+
+    case 'maerchen-04-fairy.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* wing left */}
+          <Path d="M 100 90 C 40 70 25 110 55 130 C 75 143 95 120 100 100" fill="#FF69B4" stroke="#C2185B" strokeWidth="2" opacity="0.85" />
+          {/* wing right */}
+          <Path d="M 100 90 C 160 70 175 110 145 130 C 125 143 105 120 100 100" fill="#FF69B4" stroke="#C2185B" strokeWidth="2" opacity="0.85" />
+          {/* head */}
+          <Circle cx="100" cy="62" r="20" fill="#FDBCB4" stroke="#E8998D" strokeWidth="2" />
+          {/* hair */}
+          <Path d="M 80 50 Q 100 30 120 50 Q 122 65 116 68 L 84 68 Q 78 65 80 50" fill="#9B59B6" stroke="#6C3483" strokeWidth="1.5" />
+          {/* dress */}
+          <Path d="M 82 118 L 100 92 L 118 118 Z" fill="#7C5CFF" stroke="#4A2FBF" strokeWidth="2" />
+          {/* eye left */}
+          <Circle cx="93" cy="60" r="2.5" fill="#1A1A1A" />
+          {/* eye right */}
+          <Circle cx="107" cy="60" r="2.5" fill="#1A1A1A" />
+          {/* wand */}
+          <Path d="M 100 118 L 100 150" stroke="#8B5A2B" strokeWidth="4" strokeLinecap="round" />
+          {/* wand tip */}
+          <Circle cx="100" cy="148" r="5" fill="#FFD700" />
+          {/* sparkle1 */}
+          <Circle cx="130" cy="145" r="3" fill="#FFD700" />
+          {/* sparkle2 */}
+          <Circle cx="145" cy="130" r="2.5" fill="#87CEEB" />
+        </Svg>
+      );
+
+    case 'maerchen-05-frogprince.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* body */}
+          <Ellipse cx="100" cy="130" rx="52" ry="40" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2.5" />
+          {/* eye dome left */}
+          <Circle cx="68" cy="92" r="20" fill="#66BB6A" stroke="#2E7D32" strokeWidth="2.5" />
+          {/* eye dome right */}
+          <Circle cx="132" cy="92" r="20" fill="#66BB6A" stroke="#2E7D32" strokeWidth="2.5" />
+          {/* pupil left */}
+          <Circle cx="68" cy="90" r="9" fill="#1A1A1A" />
+          {/* pupil right */}
+          <Circle cx="132" cy="90" r="9" fill="#1A1A1A" />
+          {/* smile */}
+          <Path d="M 75 130 Q 100 150 125 130" fill="none" stroke="#1A1A1A" strokeWidth="3" strokeLinecap="round" />
+          {/* crown */}
+          <Polygon points="80,68 92,68 100,50 108,68 120,68 116,80 84,80" fill="#FFD700" stroke="#B8860B" strokeWidth="2" />
+          {/* crown jewel */}
+          <Circle cx="100" cy="60" r="4" fill="#E74C3C" />
+          {/* foot left */}
+          <Ellipse cx="55" cy="158" rx="20" ry="11" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" />
+          {/* foot right */}
+          <Ellipse cx="145" cy="158" rx="20" ry="11" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" />
+          {/* sparkle */}
+          <Circle cx="165" cy="60" r="3" fill="#FFD700" opacity="0.7" />
+        </Svg>
+      );
+
+    case 'maerchen-06-pumpkincarriage.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* body */}
+          <Ellipse cx="100" cy="105" rx="62" ry="45" fill="#FF7043" stroke="#E64A19" strokeWidth="2.5" />
+          {/* rib1 */}
+          <Line x1="65" y1="65" x2="65" y2="145" stroke="#E64A19" strokeWidth="2" />
+          {/* rib2 */}
+          <Line x1="100" y1="60" x2="100" y2="150" stroke="#E64A19" strokeWidth="2" />
+          {/* rib3 */}
+          <Line x1="135" y1="65" x2="135" y2="145" stroke="#E64A19" strokeWidth="2" />
+          {/* window */}
+          <Rect x="82" y="78" width="36" height="30" rx="6" fill="#87CEEB" stroke="#E64A19" strokeWidth="2" />
+          {/* side lantern */}
+          <Circle cx="55" cy="90" r="8" fill="#FFD700" stroke="#B8860B" strokeWidth="1.5" />
+          {/* vine stem */}
+          <Path d="M 96 40 Q 100 22 110 30" fill="none" stroke="#4CAF50" strokeWidth="5" strokeLinecap="round" />
+          {/* vine leaf */}
+          <Circle cx="112" cy="25" r="5" fill="#4CAF50" stroke="#2E7D32" strokeWidth="1" />
+          {/* wheel left */}
+          <Circle cx="40" cy="165" r="18" fill="#FFD700" stroke="#B8860B" strokeWidth="2.5" />
+          {/* wheel right */}
+          <Circle cx="160" cy="165" r="18" fill="#FFD700" stroke="#B8860B" strokeWidth="2.5" />
+        </Svg>
+      );
+
+    case 'maerchen-07-spellbook.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* cover left */}
+          <Path d="M 45 45 L 100 55 L 100 165 L 45 155 Z" fill="#7C5CFF" stroke="#4A2FBF" strokeWidth="2.5" />
+          {/* cover right */}
+          <Path d="M 155 45 L 100 55 L 100 165 L 155 155 Z" fill="#9B7BFF" stroke="#4A2FBF" strokeWidth="2.5" />
+          {/* page line left1 */}
+          <Line x1="55" y1="68" x2="90" y2="74" stroke="#E6DFFF" strokeWidth="2" />
+          {/* page line left2 */}
+          <Line x1="55" y1="85" x2="90" y2="90" stroke="#E6DFFF" strokeWidth="2" />
+          {/* page line right1 */}
+          <Line x1="110" y1="74" x2="145" y2="68" stroke="#E6DFFF" strokeWidth="2" />
+          {/* page line right2 */}
+          <Line x1="110" y1="90" x2="145" y2="85" stroke="#E6DFFF" strokeWidth="2" />
+          {/* star */}
+          <Polygon points="100,95 106,110 122,110 109,120 114,136 100,127 86,136 91,120 78,110 94,110" fill="#FFD700" stroke="#B8860B" strokeWidth="1.5" />
+          {/* bookmark ribbon */}
+          <Rect x="96" y="40" width="8" height="30" fill="#E74C3C" />
+          {/* sparkle1 */}
+          <Circle cx="130" cy="40" r="3" fill="#FFD700" />
+          {/* sparkle2 */}
+          <Circle cx="65" cy="35" r="2.5" fill="#87CEEB" />
+        </Svg>
+      );
+
+    case 'maerchen-08-unicorn.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* body */}
+          <Ellipse cx="105" cy="120" rx="55" ry="34" fill="#FFFFFF" stroke="#B0BEC5" strokeWidth="2.5" />
+          {/* head */}
+          <Circle cx="65" cy="78" r="30" fill="#FFFFFF" stroke="#B0BEC5" strokeWidth="2.5" />
+          {/* horn */}
+          <Polygon points="65,48 58,15 74,44" fill="#FFD700" stroke="#B8860B" strokeWidth="2" />
+          {/* mane */}
+          <Path d="M 55 60 Q 40 40 55 25 Q 65 42 62 55 Q 78 40 85 55 Q 72 55 66 68" fill="#FF69B4" stroke="#C2185B" strokeWidth="1.5" />
+          {/* eye */}
+          <Circle cx="55" cy="78" r="3" fill="#1A1A1A" />
+          {/* leg1 */}
+          <Rect x="55" y="145" width="12" height="30" rx="5" fill="#FFFFFF" stroke="#B0BEC5" strokeWidth="2" />
+          {/* leg2 */}
+          <Rect x="85" y="148" width="12" height="30" rx="5" fill="#FFFFFF" stroke="#B0BEC5" strokeWidth="2" />
+          {/* leg3 */}
+          <Rect x="115" y="148" width="12" height="30" rx="5" fill="#FFFFFF" stroke="#B0BEC5" strokeWidth="2" />
+          {/* leg4 */}
+          <Rect x="143" y="145" width="12" height="30" rx="5" fill="#FFFFFF" stroke="#B0BEC5" strokeWidth="2" />
+          {/* tail */}
+          <Path d="M 158 110 Q 178 120 170 145 Q 160 135 158 145" fill="#9B59B6" stroke="#6C3483" strokeWidth="1.5" />
+          {/* sparkle1 */}
+          <Circle cx="30" cy="40" r="3" fill="#FFD700" opacity="0.8" />
+          {/* sparkle2 */}
+          <Circle cx="165" cy="60" r="3" fill="#87CEEB" opacity="0.8" />
+          {/* sparkle3 */}
+          <Circle cx="175" cy="90" r="2.5" fill="#FF69B4" opacity="0.8" />
+        </Svg>
+      );
+
+    case 'maerchen-09-dragon.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* body */}
+          <Ellipse cx="100" cy="125" rx="50" ry="34" fill="#27AE60" stroke="#1B5E20" strokeWidth="2.5" />
+          {/* head */}
+          <Circle cx="145" cy="90" r="26" fill="#2ECC71" stroke="#1B5E20" strokeWidth="2.5" />
+          {/* jaw/snout */}
+          <Path d="M 165 78 L 178 68 L 172 84 Z" fill="#2ECC71" stroke="#1B5E20" strokeWidth="2" />
+          {/* spike1 */}
+          <Polygon points="130,68 128,50 140,64" fill="#1B5E20" stroke="none" />
+          {/* spike2 */}
+          <Polygon points="145,62 146,44 156,60" fill="#1B5E20" stroke="none" />
+          {/* spike3 back */}
+          <Polygon points="110,95 105,80 118,88" fill="#1B5E20" stroke="none" />
+          {/* eye */}
+          <Circle cx="150" cy="84" r="3.5" fill="#1A1A1A" />
+          {/* tail */}
+          <Path d="M 65 105 Q 25 95 20 70" fill="none" stroke="#1B5E20" strokeWidth="8" strokeLinecap="round" />
+          {/* tail spike */}
+          <Polygon points="18,66 12,55 24,58" fill="#1B5E20" stroke="none" />
+          {/* wing */}
+          <Path d="M 90 95 C 60 70 30 85 45 105 C 60 100 75 100 90 108" fill="#66BB6A" stroke="#1B5E20" strokeWidth="2" opacity="0.9" />
+          {/* fire breath */}
+          <Path d="M 168 66 Q 185 55 190 65 Q 178 68 175 76" fill="#FF7043" stroke="#E64A19" strokeWidth="1.5" />
+          {/* foot */}
+          <Circle cx="60" cy="155" r="8" fill="#27AE60" stroke="#1B5E20" strokeWidth="2" />
+          {/* foot2 */}
+          <Circle cx="130" cy="158" r="8" fill="#27AE60" stroke="#1B5E20" strokeWidth="2" />
+        </Svg>
+      );
+
+    case 'maerchen-10-castletower.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* tower body */}
+          <Rect x="62" y="75" width="76" height="105" fill="#D3D3D3" stroke="#8A8A8A" strokeWidth="2.5" />
+          {/* roof */}
+          <Polygon points="55,80 100,25 145,80" fill="#7C5CFF" stroke="#4A2FBF" strokeWidth="2.5" />
+          {/* battlement1 */}
+          <Rect x="60" y="68" width="12" height="14" fill="#D3D3D3" stroke="#8A8A8A" strokeWidth="2" />
+          {/* battlement2 */}
+          <Rect x="94" y="68" width="12" height="14" fill="#D3D3D3" stroke="#8A8A8A" strokeWidth="2" />
+          {/* battlement3 */}
+          <Rect x="128" y="68" width="12" height="14" fill="#D3D3D3" stroke="#8A8A8A" strokeWidth="2" />
+          {/* door */}
+          <Rect x="88" y="130" width="24" height="50" rx="12" fill="#5D4037" stroke="#3E2723" strokeWidth="2" />
+          {/* window left */}
+          <Rect x="80" y="95" width="18" height="20" fill="#87CEEB" stroke="#5D4037" strokeWidth="1.5" />
+          {/* window right */}
+          <Rect x="102" y="95" width="18" height="20" fill="#87CEEB" stroke="#5D4037" strokeWidth="1.5" />
+          {/* window glow left */}
+          <Circle cx="89" cy="105" r="4" fill="#FFD700" opacity="0.6" />
+          {/* window glow right */}
+          <Circle cx="111" cy="105" r="4" fill="#FFD700" opacity="0.6" />
+          {/* flagpole */}
+          <Line x1="100" y1="25" x2="100" y2="8" stroke="#5D4037" strokeWidth="3" />
+          {/* flag */}
+          <Polygon points="100,8 122,15 100,22" fill="#E74C3C" stroke="#B71C1C" strokeWidth="1.5" />
+          {/* bush */}
+          <Circle cx="40" cy="100" r="5" fill="#4CAF50" stroke="#2E7D32" strokeWidth="1.5" />
+        </Svg>
+      );
+
+  // ===== essen-v1 Pack =====
+    case 'essen-01-popsicle.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* stick */}
+          <Rect x="96" y="130" width="8" height="45" rx="3" fill="#E0C097" stroke="#B8935F" strokeWidth="1.5" />
+          {/* body */}
+          <Path d="M 60 40 Q 60 20 100 20 Q 140 20 140 40 L 140 120 Q 140 138 100 138 Q 60 138 60 120 Z" fill="#FF6B9D" stroke="#C2185B" strokeWidth="2.5" />
+          {/* drip line1 */}
+          <Path d="M 65 55 L 135 55" stroke="#FFFFFF" strokeWidth="3" opacity="0.6" />
+          {/* drip line2 */}
+          <Path d="M 65 80 L 135 80" stroke="#FFFFFF" strokeWidth="2" opacity="0.4" />
+          {/* drip1 */}
+          <Circle cx="78" cy="90" r="5" fill="#FFFFFF" opacity="0.5" />
+          {/* drip2 */}
+          <Circle cx="122" cy="100" r="4" fill="#FFFFFF" opacity="0.5" />
+          {/* melt drip */}
+          <Path d="M 100 138 L 96 150 L 104 150 Z" fill="#FF6B9D" stroke="none" />
+          {/* shine */}
+          <Circle cx="90" cy="35" r="4" fill="#FFFFFF" opacity="0.5" />
+        </Svg>
+      );
+
+    case 'essen-02-cookie.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* cookie */}
+          <Circle cx="100" cy="100" r="65" fill="#D2A679" stroke="#A6764A" strokeWidth="2.5" />
+          {/* choc1 */}
+          <Circle cx="75" cy="75" r="8" fill="#5D3A1A" />
+          {/* choc2 */}
+          <Circle cx="120" cy="70" r="7" fill="#5D3A1A" />
+          {/* choc3 */}
+          <Circle cx="135" cy="105" r="8" fill="#5D3A1A" />
+          {/* choc4 */}
+          <Circle cx="100" cy="120" r="7" fill="#5D3A1A" />
+          {/* choc5 */}
+          <Circle cx="68" cy="118" r="6" fill="#5D3A1A" />
+          {/* choc6 */}
+          <Circle cx="110" cy="95" r="6" fill="#5D3A1A" />
+          {/* choc7 */}
+          <Circle cx="90" cy="145" r="5" fill="#5D3A1A" />
+          {/* choc8 */}
+          <Circle cx="140" cy="135" r="5" fill="#5D3A1A" />
+        </Svg>
+      );
+
+    case 'essen-03-strawberry.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* body */}
+          <Path d="M 100 55 C 50 55 40 110 65 150 C 80 172 120 172 135 150 C 160 110 150 55 100 55 Z" fill="#E74C3C" stroke="#B71C1C" strokeWidth="2.5" />
+          {/* leaf */}
+          <Path d="M 100 55 L 80 30 L 92 42 L 100 25 L 108 42 L 120 30 Z" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" />
+          {/* seed1 */}
+          <Circle cx="82" cy="90" r="3" fill="#FFD700" />
+          {/* seed2 */}
+          <Circle cx="108" cy="85" r="3" fill="#FFD700" />
+          {/* seed3 */}
+          <Circle cx="122" cy="105" r="3" fill="#FFD700" />
+          {/* seed4 */}
+          <Circle cx="90" cy="118" r="3" fill="#FFD700" />
+          {/* seed5 */}
+          <Circle cx="110" cy="135" r="3" fill="#FFD700" />
+          {/* seed6 */}
+          <Circle cx="75" cy="130" r="3" fill="#FFD700" />
+          {/* seed7 */}
+          <Circle cx="95" cy="155" r="3" fill="#FFD700" />
+        </Svg>
+      );
+
+    case 'essen-04-pizza.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* crust wedge */}
+          <Path d="M 100 35 L 165 165 L 35 165 Z" fill="#FFD54F" stroke="#E6A800" strokeWidth="2.5" />
+          {/* crust edge */}
+          <Path d="M 40 155 L 160 155 L 165 165 L 35 165 Z" fill="#F0C060" stroke="#E6A800" strokeWidth="2" />
+          {/* pepperoni1 */}
+          <Circle cx="90" cy="90" r="12" fill="#E74C3C" stroke="#B71C1C" strokeWidth="1.5" />
+          {/* pepperoni2 */}
+          <Circle cx="118" cy="115" r="11" fill="#E74C3C" stroke="#B71C1C" strokeWidth="1.5" />
+          {/* pepperoni3 */}
+          <Circle cx="100" cy="140" r="10" fill="#E74C3C" stroke="#B71C1C" strokeWidth="1.5" />
+          {/* pepperoni4 */}
+          <Circle cx="78" cy="130" r="9" fill="#E74C3C" stroke="#B71C1C" strokeWidth="1.5" />
+          {/* basil1 */}
+          <Circle cx="105" cy="70" r="5" fill="#4CAF50" />
+          {/* basil2 */}
+          <Circle cx="75" cy="120" r="5" fill="#4CAF50" />
+          {/* basil3 */}
+          <Circle cx="130" cy="145" r="4" fill="#4CAF50" />
+          {/* crust texture */}
+          <Line x1="60" y1="100" x2="70" y2="95" stroke="#E6A800" strokeWidth="1.5" opacity="0.6" />
+        </Svg>
+      );
+
+    case 'essen-05-cupcake.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* wrapper */}
+          <Path d="M 60 120 L 140 120 L 128 172 L 72 172 Z" fill="#FF7043" stroke="#E64A19" strokeWidth="2" />
+          {/* wrapper line1 */}
+          <Line x1="75" y1="122" x2="68" y2="168" stroke="#E64A19" strokeWidth="1.5" />
+          {/* wrapper line2 */}
+          <Line x1="100" y1="122" x2="100" y2="170" stroke="#E64A19" strokeWidth="1.5" />
+          {/* wrapper line3 */}
+          <Line x1="125" y1="122" x2="132" y2="168" stroke="#E64A19" strokeWidth="1.5" />
+          {/* frosting */}
+          <Path d="M 55 120 Q 60 70 100 75 Q 140 70 145 120 Z" fill="#FFFFFF" stroke="#D0D0D0" strokeWidth="2" />
+          {/* frosting swirl */}
+          <Path d="M 65 90 Q 100 60 135 90" fill="none" stroke="#D0D0D0" strokeWidth="2" />
+          {/* cherry */}
+          <Circle cx="100" cy="68" r="9" fill="#E74C3C" stroke="#B71C1C" strokeWidth="1.5" />
+          {/* sprinkle1 */}
+          <Circle cx="80" cy="95" r="3" fill="#3498DB" />
+          {/* sprinkle2 */}
+          <Circle cx="120" cy="100" r="3" fill="#FFD700" />
+          {/* sprinkle3 */}
+          <Circle cx="95" cy="105" r="3" fill="#27AE60" />
+          {/* sprinkle4 */}
+          <Circle cx="112" cy="88" r="3" fill="#FF69B4" />
+        </Svg>
+      );
+
+    case 'essen-06-banana.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* body */}
+          <Path d="M 55 60 C 40 100 55 150 105 160 C 145 168 165 145 160 125 C 145 150 110 150 90 130 C 65 108 65 75 80 55 Z" fill="#FFD700" stroke="#D4A017" strokeWidth="2.5" />
+          {/* stem */}
+          <Path d="M 55 60 C 60 50 72 48 80 55" fill="none" stroke="#8B6914" strokeWidth="3" strokeLinecap="round" />
+          {/* ridge line1 */}
+          <Path d="M 70 75 C 60 100 65 130 100 145" fill="none" stroke="#D4A017" strokeWidth="1.5" opacity="0.7" />
+          {/* ridge line2 */}
+          <Path d="M 85 65 C 78 95 82 125 115 148" fill="none" stroke="#D4A017" strokeWidth="1.5" opacity="0.5" />
+          {/* tip */}
+          <Circle cx="158" cy="128" r="5" fill="#4E342E" />
+          {/* shine */}
+          <Circle cx="95" cy="95" r="4" fill="#FFFFFF" opacity="0.4" />
+          {/* bruise mark1 */}
+          <Path d="M 145 130 L 150 138" stroke="#8B6914" strokeWidth="1.5" opacity="0.6" />
+          {/* bruise mark2 */}
+          <Path d="M 110 140 L 116 145" stroke="#8B6914" strokeWidth="1.5" opacity="0.5" />
+          {/* sparkle */}
+          <Circle cx="175" cy="110" r="2.5" fill="#FFD700" opacity="0.7" />
+          {/* sparkle2 */}
+          <Circle cx="45" cy="45" r="2.5" fill="#FFD700" opacity="0.6" />
+        </Svg>
+      );
+
+    case 'essen-07-carrot.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* root */}
+          <Path d="M 75 70 L 125 70 L 105 170 Q 100 178 95 170 Z" fill="#FFA500" stroke="#E67E00" strokeWidth="2.5" />
+          {/* texture1 */}
+          <Line x1="82" y1="90" x2="92" y2="92" stroke="#E67E00" strokeWidth="1.5" />
+          {/* texture2 */}
+          <Line x1="108" y1="105" x2="118" y2="107" stroke="#E67E00" strokeWidth="1.5" />
+          {/* texture3 */}
+          <Line x1="90" y1="125" x2="98" y2="127" stroke="#E67E00" strokeWidth="1.5" />
+          {/* texture4 */}
+          <Line x1="96" y1="145" x2="104" y2="147" stroke="#E67E00" strokeWidth="1.5" />
+          {/* leaf left */}
+          <Path d="M 100 70 L 85 25" fill="none" stroke="#4CAF50" strokeWidth="6" strokeLinecap="round" />
+          {/* leaf center */}
+          <Path d="M 100 70 L 100 20" fill="none" stroke="#388E3C" strokeWidth="6" strokeLinecap="round" />
+          {/* leaf right */}
+          <Path d="M 100 70 L 115 25" fill="none" stroke="#4CAF50" strokeWidth="6" strokeLinecap="round" />
+          {/* leaf tip left */}
+          <Path d="M 85 25 L 78 15" fill="none" stroke="#2E7D32" strokeWidth="3" strokeLinecap="round" />
+          {/* leaf tip right */}
+          <Path d="M 115 25 L 122 15" fill="none" stroke="#2E7D32" strokeWidth="3" strokeLinecap="round" />
+        </Svg>
+      );
+
+    case 'essen-08-cake.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* bottom tier */}
+          <Rect x="45" y="120" width="110" height="50" rx="6" fill="#FF9EC4" stroke="#C2185B" strokeWidth="2.5" />
+          {/* top tier */}
+          <Rect x="65" y="85" width="70" height="40" rx="6" fill="#FFB6D9" stroke="#C2185B" strokeWidth="2.5" />
+          {/* bottom frosting */}
+          <Path d="M 45 122 Q 60 112 75 122 Q 90 112 105 122 Q 120 112 135 122 Q 148 112 155 122 L 155 130 L 45 130 Z" fill="#FFFFFF" stroke="none" />
+          {/* top frosting */}
+          <Path d="M 65 87 Q 78 78 90 87 Q 103 78 116 87 Q 128 78 135 87 L 135 94 L 65 94 Z" fill="#FFFFFF" stroke="none" />
+          {/* candle1 */}
+          <Rect x="82" y="55" width="5" height="30" fill="#FFD700" />
+          {/* candle2 */}
+          <Rect x="98" y="50" width="5" height="35" fill="#3498DB" />
+          {/* candle3 */}
+          <Rect x="114" y="55" width="5" height="30" fill="#FFD700" />
+          {/* flame1 */}
+          <Circle cx="84" cy="52" r="4" fill="#FF7043" />
+          {/* flame2 */}
+          <Circle cx="100" cy="47" r="4" fill="#FF7043" />
+          {/* flame3 */}
+          <Circle cx="116" cy="52" r="4" fill="#FF7043" />
+          {/* sprinkle1 */}
+          <Circle cx="60" cy="145" r="4" fill="#3498DB" />
+          {/* sprinkle2 */}
+          <Circle cx="140" cy="150" r="4" fill="#FFD700" />
+          {/* sprinkle3 */}
+          <Circle cx="80" cy="155" r="3.5" fill="#27AE60" />
+          {/* sprinkle4 */}
+          <Circle cx="120" cy="158" r="3.5" fill="#FF69B4" />
+        </Svg>
+      );
+
+    case 'essen-09-hamburger.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* bun top */}
+          <Path d="M 40 90 Q 40 55 100 55 Q 160 55 160 90 Z" fill="#E8B063" stroke="#B8804A" strokeWidth="2.5" />
+          {/* sesame1 */}
+          <Circle cx="70" cy="68" r="3" fill="#FFFFFF" />
+          {/* sesame2 */}
+          <Circle cx="100" cy="62" r="3" fill="#FFFFFF" />
+          {/* sesame3 */}
+          <Circle cx="130" cy="68" r="3" fill="#FFFFFF" />
+          {/* sesame4 */}
+          <Circle cx="85" cy="75" r="2.5" fill="#FFFFFF" />
+          {/* lettuce */}
+          <Path d="M 38 92 L 162 92 L 162 100 Q 100 110 38 100 Z" fill="#4CAF50" stroke="#2E7D32" strokeWidth="2" />
+          {/* patty */}
+          <Rect x="40" y="100" width="120" height="18" fill="#8B5A2B" stroke="#5D3A1A" strokeWidth="2" />
+          {/* cheese */}
+          <Path d="M 40 118 L 160 118 L 155 128 L 45 128 Z" fill="#FFD700" stroke="#D4A017" strokeWidth="2" />
+          {/* tomato */}
+          <Ellipse cx="100" cy="128" rx="20" ry="6" fill="#E74C3C" stroke="#B71C1C" strokeWidth="1.5" />
+          {/* onion ring */}
+          <Circle cx="65" cy="128" r="5" fill="#9B59B6" stroke="#6C3483" strokeWidth="1" />
+          {/* pickle */}
+          <Circle cx="135" cy="128" r="5" fill="#4CAF50" stroke="#2E7D32" strokeWidth="1" />
+          {/* bun bottom */}
+          <Rect x="42" y="133" width="116" height="30" rx="14" fill="#E8B063" stroke="#B8804A" strokeWidth="2.5" />
+          {/* lettuce peek */}
+          <Path d="M 60 133 Q 62 145 58 155" fill="none" stroke="#4CAF50" strokeWidth="2" opacity="0.6" />
+        </Svg>
+      );
+
+    case 'essen-10-watermelon.svg':
+      return (
+        <Svg width={svgSize} height={svgSize} viewBox={viewBox}>
+          {/* rind outer */}
+          <Path d="M 30 90 A 70 70 0 0 0 170 90 Z" fill="#4CAF50" stroke="#1B5E20" strokeWidth="2.5" />
+          {/* rind inner white */}
+          <Path d="M 40 90 A 60 60 0 0 0 160 90 Z" fill="#F1F8E9" stroke="none" />
+          {/* flesh */}
+          <Path d="M 48 90 A 52 52 0 0 0 152 90 Z" fill="#FF6B6B" stroke="#E74C3C" strokeWidth="2" />
+          {/* seed1 */}
+          <Circle cx="80" cy="78" r="3.5" fill="#1A1A1A" />
+          {/* seed2 */}
+          <Circle cx="100" cy="70" r="3.5" fill="#1A1A1A" />
+          {/* seed3 */}
+          <Circle cx="120" cy="78" r="3.5" fill="#1A1A1A" />
+          {/* seed4 */}
+          <Circle cx="90" cy="88" r="3.5" fill="#1A1A1A" />
+          {/* seed5 */}
+          <Circle cx="110" cy="88" r="3.5" fill="#1A1A1A" />
+          {/* flat edge */}
+          <Line x1="30" y1="90" x2="170" y2="90" stroke="#1B5E20" strokeWidth="2.5" />
+          {/* juice drip1 */}
+          <Circle cx="65" cy="95" r="3" fill="#FFFFFF" opacity="0.5" />
+          {/* juice drip2 */}
+          <Circle cx="135" cy="92" r="2.5" fill="#FFFFFF" opacity="0.4" />
+          {/* seed6 */}
+          <Circle cx="100" cy="88" r="3.5" fill="#1A1A1A" />
+          {/* shine sparkle */}
+          <Circle cx="40" cy="60" r="2.5" fill="#FFFFFF" opacity="0.5" />
         </Svg>
       );
 

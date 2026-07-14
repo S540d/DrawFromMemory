@@ -44,7 +44,10 @@
       "title": "Pacchetto tematico",
       "all": "Tutti",
       "tiere": "Animali",
-      "fahrzeuge": "Veicoli"
+      "fahrzeuge": "Veicoli",
+      "natur": "Natura",
+      "maerchen": "Fiabe",
+      "essen": "Cibo"
     }
   },
   "game": {

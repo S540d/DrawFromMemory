@@ -44,7 +44,10 @@
       "title": "Themapakket",
       "all": "Alle",
       "tiere": "Dieren",
-      "fahrzeuge": "Voertuigen"
+      "fahrzeuge": "Voertuigen",
+      "natur": "Natuur",
+      "maerchen": "Sprookjes",
+      "essen": "Eten"
     }
   },
   "game": {
