@@ -215,11 +215,7 @@ export default function ResultPhase({
           <AnimatedFeedback visible={userRating > 0}>
             <View style={styles.mascotFeedbackRow}>
               <View style={styles.mascotWithSparkle}>
-                <Mascot
-                  size={48}
-                  mood={getResultMoodForStars(userRating)}
-                  testID="result-mascot"
-                />
+                <Mascot size={48} mood={getResultMoodForStars(userRating)} testID="result-mascot" />
                 {userRating >= 5 && (
                   <View style={styles.sparkleOverlay}>
                     <MascotSparkle size={56} testID="result-mascot-sparkle" />

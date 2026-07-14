@@ -44,12 +44,12 @@ Ziel-Standard — nicht eine neue Erfindung. Er ist die Referenz für:
 
 ## 2. Linienstärke
 
-| Verwendung | `stroke-width` | Beispiel |
-| --- | --- | --- |
-| Haupt-Konturen (Körper, Kopf, große Formen) | `2`–`3` | Körper-Ellipse, Kopf-Kreis |
-| Details (Augen, Mund, kleine Elemente) | `2` | Pupillen-Highlight, Mund-Pfad |
-| Akzent-/dünne Linien (Strahlen, Fühler, Whiskers) | `4` | Sonnenstrahlen (`level-01-sun.svg`) |
-| Dicke Akzente (Schwanz, Äste) | `6`–`8` | Hunde-Schwanz (`level-06-dog.svg`) |
+| Verwendung                                        | `stroke-width` | Beispiel                            |
+| ------------------------------------------------- | -------------- | ----------------------------------- |
+| Haupt-Konturen (Körper, Kopf, große Formen)       | `2`–`3`        | Körper-Ellipse, Kopf-Kreis          |
+| Details (Augen, Mund, kleine Elemente)            | `2`            | Pupillen-Highlight, Mund-Pfad       |
+| Akzent-/dünne Linien (Strahlen, Fühler, Whiskers) | `4`            | Sonnenstrahlen (`level-01-sun.svg`) |
+| Dicke Akzente (Schwanz, Äste)                     | `6`–`8`        | Hunde-Schwanz (`level-06-dog.svg`)  |
 
 Nie dünner als `2` (verschwindet bei kleiner Anzeigegröße auf Mobilgeräten)
 und nie dicker als `8` (wirkt klobig gegen die übrige Linienführung).
@@ -90,13 +90,13 @@ tatsächlichen Bestand extrahiert (Top-Level-SVG-Elemente je Bild,
 `IMAGE_ELEMENT_COUNTS` in `LevelImageDisplay.tsx`, gegen `difficulty` in
 `ImagePoolManager.ts` gemappt, Stand 51 Bilder):
 
-| Difficulty | Anzeigezeit | Ist-Streuung (min–max) | Ziel-Korridor für neue Bilder | Charakter |
-| --- | --- | --- | --- | --- |
-| 1 | 5 s | 6–9 (n=3) | 6–9 | Einzelnes Objekt, Grundformen (Kreis, Linie) |
-| 2 | 4 s | 5–11 (n=11) | 8–11 | Objekt + 1–2 Details (Fenster, Blätter) |
-| 3 | 3 s | 8–15 (n=14) | 10–13 | Mehrteiliges Motiv (Kopf+Körper+Gliedmaßen) |
-| 4 | 2 s | 12–23 (n=14) | 13–16 | Reicher an Details (Fell-Muster, Zubehör) |
-| 5 | 2 s | 9–25 (n=9) | 15–18 | Komplexeste Motive (Szenen, viele Elemente) |
+| Difficulty | Anzeigezeit | Ist-Streuung (min–max) | Ziel-Korridor für neue Bilder | Charakter                                    |
+| ---------- | ----------- | ---------------------- | ----------------------------- | -------------------------------------------- |
+| 1          | 5 s         | 6–9 (n=3)              | 6–9                           | Einzelnes Objekt, Grundformen (Kreis, Linie) |
+| 2          | 4 s         | 5–11 (n=11)            | 8–11                          | Objekt + 1–2 Details (Fenster, Blätter)      |
+| 3          | 3 s         | 8–15 (n=14)            | 10–13                         | Mehrteiliges Motiv (Kopf+Körper+Gliedmaßen)  |
+| 4          | 2 s         | 12–23 (n=14)           | 13–16                         | Reicher an Details (Fell-Muster, Zubehör)    |
+| 5          | 2 s         | 9–25 (n=9)             | 15–18                         | Komplexeste Motive (Szenen, viele Elemente)  |
 
 Die teils breite Ist-Streuung (v.a. Difficulty 4/5, Ausreißer bis 23/25
 Elemente bzw. so niedrig wie 9) zeigt konkret, warum ein späterer

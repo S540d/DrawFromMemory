@@ -20,8 +20,7 @@ const { chromium } = require('playwright-core');
 
 const ICONS_DIR = path.join(__dirname, '..', 'assets', 'icons');
 const CHROMIUM_PATH =
-  process.env.PLAYWRIGHT_CHROMIUM_PATH ||
-  '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
+  process.env.PLAYWRIGHT_CHROMIUM_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 
 const TARGETS = [
   { svg: 'app-icon.svg', out: 'app-icon.png', width: 1024, height: 1024 },

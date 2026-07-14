@@ -287,12 +287,12 @@ Gespeicherte Felder: `progress`, `theme`, `language`, `sound_enabled`, `music_en
 
 **Ein Fortschrittssystem statt eines weiteren Parallel-Systems:** Gesamt-Sterne (Summe aller `bestRating`-Werte aus `StorageManager.getProgress()`, `getTotalStars()`) schalten kosmetische Mascot-Accessoires frei — `MASCOT_UNLOCKS` in `MascotManager.ts`:
 
-| Schwelle (Gesamt-Sterne) | Accessoire |
-| --- | --- |
-| 15 | Hut |
-| 40 | Sonnenbrille |
-| 80 | Fliege |
-| 150 | Krone |
+| Schwelle (Gesamt-Sterne) | Accessoire   |
+| ------------------------ | ------------ |
+| 15                       | Hut          |
+| 40                       | Sonnenbrille |
+| 80                       | Fliege       |
+| 150                      | Krone        |
 
 Bewusst **kein** separates XP-System, keine zusätzliche Währung — nur diese eine Ressource. `useGamePhase.handleRatingSubmit()` vergleicht Sterne-Stand vor/nach dem Speichern (`getNewlyUnlockedAccessories()`) und zeigt bei neuem Unlock `MascotUnlockToast` (mit `MascotSparkle`-Lottie-Effekt, siehe unten).
 
@@ -310,13 +310,13 @@ Stand `testing`: Phase A, B, C, D und E vollständig abgeschlossen (Lottie-Teil 
 
 ### Phase-Übersicht
 
-| Phase                                                                       | Status                                                                                                           | Branch/PR                            |
-| --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie         | ✅ in `testing`                                                                                                  | PR merged                            |
-| **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in `testing`                                                                                                  | PR #178 merged                       |
-| **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh        | ✅ in `testing`                                                                                                  | PR #257 merged                       |
-| **D: Delight** — Lottie, Konfetti, Mikro-Sounds                             | ✅ in `testing`                                                                                                  | Konfetti/Sound PR #253, TimerArc/Crossfade/Stats PR #257, Lottie-Sparkle PR #286 |
-| **E: Onboarding** — First-Run-Tour                                          | ✅ in `testing`                                                                                                  | PR #261 merged (In-Game Coach-Marks) |
+| Phase                                                                       | Status          | Branch/PR                                                                        |
+| --------------------------------------------------------------------------- | --------------- | -------------------------------------------------------------------------------- |
+| **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie         | ✅ in `testing` | PR merged                                                                        |
+| **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in `testing` | PR #178 merged                                                                   |
+| **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh        | ✅ in `testing` | PR #257 merged                                                                   |
+| **D: Delight** — Lottie, Konfetti, Mikro-Sounds                             | ✅ in `testing` | Konfetti/Sound PR #253, TimerArc/Crossfade/Stats PR #257, Lottie-Sparkle PR #286 |
+| **E: Onboarding** — First-Run-Tour                                          | ✅ in `testing` | PR #261 merged (In-Game Coach-Marks)                                             |
 
 ### Lottie (PR #286, Issue #279 2.2)
 
@@ -450,27 +450,27 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusät
 
 ### P1 — Content & Retention
 
-| Task                                                                     | Status              |
-| ------------------------------------------------------------------------ | ------------------- |
-| **Themen-Pack Tiere v1** (10 Bilder, #222)                               | ✅ in main (v1.7.0) |
-| **Themen-Pack Fahrzeuge v1** (10 Bilder, PR #254)                        | ✅ in main (v1.7.0) |
-| **Themen-Pack-Auswahl-UI** (Chip-Filter Alle/Tiere/Fahrzeuge, PR #271)   | ✅ in `testing`     |
-| **Themen-Pack Natur/Märchen/Essen v1** (je 10 Bilder, Issue #279 1.5)    | 🟡 PR offen         |
-| Content-Pipeline: Ziel 100+ Bilder (Issue #279 1.5)                      | 🟡 81/100+ — saisonaler Pack-Mechanismus noch offen |
-| **Spielvarianten** (Nur Umriss merken, Spiegelbild, Kreativ-Modus, #247) | ✅ in main (v1.7.0) |
-| **Avatar & Personalisierung** (Mascot "Mali", Issue #279 1.1)           | ✅ in `testing` — bewusst ohne separates XP-System, siehe Zeile darunter |
+| Task                                                                     | Status                                                                                                       |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| **Themen-Pack Tiere v1** (10 Bilder, #222)                               | ✅ in main (v1.7.0)                                                                                          |
+| **Themen-Pack Fahrzeuge v1** (10 Bilder, PR #254)                        | ✅ in main (v1.7.0)                                                                                          |
+| **Themen-Pack-Auswahl-UI** (Chip-Filter Alle/Tiere/Fahrzeuge, PR #271)   | ✅ in `testing`                                                                                              |
+| **Themen-Pack Natur/Märchen/Essen v1** (je 10 Bilder, Issue #279 1.5)    | 🟡 PR offen                                                                                                  |
+| Content-Pipeline: Ziel 100+ Bilder (Issue #279 1.5)                      | 🟡 81/100+ — saisonaler Pack-Mechanismus noch offen                                                          |
+| **Spielvarianten** (Nur Umriss merken, Spiegelbild, Kreativ-Modus, #247) | ✅ in main (v1.7.0)                                                                                          |
+| **Avatar & Personalisierung** (Mascot "Mali", Issue #279 1.1)            | ✅ in `testing` — bewusst ohne separates XP-System, siehe Zeile darunter                                     |
 | ~~XP- & Level-System~~                                                   | ❌ bewusst nicht (Issue #279 Anti-Bloat) — Gesamt-Sterne schalten stattdessen direkt Mascot-Accessoires frei |
-| Wöchentliche Challenge                                                   | ❌ bewusst nicht (Issue #279 Anti-Bloat) — ein Loop (Daily Challenge) statt mehrerer Parallel-Systeme |
+| Wöchentliche Challenge                                                   | ❌ bewusst nicht (Issue #279 Anti-Bloat) — ein Loop (Daily Challenge) statt mehrerer Parallel-Systeme        |
 
 ### P2 — Reichweite & Trust
 
-| Task                                                     | Status                                                    |
-| -------------------------------------------------------- | --------------------------------------------------------- |
-| Designed for Families Programm                           | 🔲 offen                                                  |
-| **Weitere Sprachen** (ES/FR/IT/NL/PL, #247)              | ✅ in main (v1.7.0) — automatische Geräte-Spracherkennung |
-| **Sharing-Feature / PNG-Export** (ShareService, PR #255) | ✅ in main (v1.7.0)                                       |
-| Push-Notifications (opt-in)                              | 🔲 offen                                                  |
-| **Tablet-/Landscape-Layout** (Issue #279 2.4, deckt #278 UI-seitig ab) | ✅ in `testing` (PR #287) |
+| Task                                                                   | Status                                                    |
+| ---------------------------------------------------------------------- | --------------------------------------------------------- |
+| Designed for Families Programm                                         | 🔲 offen                                                  |
+| **Weitere Sprachen** (ES/FR/IT/NL/PL, #247)                            | ✅ in main (v1.7.0) — automatische Geräte-Spracherkennung |
+| **Sharing-Feature / PNG-Export** (ShareService, PR #255)               | ✅ in main (v1.7.0)                                       |
+| Push-Notifications (opt-in)                                            | 🔲 offen                                                  |
+| **Tablet-/Landscape-Layout** (Issue #279 2.4, deckt #278 UI-seitig ab) | ✅ in `testing` (PR #287)                                 |
 
 ### Themen-Pack Architektur (ab PR #221, Auswahl-UI ab PR #271)
 
