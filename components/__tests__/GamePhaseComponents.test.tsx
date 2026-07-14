@@ -232,6 +232,24 @@ describe('DrawPhase', () => {
     expect(texts).toContain('game.draw.undo');
     expect(texts).toContain('game.draw.clear');
   });
+
+  // Issue #279, 2.4 — Querformat: Werkzeugleiste steht neben statt unter der Zeichenfläche
+  it('renders all controls when toolbarPosition is "side" (landscape)', () => {
+    const sideProps = {
+      ...drawProps,
+      layout: {
+        ...drawProps.layout,
+        toolbarPosition: 'side' as const,
+        sideToolbarWidth: 120,
+      },
+    };
+    const { UNSAFE_getAllByType } = render(<DrawPhase {...sideProps} />);
+    const texts = getAllTexts(UNSAFE_getAllByType);
+    expect(texts).toContain('game.draw.done');
+    expect(texts).toContain('game.draw.undo');
+    expect(texts).toContain('game.draw.clear');
+    expect(texts).toContain('game.draw.referenceLabel');
+  });
 });
 
 // ─── ResultPhase ─────────────────────────────────────────────────────────────

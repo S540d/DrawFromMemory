@@ -62,6 +62,10 @@ components/
   Button.tsx                 # UI-Primitiv: Button (primary = LinearGradient cta, secondary = outlined, ghost = transparent, danger = solid)
   SkeletonLoader.tsx         # Skeleton Placeholder
   WebTrustFooter.tsx         # Nur Web: Play-Store-Link + Datenschutz-Link am Ende der Startseite (Issue #279, 3.4)
+  Mascot.tsx                 # Begleitfigur "Mali" (SVG-Chamäleon), Mood-Varianten, kosmetische Accessoires (Issue #279, 1.1)
+  MascotUnlockToast.tsx      # Toast bei neu freigeschaltetem Mascot-Accessoire (spiegelt BadgeUnlockToast)
+  MascotSparkle.tsx          # Lottie-Sparkle-Effekt neben der Mascot bei 5 Sternen/Unlocks (Issue #279, 2.2)
+  AgeGroupModal.tsx          # Erst-Start-Altersauswahl (3-5/6-8/9+), ersetzt den alten extra_time_mode-Schalter (Issue #279, 1.3)
 
 services/
   FloodFillService.ts        # Flood-Fill-Algorithmus (Scanline, 1-Bit-Palette)
@@ -81,6 +85,8 @@ services/
   ShareService.native.ts     # PNG-Export (Native): Skia Surface → expo-file-system + expo-sharing
   useGamePhase.ts            # Spielphasen-Hook: memorize / draw / result + Replay
   useTimer.ts                # Timer-Hook (Countdown, pause/resume via phase)
+  MascotManager.ts           # Einheitliches Fortschrittssystem: Gesamt-Sterne → Mascot-Accessoire-Unlocks, Mood/Greeting-Logik (Issue #279, 1.1)
+  AgeGroupManager.ts         # Altersstufen-Auswahl (3-5/6-8/9+): Anzeigedauer-Bonus, Standard-Strichstärke, empfohlener Level-Bereich (Issue #279, 1.3)
 
 constants/
   Colors.ts                  # Design-Tokens: Primärfarben, Gradienten, shadow.*, glass.*, Drawing-Farben
@@ -89,7 +95,7 @@ constants/
 
 utils/
   platform.ts                # isWeb/isIOS/isAndroid, safeWebAPI(), Storage-Adapter
-  useScreenLayout.ts         # Responsiver Layout-Hook (xs/sm/md/lg nach nutzbarer Höhe)
+  useScreenLayout.ts         # Responsiver Layout-Hook (xs/sm/md/lg nach nutzbarer Höhe; isLandscape/isTablet + toolbarPosition 'bottom'|'side' — Issue #279, 2.4)
 
 types/
   index.ts                   # Globale TypeScript-Typen (LevelImage, GamePhase, AppSettings, …)
@@ -226,6 +232,16 @@ interface DrawingPath {
 
 `components/game/ToolIcons.tsx` exportiert `PenIcon`, `FillIcon`, `EyeIcon` — abstrakte, einfarbige SVG-Piktogramme (via `react-native-svg`) für Pinsel/Füllen/Vorlage-ansehen in `DrawPhase.tsx`, statt bunter Emoji (✏️ 🪣 👁). Farbe wird komplett über den `color`-Prop gesteuert (aktiv = weiß, inaktiv = `colors.text.secondary`). Die Strichstärken-Auswahl (klein/mittel/groß) zeigt bei allen drei Punkten einheitlich `drawing.color`; die aktive Größe wird über einen Ring (`borderColor`) markiert, nicht über unterschiedliche Punktfarben.
 
+### Tablet-/Landscape-Layout (PR #287, Issue #279, 2.4)
+
+`useScreenLayout()` liefert zusätzlich `isLandscape` (width > height), `isTablet` (kürzere Kante ≥ 600px) und `toolbarPosition` (`'bottom' | 'side'`). Im ausreichend breiten Querformat (`safeWidth >= 480`) wechselt `toolbarPosition` auf `'side'`:
+
+- `DrawPhase.tsx` rendert Zeichenfläche und Werkzeugleiste dann nebeneinander (Farbauswahl/Werkzeuge/Strichstärken vertikal gestapelt in einer schmalen Seitenleiste, Breite `sideToolbarWidth`) statt vertikal gestapelt.
+- Die Zeichenfläche bekommt dadurch mehr Höhe (`canvasUpperLimitBase` 640 statt 320/400, da keine Werkzeugleiste mehr darunter Platz braucht).
+- Die Merke-Phase bekommt ein größeres Vorschaubild (`memorizeImageSize`-Obergrenze an die verfügbare Breite gekoppelt statt fix 280px).
+- Bei zu schmalem Querformat (z.B. Split-Screen) bleibt es beim bisherigen `'bottom'`-Layout.
+- `app.json`s `orientation: "default"` + `android:resizeableActivity="true"` (Android-Manifest-Teil von Issue #278) kamen bereits in PR #281.
+
 ---
 
 ## Flood-Fill Architektur (Native)
@@ -261,11 +277,36 @@ Storage-Keys beginnen mit `@merke_male:`.
 
 Gespeicherte Felder: `progress`, `theme`, `language`, `sound_enabled`, `music_enabled`, `extra_time_mode`, `gallery`.
 
+> `extra_time_mode` bleibt als Feld in `AppSettings`/`StorageManager` erhalten (Rückwärtskompatibilität, `LevelManager.getDisplayDuration()` nutzt es weiterhin als Parameter), steuert aber die tatsächliche Anzeigedauer im Spiel nicht mehr — das übernimmt jetzt die Altersstufe aus `AgeGroupManager` (eigener Storage-Key `@merke_male:age_group`, siehe unten).
+
+---
+
+## Mascot & Altersstufen (Issue #279, 1.1 + 1.3)
+
+**Mascot "Mali"** (`components/Mascot.tsx`, `services/MascotManager.ts`): SVG-Chamäleon-Begleitfigur, kein Lottie-Charakter (siehe `docs/ILLUSTRATION_STYLEGUIDE.md` für den visuellen Stil). Begrüßt auf dem Home-Screen (streak-abhängige Nachricht) und kommentiert die Ergebnis-Phase mit einer `MascotMood` (`neutral`/`happy`/`excited`/`encouraging`, abgeleitet aus der Sterne-Bewertung via `getResultMoodForStars()`).
+
+**Ein Fortschrittssystem statt eines weiteren Parallel-Systems:** Gesamt-Sterne (Summe aller `bestRating`-Werte aus `StorageManager.getProgress()`, `getTotalStars()`) schalten kosmetische Mascot-Accessoires frei — `MASCOT_UNLOCKS` in `MascotManager.ts`:
+
+| Schwelle (Gesamt-Sterne) | Accessoire |
+| --- | --- |
+| 15 | Hut |
+| 40 | Sonnenbrille |
+| 80 | Fliege |
+| 150 | Krone |
+
+Bewusst **kein** separates XP-System, keine zusätzliche Währung — nur diese eine Ressource. `useGamePhase.handleRatingSubmit()` vergleicht Sterne-Stand vor/nach dem Speichern (`getNewlyUnlockedAccessories()`) und zeigt bei neuem Unlock `MascotUnlockToast` (mit `MascotSparkle`-Lottie-Effekt, siehe unten).
+
+**Altersstufen** (`services/AgeGroupManager.ts`, `components/AgeGroupModal.tsx`): ersetzen den früher komplett UI-losen `extra_time_mode`-Schalter durch eine bewusste Auswahl (3-5 / 6-8 / 9+) beim ersten Start, vor dem Onboarding-Tutorial (`app/index.tsx`). Änderbar jederzeit über einen Segment-Control in `SettingsModal.tsx`. Steuert:
+
+- **Anzeigedauer-Bonus**: `getExtraTimeForAgeGroup()` — nur 3-5 bekommt den (weiterhin über `LevelManager.getDisplayDuration(level, extraTimeMode)` berechneten) Zeitbonus.
+- **Standard-Strichstärke**: `getDefaultStrokeWidthForAgeGroup()` — 3-5 dick (5), 6-8 mittel (3), 9+ dünn (2); wird beim Rundenstart in `app/game.tsx` per `drawing.setStrokeWidth()` gesetzt.
+- **Empfohlener Level-Bereich** (Bildkomplexität-Hinweis, **keine harte Sperre**): `getRecommendedLevelRange()` — dezenter Hinweistext auf `app/levels.tsx`, alle Level bleiben für jede Altersstufe spielbar.
+
 ---
 
 ## UI/UX Design System (Issue #176)
 
-Stand `testing`: Phase A, B, C und E abgeschlossen, Phase D (Konfetti + Jubel-Sound, TimerArc, Phasen-Crossfade, Stats-Counter) größtenteils umgesetzt — nur Lottie offen.
+Stand `testing`: Phase A, B, C, D und E vollständig abgeschlossen (Lottie-Teil aus Phase D via PR #286).
 
 ### Phase-Übersicht
 
@@ -274,8 +315,15 @@ Stand `testing`: Phase A, B, C und E abgeschlossen, Phase D (Konfetti + Jubel-So
 | **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie         | ✅ in `testing`                                                                                                  | PR merged                            |
 | **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in `testing`                                                                                                  | PR #178 merged                       |
 | **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh        | ✅ in `testing`                                                                                                  | PR #257 merged                       |
-| **D: Delight** — Lottie, Konfetti, Mikro-Sounds                             | 🔶 größtenteils (Konfetti + Jubel-Sound PR #253, TimerArc/Phasen-Crossfade/Stats-Counter PR #257) — Lottie offen | —                                    |
+| **D: Delight** — Lottie, Konfetti, Mikro-Sounds                             | ✅ in `testing`                                                                                                  | Konfetti/Sound PR #253, TimerArc/Crossfade/Stats PR #257, Lottie-Sparkle PR #286 |
 | **E: Onboarding** — First-Run-Tour                                          | ✅ in `testing`                                                                                                  | PR #261 merged (In-Game Coach-Marks) |
+
+### Lottie (PR #286, Issue #279 2.2)
+
+`lottie-react-native` war bereits als Dependency installiert, aber nie verdrahtet — `components/MascotSparkle.tsx` ist die erste echte Nutzung: ein hand-authored Lottie-JSON (`assets/lottie/sparkle.json`) als Twinkle-Effekt neben der Mascot bei 5-Sterne-Ergebnissen und neuen Accessoire-Unlocks. Respektiert `prefers-reduced-motion`.
+
+- **Web-Plattform braucht zusätzlich `@lottiefiles/dotlottie-react`** als Peer-Dependency von `lottie-react-native` — ohne sie bricht `expo export --platform web`, sobald `LottieView` real importiert wird (war vorher nie der Fall, da ungenutzt).
+- **Jest-Mock:** `__mocks__/lottie-react-native.js` (analog zu den Skia-/react-native-svg-Mocks) — die native/Web-Implementierungen laufen nicht unter jsdom.
 
 ### Neue Primitiven (Phase B)
 
@@ -370,7 +418,8 @@ Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerend
 ### Tests
 
 - Test-Dateien liegen bei `services/__tests__/`, `components/__tests__/`, `utils/__tests__/`, `__tests__/`
-- Jest-Umgebung: `jsdom`; Skia wird gemockt via `__mocks__/@shopify/react-native-skia.js`, `react-native-svg` via `__mocks__/react-native-svg.js` (beide global, automatisch für alle Tests aktiv — kein `jest.mock()`-Aufruf nötig)
+- Jest-Umgebung: `jsdom`; Skia wird gemockt via `__mocks__/@shopify/react-native-skia.js`, `react-native-svg` via `__mocks__/react-native-svg.js`, `lottie-react-native` via `__mocks__/lottie-react-native.js` (alle global, automatisch für alle Tests aktiv — kein `jest.mock()`-Aufruf nötig)
+- `getByTestId`/`queryByTestId` aus `@testing-library/react-native` matchen `node.props.testID` auf der React-Test-Instance-Ebene — unter der `react-native-web`-Abbildung (`moduleNameMapper` in `jest.config.js`) landet der Prop auf dem finalen Host-Element aber als `data-testid`, nicht mehr als `testID`, wodurch beide Queries nichts finden. Für testID-Prüfungen stattdessen `UNSAFE_getAllByType(View)` + `.props.testID`-Filter verwenden (etabliertes Muster in diesem Repo, siehe z.B. `MascotSparkle.test.tsx`).
 - `@testing-library/dom` muss installiert sein (Peer-Dep von `@testing-library/react` v16)
 - `npm test` (kein `--runInBand` nötig, aber stabil)
 
@@ -387,7 +436,7 @@ Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerend
 ## Wachstums-Roadmap (Issue #219)
 
 Übergeordneter Plan, um aus der App eine dauerhaft wachsende Kids-App im Play Store zu machen.
-Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusätzlich die Themen-Pack-Auswahl-UI (PR #271) und die Draw-UX-Fixes (Icons/Strichstärken-Farbe/Fortschrittsbalken, PR #272) — noch nicht in `main` gemerged. Enthält Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten, weitere Sprachen, Sentry-ErrorBoundary (#264) und den transform-origin Web-Fix (#265). **Play Store noch nicht auf v1.7.0** — Release-Aufgabe in Issue #267.
+Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusätzlich die Themen-Pack-Auswahl-UI (PR #271), die Draw-UX-Fixes (Icons/Strichstärken-Farbe/Fortschrittsbalken, PR #272) und die komplette Issue-#279-PR-Serie (Mascot/Altersstufen #284, Stilguide #285, Lottie/Icon-Refresh #286, Tablet-/Landscape-Layout #287, Natur/Märchen/Essen-Packs #288) — noch nicht in `main` gemerged. Enthält Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten, weitere Sprachen, Sentry-ErrorBoundary (#264) und den transform-origin Web-Fix (#265). **Play Store noch nicht auf v1.7.0** — Release-Aufgabe in Issue #267.
 
 ### P0 — Foundation für Wachstum
 
@@ -409,9 +458,9 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusät
 | **Themen-Pack Natur/Märchen/Essen v1** (je 10 Bilder, Issue #279 1.5)    | 🟡 PR offen         |
 | Content-Pipeline: Ziel 100+ Bilder (Issue #279 1.5)                      | 🟡 81/100+ — saisonaler Pack-Mechanismus noch offen |
 | **Spielvarianten** (Nur Umriss merken, Spiegelbild, Kreativ-Modus, #247) | ✅ in main (v1.7.0) |
-| Avatar & Personalisierung                                                | 🔲 offen            |
-| XP- & Level-System                                                       | 🔲 offen            |
-| Wöchentliche Challenge                                                   | 🔲 offen            |
+| **Avatar & Personalisierung** (Mascot "Mali", Issue #279 1.1)           | ✅ in `testing` — bewusst ohne separates XP-System, siehe Zeile darunter |
+| ~~XP- & Level-System~~                                                   | ❌ bewusst nicht (Issue #279 Anti-Bloat) — Gesamt-Sterne schalten stattdessen direkt Mascot-Accessoires frei |
+| Wöchentliche Challenge                                                   | ❌ bewusst nicht (Issue #279 Anti-Bloat) — ein Loop (Daily Challenge) statt mehrerer Parallel-Systeme |
 
 ### P2 — Reichweite & Trust
 
@@ -421,6 +470,7 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusät
 | **Weitere Sprachen** (ES/FR/IT/NL/PL, #247)              | ✅ in main (v1.7.0) — automatische Geräte-Spracherkennung |
 | **Sharing-Feature / PNG-Export** (ShareService, PR #255) | ✅ in main (v1.7.0)                                       |
 | Push-Notifications (opt-in)                              | 🔲 offen                                                  |
+| **Tablet-/Landscape-Layout** (Issue #279 2.4, deckt #278 UI-seitig ab) | ✅ in `testing` (PR #287) |
 
 ### Themen-Pack Architektur (ab PR #221, Auswahl-UI ab PR #271)
 
