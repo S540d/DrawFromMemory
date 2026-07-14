@@ -185,6 +185,63 @@ describe('useScreenLayout', () => {
     });
   });
 
+  describe('Querformat / Tablet (Issue #279, 2.4)', () => {
+    it('erkennt Querformat wenn width > height', () => {
+      mockWindowDimensions = { width: 932, height: 430 };
+      mockInsets = { top: 0, bottom: 21, left: 50, right: 50 };
+      const { result } = renderHook(() => useScreenLayout());
+      expect(result.current.isLandscape).toBe(true);
+    });
+
+    it('bleibt im Hochformat, wenn height >= width', () => {
+      mockWindowDimensions = { width: 390, height: 844 };
+      mockInsets = { top: 47, bottom: 34, left: 0, right: 0 };
+      const { result } = renderHook(() => useScreenLayout());
+      expect(result.current.isLandscape).toBe(false);
+      expect(result.current.toolbarPosition).toBe('bottom');
+    });
+
+    it('erkennt Tablets über die kürzere Bildschirmkante (>= 600px)', () => {
+      mockWindowDimensions = { width: 1180, height: 820 };
+      mockInsets = { top: 24, bottom: 20, left: 0, right: 0 };
+      const { result } = renderHook(() => useScreenLayout());
+      expect(result.current.isTablet).toBe(true);
+    });
+
+    it('verschiebt die Werkzeugleiste im breiten Querformat zur Seite', () => {
+      mockWindowDimensions = { width: 932, height: 430 };
+      mockInsets = { top: 0, bottom: 21, left: 50, right: 50 };
+      const { result } = renderHook(() => useScreenLayout());
+      expect(result.current.toolbarPosition).toBe('side');
+      expect(result.current.sideToolbarWidth).toBeGreaterThan(0);
+    });
+
+    it('bleibt bei "bottom", wenn im Querformat zu wenig Breite übrig ist', () => {
+      // Sehr schmales Querformat-Popup (z.B. Split-Screen) — sollte nicht seitlich stapeln
+      mockWindowDimensions = { width: 460, height: 300 };
+      mockInsets = { top: 0, bottom: 0, left: 0, right: 0 };
+      const { result } = renderHook(() => useScreenLayout());
+      expect(result.current.toolbarPosition).toBe('bottom');
+    });
+
+    it('erlaubt der Zeichenfläche im Tablet-Querformat eine größere Obergrenze als im Portrait-Großgerät', () => {
+      // Portrait, großes Gerät: canvasUpperLimitBase = 400 (isLarge)
+      mockWindowDimensions = { width: 430, height: 932 };
+      mockInsets = { top: 50, bottom: 34, left: 0, right: 0 };
+      const { result: portraitResult } = renderHook(() => useScreenLayout());
+
+      // Tablet-Querformat mit viel vertikalem Platz: canvasUpperLimitBase = 640 (toolbarPosition 'side')
+      mockWindowDimensions = { width: 1180, height: 900 };
+      mockInsets = { top: 24, bottom: 20, left: 0, right: 0 };
+      const { result: landscapeResult } = renderHook(() => useScreenLayout());
+
+      expect(landscapeResult.current.toolbarPosition).toBe('side');
+      expect(landscapeResult.current.canvasMaxHeight).toBeGreaterThan(
+        portraitResult.current.canvasMaxHeight,
+      );
+    });
+  });
+
   describe('Header-Padding', () => {
     it('headerPaddingVertical ist auf xs kleiner als auf lg', () => {
       mockWindowDimensions = { width: 320, height: 480 };
