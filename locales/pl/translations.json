@@ -44,7 +44,10 @@
       "title": "Pakiet tematyczny",
       "all": "Wszystkie",
       "tiere": "Zwierzęta",
-      "fahrzeuge": "Pojazdy"
+      "fahrzeuge": "Pojazdy",
+      "natur": "Natura",
+      "maerchen": "Bajki",
+      "essen": "Jedzenie"
     }
   },
   "game": {

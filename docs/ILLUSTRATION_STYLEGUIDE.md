@@ -1,7 +1,9 @@
 # Illustrations-Stilguide
 
-Verbindlicher Stil für alle Level-SVGs in `assets/images/levels/` und
-`assets/images/levels-{1-5}/`. Grundlage für Säule 2.1 aus [Issue #279](https://github.com/S540d/DrawFromMemory/issues/279)
+Verbindlicher Stil für alle Level-Bilder — die MVP-Level-SVGs in
+`assets/images/levels/`/`assets/images/levels-{1-5}/` ebenso wie die
+inline-JSX-Bilder aller Themen-Packs in `components/LevelImageDisplay.tsx`
+(siehe §6). Grundlage für Säule 2.1 aus [Issue #279](https://github.com/S540d/DrawFromMemory/issues/279)
 und Voraussetzung für 1.5 (Content-Pipeline auf 100+ Bilder) — ohne einen
 festgelegten Stil lässt sich Bildproduktion nicht in Serie delegieren, und
 jedes neue Pack würde optisch aus dem Rahmen fallen.
@@ -118,22 +120,40 @@ unten).
 
 ## 6. Produktionsweg für neue Bilder (1.5-Grundlage)
 
+**Wichtig — Architektur-Korrektur (seit Issue #279, 1.5):** Die MVP-Bilder
+(`level-01` … `level-20`, `extra-01` … `extra-04`) haben zusätzlich
+physische SVG-Dateien in `assets/images/levels/`, aber **alle Themen-Pack-
+Bilder** (`tiere-v1`, `fahrzeuge-v1`, `natur-v1`, `maerchen-v1`, `essen-v1`)
+existieren **ausschließlich als inline React-Native-SVG-JSX** in
+`components/LevelImageDisplay.tsx` (`renderSvgForImage()`-Switch, ein
+`case '<filename>.svg':` pro Bild) — es gibt dafür **keine** separaten
+`.svg`-Dateien und **keinen** Ordner-Kopiervorgang nach
+`assets/images/levels-{1-5}/`. `<filename>.svg` ist nur der Lookup-Key
+(muss wie ein Dateiname aussehen, referenziert aber keine Datei). Schritte
+3+4 der ursprünglichen Fassung dieses Guides waren dadurch irreführend und
+wurden hier korrigiert.
+
 1. Motiv anhand der Ziel-Difficulty aus §4 auswählen (Elementanzahl-Korridor).
-2. In einem SVG-Editor (Figma, Inkscape, Excalidraw — siehe
-   `assets/images/levels/README.md`) mit `viewBox="0 0 200 200"` zeichnen,
-   Linienstärken aus §2 und Farben aus §3 verwenden.
-3. Datei benennen nach Schema `level-XX-name.svg` / `extra-NN-name.svg` /
-   packbezogen (z.B. `level-05-04-lion.svg` für Themen-Pack-Bilder, siehe
-   bestehende Namenskonvention in `services/ImagePoolManager.ts`).
-4. In `assets/images/levels/` (kanonisch) sowie im passenden
-   `assets/images/levels-{1-5}/`-Ordner ablegen.
-5. Eintrag in `services/ImagePoolManager.ts` (`filename`, `difficulty`,
-   `displayName`/`displayNameEn`, `strokeCount`, `colors`, optional `pack`)
-   ergänzen.
-6. **Pflicht:** `IMAGE_ELEMENT_COUNTS` in `components/LevelImageDisplay.tsx`
-   um den neuen Dateinamen ergänzen (Anzahl der Top-Level-SVG-Kinder).
-7. `npm run validate:svg-counts` ausführen — schlägt fehl, wenn Schritt 6
+2. `filename` nach Schema `<pack>-NN-name.svg` festlegen (z.B.
+   `natur-01-rainbow.svg`), passend zur bestehenden Namenskonvention in
+   `services/ImagePoolManager.ts`.
+3. In `components/LevelImageDisplay.tsx` einen neuen
+   `case '<filename>.svg':` im `renderSvgForImage()`-Switch ergänzen —
+   `<Svg width={svgSize} height={svgSize} viewBox={viewBox}>` mit den
+   Top-Level-Kind-Elementen (`<Circle>`, `<Ellipse>`, `<Rect>`, `<Line>`,
+   `<Path>`, `<Polygon>` — RN-SVG-Komponenten, camelCase-Props wie
+   `strokeWidth`), Linienstärken aus §2 und Farben aus §3.
+4. Eintrag in `services/ImagePoolManager.ts` (`filename`, `difficulty`,
+   `displayName`/`displayNameEn`, `strokeCount`, `colors`, `pack`)
+   ergänzen. `strokeCount` = Anzahl der Top-Level-Kind-Elemente aus Schritt 3.
+5. **Pflicht:** `IMAGE_ELEMENT_COUNTS` in `components/LevelImageDisplay.tsx`
+   um den neuen Dateinamen ergänzen — Wert muss exakt der Anzahl der
+   Top-Level-Kind-Elemente aus Schritt 3 entsprechen.
+6. `npm run validate:svg-counts` ausführen — schlägt fehl, wenn Schritt 5
    vergessen wurde oder die Zahl nicht stimmt.
+7. Neues Pack? Zusätzlich `PACK_LABEL_KEYS` (`app/levels.tsx`) und
+   `levels.pack.<label>` in allen 7 Locale-Dateien ergänzen, damit der
+   Chip-Filter ein sprechendes Label zeigt.
 8. Stichprobe in der App: Reveal-Effekt (Memorize-Phase), Outline-Modus
    (Spielvariante „Nur Umriss") und Spiegelbild-Modus visuell prüfen.
 

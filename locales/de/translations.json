@@ -44,7 +44,10 @@
       "title": "Themen-Pack",
       "all": "Alle",
       "tiere": "Tiere",
-      "fahrzeuge": "Fahrzeuge"
+      "fahrzeuge": "Fahrzeuge",
+      "natur": "Natur",
+      "maerchen": "Märchen",
+      "essen": "Essen"
     }
   },
   "game": {

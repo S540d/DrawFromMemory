@@ -179,7 +179,7 @@ memorize  →  draw  →  result
 3. **Result**: Sternbewertung (1–5), Replay-Animation, Speichern in Galerie möglich.
 
 Level-Anzahl: 20 (Difficulty 1–5). Alle Level haben 3 s Anzeigezeit.
-Bilderpool: `ImagePoolManager.ts` wählt zufällig nach Difficulty-Klasse aus. Aktuell **51 Bilder** (inkl. Tiere v1 Pack — 10 Tiere, PR #221 + Fahrzeuge v1 Pack — 10 Fahrzeuge, PR #254).
+Bilderpool: `ImagePoolManager.ts` wählt zufällig nach Difficulty-Klasse aus. Aktuell **81 Bilder** (inkl. Tiere v1 Pack — 10 Tiere, PR #221 + Fahrzeuge v1 Pack — 10 Fahrzeuge, PR #254 + Natur/Märchen/Essen v1 Packs — je 10 Bilder, Issue #279 1.5).
 
 Fortschrittsanzeige oben im Spielschirm (`app/game.tsx`): proportionaler Balken (`levelNumber / totalLevels`), kein Punkte-Indikator mehr (PR #272 — die vorherigen 5 fest codierten Punkte waren bei 20 Levels irreführend).
 
@@ -406,7 +406,8 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusät
 | **Themen-Pack Tiere v1** (10 Bilder, #222)                               | ✅ in main (v1.7.0) |
 | **Themen-Pack Fahrzeuge v1** (10 Bilder, PR #254)                        | ✅ in main (v1.7.0) |
 | **Themen-Pack-Auswahl-UI** (Chip-Filter Alle/Tiere/Fahrzeuge, PR #271)   | ✅ in `testing`     |
-| Themen-Pack Natur / Märchen / weitere                                    | 🔲 offen            |
+| **Themen-Pack Natur/Märchen/Essen v1** (je 10 Bilder, Issue #279 1.5)    | 🟡 PR offen         |
+| Content-Pipeline: Ziel 100+ Bilder (Issue #279 1.5)                      | 🟡 81/100+ — saisonaler Pack-Mechanismus noch offen |
 | **Spielvarianten** (Nur Umriss merken, Spiegelbild, Kreativ-Modus, #247) | ✅ in main (v1.7.0) |
 | Avatar & Personalisierung                                                | 🔲 offen            |
 | XP- & Level-System                                                       | 🔲 offen            |
@@ -426,7 +427,7 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusät
 - `LevelImage.pack?: string` — optionaler Tag (z.B. `'tiere-v1'`)
 - Bilder ohne `minLevel` sind ab dem passenden Difficulty-Level verfügbar
 - Neue Packs: einfach neue Cases in `LevelImageDisplay.tsx` + Einträge in `ImagePoolManager.ts` + `IMAGE_ELEMENT_COUNTS`
-- Pflicht nach jedem neuen SVG: `npm run validate:svg-counts` (derzeit 51 Einträge)
+- Pflicht nach jedem neuen SVG: `npm run validate:svg-counts` (derzeit 81 Einträge)
 - `getAvailablePacks()` (`ImagePoolManager.ts`) liefert alle im Pool vorkommenden Pack-IDs für die Chip-Filter-UI in `app/levels.tsx`
 - Neue Packs erscheinen automatisch als Filteroption — für ein sprechendes Label in der UI zusätzlich einen Eintrag in `PACK_LABEL_KEYS` (`app/levels.tsx`) sowie `levels.pack.<label>` in allen 7 Locale-Dateien ergänzen
 - **Visueller Stil verbindlich:** [`docs/ILLUSTRATION_STYLEGUIDE.md`](docs/ILLUSTRATION_STYLEGUIDE.md) (Linienstärke, Farbpalette aus `Colors.ts`, Ziel-Elementanzahl pro Difficulty, Produktionsweg für neue SVGs) — Grundlage für Issue #279 Säule 2.1 und die Content-Pipeline (1.5, Ziel 100+ Bilder)

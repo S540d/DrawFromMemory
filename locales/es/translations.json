@@ -44,7 +44,10 @@
       "title": "Paquete temático",
       "all": "Todos",
       "tiere": "Animales",
-      "fahrzeuge": "Vehículos"
+      "fahrzeuge": "Vehículos",
+      "natur": "Naturaleza",
+      "maerchen": "Cuentos",
+      "essen": "Comida"
     }
   },
   "game": {

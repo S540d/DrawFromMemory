@@ -32,6 +32,9 @@ const VARIANT_KEYS: GameVariant[] = ['normal', 'outline', 'mirror'];
 const PACK_LABEL_KEYS: Record<string, string> = {
   'tiere-v1': 'tiere',
   'fahrzeuge-v1': 'fahrzeuge',
+  'natur-v1': 'natur',
+  'maerchen-v1': 'maerchen',
+  'essen-v1': 'essen',
 };
 
 /**
