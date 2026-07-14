@@ -429,6 +429,7 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusät
 - Pflicht nach jedem neuen SVG: `npm run validate:svg-counts` (derzeit 51 Einträge)
 - `getAvailablePacks()` (`ImagePoolManager.ts`) liefert alle im Pool vorkommenden Pack-IDs für die Chip-Filter-UI in `app/levels.tsx`
 - Neue Packs erscheinen automatisch als Filteroption — für ein sprechendes Label in der UI zusätzlich einen Eintrag in `PACK_LABEL_KEYS` (`app/levels.tsx`) sowie `levels.pack.<label>` in allen 7 Locale-Dateien ergänzen
+- **Visueller Stil verbindlich:** [`docs/ILLUSTRATION_STYLEGUIDE.md`](docs/ILLUSTRATION_STYLEGUIDE.md) (Linienstärke, Farbpalette aus `Colors.ts`, Ziel-Elementanzahl pro Difficulty, Produktionsweg für neue SVGs) — Grundlage für Issue #279 Säule 2.1 und die Content-Pipeline (1.5, Ziel 100+ Bilder)
 
 ---
 
