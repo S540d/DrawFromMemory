@@ -3,6 +3,10 @@ const path = require('path');
 
 const distPath = path.join(__dirname, '..', 'dist');
 const baseUrl = '/DrawFromMemory';
+const siteUrl = 'https://s540d.github.io/DrawFromMemory/';
+const appTitle = 'Merke und Male - Gedächtnistraining für Kinder';
+const appDescription =
+  'Merke und Male: Gedächtnistraining für Kinder. Bild kurz ansehen, aus dem Gedächtnis nachzeichnen und vergleichen — spielerisch lernen, kostenlos und werbefrei.';
 
 console.log('🔧 Starting post-build processing for expo-router + GitHub Pages...');
 
@@ -31,10 +35,39 @@ htmlFiles.forEach(filePath => {
 
   // Fix title if empty (expo-router sometimes generates empty titles)
   if (html.includes('<title data-rh="true"></title>') || html.includes('<title></title>')) {
-    html = html.replace(
-      /<title[^>]*><\/title>/,
-      '<title>Merke und Male - Gedächtnistraining</title>',
-    );
+    html = html.replace(/<title[^>]*><\/title>/, `<title>${appTitle}</title>`);
+  } else {
+    // Ensure a descriptive, SEO-friendly title even when expo-router already set one
+    html = html.replace(/<title>[^<]*<\/title>/, `<title>${appTitle}</title>`);
+  }
+
+  // SEO tags: only for index.html (the actual public landing page) —
+  // avoids duplicate-content signals across expo-router's other generated pages.
+  if (fileName === 'index.html') {
+    const seoTags = [
+      `<meta name="robots" content="index, follow">`,
+      `<meta property="og:title" content="${appTitle}">`,
+      `<meta property="og:description" content="${appDescription}">`,
+      `<meta property="og:type" content="website">`,
+      `<meta property="og:url" content="${siteUrl}">`,
+      `<meta property="og:image" content="${siteUrl}feature-graphic.png">`,
+      `<meta name="twitter:card" content="summary_large_image">`,
+      `<meta name="twitter:title" content="${appTitle}">`,
+      `<meta name="twitter:description" content="${appDescription}">`,
+      `<meta name="twitter:image" content="${siteUrl}feature-graphic.png">`,
+      `<link rel="canonical" href="${siteUrl}">`,
+    ].join('\n');
+
+    if (html.includes('<meta name="description"')) {
+      // Overwrite the description injected from app.json's web.description with the
+      // more detailed SEO copy, and insert the rest of the SEO tags right after it.
+      html = html.replace(
+        /<meta name="description"[^>]*>/,
+        `<meta name="description" content="${appDescription}">\n${seoTags}`,
+      );
+    } else {
+      html = html.replace('</head>', `<meta name="description" content="${appDescription}">\n${seoTags}\n</head>`);
+    }
   }
 
   fs.writeFileSync(filePath, html);
