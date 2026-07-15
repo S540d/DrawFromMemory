@@ -140,6 +140,7 @@ npm run lint                       # ESLint
 npm run validate:svg-counts        # Prüft SVG-Element-Counts in LevelImageDisplay.tsx
 npx tsc --noEmit                   # TypeScript-Check
 npm run build:web                  # Web-Build für gh-pages (expo export --platform web)
+npm run build:doctor               # Preflight-Checks vor lokalem Build (Disk/JDK/foojay/Sollstand/Branch)
 npm run build:android              # EAS Build (Android, Production)
 npm run build:android:preview      # EAS Build (Android, Preview APK)
 npm run build:android:local        # Lokaler EAS-Build (preview)
@@ -487,6 +488,7 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusät
 ## Offene Issues / Bekannte Einschränkungen
 
 - **jest-expo → @tootallnate/once** (low severity): Fix würde Breaking-Major-Upgrade von jest-expo erfordern (aktuell `~55.0.9`) — noch nicht gemacht
+- **foojay-resolver-Patch** (`patches/@react-native+gradle-plugin+0.83.6.patch`, via `postinstall`): hebt den in RN 0.83 gebündelten foojay-resolver 0.5.0 → 1.0.0, sonst bricht jeder Android-Build unter Gradle 9 / JDK 21 ab (`IBM_SEMERU`-Crash, Issue #276, Upstream facebook/react-native#56287). **Bei RN-Upgrade prüfen:** `grep foojay node_modules/@react-native/gradle-plugin/settings.gradle.kts` — bündelt die neue Version bereits ≥1.0.0, Patch löschen. `npm run build:doctor` warnt automatisch, falls der Pin wieder auf 0.5.0 steht.
 - **Nexus 6**: EOL — `minSdkVersion` = 26; Nexus 6 endet bei API 25 (geschlossen via Issue #172)
 - **iOS**: Nicht primär getestet (Fokus auf Web + Android)
 - **iOS App Store**: Bundle ID `com.s540d.merkeundmale`, App Store URL noch TBD
