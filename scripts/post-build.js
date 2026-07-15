@@ -66,7 +66,10 @@ htmlFiles.forEach(filePath => {
         `<meta name="description" content="${appDescription}">\n${seoTags}`,
       );
     } else {
-      html = html.replace('</head>', `<meta name="description" content="${appDescription}">\n${seoTags}\n</head>`);
+      html = html.replace(
+        '</head>',
+        `<meta name="description" content="${appDescription}">\n${seoTags}\n</head>`,
+      );
     }
   }
 
