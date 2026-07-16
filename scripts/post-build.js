@@ -34,10 +34,14 @@ htmlFiles.forEach(filePath => {
   html = html.replace(/src="\/(?!\/)/g, `src="${baseUrl}/`);
 
   // Fix title if empty (expo-router sometimes generates empty titles)
-  if (html.includes('<title data-rh="true"></title>') || html.includes('<title></title>')) {
+  const hasEmptyTitle =
+    html.includes('<title data-rh="true"></title>') || html.includes('<title></title>');
+  if (hasEmptyTitle) {
     html = html.replace(/<title[^>]*><\/title>/, `<title>${appTitle}</title>`);
-  } else {
-    // Ensure a descriptive, SEO-friendly title even when expo-router already set one
+  } else if (fileName === 'index.html') {
+    // Ensure a descriptive, SEO-friendly title on the landing page even when
+    // expo-router already set one. Other static pages (e.g. privacy-policy.html)
+    // keep their own title — overwriting it here would mislabel them as the app.
     html = html.replace(/<title>[^<]*<\/title>/, `<title>${appTitle}</title>`);
   }
 

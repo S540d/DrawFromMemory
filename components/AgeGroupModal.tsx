@@ -30,7 +30,12 @@ export default function AgeGroupModal({ visible, onConfirm }: Props) {
   const [selected, setSelected] = useState<AgeGroup | null>(null);
 
   return (
-    <Modal visible={visible} animationType="fade" testID="age-group-modal">
+    <Modal
+      visible={visible}
+      animationType="fade"
+      onRequestClose={() => {}}
+      testID="age-group-modal"
+    >
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.heroSection}>
           <Mascot size={96} mood="happy" testID="age-group-mascot" />
