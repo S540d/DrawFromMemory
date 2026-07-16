@@ -319,31 +319,27 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               {
                 id: 'trophies',
                 label: t('achievements.menuLabel'),
-                icon: '🏆',
                 onPress: () => setShowBadgesModal(true),
               },
               {
                 id: 'parents',
                 label: t('parentDashboard.menuLabel'),
-                icon: '👨‍👩‍👧',
                 onPress: openParentDashboard,
               },
               {
                 id: 'feedback',
                 label: t('settings.feedback'),
-                icon: '✉️',
                 onPress: handleSendFeedback,
               },
-              { id: 'support', label: t('settings.support'), icon: '☕', onPress: handleSupport },
-              { id: 'share', label: t('settings.share'), icon: '↗', onPress: handleShareApp },
+              { id: 'support', label: t('settings.support'), onPress: handleSupport },
+              { id: 'share', label: t('settings.share'), onPress: handleShareApp },
               {
                 id: 'about',
                 label: t('settings.aboutButton'),
-                icon: 'ℹ',
                 onPress: () => setShowAboutModal(true),
               },
             ] as const
-          ).map(({ id, label, icon, onPress }, idx) => (
+          ).map(({ id, label, onPress }, idx) => (
             <TouchableOpacity
               key={id}
               style={[
@@ -356,13 +352,6 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               accessibilityRole="button"
               accessibilityLabel={label}
             >
-              <Text
-                accessible={false}
-                importantForAccessibility="no"
-                style={[styles.actionGridIcon, { color: colors.primary }]}
-              >
-                {icon}
-              </Text>
               <Text style={[styles.actionGridLabel, { color: colors.text.primary }]}>{label}</Text>
             </TouchableOpacity>
           ))}
@@ -536,9 +525,6 @@ const styles = StyleSheet.create({
   },
   actionGridItemRight: {
     borderLeftWidth: StyleSheet.hairlineWidth,
-  },
-  actionGridIcon: {
-    fontSize: 16,
   },
   actionGridLabel: {
     fontSize: FontSize.xs,

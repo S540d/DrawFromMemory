@@ -190,7 +190,7 @@ export default function HomeScreen() {
             accessibilityRole="button"
           >
             <Text style={[styles.secondaryTileText, { color: colors.primary }]}>
-              🎨 {t('home.creativeButton')}
+              {t('home.creativeButton')}
             </Text>
           </TouchableOpacity>
         </View>
