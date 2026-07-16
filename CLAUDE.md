@@ -224,6 +224,10 @@ interface DrawingPath {
 
 `components/game/ToolIcons.tsx` exportiert `PenIcon`, `FillIcon`, `EyeIcon` — abstrakte, einfarbige SVG-Piktogramme (via `react-native-svg`) für Pinsel/Füllen/Vorlage-ansehen in `DrawPhase.tsx`, statt bunter Emoji (✏️ 🪣 👁). Farbe wird komplett über den `color`-Prop gesteuert (aktiv = weiß, inaktiv = `colors.text.secondary`). Die Strichstärken-Auswahl (klein/mittel/groß) zeigt bei allen drei Punkten einheitlich `drawing.color`; die aktive Größe wird über einen Ring (`borderColor`) markiert, nicht über unterschiedliche Punktfarben.
 
+### Startbildschirm & Einstellungen: Label-/Icon-Aufräumen (PR #292)
+
+APK-Testing-Feedback: Startbildschirm-Button „Kreativ" → „Freies Malen" umbenannt (nur DE-Locale, `locales/de/translations.json`), Emoji 🎨 vor dem Button-Text in `app/index.tsx` entfernt. In den Einstellungen (`components/SettingsModal.tsx`) verlor der Bereich „Über & Support" (`settings.aboutSupport`) die Icons im Action-Grid (🏆 👨‍👩‍👧 ✉️ ☕ ↗ ℹ) — nur noch Text-Labels, `actionGridIcon`-Style entfernt.
+
 ---
 
 ## Flood-Fill Architektur (Native)
@@ -381,7 +385,7 @@ Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerend
 ## Wachstums-Roadmap (Issue #219)
 
 Übergeordneter Plan, um aus der App eine dauerhaft wachsende Kids-App im Play Store zu machen.
-Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusätzlich die Themen-Pack-Auswahl-UI (PR #271) und die Draw-UX-Fixes (Icons/Strichstärken-Farbe/Fortschrittsbalken, PR #272) — noch nicht in `main` gemerged. Enthält Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten, weitere Sprachen, Sentry-ErrorBoundary (#264) und den transform-origin Web-Fix (#265). **Play Store noch nicht auf v1.7.0** — Release-Aufgabe in Issue #267.
+Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusätzlich die Themen-Pack-Auswahl-UI (PR #271), die Draw-UX-Fixes (Icons/Strichstärken-Farbe/Fortschrittsbalken, PR #272) und (offen als PR #292) die Startbildschirm-/Einstellungen-Label-/Icon-Anpassungen aus APK-Testing-Feedback — noch nicht in `main` gemerged. Enthält Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten, weitere Sprachen, Sentry-ErrorBoundary (#264) und den transform-origin Web-Fix (#265). **Play Store noch nicht auf v1.7.0** — Release-Aufgabe in Issue #267.
 
 ### P0 — Foundation für Wachstum
 
