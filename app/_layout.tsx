@@ -8,6 +8,7 @@ import AnimatedSplashScreen from '@components/AnimatedSplashScreen';
 import { useCallback, useEffect, useState, useReducer } from 'react';
 import { initLanguage, addLanguageChangeListener } from '@services/i18n';
 import { initSentry } from '@services/SentryService';
+import { initAnalytics } from '@services/AnalyticsService';
 import { useFonts } from 'expo-font';
 import {
   Nunito_400Regular,
@@ -18,6 +19,15 @@ import {
 
 // Initialize Sentry as early as possible (no-op on web or without DSN)
 initSentry();
+
+// Privacy-freundliches, minimales Analytics (no-op ohne EXPO_PUBLIC_PLAUSIBLE_DOMAIN)
+initAnalytics();
+
+const SITE_URL = 'https://s540d.github.io/DrawFromMemory/';
+const OG_IMAGE_URL = `${SITE_URL}feature-graphic.png`;
+const SEO_TITLE = 'Merke und Male – Gedächtnistraining für Kinder';
+const SEO_DESCRIPTION =
+  'Gedächtnistraining für Kinder ab 3 Jahren: Bild merken, aus dem Gedächtnis nachzeichnen, vergleichen. Kostenlos im Browser spielen – offline, ohne Werbung, ohne Datensammlung.';
 
 /**
  * Root Layout Content - wrapped with theme context
@@ -51,6 +61,47 @@ function RootLayoutContent() {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="Merke und Male" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+        {/* SEO für die gh-pages-Demo (Issue #279, 3.4) */}
+        <title>{SEO_TITLE}</title>
+        <meta name="description" content={SEO_DESCRIPTION} />
+        <meta
+          name="keywords"
+          content="Gedächtnistraining Kinder App, Memory Kinder, Zeichenspiel Kinder, Malen lernen, Konzentration Kinder, offline Kinder App ohne Werbung"
+        />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href={SITE_URL} />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={SITE_URL} />
+        <meta property="og:title" content={SEO_TITLE} />
+        <meta property="og:description" content={SEO_DESCRIPTION} />
+        <meta property="og:image" content={OG_IMAGE_URL} />
+        <meta property="og:locale" content="de_DE" />
+        <meta property="og:site_name" content="Merke und Male" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={SEO_TITLE} />
+        <meta name="twitter:description" content={SEO_DESCRIPTION} />
+        <meta name="twitter:image" content={OG_IMAGE_URL} />
+
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'MobileApplication',
+            name: 'Merke und Male',
+            url: SITE_URL,
+            description: SEO_DESCRIPTION,
+            applicationCategory: 'GameApplication',
+            operatingSystem: 'Android, Web',
+            offers: {
+              '@type': 'Offer',
+              price: '0',
+              priceCurrency: 'EUR',
+            },
+            installUrl: 'https://play.google.com/store/apps/details?id=com.s540d.merkeundmale',
+          })}
+        </script>
       </Head>
       <StatusBar style={showSplash ? 'light' : theme === 'dark' ? 'light' : 'dark'} />
       <Stack

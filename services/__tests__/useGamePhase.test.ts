@@ -40,7 +40,18 @@ jest.mock('../StorageManager', () => ({
     saveLevelProgress: jest.fn().mockResolvedValue(undefined),
     saveToGallery: jest.fn().mockResolvedValue(undefined),
     getSettings: jest.fn().mockResolvedValue({ extraTimeMode: false }),
+    getProgress: jest.fn().mockResolvedValue({
+      levels: {},
+      lastPlayedLevel: 1,
+      totalLevelsCompleted: 0,
+      averageRating: 0,
+    }),
   },
+}));
+
+jest.mock('../AgeGroupManager', () => ({
+  getAgeGroup: jest.fn().mockResolvedValue(null),
+  getExtraTimeForAgeGroup: jest.fn(() => false),
 }));
 
 jest.mock('../SoundManager', () => ({

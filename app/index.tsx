@@ -18,6 +18,12 @@ import QuickStatsCards from '@components/QuickStatsCards';
 import { FloatingStars } from '@components/FloatingStars';
 import OnboardingModal from '@components/OnboardingModal';
 import { isOnboardingDone } from '@services/OnboardingManager';
+import WebTrustFooter from '@components/WebTrustFooter';
+import Mascot from '@components/Mascot';
+import AgeGroupModal from '@components/AgeGroupModal';
+import { isAgeGroupSelected, setAgeGroup } from '@services/AgeGroupManager';
+import { getMascotProgress, getHomeGreetingKey, type MascotUnlock } from '@services/MascotManager';
+import type { AgeGroup } from '../types';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -26,13 +32,31 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const [showSettings, setShowSettings] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [dailyCompleted, setDailyCompleted] = useState(false);
+  const [showAgeGroup, setShowAgeGroup] = useState(false);
+  const [mascotNextUnlock, setMascotNextUnlock] = useState<MascotUnlock | null>(null);
+
+  const maybeShowOnboarding = useCallback(async () => {
+    const done = await isOnboardingDone();
+    if (!done) setShowOnboarding(true);
+  }, []);
 
   useEffect(() => {
-    isOnboardingDone().then(done => {
-      if (!done) setShowOnboarding(true);
+    isAgeGroupSelected().then(async selected => {
+      if (!selected) {
+        setShowAgeGroup(true);
+        return;
+      }
+      await maybeShowOnboarding();
     });
-  }, []);
+  }, [maybeShowOnboarding]);
+
+  const handleAgeGroupConfirm = async (ageGroup: AgeGroup) => {
+    await setAgeGroup(ageGroup);
+    setShowAgeGroup(false);
+    await maybeShowOnboarding();
+  };
+
+  const [dailyCompleted, setDailyCompleted] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(() => getSecondsUntilMidnight());
   const [dailyLevel, setDailyLevel] = useState(() => getDailyChallengeLevel());
   const [currentStreak, setCurrentStreak] = useState(0);
@@ -45,9 +69,14 @@ export default function HomeScreen() {
       const refresh = async () => {
         setSecondsLeft(getSecondsUntilMidnight());
         setDailyLevel(getDailyChallengeLevel());
-        const [completed, streakData] = await Promise.all([isTodayCompleted(), getStreakData()]);
+        const [completed, streakData, mascotProgress] = await Promise.all([
+          isTodayCompleted(),
+          getStreakData(),
+          getMascotProgress(),
+        ]);
         setDailyCompleted(completed);
         setCurrentStreak(streakData.currentStreak);
+        setMascotNextUnlock(mascotProgress.nextUnlock);
       };
       refresh();
 
@@ -96,6 +125,24 @@ export default function HomeScreen() {
             <Text style={[styles.settingsIcon, { color: colors.text.primary }]}>⋮</Text>
           </Pressable>
         </View>
+      </View>
+
+      {/* Mascot-Begrüßung — einheitlicher Fortschritts-Companion (Issue #279, 1.1) */}
+      <View style={styles.mascotRow}>
+        <Mascot
+          size={56}
+          mood={currentStreak >= 2 ? 'happy' : 'neutral'}
+          message={t(getHomeGreetingKey(currentStreak), { count: String(currentStreak) })}
+          testID="home-mascot"
+        />
+        {mascotNextUnlock && (
+          <Text style={[styles.mascotUnlockHint, { color: colors.text.secondary }]}>
+            {t('mascot.nextUnlock', {
+              count: String(mascotNextUnlock.starsRequired),
+              item: t(mascotNextUnlock.labelKey),
+            })}
+          </Text>
+        )}
       </View>
 
       {/* Hero CTA — "Spiel starten" als dominanter zentraler Button */}
@@ -197,9 +244,12 @@ export default function HomeScreen() {
 
         {/* Quick Stats — dezent am unteren Rand */}
         <QuickStatsCards />
+
+        <WebTrustFooter />
       </View>
 
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
+      <AgeGroupModal visible={showAgeGroup} onConfirm={handleAgeGroupConfirm} />
       <OnboardingModal
         visible={showOnboarding}
         onClose={() => setShowOnboarding(false)}
@@ -259,6 +309,14 @@ const styles = StyleSheet.create({
   },
   settingsIcon: {
     fontSize: 24,
+  },
+  mascotRow: {
+    marginTop: Spacing.sm,
+    gap: 2,
+  },
+  mascotUnlockHint: {
+    fontSize: FontSize.xs,
+    marginLeft: 64,
   },
   heroSlot: {
     flex: 1,

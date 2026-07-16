@@ -94,3 +94,11 @@ export interface BrushSettings {
   color: string;
   size: number; // 1 = dünn, 2 = mittel, 3 = dick
 }
+
+/**
+ * Altersstufe des Kindes (Issue #279, 1.3) — ersetzt den früheren
+ * versteckten `extra_time_mode`-Schalter durch eine bewusste Auswahl
+ * beim ersten Start. Steuert Anzeigedauer, empfohlenen Level-Bereich
+ * und Standard-Strichstärke.
+ */
+export type AgeGroup = '3-5' | '6-8' | '9plus';

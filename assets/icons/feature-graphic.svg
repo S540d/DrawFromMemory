@@ -34,17 +34,22 @@
     <polygon points="0,15 30,15 30,5 50,20 30,35 30,25 0,25" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
   </g>
 
-  <!-- Card 2: Thinking/Brain -->
+  <!-- Card 2: Mascot "Mali" (Issue #279, 2.3 Icon-Refresh — konsistent mit app-icon.svg) -->
   <g transform="translate(280, 140)">
     <rect x="0" y="0" width="120" height="120" rx="15" fill="#FFFFFF" stroke="#000000" stroke-width="3"/>
-    <!-- Question marks -->
-    <text x="35" y="50" font-family="Comic Sans MS, cursive" font-size="28" font-weight="bold" fill="#60D5FA">?</text>
-    <text x="65" y="70" font-family="Comic Sans MS, cursive" font-size="36" font-weight="bold" fill="#3498DB">?</text>
-    <text x="80" y="45" font-family="Comic Sans MS, cursive" font-size="22" font-weight="bold" fill="#60D5FA">?</text>
-    <!-- Thought bubbles -->
-    <circle cx="40" cy="85" r="8" fill="#E0E0E0" stroke="#999" stroke-width="1.5"/>
-    <circle cx="55" cy="95" r="6" fill="#E0E0E0" stroke="#999" stroke-width="1.5"/>
-    <circle cx="70" cy="100" r="4" fill="#E0E0E0" stroke="#999" stroke-width="1.5"/>
+    <g transform="translate(60, 58)">
+      <ellipse cx="0" cy="15" rx="24" ry="20" fill="#44CF6C"/>
+      <circle cx="0" cy="-14" r="18" fill="#44CF6C"/>
+      <circle cx="-11" cy="-27" r="8.5" fill="#44CF6C"/>
+      <circle cx="11" cy="-27" r="8.5" fill="#44CF6C"/>
+      <circle cx="-11" cy="-28" r="5" fill="#FFFFFF"/>
+      <circle cx="11" cy="-28" r="5" fill="#FFFFFF"/>
+      <circle cx="-10" cy="-29" r="2.4" fill="#000000"/>
+      <circle cx="12" cy="-29" r="2.4" fill="#000000"/>
+      <circle cx="-13" cy="-5" r="3.5" fill="#FF69B4" opacity="0.55"/>
+      <circle cx="13" cy="-5" r="3.5" fill="#FF69B4" opacity="0.55"/>
+      <path d="M-9 -5 Q0 2 9 -5" stroke="#000000" stroke-width="2" stroke-linecap="round" fill="none"/>
+    </g>
     <text x="60" y="115" text-anchor="middle" font-family="Comic Sans MS, cursive" font-size="11" fill="#333">Denken</text>
   </g>
 

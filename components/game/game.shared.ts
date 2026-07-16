@@ -38,6 +38,9 @@ export interface DrawPhaseProps {
     buttonMinHeight: number;
     buttonPaddingVertical: number;
     isSmall: boolean;
+    /** 'side' im Querformat (Werkzeugleiste neben statt unter der Zeichenfläche) — Issue #279, 2.4 */
+    toolbarPosition?: 'bottom' | 'side';
+    sideToolbarWidth?: number;
   };
   onDone: () => void;
 }

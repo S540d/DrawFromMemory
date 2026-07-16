@@ -4,6 +4,12 @@
 dist/
 web-build/
 
+# Expo CNG / Prebuild — native Projekte werden beim Build frisch generiert
+# (expo prebuild / EAS Local Build), nie einchecken. Konfiguration läuft über
+# app.json + plugins/, nicht über die generierten android/ & ios/ Dateien.
+/android/
+/ios/
+
 # React Native
 node_modules/
 npm-debug.log*

@@ -21,6 +21,11 @@
       "levelOf": "z {{total}}"
     }
   },
+  "footer": {
+    "tagline": "Offline · bez reklam · bez zbierania danych",
+    "playStore": "Dostępne w Google Play",
+    "privacyPolicy": "Polityka prywatności"
+  },
   "levels": {
     "title": "Wybierz poziom",
     "level": "Poziom {{number}}",
@@ -39,7 +44,10 @@
       "title": "Pakiet tematyczny",
       "all": "Wszystkie",
       "tiere": "Zwierzęta",
-      "fahrzeuge": "Pojazdy"
+      "fahrzeuge": "Pojazdy",
+      "natur": "Natura",
+      "maerchen": "Bajki",
+      "essen": "Jedzenie"
     }
   },
   "game": {
@@ -265,5 +273,34 @@
     "badgeMemorize": "Zapamiętaj",
     "badgeDraw": "Rysuj",
     "badgeResult": "Oceń"
+  },
+  "mascot": {
+    "greeting": {
+      "default": "Cześć! Jestem Mali. Gotowy do gry?",
+      "streak": "Miło Cię znów widzieć! 🔥 {{count}} dni z rzędu!",
+      "streakLong": "Wow, {{count}} dni z rzędu! Jesteś niesamowity!"
+    },
+    "nextUnlock": "Jeszcze {{count}} gwiazdek do: {{item}}",
+    "accessory": {
+      "hat": "Kapelusz",
+      "glasses": "Okulary przeciwsłoneczne",
+      "bowtie": "Muszka",
+      "crown": "Korona"
+    },
+    "unlockToast": {
+      "title": "Nowy dodatek!",
+      "subtitle": "Mali nosi teraz: {{item}}"
+    }
+  },
+  "ageGroup": {
+    "title": "Ile lat ma Twoje dziecko?",
+    "subtitle": "To pomaga nam dopasować czas wyświetlania i trudność.",
+    "group3to5": "3–5 lat",
+    "group6to8": "6–8 lat",
+    "group9plus": "9+ lat",
+    "confirm": "Zaczynamy!",
+    "changeLater": "Możesz to później zmienić w ustawieniach.",
+    "settingsLabel": "Grupa wiekowa",
+    "recommendedLevels": "Polecane dla Twojego dziecka: Poziom {{from}}–{{to}}"
   }
 }

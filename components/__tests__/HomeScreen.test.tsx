@@ -48,6 +48,13 @@ jest.mock('../../components/SettingsModal', () => {
   };
 });
 
+jest.mock('../../components/WebTrustFooter', () => {
+  const { View } = require('react-native');
+  return function WebTrustFooter() {
+    return <View />;
+  };
+});
+
 jest.mock('../../components/FloatingStars', () => {
   const { View } = require('react-native');
   return { FloatingStars: () => <View testID="floating-stars" /> };
@@ -67,6 +74,31 @@ jest.mock('../../services/OnboardingManager', () => ({
   isOnboardingDone: jest.fn(async () => true),
   markOnboardingDone: jest.fn(async () => {}),
 }));
+
+jest.mock('../../services/AgeGroupManager', () => ({
+  isAgeGroupSelected: jest.fn(async () => true),
+  setAgeGroup: jest.fn(async () => {}),
+}));
+
+jest.mock('../../services/MascotManager', () => ({
+  getMascotProgress: jest.fn(async () => ({
+    totalStars: 0,
+    currentStreak: 0,
+    unlocked: [],
+    nextUnlock: null,
+  })),
+  getHomeGreetingKey: () => 'mascot.greeting.default',
+}));
+
+jest.mock('../../components/Mascot', () => {
+  const { View } = require('react-native');
+  return { __esModule: true, default: () => <View testID="mascot" /> };
+});
+
+jest.mock('../../components/AgeGroupModal', () => {
+  const { View } = require('react-native');
+  return { __esModule: true, default: () => <View testID="age-group-modal" /> };
+});
 
 jest.mock('../../services/ThemeContext', () => ({
   useTheme: () => ({

@@ -21,6 +21,11 @@
       "levelOf": "de {{total}}"
     }
   },
+  "footer": {
+    "tagline": "Sin conexión · sin anuncios · sin recopilación de datos",
+    "playStore": "Disponible en Google Play",
+    "privacyPolicy": "Política de privacidad"
+  },
   "levels": {
     "title": "Elegir nivel",
     "level": "Nivel {{number}}",
@@ -39,7 +44,10 @@
       "title": "Paquete temático",
       "all": "Todos",
       "tiere": "Animales",
-      "fahrzeuge": "Vehículos"
+      "fahrzeuge": "Vehículos",
+      "natur": "Naturaleza",
+      "maerchen": "Cuentos",
+      "essen": "Comida"
     }
   },
   "game": {
@@ -265,5 +273,34 @@
     "badgeMemorize": "Memoriza",
     "badgeDraw": "Dibuja",
     "badgeResult": "Puntúa"
+  },
+  "mascot": {
+    "greeting": {
+      "default": "¡Hola! Soy Mali. ¿Listo para jugar?",
+      "streak": "¡Qué bien que vuelvas! 🔥 ¡{{count}} días seguidos!",
+      "streakLong": "¡Vaya, {{count}} días seguidos! ¡Eres increíble!"
+    },
+    "nextUnlock": "Faltan {{count}} estrellas para: {{item}}",
+    "accessory": {
+      "hat": "Sombrero",
+      "glasses": "Gafas de sol",
+      "bowtie": "Pajarita",
+      "crown": "Corona"
+    },
+    "unlockToast": {
+      "title": "¡Nuevo accesorio!",
+      "subtitle": "Mali ahora lleva: {{item}}"
+    }
+  },
+  "ageGroup": {
+    "title": "¿Cuántos años tiene tu hijo/a?",
+    "subtitle": "Esto nos ayuda a ajustar el tiempo de visualización y la dificultad.",
+    "group3to5": "3–5 años",
+    "group6to8": "6–8 años",
+    "group9plus": "9+ años",
+    "confirm": "¡Vamos!",
+    "changeLater": "Puedes cambiarlo más tarde en los ajustes.",
+    "settingsLabel": "Grupo de edad",
+    "recommendedLevels": "Recomendado para tu hijo/a: Nivel {{from}}–{{to}}"
   }
 }

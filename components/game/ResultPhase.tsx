@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import DrawingCanvas from '@components/DrawingCanvas';
 import LevelImageDisplay from '@components/LevelImageDisplay';
+import Mascot from '@components/Mascot';
+import MascotSparkle from '@components/MascotSparkle';
 import { AnimatedFeedback, AnimatedStar } from '@components/AnimatedPrimitives';
 import Colors from '../../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../../constants/Layout';
@@ -10,6 +12,7 @@ import type { ResultPhaseProps } from './game.shared';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import { getRatingFeedback } from '@services/RatingManager';
+import { getResultMoodForStars } from '@services/MascotManager';
 import type { StarRating } from '../../types';
 
 export default function ResultPhase({
@@ -210,9 +213,19 @@ export default function ResultPhase({
             ))}
           </View>
           <AnimatedFeedback visible={userRating > 0}>
-            <Text style={[styles.feedbackText, { color: colors.text.secondary }]}>
-              {getFeedbackText(userRating)}
-            </Text>
+            <View style={styles.mascotFeedbackRow}>
+              <View style={styles.mascotWithSparkle}>
+                <Mascot size={48} mood={getResultMoodForStars(userRating)} testID="result-mascot" />
+                {userRating >= 5 && (
+                  <View style={styles.sparkleOverlay}>
+                    <MascotSparkle size={56} testID="result-mascot-sparkle" />
+                  </View>
+                )}
+              </View>
+              <Text style={[styles.feedbackText, { color: colors.text.secondary }]}>
+                {getFeedbackText(userRating)}
+              </Text>
+            </View>
           </AnimatedFeedback>
         </View>
 
@@ -303,10 +316,26 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
     marginBottom: Spacing.md,
   },
+  mascotFeedbackRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+  },
+  mascotWithSparkle: {
+    width: 48,
+    height: 48,
+  },
+  sparkleOverlay: {
+    position: 'absolute',
+    top: -14,
+    left: -4,
+  },
   feedbackText: {
+    flexShrink: 1,
     fontSize: FontSize.md,
-    textAlign: 'center',
-    paddingHorizontal: Spacing.lg,
+    textAlign: 'left',
   },
   completionOverlay: {
     flex: 1,

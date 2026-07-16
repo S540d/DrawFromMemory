@@ -10,6 +10,12 @@ import { recordSession } from '@services/SessionTracker';
 import SoundManager from '@services/SoundManager';
 import { requestReviewIfEligible } from '@services/ReviewManager';
 import { useTimer } from '@services/useTimer';
+import { getAgeGroup, getExtraTimeForAgeGroup } from '@services/AgeGroupManager';
+import {
+  getTotalStars,
+  getNewlyUnlockedAccessories,
+  type MascotUnlock,
+} from '@services/MascotManager';
 import type { DrawingPath } from '@components/DrawingCanvas';
 import type { GamePhase, LevelImage } from '../types';
 
@@ -60,6 +66,7 @@ export function useGamePhase({
   const levelStartedAtRef = useRef<number>(Date.now());
 
   const [extraTimeMode, setExtraTimeMode] = useState(false);
+  const [newMascotUnlock, setNewMascotUnlock] = useState<MascotUnlock | null>(null);
 
   const REPLAY_DURATION_MS = 3000;
   const REPLAY_FRAME_MS = 30;
@@ -77,11 +84,12 @@ export function useGamePhase({
     onExpire: handleTimerExpire,
   });
 
-  // Load extraTimeMode setting once on mount with unmount guard
+  // Load extra-time bonus from the selected age group (Issue #279, 1.3 —
+  // replaces the previous hidden extraTimeMode settings toggle).
   useEffect(() => {
     let mounted = true;
-    storageManager.getSettings().then(settings => {
-      if (mounted) setExtraTimeMode(settings.extraTimeMode);
+    getAgeGroup().then(ageGroup => {
+      if (mounted) setExtraTimeMode(getExtraTimeForAgeGroup(ageGroup));
     });
     return () => {
       mounted = false;
@@ -192,7 +200,11 @@ export function useGamePhase({
     try {
       SoundManager.playStarTap(rating);
       setUserRating(rating);
+      const starsBefore = getTotalStars(await storageManager.getProgress());
       await storageManager.saveLevelProgress(levelNumber, rating);
+      const starsAfter = getTotalStars(await storageManager.getProgress());
+      const newlyUnlocked = getNewlyUnlockedAccessories(starsBefore, starsAfter);
+      if (newlyUnlocked.length > 0) setNewMascotUnlock(newlyUnlocked[0]);
       await updateStreakAfterGame();
       await recordSession({
         durationMs: Date.now() - levelStartedAtRef.current,
@@ -296,6 +308,8 @@ export function useGamePhase({
     isReplaying,
     setIsReplaying,
     replayPaths,
+    newMascotUnlock,
+    clearMascotUnlock: () => setNewMascotUnlock(null),
     handleRatingSubmit,
     saveToGallery,
     startReplay,
