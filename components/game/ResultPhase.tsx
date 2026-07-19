@@ -4,7 +4,12 @@ import DrawingCanvas from '@components/DrawingCanvas';
 import LevelImageDisplay from '@components/LevelImageDisplay';
 import Mascot from '@components/Mascot';
 import MascotSparkle from '@components/MascotSparkle';
-import { AnimatedFeedback, AnimatedStar } from '@components/AnimatedPrimitives';
+import {
+  AnimatedFeedback,
+  AnimatedStar,
+  PressableScale,
+  PulseView,
+} from '@components/AnimatedPrimitives';
 import Colors from '../../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../../constants/Layout';
 import { getTotalLevels } from '@services/LevelManager';
@@ -229,23 +234,30 @@ export default function ResultPhase({
           </AnimatedFeedback>
         </View>
 
-        {/* 3. Weiter — prominenter primärer CTA */}
+        {/* 3. Weiter — prominenter primärer CTA. Sanfter Puls (erst nach Bewertung)
+            zieht in die nächste Runde; Press-Feedback via PressableScale. */}
         {levelNumber < getTotalLevels() ? (
-          <TouchableOpacity
-            style={styles.nextLevelButton}
-            onPress={onNextLevel}
-            accessibilityRole="button"
-          >
-            <Text style={styles.nextLevelButtonText}>{t('game.result.nextLevel')} →</Text>
-          </TouchableOpacity>
+          <PulseView enabled={userRating > 0}>
+            <PressableScale
+              style={styles.nextLevelButton}
+              onPress={onNextLevel}
+              accessibilityRole="button"
+              accessibilityLabel={t('game.result.nextLevel')}
+            >
+              <Text style={styles.nextLevelButtonText}>{t('game.result.nextLevel')} →</Text>
+            </PressableScale>
+          </PulseView>
         ) : (
-          <TouchableOpacity
-            style={styles.nextLevelButton}
-            onPress={onRestartFromLevel1}
-            accessibilityRole="button"
-          >
-            <Text style={styles.nextLevelButtonText}>🔄 {t('game.result.playAgain')}</Text>
-          </TouchableOpacity>
+          <PulseView enabled={userRating > 0}>
+            <PressableScale
+              style={styles.nextLevelButton}
+              onPress={onRestartFromLevel1}
+              accessibilityRole="button"
+              accessibilityLabel={t('game.result.playAgain')}
+            >
+              <Text style={styles.nextLevelButtonText}>🔄 {t('game.result.playAgain')}</Text>
+            </PressableScale>
+          </PulseView>
         )}
       </ScrollView>
     </>

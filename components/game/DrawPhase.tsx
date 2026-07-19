@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Platform, FlatList } from 'react-native';
 import DrawingCanvas from '@components/DrawingCanvas';
 import { ErrorBoundary } from '@components/ErrorBoundary';
+import { PressableScale } from '@components/AnimatedPrimitives';
 import { DrawingColors } from '../../constants/Colors';
 import Colors from '../../constants/Colors';
 import { PenIcon, FillIcon, EyeIcon } from './ToolIcons';
@@ -204,7 +205,11 @@ export default function DrawPhase({
           {t('game.draw.clear')}
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.primaryButton} onPress={onDone}>
+      <PressableScale
+        style={styles.primaryButton}
+        onPress={onDone}
+        accessibilityLabel={t('game.draw.done')}
+      >
         <Text
           style={[styles.primaryButtonText, layout.isSmall && styles.buttonTextSmall]}
           numberOfLines={1}
@@ -213,7 +218,7 @@ export default function DrawPhase({
         >
           {t('game.draw.done')}
         </Text>
-      </TouchableOpacity>
+      </PressableScale>
     </View>
   );
 
