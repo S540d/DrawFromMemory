@@ -55,7 +55,7 @@ components/
   ParentalGate.tsx           # Eltern-Sperre für Einstellungen
   SettingsModal.tsx          # Einstellungen-Modal (In-Game)
   ErrorBoundary.tsx          # Fehlerbehandlung für Render-Fehler
-  AnimatedPrimitives.tsx     # AnimatedCard, GlassCard, AnimatedButton, AnimatedFeedback, AnimatedStar
+  AnimatedPrimitives.tsx     # AnimatedCard, GlassCard, AnimatedButton, AnimatedFeedback, AnimatedStar, PressableScale, PulseView
   AnimatedSplashScreen.tsx   # Animierter Splash Screen
   Badge.tsx                  # UI-Primitiv: Badge
   Chip.tsx                   # UI-Primitiv: Chip
@@ -330,13 +330,15 @@ Stand `testing`: Phase A, B, C, D und E vollständig abgeschlossen (Lottie-Teil 
 
 **`AnimatedPrimitives.tsx`** exportiert:
 
-| Komponente         | Zweck                                                                                                            |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| `AnimatedCard`     | Fade-in + Slide-up Eingangs-Animation mit Stagger (50 ms/Item)                                                   |
-| `GlassCard`        | Glassmorphism + Eingangs-Animation + optionaler Press-Lift (scale 0.97, Spring) — `prefers-reduced-motion`-aware |
-| `AnimatedButton`   | Scale-Spring bei Press                                                                                           |
-| `AnimatedFeedback` | Scale + Fade beim Erscheinen (z.B. Feedback-Text)                                                                |
-| `AnimatedStar`     | Spring-Bounce-Pop beim Füllen, Stagger 80 ms/Stern, goldener Textglow — `prefers-reduced-motion`-aware           |
+| Komponente         | Zweck                                                                                                                                  |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `AnimatedCard`     | Fade-in + Slide-up Eingangs-Animation mit Stagger (50 ms/Item)                                                                         |
+| `GlassCard`        | Glassmorphism + Eingangs-Animation + optionaler Press-Lift (scale 0.97, Spring) — `prefers-reduced-motion`-aware                       |
+| `AnimatedButton`   | Scale-Spring bei Press — `prefers-reduced-motion`-aware                                                                                |
+| `AnimatedFeedback` | Scale + Fade beim Erscheinen (z.B. Feedback-Text)                                                                                      |
+| `AnimatedStar`     | Spring-Bounce-Pop beim Füllen, Stagger 80 ms/Stern, goldener Textglow — `prefers-reduced-motion`-aware                                 |
+| `PressableScale`   | Generischer Pressable mit Spring-Scale-Down beim Drücken — taktiles Feedback für schmucklose Kacheln, `prefers-reduced-motion`-aware   |
+| `PulseView`        | Sanfter Dauer-Puls (Scale-Oszillation) als Aufmerksamkeits-Hinweis für Primäraktionen; `enabled`-Prop + `prefers-reduced-motion`-aware |
 
 **`GlassCard` verwenden:**
 

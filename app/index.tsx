@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { AnimatedCard, PressableScale, PulseView } from '@components/AnimatedPrimitives';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from '@services/i18n';
@@ -145,102 +146,111 @@ export default function HomeScreen() {
         )}
       </View>
 
-      {/* Hero CTA — "Spiel starten" als dominanter zentraler Button */}
+      {/* Hero CTA — "Spiel starten" als dominanter zentraler Button.
+          Sanfter Dauer-Puls führt das Auge zur Primäraktion (prefers-reduced-motion-aware). */}
       <View style={styles.heroSlot}>
-        <TouchableOpacity
-          onPress={() => router.push('/game')}
-          accessibilityRole="button"
-          accessibilityLabel={t('home.startButton')}
-          style={styles.heroCtaWrapper}
-          activeOpacity={0.85}
-        >
-          <LinearGradient
-            colors={Colors.gradient.cta as [string, string]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.heroCtaPill}
+        <PulseView>
+          <PressableScale
+            onPress={() => router.push('/game')}
+            accessibilityRole="button"
+            accessibilityLabel={t('home.startButton')}
+            style={styles.heroCtaWrapper}
           >
-            <Text style={styles.heroCtaIcon}>▶</Text>
-            <Text style={styles.heroCtaText}>{t('home.startButton')}</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+            <LinearGradient
+              colors={Colors.gradient.cta as [string, string]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.heroCtaPill}
+            >
+              <Text style={styles.heroCtaIcon}>▶</Text>
+              <Text style={styles.heroCtaText}>{t('home.startButton')}</Text>
+            </LinearGradient>
+          </PressableScale>
+        </PulseView>
       </View>
 
-      {/* Bottom section: sekundär-Aktionen + Stats — versetzt, nicht statisch gestapelt */}
+      {/* Bottom section: sekundär-Aktionen + Stats — versetzt, nicht statisch gestapelt.
+          Gestaffelte Eingangs-Animation (AnimatedCard-Index) + Press-Feedback (PressableScale). */}
       <View style={styles.bottomSection}>
         {/* Daily Challenge — breite Karte, abgesetzt von den anderen */}
-        <TouchableOpacity
-          style={[
-            styles.dailyChallengeButton,
-            {
-              backgroundColor: colors.surface,
-              borderColor: dailyCompleted ? colors.text.light : '#F59E0B',
-            },
-            dailyCompleted && styles.dailyChallengeCompleted,
-          ]}
-          onPress={() => !dailyCompleted && router.push(`/game?level=${dailyLevel}&daily=1`)}
-          accessibilityRole="button"
-          disabled={dailyCompleted}
-        >
-          <Text style={styles.dailyChallengeEmoji}>⚡</Text>
-          <View style={styles.dailyChallengeInfo}>
-            <Text
-              style={[
-                styles.dailyChallengeTitle,
-                { color: dailyCompleted ? colors.text.secondary : '#D97706' },
-              ]}
-            >
-              {t('dailyChallenge.title')}
-            </Text>
-            <Text style={[styles.dailyChallengeMeta, { color: colors.text.secondary }]}>
-              {dailyCompleted
-                ? t('dailyChallenge.completed')
-                : `${t('dailyChallenge.level', { number: String(dailyLevel) })} · ${t('dailyChallenge.countdown', { hours: String(countdownHours), minutes: String(countdownMinutes) })}`}
-            </Text>
-          </View>
-        </TouchableOpacity>
+        <AnimatedCard index={0}>
+          <PressableScale
+            style={[
+              styles.dailyChallengeButton,
+              {
+                backgroundColor: colors.surface,
+                borderColor: dailyCompleted ? colors.text.light : '#F59E0B',
+              },
+              dailyCompleted && styles.dailyChallengeCompleted,
+            ]}
+            onPress={() => !dailyCompleted && router.push(`/game?level=${dailyLevel}&daily=1`)}
+            accessibilityRole="button"
+            disabled={dailyCompleted}
+            accessibilityState={{ disabled: dailyCompleted }}
+          >
+            <Text style={styles.dailyChallengeEmoji}>⚡</Text>
+            <View style={styles.dailyChallengeInfo}>
+              <Text
+                style={[
+                  styles.dailyChallengeTitle,
+                  { color: dailyCompleted ? colors.text.secondary : '#D97706' },
+                ]}
+              >
+                {t('dailyChallenge.title')}
+              </Text>
+              <Text style={[styles.dailyChallengeMeta, { color: colors.text.secondary }]}>
+                {dailyCompleted
+                  ? t('dailyChallenge.completed')
+                  : `${t('dailyChallenge.level', { number: String(dailyLevel) })} · ${t('dailyChallenge.countdown', { hours: String(countdownHours), minutes: String(countdownMinutes) })}`}
+              </Text>
+            </View>
+          </PressableScale>
+        </AnimatedCard>
 
         {/* Levels + Galerie + Kreativ — Side-by-Side */}
-        <View style={styles.secondaryRow}>
-          <TouchableOpacity
+        <AnimatedCard index={1} style={styles.secondaryRow}>
+          <PressableScale
             style={[
               styles.secondaryTile,
               { backgroundColor: colors.surface, borderColor: colors.primary },
             ]}
             onPress={() => router.push('/levels')}
             accessibilityRole="button"
+            accessibilityLabel={t('home.levelsButton')}
           >
             <Text style={[styles.secondaryTileText, { color: colors.primary }]}>
               {t('home.levelsButton')}
             </Text>
-          </TouchableOpacity>
+          </PressableScale>
 
-          <TouchableOpacity
+          <PressableScale
             style={[
               styles.secondaryTile,
               { backgroundColor: colors.surface, borderColor: colors.primary },
             ]}
             onPress={() => router.push('/gallery')}
             accessibilityRole="button"
+            accessibilityLabel={t('home.galleryButton')}
           >
             <Text style={[styles.secondaryTileText, { color: colors.primary }]}>
               {t('home.galleryButton')}
             </Text>
-          </TouchableOpacity>
+          </PressableScale>
 
-          <TouchableOpacity
+          <PressableScale
             style={[
               styles.secondaryTile,
               { backgroundColor: colors.surface, borderColor: colors.primary },
             ]}
             onPress={() => router.push('/creative')}
             accessibilityRole="button"
+            accessibilityLabel={t('home.creativeButton')}
           >
             <Text style={[styles.secondaryTileText, { color: colors.primary }]}>
               🎨 {t('home.creativeButton')}
             </Text>
-          </TouchableOpacity>
-        </View>
+          </PressableScale>
+        </AnimatedCard>
 
         {/* Quick Stats — dezent am unteren Rand */}
         <QuickStatsCards />

@@ -84,6 +84,19 @@ jest.mock('../../components/AnimatedPrimitives', () => {
         </TouchableOpacity>
       );
     },
+    PulseView: ({ children }: any) => <View>{children}</View>,
+    PressableScale: ({ children, onPress, accessibilityLabel, disabled }: any) => {
+      const { TouchableOpacity } = require('react-native');
+      return (
+        <TouchableOpacity
+          onPress={onPress}
+          accessibilityLabel={accessibilityLabel}
+          disabled={disabled}
+        >
+          {children}
+        </TouchableOpacity>
+      );
+    },
   };
 });
 
