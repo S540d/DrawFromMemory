@@ -247,7 +247,7 @@ export default function HomeScreen() {
             accessibilityLabel={t('home.creativeButton')}
           >
             <Text style={[styles.secondaryTileText, { color: colors.primary }]}>
-              🎨 {t('home.creativeButton')}
+              {t('home.creativeButton')}
             </Text>
           </PressableScale>
         </AnimatedCard>
