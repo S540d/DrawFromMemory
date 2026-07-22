@@ -55,12 +55,17 @@ components/
   ParentalGate.tsx           # Eltern-Sperre für Einstellungen
   SettingsModal.tsx          # Einstellungen-Modal (In-Game)
   ErrorBoundary.tsx          # Fehlerbehandlung für Render-Fehler
-  AnimatedPrimitives.tsx     # AnimatedCard, GlassCard, AnimatedButton, AnimatedFeedback, AnimatedStar
+  AnimatedPrimitives.tsx     # AnimatedCard, GlassCard, AnimatedButton, AnimatedFeedback, AnimatedStar, PressableScale, PulseView
   AnimatedSplashScreen.tsx   # Animierter Splash Screen
   Badge.tsx                  # UI-Primitiv: Badge
   Chip.tsx                   # UI-Primitiv: Chip
   Button.tsx                 # UI-Primitiv: Button (primary = LinearGradient cta, secondary = outlined, ghost = transparent, danger = solid)
   SkeletonLoader.tsx         # Skeleton Placeholder
+  WebTrustFooter.tsx         # Nur Web: Play-Store-Link + Datenschutz-Link am Ende der Startseite (Issue #279, 3.4)
+  Mascot.tsx                 # Begleitfigur "Mali" (SVG-Chamäleon), Mood-Varianten, kosmetische Accessoires (Issue #279, 1.1)
+  MascotUnlockToast.tsx      # Toast bei neu freigeschaltetem Mascot-Accessoire (spiegelt BadgeUnlockToast)
+  MascotSparkle.tsx          # Lottie-Sparkle-Effekt neben der Mascot bei 5 Sternen/Unlocks (Issue #279, 2.2)
+  AgeGroupModal.tsx          # Erst-Start-Altersauswahl (3-5/6-8/9+), ersetzt den alten extra_time_mode-Schalter (Issue #279, 1.3)
 
 services/
   FloodFillService.ts        # Flood-Fill-Algorithmus (Scanline, 1-Bit-Palette)
@@ -72,6 +77,7 @@ services/
   RatingManager.ts           # Stern-Bewertungen und rotierende Motivations-Nachrichten
   SoundManager.ts            # Web Audio API (Web) + expo-haptics (Native)
   SentryService.ts           # Sentry-Wrapper (init, captureException, etc.)
+  AnalyticsService.ts        # Privacy-freundliches Web-Analytics (Plausible-kompatibel) — no-op ohne EXPO_PUBLIC_PLAUSIBLE_DOMAIN
   ThemeContext.tsx            # ThemeProvider + useTheme Hook (light/dark/system)
   i18n.ts                    # Übersetzungs-Service (de/en/es/fr/it/nl/pl) mit listener-basiertem Reload + automatischer Geräte-Spracherkennung
   ReviewManager.ts           # In-App-Review-Trigger: 5-Sterne oder 3. Daily Challenge, 90-Tage-Cooldown — deaktiviert via EXPO_PUBLIC_ENABLE_IN_APP_REVIEW
@@ -79,6 +85,8 @@ services/
   ShareService.native.ts     # PNG-Export (Native): Skia Surface → expo-file-system + expo-sharing
   useGamePhase.ts            # Spielphasen-Hook: memorize / draw / result + Replay
   useTimer.ts                # Timer-Hook (Countdown, pause/resume via phase)
+  MascotManager.ts           # Einheitliches Fortschrittssystem: Gesamt-Sterne → Mascot-Accessoire-Unlocks, Mood/Greeting-Logik (Issue #279, 1.1)
+  AgeGroupManager.ts         # Altersstufen-Auswahl (3-5/6-8/9+): Anzeigedauer-Bonus, Standard-Strichstärke, empfohlener Level-Bereich (Issue #279, 1.3)
 
 constants/
   Colors.ts                  # Design-Tokens: Primärfarben, Gradienten, shadow.*, glass.*, Drawing-Farben
@@ -87,7 +95,7 @@ constants/
 
 utils/
   platform.ts                # isWeb/isIOS/isAndroid, safeWebAPI(), Storage-Adapter
-  useScreenLayout.ts         # Responsiver Layout-Hook (xs/sm/md/lg nach nutzbarer Höhe)
+  useScreenLayout.ts         # Responsiver Layout-Hook (xs/sm/md/lg nach nutzbarer Höhe; isLandscape/isTablet + toolbarPosition 'bottom'|'side' — Issue #279, 2.4)
 
 types/
   index.ts                   # Globale TypeScript-Typen (LevelImage, GamePhase, AppSettings, …)
@@ -132,6 +140,7 @@ npm run lint                       # ESLint
 npm run validate:svg-counts        # Prüft SVG-Element-Counts in LevelImageDisplay.tsx
 npx tsc --noEmit                   # TypeScript-Check
 npm run build:web                  # Web-Build für gh-pages (expo export --platform web)
+npm run build:doctor               # Preflight-Checks vor lokalem Build (Disk/JDK/foojay/Sollstand/Branch)
 npm run build:android              # EAS Build (Android, Production)
 npm run build:android:preview      # EAS Build (Android, Preview APK)
 npm run build:android:local        # Lokaler EAS-Build (preview)
@@ -177,7 +186,7 @@ memorize  →  draw  →  result
 3. **Result**: Sternbewertung (1–5), Replay-Animation, Speichern in Galerie möglich.
 
 Level-Anzahl: 20 (Difficulty 1–5). Alle Level haben 3 s Anzeigezeit.
-Bilderpool: `ImagePoolManager.ts` wählt zufällig nach Difficulty-Klasse aus. Aktuell **51 Bilder** (inkl. Tiere v1 Pack — 10 Tiere, PR #221 + Fahrzeuge v1 Pack — 10 Fahrzeuge, PR #254).
+Bilderpool: `ImagePoolManager.ts` wählt zufällig nach Difficulty-Klasse aus. Aktuell **81 Bilder** (inkl. Tiere v1 Pack — 10 Tiere, PR #221 + Fahrzeuge v1 Pack — 10 Fahrzeuge, PR #254 + Natur/Märchen/Essen v1 Packs — je 10 Bilder, Issue #279 1.5).
 
 Fortschrittsanzeige oben im Spielschirm (`app/game.tsx`): proportionaler Balken (`levelNumber / totalLevels`), kein Punkte-Indikator mehr (PR #272 — die vorherigen 5 fest codierten Punkte waren bei 20 Levels irreführend).
 
@@ -228,6 +237,16 @@ interface DrawingPath {
 
 APK-Testing-Feedback: Startbildschirm-Button „Kreativ" → „Freies Malen" umbenannt (nur DE-Locale, `locales/de/translations.json`), Emoji 🎨 vor dem Button-Text in `app/index.tsx` entfernt. In den Einstellungen (`components/SettingsModal.tsx`) verlor der Bereich „Über & Support" (`settings.aboutSupport`) die Icons im Action-Grid (🏆 👨‍👩‍👧 ✉️ ☕ ↗ ℹ) — nur noch Text-Labels, `actionGridIcon`-Style entfernt.
 
+### Tablet-/Landscape-Layout (PR #287, Issue #279, 2.4)
+
+`useScreenLayout()` liefert zusätzlich `isLandscape` (width > height), `isTablet` (kürzere Kante ≥ 600px) und `toolbarPosition` (`'bottom' | 'side'`). Im ausreichend breiten Querformat (`safeWidth >= 480`) wechselt `toolbarPosition` auf `'side'`:
+
+- `DrawPhase.tsx` rendert Zeichenfläche und Werkzeugleiste dann nebeneinander (Farbauswahl/Werkzeuge/Strichstärken vertikal gestapelt in einer schmalen Seitenleiste, Breite `sideToolbarWidth`) statt vertikal gestapelt.
+- Die Zeichenfläche bekommt dadurch mehr Höhe (`canvasUpperLimitBase` 640 statt 320/400, da keine Werkzeugleiste mehr darunter Platz braucht).
+- Die Merke-Phase bekommt ein größeres Vorschaubild (`memorizeImageSize`-Obergrenze an die verfügbare Breite gekoppelt statt fix 280px).
+- Bei zu schmalem Querformat (z.B. Split-Screen) bleibt es beim bisherigen `'bottom'`-Layout.
+- `app.json`s `orientation: "default"` + `android:resizeableActivity="true"` (Android-Manifest-Teil von Issue #278) kamen bereits in PR #281.
+
 ---
 
 ## Flood-Fill Architektur (Native)
@@ -263,33 +282,67 @@ Storage-Keys beginnen mit `@merke_male:`.
 
 Gespeicherte Felder: `progress`, `theme`, `language`, `sound_enabled`, `music_enabled`, `extra_time_mode`, `gallery`.
 
+> `extra_time_mode` bleibt als Feld in `AppSettings`/`StorageManager` erhalten (Rückwärtskompatibilität, `LevelManager.getDisplayDuration()` nutzt es weiterhin als Parameter), steuert aber die tatsächliche Anzeigedauer im Spiel nicht mehr — das übernimmt jetzt die Altersstufe aus `AgeGroupManager` (eigener Storage-Key `@merke_male:age_group`, siehe unten).
+
+---
+
+## Mascot & Altersstufen (Issue #279, 1.1 + 1.3)
+
+**Mascot "Mali"** (`components/Mascot.tsx`, `services/MascotManager.ts`): SVG-Chamäleon-Begleitfigur, kein Lottie-Charakter (siehe `docs/ILLUSTRATION_STYLEGUIDE.md` für den visuellen Stil). Begrüßt auf dem Home-Screen (streak-abhängige Nachricht) und kommentiert die Ergebnis-Phase mit einer `MascotMood` (`neutral`/`happy`/`excited`/`encouraging`, abgeleitet aus der Sterne-Bewertung via `getResultMoodForStars()`).
+
+**Ein Fortschrittssystem statt eines weiteren Parallel-Systems:** Gesamt-Sterne (Summe aller `bestRating`-Werte aus `StorageManager.getProgress()`, `getTotalStars()`) schalten kosmetische Mascot-Accessoires frei — `MASCOT_UNLOCKS` in `MascotManager.ts`:
+
+| Schwelle (Gesamt-Sterne) | Accessoire   |
+| ------------------------ | ------------ |
+| 15                       | Hut          |
+| 40                       | Sonnenbrille |
+| 80                       | Fliege       |
+| 150                      | Krone        |
+
+Bewusst **kein** separates XP-System, keine zusätzliche Währung — nur diese eine Ressource. `useGamePhase.handleRatingSubmit()` vergleicht Sterne-Stand vor/nach dem Speichern (`getNewlyUnlockedAccessories()`) und zeigt bei neuem Unlock `MascotUnlockToast` (mit `MascotSparkle`-Lottie-Effekt, siehe unten).
+
+**Altersstufen** (`services/AgeGroupManager.ts`, `components/AgeGroupModal.tsx`): ersetzen den früher komplett UI-losen `extra_time_mode`-Schalter durch eine bewusste Auswahl (3-5 / 6-8 / 9+) beim ersten Start, vor dem Onboarding-Tutorial (`app/index.tsx`). Änderbar jederzeit über einen Segment-Control in `SettingsModal.tsx`. Steuert:
+
+- **Anzeigedauer-Bonus**: `getExtraTimeForAgeGroup()` — nur 3-5 bekommt den (weiterhin über `LevelManager.getDisplayDuration(level, extraTimeMode)` berechneten) Zeitbonus.
+- **Standard-Strichstärke**: `getDefaultStrokeWidthForAgeGroup()` — 3-5 dick (5), 6-8 mittel (3), 9+ dünn (2); wird beim Rundenstart in `app/game.tsx` per `drawing.setStrokeWidth()` gesetzt.
+- **Empfohlener Level-Bereich** (Bildkomplexität-Hinweis, **keine harte Sperre**): `getRecommendedLevelRange()` — dezenter Hinweistext auf `app/levels.tsx`, alle Level bleiben für jede Altersstufe spielbar.
+
 ---
 
 ## UI/UX Design System (Issue #176)
 
-Stand `testing`: Phase A, B, C und E abgeschlossen, Phase D (Konfetti + Jubel-Sound, TimerArc, Phasen-Crossfade, Stats-Counter) größtenteils umgesetzt — nur Lottie offen.
+Stand `testing`: Phase A, B, C, D und E vollständig abgeschlossen (Lottie-Teil aus Phase D via PR #286).
 
 ### Phase-Übersicht
 
-| Phase                                                                       | Status                                                                                                           | Branch/PR                            |
-| --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie         | ✅ in `testing`                                                                                                  | PR merged                            |
-| **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in `testing`                                                                                                  | PR #178 merged                       |
-| **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh        | ✅ in `testing`                                                                                                  | PR #257 merged                       |
-| **D: Delight** — Lottie, Konfetti, Mikro-Sounds                             | 🔶 größtenteils (Konfetti + Jubel-Sound PR #253, TimerArc/Phasen-Crossfade/Stats-Counter PR #257) — Lottie offen | —                                    |
-| **E: Onboarding** — First-Run-Tour                                          | ✅ in `testing`                                                                                                  | PR #261 merged (In-Game Coach-Marks) |
+| Phase                                                                       | Status          | Branch/PR                                                                        |
+| --------------------------------------------------------------------------- | --------------- | -------------------------------------------------------------------------------- |
+| **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie         | ✅ in `testing` | PR merged                                                                        |
+| **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in `testing` | PR #178 merged                                                                   |
+| **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh        | ✅ in `testing` | PR #257 merged                                                                   |
+| **D: Delight** — Lottie, Konfetti, Mikro-Sounds                             | ✅ in `testing` | Konfetti/Sound PR #253, TimerArc/Crossfade/Stats PR #257, Lottie-Sparkle PR #286 |
+| **E: Onboarding** — First-Run-Tour                                          | ✅ in `testing` | PR #261 merged (In-Game Coach-Marks)                                             |
+
+### Lottie (PR #286, Issue #279 2.2)
+
+`lottie-react-native` war bereits als Dependency installiert, aber nie verdrahtet — `components/MascotSparkle.tsx` ist die erste echte Nutzung: ein hand-authored Lottie-JSON (`assets/lottie/sparkle.json`) als Twinkle-Effekt neben der Mascot bei 5-Sterne-Ergebnissen und neuen Accessoire-Unlocks. Respektiert `prefers-reduced-motion`.
+
+- **Web-Plattform braucht zusätzlich `@lottiefiles/dotlottie-react`** als Peer-Dependency von `lottie-react-native` — ohne sie bricht `expo export --platform web`, sobald `LottieView` real importiert wird (war vorher nie der Fall, da ungenutzt).
+- **Jest-Mock:** `__mocks__/lottie-react-native.js` (analog zu den Skia-/react-native-svg-Mocks) — die native/Web-Implementierungen laufen nicht unter jsdom.
 
 ### Neue Primitiven (Phase B)
 
 **`AnimatedPrimitives.tsx`** exportiert:
 
-| Komponente         | Zweck                                                                                                            |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| `AnimatedCard`     | Fade-in + Slide-up Eingangs-Animation mit Stagger (50 ms/Item)                                                   |
-| `GlassCard`        | Glassmorphism + Eingangs-Animation + optionaler Press-Lift (scale 0.97, Spring) — `prefers-reduced-motion`-aware |
-| `AnimatedButton`   | Scale-Spring bei Press                                                                                           |
-| `AnimatedFeedback` | Scale + Fade beim Erscheinen (z.B. Feedback-Text)                                                                |
-| `AnimatedStar`     | Spring-Bounce-Pop beim Füllen, Stagger 80 ms/Stern, goldener Textglow — `prefers-reduced-motion`-aware           |
+| Komponente         | Zweck                                                                                                                                  |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `AnimatedCard`     | Fade-in + Slide-up Eingangs-Animation mit Stagger (50 ms/Item)                                                                         |
+| `GlassCard`        | Glassmorphism + Eingangs-Animation + optionaler Press-Lift (scale 0.97, Spring) — `prefers-reduced-motion`-aware                       |
+| `AnimatedButton`   | Scale-Spring bei Press — `prefers-reduced-motion`-aware                                                                                |
+| `AnimatedFeedback` | Scale + Fade beim Erscheinen (z.B. Feedback-Text)                                                                                      |
+| `AnimatedStar`     | Spring-Bounce-Pop beim Füllen, Stagger 80 ms/Stern, goldener Textglow — `prefers-reduced-motion`-aware                                 |
+| `PressableScale`   | Generischer Pressable mit Spring-Scale-Down beim Drücken — taktiles Feedback für schmucklose Kacheln, `prefers-reduced-motion`-aware   |
+| `PulseView`        | Sanfter Dauer-Puls (Scale-Oszillation) als Aufmerksamkeits-Hinweis für Primäraktionen; `enabled`-Prop + `prefers-reduced-motion`-aware |
 
 **`GlassCard` verwenden:**
 
@@ -330,13 +383,17 @@ Colors.glass.darkShadow; // { boxShadow, elevation } — dunkel
 
 Alle `EXPO_PUBLIC_*`-Flags sind zur Build-Zeit eingefroren (Expo bündelt sie statisch).
 
-| Env-Var                            | Default | Bedeutung                                                                                                       |
-| ---------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------- |
-| `EXPO_PUBLIC_SENTRY_DSN`           | —       | Sentry-Reporting aktivieren (leer = no-op)                                                                      |
-| `EXPO_PUBLIC_ENABLE_IN_APP_REVIEW` | `false` | In-App-Review-Prompt via `expo-store-review` — **deaktiviert bis Play-Store-Listing auditiert** (Issue #219 P0) |
+| Env-Var                            | Default             | Bedeutung                                                                                                       |
+| ---------------------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `EXPO_PUBLIC_SENTRY_DSN`           | —                   | Sentry-Reporting aktivieren (leer = no-op)                                                                      |
+| `EXPO_PUBLIC_ENABLE_IN_APP_REVIEW` | `false`             | In-App-Review-Prompt via `expo-store-review` — **deaktiviert bis Play-Store-Listing auditiert** (Issue #219 P0) |
+| `EXPO_PUBLIC_PLAUSIBLE_DOMAIN`     | —                   | Privacy-freundliches, cookie-loses Web-Analytics (Plausible-kompatibel) — leer = no-op (Issue #279, 3.4)        |
+| `EXPO_PUBLIC_PLAUSIBLE_SCRIPT_SRC` | Plausible-Cloud-URL | Überschreibt die Script-Quelle für self-hosted Plausible/Umami-kompatible Instanzen                             |
 
 > **Aktivieren:** In `.env` oder EAS-Build-Profil `EXPO_PUBLIC_ENABLE_IN_APP_REVIEW=true` setzen.  
 > Der Flag wird in `services/ReviewManager.ts` ausgewertet; kein Code-Change nötig.
+>
+> **Analytics aktivieren:** `EXPO_PUBLIC_PLAUSIBLE_DOMAIN=s540d.github.io` (oder eigene Domain) setzen — Tool-Entscheidung (Plausible-Cloud vs. self-hosted) und Domain-Wahl liegen beim Team, der Flag ist nur die Infrastruktur dafür (`services/AnalyticsService.ts`, aufgerufen in `app/_layout.tsx`).
 
 ---
 
@@ -368,7 +425,8 @@ Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerend
 ### Tests
 
 - Test-Dateien liegen bei `services/__tests__/`, `components/__tests__/`, `utils/__tests__/`, `__tests__/`
-- Jest-Umgebung: `jsdom`; Skia wird gemockt via `__mocks__/@shopify/react-native-skia.js`, `react-native-svg` via `__mocks__/react-native-svg.js` (beide global, automatisch für alle Tests aktiv — kein `jest.mock()`-Aufruf nötig)
+- Jest-Umgebung: `jsdom`; Skia wird gemockt via `__mocks__/@shopify/react-native-skia.js`, `react-native-svg` via `__mocks__/react-native-svg.js`, `lottie-react-native` via `__mocks__/lottie-react-native.js` (alle global, automatisch für alle Tests aktiv — kein `jest.mock()`-Aufruf nötig)
+- `getByTestId`/`queryByTestId` aus `@testing-library/react-native` matchen `node.props.testID` auf der React-Test-Instance-Ebene — unter der `react-native-web`-Abbildung (`moduleNameMapper` in `jest.config.js`) landet der Prop auf dem finalen Host-Element aber als `data-testid`, nicht mehr als `testID`, wodurch beide Queries nichts finden. Für testID-Prüfungen stattdessen `UNSAFE_getAllByType(View)` + `.props.testID`-Filter verwenden (etabliertes Muster in diesem Repo, siehe z.B. `MascotSparkle.test.tsx`).
 - `@testing-library/dom` muss installiert sein (Peer-Dep von `@testing-library/react` v16)
 - `npm test` (kein `--runInBand` nötig, aber stabil)
 
@@ -385,7 +443,7 @@ Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerend
 ## Wachstums-Roadmap (Issue #219)
 
 Übergeordneter Plan, um aus der App eine dauerhaft wachsende Kids-App im Play Store zu machen.
-Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusätzlich die Themen-Pack-Auswahl-UI (PR #271), die Draw-UX-Fixes (Icons/Strichstärken-Farbe/Fortschrittsbalken, PR #272) und (offen als PR #292) die Startbildschirm-/Einstellungen-Label-/Icon-Anpassungen aus APK-Testing-Feedback — noch nicht in `main` gemerged. Enthält Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten, weitere Sprachen, Sentry-ErrorBoundary (#264) und den transform-origin Web-Fix (#265). **Play Store noch nicht auf v1.7.0** — Release-Aufgabe in Issue #267.
+Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusätzlich die Themen-Pack-Auswahl-UI (PR #271), die Draw-UX-Fixes (Icons/Strichstärken-Farbe/Fortschrittsbalken, PR #272), die komplette Issue-#279-PR-Serie (Mascot/Altersstufen #284, Stilguide #285, Lottie/Icon-Refresh #286, Tablet-/Landscape-Layout #287, Natur/Märchen/Essen-Packs #288) und die Startbildschirm-/Einstellungen-Label-/Icon-Anpassungen aus APK-Testing-Feedback (PR #292) — noch nicht in `main` gemerged. Enthält Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten, weitere Sprachen, Sentry-ErrorBoundary (#264) und den transform-origin Web-Fix (#265). **Play Store noch nicht auf v1.7.0** — Release-Aufgabe in Issue #267.
 
 ### P0 — Foundation für Wachstum
 
@@ -399,40 +457,74 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusät
 
 ### P1 — Content & Retention
 
-| Task                                                                     | Status              |
-| ------------------------------------------------------------------------ | ------------------- |
-| **Themen-Pack Tiere v1** (10 Bilder, #222)                               | ✅ in main (v1.7.0) |
-| **Themen-Pack Fahrzeuge v1** (10 Bilder, PR #254)                        | ✅ in main (v1.7.0) |
-| **Themen-Pack-Auswahl-UI** (Chip-Filter Alle/Tiere/Fahrzeuge, PR #271)   | ✅ in `testing`     |
-| Themen-Pack Natur / Märchen / weitere                                    | 🔲 offen            |
-| **Spielvarianten** (Nur Umriss merken, Spiegelbild, Kreativ-Modus, #247) | ✅ in main (v1.7.0) |
-| Avatar & Personalisierung                                                | 🔲 offen            |
-| XP- & Level-System                                                       | 🔲 offen            |
-| Wöchentliche Challenge                                                   | 🔲 offen            |
+| Task                                                                     | Status                                                                                                       |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| **Themen-Pack Tiere v1** (10 Bilder, #222)                               | ✅ in main (v1.7.0)                                                                                          |
+| **Themen-Pack Fahrzeuge v1** (10 Bilder, PR #254)                        | ✅ in main (v1.7.0)                                                                                          |
+| **Themen-Pack-Auswahl-UI** (Chip-Filter Alle/Tiere/Fahrzeuge, PR #271)   | ✅ in `testing`                                                                                              |
+| **Themen-Pack Natur/Märchen/Essen v1** (je 10 Bilder, Issue #279 1.5)    | 🟡 PR offen                                                                                                  |
+| Content-Pipeline: Ziel 100+ Bilder (Issue #279 1.5)                      | 🟡 81/100+ — saisonaler Pack-Mechanismus noch offen                                                          |
+| **Spielvarianten** (Nur Umriss merken, Spiegelbild, Kreativ-Modus, #247) | ✅ in main (v1.7.0)                                                                                          |
+| **Avatar & Personalisierung** (Mascot "Mali", Issue #279 1.1)            | ✅ in `testing` — bewusst ohne separates XP-System, siehe Zeile darunter                                     |
+| ~~XP- & Level-System~~                                                   | ❌ bewusst nicht (Issue #279 Anti-Bloat) — Gesamt-Sterne schalten stattdessen direkt Mascot-Accessoires frei |
+| Wöchentliche Challenge                                                   | ❌ bewusst nicht (Issue #279 Anti-Bloat) — ein Loop (Daily Challenge) statt mehrerer Parallel-Systeme        |
 
 ### P2 — Reichweite & Trust
 
-| Task                                                     | Status                                                    |
-| -------------------------------------------------------- | --------------------------------------------------------- |
-| Designed for Families Programm                           | 🔲 offen                                                  |
-| **Weitere Sprachen** (ES/FR/IT/NL/PL, #247)              | ✅ in main (v1.7.0) — automatische Geräte-Spracherkennung |
-| **Sharing-Feature / PNG-Export** (ShareService, PR #255) | ✅ in main (v1.7.0)                                       |
-| Push-Notifications (opt-in)                              | 🔲 offen                                                  |
+| Task                                                                   | Status                                                    |
+| ---------------------------------------------------------------------- | --------------------------------------------------------- |
+| Designed for Families Programm                                         | 🔲 offen                                                  |
+| **Weitere Sprachen** (ES/FR/IT/NL/PL, #247)                            | ✅ in main (v1.7.0) — automatische Geräte-Spracherkennung |
+| **Sharing-Feature / PNG-Export** (ShareService, PR #255)               | ✅ in main (v1.7.0)                                       |
+| Push-Notifications (opt-in)                                            | 🔲 offen                                                  |
+| **Tablet-/Landscape-Layout** (Issue #279 2.4, deckt #278 UI-seitig ab) | ✅ in `testing` (PR #287)                                 |
 
 ### Themen-Pack Architektur (ab PR #221, Auswahl-UI ab PR #271)
 
 - `LevelImage.pack?: string` — optionaler Tag (z.B. `'tiere-v1'`)
 - Bilder ohne `minLevel` sind ab dem passenden Difficulty-Level verfügbar
 - Neue Packs: einfach neue Cases in `LevelImageDisplay.tsx` + Einträge in `ImagePoolManager.ts` + `IMAGE_ELEMENT_COUNTS`
-- Pflicht nach jedem neuen SVG: `npm run validate:svg-counts` (derzeit 51 Einträge)
+- Pflicht nach jedem neuen SVG: `npm run validate:svg-counts` (derzeit 81 Einträge)
 - `getAvailablePacks()` (`ImagePoolManager.ts`) liefert alle im Pool vorkommenden Pack-IDs für die Chip-Filter-UI in `app/levels.tsx`
 - Neue Packs erscheinen automatisch als Filteroption — für ein sprechendes Label in der UI zusätzlich einen Eintrag in `PACK_LABEL_KEYS` (`app/levels.tsx`) sowie `levels.pack.<label>` in allen 7 Locale-Dateien ergänzen
+- **Visueller Stil verbindlich:** [`docs/ILLUSTRATION_STYLEGUIDE.md`](docs/ILLUSTRATION_STYLEGUIDE.md) (Linienstärke, Farbpalette aus `Colors.ts`, Ziel-Elementanzahl pro Difficulty, Produktionsweg für neue SVGs) — Grundlage für Issue #279 Säule 2.1 und die Content-Pipeline (1.5, Ziel 100+ Bilder)
 
 ---
 
 ## Offene Issues / Bekannte Einschränkungen
 
 - **jest-expo → @tootallnate/once** (low severity): Fix würde Breaking-Major-Upgrade von jest-expo erfordern (aktuell `~55.0.9`) — noch nicht gemacht
+- **foojay-resolver-Patch** (`patches/@react-native+gradle-plugin+0.83.6.patch`, via `postinstall`): hebt den in RN 0.83 gebündelten foojay-resolver 0.5.0 → 1.0.0, sonst bricht jeder Android-Build unter Gradle 9 / JDK 21 ab (`IBM_SEMERU`-Crash, Issue #276, Upstream facebook/react-native#56287). **Bei RN-Upgrade prüfen:** `grep foojay node_modules/@react-native/gradle-plugin/settings.gradle.kts` — bündelt die neue Version bereits ≥1.0.0, Patch löschen. `npm run build:doctor` warnt automatisch, falls der Pin wieder auf 0.5.0 steht.
 - **Nexus 6**: EOL — `minSdkVersion` = 26; Nexus 6 endet bei API 25 (geschlossen via Issue #172)
 - **iOS**: Nicht primär getestet (Fokus auf Web + Android)
 - **iOS App Store**: Bundle ID `com.s540d.merkeundmale`, App Store URL noch TBD
+
+<!-- GLOBAL POLICY:START -->
+
+## [GLOBAL POLICY]
+
+> Automatisch synchronisiert aus project-templates (Issue #7). Nicht manuell editieren –
+> Änderungen hier werden beim nächsten Sync überschrieben. Quelle anpassen statt lokal.
+
+- PRs immer gegen `testing`, nie direkt gegen `staging` oder `main`
+- Merge auf `main` nur mit expliziter schriftlicher Freigabe
+- `--delete-branch` nur für Feature-Branches (nie staging/testing)
+- **Lokales Branch-Cleanup:** `main` und `testing` NIE löschen — auch nicht beim Bulk-Delete verwaister `[gone]`-Branches. Ein fehlender `origin/main`/`origin/testing` ist ein **wiederherzustellender Defekt** (lokal behalten, nach origin zurückpushen), kein Aufräum-Signal.
+- `--no-verify` nur auf explizite Bitte
+- **Vor jedem Push: lokale Tests ausführen** (`npm test` bzw. projektspezifischer Test-Befehl) – kein Push ohne grüne lokale Tests
+- **Kein Merge bei CI-Fail** – Branch Protection erzwingt das technisch; nie mit `--admin` umgehen außer auf explizite Bitte
+
+## [ANDROID BUILD – PFLICHTREGELN]
+
+- **Git-Tag** nach jedem Play-Store-Upload setzen: `git tag vX.Y.Z && git push origin vX.Y.Z` – der Tag markiert den tatsächlich veröffentlichten Stand und dient als Changelog-Baseline für den nächsten Build
+- **EAS Local Build (DrawFromMemory):** Workingdir vor jedem Build leeren: `rm -rf ~/tmp/eas-build && mkdir -p ~/tmp/eas-build` – ein nicht-leeres Verzeichnis bricht den Build sofort ab
+- **Disk-Check vor EAS Build:** Skia-Libraries benötigen ~5–8 GB. Bei < 5 GB frei: `npm cache clean --force && rm -rf ~/.npm/_npx` (~13 GB, sicher löschbar)
+- **JAVA_HOME** für EAS/Expo-Builds explizit auf Android Studio JBR setzen: `export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"`
+- **Gradle-Lock nach Absturz:** Bei "Cannot lock file hash cache"-Fehler Daemons stoppen: `pkill -f GradleDaemon`, dann Workingdir leeren und neu starten
+- **AAB-Archiv:** Gebaute Release-AABs in einem **gitignored** `aab-archive/`-Verzeichnis im Repo-Root ablegen (in `.gitignore` aufnehmen – AABs sind 3–110 MB und gehören nie in die Git-History). Benennung: `<Projekt>-vX.Y.Z-vc<versionCode>-YYYY-MM-DD.aab`. **Retention: max. 2 Dateien** (aktuelles Release + ein Vorgänger für schnelles Rollback); ältere AABs löschen. Der Git-Tag `vX.Y.Z` ist die eigentliche Release-Baseline – ältere AABs lassen sich daraus jederzeit neu bauen.
+
+## [CI – CACHE-CLEANUP]
+
+- **Cache-Cleanup-Workflow** (`.github/workflows/cache-cleanup.yml`) in jedem Repo mit GitHub-Actions-Caches: löscht wöchentlich (So 03:00 UTC) bzw. on-demand alle Action-Caches älter als der jeweils letzte Lauf. GitHub-Limit ist 10 GB pro Repo – ohne Cleanup laufen Build-Caches (node_modules, Gradle, Expo) voll und verdrängen frische Einträge. Vorlage: `cache-cleanup.yml` in project-templates.
+
+<!-- GLOBAL POLICY:END -->

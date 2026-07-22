@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Platform, FlatList } from 'react-native';
 import DrawingCanvas from '@components/DrawingCanvas';
 import { ErrorBoundary } from '@components/ErrorBoundary';
+import { PressableScale } from '@components/AnimatedPrimitives';
 import { DrawingColors } from '../../constants/Colors';
 import Colors from '../../constants/Colors';
 import { PenIcon, FillIcon, EyeIcon } from './ToolIcons';
@@ -25,6 +26,11 @@ export default function DrawPhase({
 
   const levelName = currentLang === 'en' ? currentImage?.displayNameEn : currentImage?.displayName;
 
+  // Querformat: Werkzeugleiste steht neben statt unter der Zeichenfläche,
+  // damit die Zeichenfläche die verfügbare Höhe voll ausnutzt (Issue #279, 2.4).
+  const isSideToolbar = layout.toolbarPosition === 'side';
+  const sideToolbarWidth = layout.sideToolbarWidth ?? 120;
+
   const dynCanvasContainer = useMemo(
     () => ({
       maxHeight: layout.canvasMaxHeight,
@@ -35,10 +41,185 @@ export default function DrawPhase({
   );
 
   const dynToolbar = useMemo(
-    () => ({
-      marginVertical: layout.toolbarMarginVertical,
-    }),
-    [layout.toolbarMarginVertical],
+    () =>
+      isSideToolbar
+        ? { marginVertical: 0, marginLeft: Spacing.sm, width: sideToolbarWidth }
+        : { marginVertical: layout.toolbarMarginVertical },
+    [isSideToolbar, sideToolbarWidth, layout.toolbarMarginVertical],
+  );
+
+  const colorList = (
+    <FlatList
+      data={DrawingColors}
+      keyExtractor={item => item.hex}
+      horizontal={!isSideToolbar}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={isSideToolbar ? styles.colorColumnContent : styles.colorRowContent}
+      renderItem={({ item }) => (
+        <TouchableOpacity
+          style={[
+            styles.inlineColorSwatch,
+            { borderColor: item.border ?? colors.border },
+            drawing.color === item.hex && styles.inlineColorSwatchActive,
+          ]}
+          onPress={() => drawing.setColor(item.hex)}
+          accessibilityLabel={currentLang === 'de' ? item.name : item.nameEn}
+          accessibilityRole="button"
+        >
+          <View style={[styles.inlineColorSwatchInner, { backgroundColor: item.hex }]} />
+          {drawing.color === item.hex && <Text style={styles.inlineColorCheckmark}>✓</Text>}
+        </TouchableOpacity>
+      )}
+    />
+  );
+
+  const toolControls = (
+    <View style={[styles.toolRow, isSideToolbar && styles.toolRowWrap]}>
+      <TouchableOpacity
+        style={[
+          styles.toolToggleButton,
+          { backgroundColor: colors.surface, borderColor: colors.border },
+          drawing.tool === 'brush' && styles.toolToggleButtonActive,
+        ]}
+        onPress={() => drawing.setTool('brush')}
+        accessibilityLabel={t('game.draw.toolBrush')}
+        accessibilityRole="button"
+      >
+        <PenIcon
+          size={20}
+          color={drawing.tool === 'brush' ? Colors.drawing.white : colors.text.secondary}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.toolToggleButton,
+          { backgroundColor: colors.surface, borderColor: colors.border },
+          drawing.tool === 'fill' && styles.toolToggleButtonActive,
+        ]}
+        onPress={() => drawing.setTool('fill')}
+        accessibilityLabel={t('game.draw.toolFill')}
+        accessibilityRole="button"
+      >
+        <FillIcon
+          size={20}
+          color={drawing.tool === 'fill' ? Colors.drawing.white : colors.text.secondary}
+        />
+      </TouchableOpacity>
+
+      {!isSideToolbar && (
+        <View style={[styles.toolRowSeparator, { backgroundColor: colors.border }]} />
+      )}
+
+      {([2, 3, 5] as const).map(size => {
+        const isSelected = drawing.strokeWidth === size && drawing.tool !== 'fill';
+        // Alle drei Punkte zeigen die aktuell gewählte Pinselfarbe (unterscheiden sich
+        // nur in der Größe). Die Auswahl selbst wird über den Ring (borderColor) angezeigt.
+        const dotColor = drawing.tool !== 'fill' ? drawing.color : colors.text.secondary;
+        return (
+          <TouchableOpacity
+            key={size}
+            style={[
+              styles.strokeCircleButton,
+              isSelected && styles.strokeCircleButtonSelected,
+              drawing.tool === 'fill' && styles.strokeCircleDisabled,
+            ]}
+            onPress={() => {
+              if (drawing.tool !== 'fill') drawing.setStrokeWidth(size);
+            }}
+            disabled={drawing.tool === 'fill'}
+            accessibilityLabel={`${t('game.draw.strokeWidth')} ${size}`}
+            accessibilityRole="button"
+          >
+            <View
+              style={[
+                styles.strokeCircle,
+                {
+                  width: size === 2 ? 10 : size === 3 ? 16 : 22,
+                  height: size === 2 ? 10 : size === 3 ? 16 : 22,
+                  backgroundColor: dotColor,
+                },
+              ]}
+            />
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
+
+  const buttonRow = (
+    <View style={styles.buttonRow}>
+      <TouchableOpacity
+        style={[
+          styles.secondaryButton,
+          { backgroundColor: colors.surface, borderColor: Colors.primary },
+        ]}
+        onPress={drawing.undo}
+        disabled={drawing.paths.length === 0}
+        accessibilityLabel={t('game.draw.undo')}
+        accessibilityRole="button"
+      >
+        <Text
+          style={[styles.secondaryButtonText, layout.isSmall && styles.buttonTextSmall]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.7}
+        >
+          {t('game.draw.undo')}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.secondaryButton,
+          { backgroundColor: colors.surface, borderColor: Colors.primary },
+          drawing.paths.length === 0 && styles.buttonDisabled,
+        ]}
+        accessibilityLabel={t('game.draw.clear')}
+        accessibilityRole="button"
+        onPress={() => {
+          if (Platform.OS === 'web') {
+            if (drawing.paths.length === 0) return;
+            if (window.confirm(t('game.draw.clearConfirm'))) drawing.setPaths([]); // platform-safe
+          } else {
+            if (drawing.paths.length === 0) return;
+            Alert.alert(t('game.draw.clear'), t('game.draw.clearConfirm'), [
+              { text: t('common.cancel'), style: 'cancel' },
+              {
+                text: t('common.yes'),
+                style: 'destructive',
+                onPress: () => {
+                  drawing.setPaths([]);
+                },
+              },
+            ]);
+          }
+        }}
+        disabled={drawing.paths.length === 0}
+      >
+        <Text
+          style={[styles.secondaryButtonText, layout.isSmall && styles.buttonTextSmall]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.7}
+        >
+          {t('game.draw.clear')}
+        </Text>
+      </TouchableOpacity>
+      <PressableScale
+        style={styles.primaryButton}
+        onPress={onDone}
+        accessibilityLabel={t('game.draw.done')}
+      >
+        <Text
+          style={[styles.primaryButtonText, layout.isSmall && styles.buttonTextSmall]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.7}
+        >
+          {t('game.draw.done')}
+        </Text>
+      </PressableScale>
+    </View>
   );
 
   return (
@@ -75,190 +256,48 @@ export default function DrawPhase({
         </TouchableOpacity>
       </View>
 
-      {/* Zeichenfläche */}
-      <View style={[styles.canvasContainer, dynCanvasContainer]}>
-        <ErrorBoundary>
-          <DrawingCanvas
-            height={Math.floor(layout.canvasMaxHeight)}
-            strokeColor={drawing.color}
-            strokeWidth={drawing.strokeWidth}
-            tool={drawing.tool}
-            paths={drawing.paths}
-            onDrawingChange={drawing.setPaths}
+      {/* Hauptbereich: Zeichenfläche + Werkzeugleiste — nebeneinander im Querformat (Issue #279, 2.4) */}
+      <View style={[styles.mainArea, isSideToolbar && styles.mainAreaRow]}>
+        <View style={styles.canvasColumn}>
+          {/* Zeichenfläche */}
+          <View style={[styles.canvasContainer, dynCanvasContainer]}>
+            <ErrorBoundary>
+              <DrawingCanvas
+                height={Math.floor(layout.canvasMaxHeight)}
+                strokeColor={drawing.color}
+                strokeWidth={drawing.strokeWidth}
+                tool={drawing.tool}
+                paths={drawing.paths}
+                onDrawingChange={drawing.setPaths}
+              />
+            </ErrorBoundary>
+          </View>
+
+          {isSideToolbar && buttonRow}
+        </View>
+
+        {/* Werkzeugleiste-Gruppe */}
+        <View
+          style={[
+            styles.toolbarGroup,
+            dynToolbar,
+            { backgroundColor: colors.surfaceAlt },
+            isSideToolbar && styles.toolbarGroupSide,
+          ]}
+        >
+          {colorList}
+          <View
+            style={[
+              styles.toolbarDivider,
+              isSideToolbar && styles.toolbarDividerSide,
+              { backgroundColor: colors.border },
+            ]}
           />
-        </ErrorBoundary>
-      </View>
-
-      {/* Toolbar-Gruppe */}
-      <View style={[styles.toolbarGroup, dynToolbar, { backgroundColor: colors.surfaceAlt }]}>
-        {/* Reihe 1: Inline-Farbreihe */}
-        <FlatList
-          data={DrawingColors}
-          keyExtractor={item => item.hex}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.colorRowContent}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={[
-                styles.inlineColorSwatch,
-                { borderColor: item.border ?? colors.border },
-                drawing.color === item.hex && styles.inlineColorSwatchActive,
-              ]}
-              onPress={() => drawing.setColor(item.hex)}
-              accessibilityLabel={currentLang === 'de' ? item.name : item.nameEn}
-              accessibilityRole="button"
-            >
-              <View style={[styles.inlineColorSwatchInner, { backgroundColor: item.hex }]} />
-              {drawing.color === item.hex && <Text style={styles.inlineColorCheckmark}>✓</Text>}
-            </TouchableOpacity>
-          )}
-        />
-
-        <View style={[styles.toolbarDivider, { backgroundColor: colors.border }]} />
-
-        {/* Reihe 2: Pen/Fill + Strichstärken */}
-        <View style={styles.toolRow}>
-          <TouchableOpacity
-            style={[
-              styles.toolToggleButton,
-              { backgroundColor: colors.surface, borderColor: colors.border },
-              drawing.tool === 'brush' && styles.toolToggleButtonActive,
-            ]}
-            onPress={() => drawing.setTool('brush')}
-            accessibilityLabel={t('game.draw.toolBrush')}
-            accessibilityRole="button"
-          >
-            <PenIcon
-              size={20}
-              color={drawing.tool === 'brush' ? Colors.drawing.white : colors.text.secondary}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.toolToggleButton,
-              { backgroundColor: colors.surface, borderColor: colors.border },
-              drawing.tool === 'fill' && styles.toolToggleButtonActive,
-            ]}
-            onPress={() => drawing.setTool('fill')}
-            accessibilityLabel={t('game.draw.toolFill')}
-            accessibilityRole="button"
-          >
-            <FillIcon
-              size={20}
-              color={drawing.tool === 'fill' ? Colors.drawing.white : colors.text.secondary}
-            />
-          </TouchableOpacity>
-
-          <View style={[styles.toolRowSeparator, { backgroundColor: colors.border }]} />
-
-          {([2, 3, 5] as const).map(size => {
-            const isSelected = drawing.strokeWidth === size && drawing.tool !== 'fill';
-            // Alle drei Punkte zeigen die aktuell gewählte Pinselfarbe (unterscheiden sich
-            // nur in der Größe). Die Auswahl selbst wird über den Ring (borderColor) angezeigt.
-            const dotColor = drawing.tool !== 'fill' ? drawing.color : colors.text.secondary;
-            return (
-              <TouchableOpacity
-                key={size}
-                style={[
-                  styles.strokeCircleButton,
-                  isSelected && styles.strokeCircleButtonSelected,
-                  drawing.tool === 'fill' && styles.strokeCircleDisabled,
-                ]}
-                onPress={() => {
-                  if (drawing.tool !== 'fill') drawing.setStrokeWidth(size);
-                }}
-                disabled={drawing.tool === 'fill'}
-                accessibilityLabel={`${t('game.draw.strokeWidth')} ${size}`}
-                accessibilityRole="button"
-              >
-                <View
-                  style={[
-                    styles.strokeCircle,
-                    {
-                      width: size === 2 ? 10 : size === 3 ? 16 : 22,
-                      height: size === 2 ? 10 : size === 3 ? 16 : 22,
-                      backgroundColor: dotColor,
-                    },
-                  ]}
-                />
-              </TouchableOpacity>
-            );
-          })}
+          {toolControls}
         </View>
       </View>
 
-      {/* Buttons */}
-      <View style={styles.buttonRow}>
-        <TouchableOpacity
-          style={[
-            styles.secondaryButton,
-            { backgroundColor: colors.surface, borderColor: Colors.primary },
-          ]}
-          onPress={drawing.undo}
-          disabled={drawing.paths.length === 0}
-          accessibilityLabel={t('game.draw.undo')}
-          accessibilityRole="button"
-        >
-          <Text
-            style={[styles.secondaryButtonText, layout.isSmall && styles.buttonTextSmall]}
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            minimumFontScale={0.7}
-          >
-            {t('game.draw.undo')}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.secondaryButton,
-            { backgroundColor: colors.surface, borderColor: Colors.primary },
-            drawing.paths.length === 0 && styles.buttonDisabled,
-          ]}
-          accessibilityLabel={t('game.draw.clear')}
-          accessibilityRole="button"
-          onPress={() => {
-            if (Platform.OS === 'web') {
-              if (drawing.paths.length > 0 && window.confirm(t('game.draw.clearConfirm'))) {
-                // platform-safe
-                drawing.setPaths([]);
-              }
-            } else {
-              if (drawing.paths.length === 0) return;
-              Alert.alert(t('game.draw.clear'), t('game.draw.clearConfirm'), [
-                { text: t('common.cancel'), style: 'cancel' },
-                {
-                  text: t('common.yes'),
-                  style: 'destructive',
-                  onPress: () => {
-                    drawing.setPaths([]);
-                  },
-                },
-              ]);
-            }
-          }}
-          disabled={drawing.paths.length === 0}
-        >
-          <Text
-            style={[styles.secondaryButtonText, layout.isSmall && styles.buttonTextSmall]}
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            minimumFontScale={0.7}
-          >
-            {t('game.draw.clear')}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.primaryButton} onPress={onDone}>
-          <Text
-            style={[styles.primaryButtonText, layout.isSmall && styles.buttonTextSmall]}
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            minimumFontScale={0.7}
-          >
-            {t('game.draw.done')}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {!isSideToolbar && buttonRow}
     </View>
   );
 }
@@ -319,6 +358,15 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.bold,
     color: '#FFFFFF',
   },
+  mainArea: {
+    flex: 1,
+  },
+  mainAreaRow: {
+    flexDirection: 'row',
+  },
+  canvasColumn: {
+    flex: 1,
+  },
   canvasContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -330,7 +378,16 @@ const styles = StyleSheet.create({
     marginVertical: Spacing.sm,
     gap: Spacing.xs,
   },
+  toolbarGroupSide: {
+    justifyContent: 'flex-start',
+  },
   colorRowContent: {
+    gap: Spacing.xs,
+    paddingHorizontal: Spacing.xs,
+    paddingVertical: Spacing.xs,
+    alignItems: 'center',
+  },
+  colorColumnContent: {
     gap: Spacing.xs,
     paddingHorizontal: Spacing.xs,
     paddingVertical: Spacing.xs,
@@ -365,12 +422,21 @@ const styles = StyleSheet.create({
     height: 1,
     marginHorizontal: Spacing.xs,
   },
+  toolbarDividerSide: {
+    height: 1,
+    width: '100%',
+    marginHorizontal: 0,
+  },
   toolRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.sm,
     paddingVertical: Spacing.xs,
     paddingHorizontal: Spacing.xs,
+  },
+  toolRowWrap: {
+    flexWrap: 'wrap',
+    justifyContent: 'center',
   },
   toolToggleButton: {
     width: 40,

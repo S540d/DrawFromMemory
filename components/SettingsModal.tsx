@@ -15,12 +15,14 @@ import { useTranslation, getLanguage, setLanguage, type Language } from '@servic
 import { useTheme } from '@services/ThemeContext';
 import storageManager from '@services/StorageManager';
 import SoundManager from '@services/SoundManager';
+import { getAgeGroup, setAgeGroup } from '@services/AgeGroupManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 import ParentalGate from './ParentalGate';
 import ParentDashboard from './ParentDashboard';
 import BadgesModal from './BadgesModal';
 import { useParentalGateAction } from './useParentalGateAction';
+import type { AgeGroup } from '../types';
 
 interface SettingsModalProps {
   visible: boolean;
@@ -42,6 +44,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [celebrationEnabled, setCelebrationEnabled] = useState(true);
   const [showParentDashboard, setShowParentDashboard] = useState(false);
+  const [ageGroup, setCurrentAgeGroup] = useState<AgeGroup | null>(null);
   const parentalGate = useParentalGateAction();
 
   useEffect(() => {
@@ -49,7 +52,13 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
     setCurrentTheme(themeSetting);
     storageManager.getSetting('soundEnabled').then(setSoundEnabled);
     storageManager.getSetting('celebrationEnabled').then(setCelebrationEnabled);
+    getAgeGroup().then(setCurrentAgeGroup);
   }, [visible, themeSetting]);
+
+  const handleAgeGroupChange = async (value: AgeGroup) => {
+    setCurrentAgeGroup(value);
+    await setAgeGroup(value);
+  };
 
   const handleLanguageChange = async (lang: Language) => {
     await setLanguage(lang);
@@ -291,6 +300,18 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
         {t('settings.personalize')}
       </Text>
       <View style={[styles.card, { backgroundColor: colors.surface }]}>
+        {renderRow(
+          t('ageGroup.settingsLabel'),
+          renderSegment(
+            [
+              { label: t('ageGroup.group3to5'), value: '3-5' },
+              { label: t('ageGroup.group6to8'), value: '6-8' },
+              { label: t('ageGroup.group9plus'), value: '9plus' },
+            ],
+            ageGroup ?? '',
+            v => handleAgeGroupChange(v as AgeGroup),
+          ),
+        )}
         {renderRow(
           t('settings.celebration'),
           renderSegment(

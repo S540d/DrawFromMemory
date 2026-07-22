@@ -2,7 +2,16 @@
 
 Öffentlich zugängliche Dokumentation für „Merke und Male".
 
-> Deployment-Anleitungen, Play-Store-Texte und Asset-Guides werden lokal gepflegt und nicht veröffentlicht.
+> Deployment-Anleitungen und Asset-Guides werden lokal gepflegt und nicht veröffentlicht.
+
+## Play Store
+
+- **[PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md)** – Listing-Texte (Titel, Kurz- & Langbeschreibung)
+- **[PLAY_STORE_DATA_SAFETY.md](PLAY_STORE_DATA_SAFETY.md)** – Data-Safety-Formular & Families-Checkliste
+
+## Design
+
+- **[ILLUSTRATION_STYLEGUIDE.md](ILLUSTRATION_STYLEGUIDE.md)** – Verbindlicher Stil für alle Level-SVGs (Linienstärke, Farbpalette, Komplexität pro Difficulty, Produktionsweg)
 
 ## Testing
 
