@@ -5,4 +5,16 @@
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
+  <!-- PRIVACY_POLICY.html ist nur eine Weiterleitung und steht deshalb nicht in
+       der Sitemap — verlinkt werden die beiden echten Seiten. -->
+  <url>
+    <loc>https://s540d.github.io/DrawFromMemory/privacy-policy.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://s540d.github.io/DrawFromMemory/privacy-policy-en.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 </urlset>

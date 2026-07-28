@@ -26,6 +26,10 @@
     "playStore": "Jetzt im Play Store",
     "privacyPolicy": "Datenschutz"
   },
+  "webInstall": {
+    "title": "Android-App gratis im Play Store",
+    "subtitle": "Auch ohne Internet spielbar"
+  },
   "levels": {
     "title": "Level auswählen",
     "level": "Level {{number}}",

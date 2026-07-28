@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Auffindbarkeit außerhalb des Play Stores: Play-Store-Badge + deutsche Kurzbeschreibung im README, Web-only Install-Banner (`WebInstallBanner`) im sichtbaren Bereich der Startseite, deutsche Keywords/Open-Graph-/JSON-LD-Auszeichnung der Landing Page
+- Attributions-Parameter (`referrer` mit UTM-Tags) an allen Play-Store-Links — Installationen aus der Web-Demo werden in der Play Console als eigene Quelle sichtbar (`constants/ExternalLinks.ts`)
+- Crawlbarer `<noscript>`-Inhalt der Landing Page inkl. echtem Play-Store-Link statt Expos „You need to enable JavaScript"-Platzhalter
+- `docs/WEB_DISCOVERABILITY.md` — Trichter, Attribution und Rendering-Besonderheiten des Web-Builds
+
+### Fixed
+
+- PWA-/Homescreen-Tags (u. a. Apple-Touch-Icon) fehlten im Deployment: `app/+html.tsx` wird bei `web.output: "single"` nicht gerendert — die Tags werden jetzt im Post-Build injiziert
+- `scripts/post-build.js` präfixierte bereits mit `/DrawFromMemory` beginnende Pfade ein zweites Mal
+- `scripts/deploy-ghpages.sh` führte weder `post-build.js` noch `update-cache-version.js` aus — manuelle Deployments gingen ohne SEO-Tags und ohne Subpfad-Korrektur live
+- Sitemap listet die beiden echten Datenschutzseiten statt nur der Startseite
+
 ## [1.3.4] - 2026-04-21
 
 ### Fixed

@@ -62,6 +62,7 @@ components/
   Button.tsx                 # UI-Primitiv: Button (primary = LinearGradient cta, secondary = outlined, ghost = transparent, danger = solid)
   SkeletonLoader.tsx         # Skeleton Placeholder
   WebTrustFooter.tsx         # Nur Web: Play-Store-Link + Datenschutz-Link am Ende der Startseite (Issue #279, 3.4)
+  WebInstallBanner.tsx       # Nur Web: Play-Store-CTA im sichtbaren Bereich der Startseite (siehe docs/WEB_DISCOVERABILITY.md)
   Mascot.tsx                 # Begleitfigur "Mali" (SVG-Chamäleon), Mood-Varianten, kosmetische Accessoires (Issue #279, 1.1)
   MascotUnlockToast.tsx      # Toast bei neu freigeschaltetem Mascot-Accessoire (spiegelt BadgeUnlockToast)
   MascotSparkle.tsx          # Lottie-Sparkle-Effekt neben der Mascot bei 5 Sternen/Unlocks (Issue #279, 2.2)
@@ -92,6 +93,7 @@ constants/
   Colors.ts                  # Design-Tokens: Primärfarben, Gradienten, shadow.*, glass.*, Drawing-Farben
   Layout.ts                  # Spacing, FontSize, FontWeight, BorderRadius
   WebAccessibility.ts        # Web-spezifische Accessibility-Konstanten
+  ExternalLinks.ts           # Play-Store-/Site-/Datenschutz-URLs + getPlayStoreUrl(source) mit referrer-Attribution
 
 utils/
   platform.ts                # isWeb/isIOS/isAndroid, safeWebAPI(), Storage-Adapter
@@ -421,6 +423,10 @@ Web-APIs über `utils/platform.ts` absichern (`safeWebAPI`, `isWeb`-Guard). Für
 ### react-native-svg auf Web
 
 Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerendert werden — sie erzeugen ein ungültiges `transform-origin`-DOM-Attribut (React DOM erwartet `transformOrigin`) → Console-Error bei jedem Render. Stattdessen Standard-SVG `transform={`rotate(angle cx cy)`}` verwenden (Fix: PR #265).
+
+### Web-Meta-Tags / SEO
+
+`app/+html.tsx` wird **nicht** gerendert, solange `app.json` `web.output: "single"` setzt — Expo kopiert in diesem Modus sein eigenes Template. Neue Meta-Tags, JSON-LD oder noscript-Inhalte gehören deshalb in `scripts/post-build.js` (wird von `deploy.yml` und `deploy-ghpages.sh` ausgeführt), sonst landen sie nie im Deployment. Play-Store-Links immer über `getPlayStoreUrl(source)` aus `constants/ExternalLinks.ts` erzeugen — der `referrer`-Parameter ist die einzige Möglichkeit, Installationen aus der Web-Demo in der Play Console zu sehen. Details: [`docs/WEB_DISCOVERABILITY.md`](docs/WEB_DISCOVERABILITY.md).
 
 ### Tests
 

@@ -5,6 +5,16 @@ import type { PropsWithChildren } from 'react';
  * HTML-Template für den Web-Export.
  * Fügt Apple-spezifische Meta-Tags hinzu, damit die App beim
  * "Zum Homescreen hinzufügen" auf iOS ein korrektes Icon und Label erhält.
+ *
+ * ⚠️ Diese Datei wird beim aktuellen Setup **nicht** verwendet: `app.json` hat
+ * `web.output: "single"`, und in diesem Modus rendert Expo nicht `+html.tsx`,
+ * sondern kopiert sein eigenes Template
+ * (`@expo/cli/static/template/index.html`). Erst bei `output: "static"` oder
+ * `"server"` greift `+html.tsx`. Die Datei bleibt deshalb als Vorlage für einen
+ * späteren Umstieg erhalten — die tatsächlich ausgelieferten Meta-Tags
+ * (PWA/Homescreen, SEO, JSON-LD, noscript-Inhalt) werden in
+ * `scripts/post-build.js` injiziert. Wer hier etwas ergänzt, muss es dort
+ * ebenfalls ergänzen, sonst landet es nicht im Deployment.
  */
 export default function Root({ children }: PropsWithChildren) {
   return (

@@ -20,6 +20,7 @@ import { FloatingStars } from '@components/FloatingStars';
 import OnboardingModal from '@components/OnboardingModal';
 import { isOnboardingDone } from '@services/OnboardingManager';
 import WebTrustFooter from '@components/WebTrustFooter';
+import WebInstallBanner from '@components/WebInstallBanner';
 import Mascot from '@components/Mascot';
 import AgeGroupModal from '@components/AgeGroupModal';
 import { isAgeGroupSelected, setAgeGroup } from '@services/AgeGroupManager';
@@ -145,6 +146,9 @@ export default function HomeScreen() {
           </Text>
         )}
       </View>
+
+      {/* Nur Web: Play-Store-Angebot im sichtbaren Bereich, nicht erst im Footer */}
+      <WebInstallBanner />
 
       {/* Hero CTA — "Spiel starten" als dominanter zentraler Button.
           Sanfter Dauer-Puls führt das Auge zur Primäraktion (prefers-reduced-motion-aware). */}
