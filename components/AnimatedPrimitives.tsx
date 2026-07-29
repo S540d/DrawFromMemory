@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Pressable, Text, TextStyle, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, Text, TextStyle, ViewStyle } from 'react-native';
 import { useReduceMotion } from '../utils/useReduceMotion';
 import Animated, {
   useSharedValue,
@@ -7,6 +7,9 @@ import Animated, {
   withTiming,
   withSpring,
   withDelay,
+  withRepeat,
+  withSequence,
+  cancelAnimation,
   Easing,
 } from 'react-native-reanimated';
 import Colors from '../constants/Colors';
@@ -147,6 +150,7 @@ export function AnimatedButton({
   accessibilityRole?: 'button' | 'link';
   [key: string]: any;
 }) {
+  const reduceMotion = useReduceMotion();
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -154,10 +158,12 @@ export function AnimatedButton({
   }));
 
   const handlePressIn = () => {
+    if (reduceMotion) return;
     scale.value = withSpring(0.95, { damping: 15, stiffness: 300 });
   };
 
   const handlePressOut = () => {
+    if (reduceMotion) return;
     scale.value = withSpring(1, { damping: 15, stiffness: 300 });
   };
 
@@ -286,6 +292,118 @@ export function AnimatedStar({
   return (
     <Animated.View style={animatedStyle}>
       <Text style={textStyle}>★</Text>
+    </Animated.View>
+  );
+}
+
+/**
+ * Generic pressable with a spring scale-down on press for tactile feedback.
+ * Gives bare tiles/cards the same responsiveness as `Button` without adopting
+ * its full visual style. Respects prefers-reduced-motion.
+ */
+export function PressableScale({
+  onPress,
+  style,
+  disabled,
+  children,
+  activeScale = 0.96,
+  accessibilityLabel,
+  accessibilityRole = 'button',
+  accessibilityState,
+  testID,
+  ...rest
+}: {
+  onPress?: () => void;
+  style?: StyleProp<ViewStyle>;
+  disabled?: boolean;
+  children: React.ReactNode;
+  activeScale?: number;
+  accessibilityLabel?: string;
+  accessibilityRole?: 'button' | 'link';
+  accessibilityState?: { disabled?: boolean; selected?: boolean };
+  testID?: string;
+  [key: string]: any;
+}) {
+  const reduceMotion = useReduceMotion();
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    if (reduceMotion || disabled) return;
+    scale.value = withSpring(activeScale, { damping: 15, stiffness: 300 });
+  };
+
+  const handlePressOut = () => {
+    if (reduceMotion) return;
+    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+  };
+
+  return (
+    <AnimatedPressable
+      onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      disabled={disabled}
+      style={[animatedStyle, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole={accessibilityRole}
+      accessibilityState={accessibilityState}
+      testID={testID}
+      {...rest}
+    >
+      {children}
+    </AnimatedPressable>
+  );
+}
+
+/**
+ * Looping "breathing" pulse that draws the eye to a primary action.
+ * Subtle scale oscillation, meant to wrap a CTA. Static (no loop) when
+ * prefers-reduced-motion is on or `enabled` is false.
+ */
+export function PulseView({
+  children,
+  style,
+  enabled = true,
+  maxScale = 1.04,
+  testID,
+}: {
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+  enabled?: boolean;
+  maxScale?: number;
+  testID?: string;
+}) {
+  const reduceMotion = useReduceMotion();
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    if (reduceMotion || !enabled) {
+      cancelAnimation(scale);
+      scale.value = 1;
+      return;
+    }
+    scale.value = withRepeat(
+      withSequence(
+        withTiming(maxScale, { duration: 1100, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1, { duration: 1100, easing: Easing.inOut(Easing.ease) }),
+      ),
+      -1,
+      false,
+    );
+    return () => cancelAnimation(scale);
+  }, [reduceMotion, enabled, maxScale, scale]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return (
+    <Animated.View style={[animatedStyle, style]} testID={testID} pointerEvents="box-none">
+      {children}
     </Animated.View>
   );
 }

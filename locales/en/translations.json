@@ -26,6 +26,10 @@
     "playStore": "Get it on Google Play",
     "privacyPolicy": "Privacy Policy"
   },
+  "webInstall": {
+    "title": "Free Android app on Google Play",
+    "subtitle": "Plays without an internet connection"
+  },
   "levels": {
     "title": "Select Level",
     "level": "Level {{number}}",

@@ -26,6 +26,10 @@
     "playStore": "Disponibile su Google Play",
     "privacyPolicy": "Informativa sulla privacy"
   },
+  "webInstall": {
+    "title": "App Android gratuita su Google Play",
+    "subtitle": "Funziona anche senza Internet"
+  },
   "levels": {
     "title": "Scegli livello",
     "level": "Livello {{number}}",

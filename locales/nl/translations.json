@@ -26,6 +26,10 @@
     "playStore": "Beschikbaar op Google Play",
     "privacyPolicy": "Privacybeleid"
   },
+  "webInstall": {
+    "title": "Gratis Android-app in Google Play",
+    "subtitle": "Speelt ook zonder internet"
+  },
   "levels": {
     "title": "Level kiezen",
     "level": "Level {{number}}",

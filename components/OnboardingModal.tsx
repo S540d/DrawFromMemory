@@ -83,7 +83,12 @@ export default function OnboardingModal({ visible, onClose, onStartTutorial }: P
     onClose();
   };
 
-  const handleStart = () => {
+  const handleStart = async () => {
+    // Onboarding gilt als erledigt, sobald der Nutzer bewusst „Spielen!" tippt —
+    // nicht erst nach der ersten Bewertung. Sonst erscheint dieser Vollbild-Modal
+    // bei jedem App-Start erneut, falls die erste Runde abgebrochen wird. Die
+    // In-Game-Coach-Marks (?tutorial=1) führen weiterhin durch diese erste Runde.
+    await markOnboardingDone();
     onStartTutorial();
   };
 

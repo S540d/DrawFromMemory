@@ -40,6 +40,13 @@ fi
 
 echo -e "${GREEN}✓${NC} Web build completed"
 
+# Step 3b: Post-processing — identisch zu .github/workflows/deploy.yml.
+# Ohne diesen Schritt fehlen im manuellen Deployment die Subpfad-Korrekturen,
+# alle SEO-/PWA-Meta-Tags und der crawlbare noscript-Inhalt.
+echo -e "${BLUE}3b. Post-processing (Pfade, SEO, Cache-Version)...${NC}"
+node scripts/post-build.js
+node scripts/update-cache-version.js
+
 # Step 4: Security check - verify no sensitive files
 echo -e "${BLUE}4. Running security checks...${NC}"
 
