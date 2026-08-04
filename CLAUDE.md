@@ -441,8 +441,8 @@ Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerend
 ## Security
 
 - `npm audit --audit-level=high` in CI — Pipeline blockiert bei high/critical
-- Verbleibende Findings (11 moderate, Stand 2026-07-03): alle im jest-expo/expo-SDK-Chain — nur via `npm audit fix --force` (Breaking) behebbar, `npm audit --audit-level=high` schlägt nicht an
-- Alle high/critical Vulnerabilities zuletzt gefixt: 2026-07-03 via `npm audit fix` (19 → 11, PR #265)
+- Verbleibende Findings (12 moderate, Stand 2026-08-04): alle im jest-expo/expo-SDK-Chain (`uuid` via `xcode` → `@expo/config-plugins` → `@expo/cli` → `expo` → `@sentry/react-native`) — nur via `npm audit fix --force` (Breaking, Downgrade auf `expo@46.0.21`) behebbar, `npm audit --audit-level=high` schlägt nicht an
+- Alle high/critical Vulnerabilities zuletzt gefixt: 2026-08-04 via `npm audit fix` (1 high `brace-expansion` DoS + `postcss` moderate → 0 high/critical; nur `package-lock.json`, kein Breaking Change)
 
 ---
 
