@@ -55,13 +55,14 @@ components/
   ParentalGate.tsx           # Eltern-Sperre für Einstellungen
   SettingsModal.tsx          # Einstellungen-Modal (In-Game)
   ErrorBoundary.tsx          # Fehlerbehandlung für Render-Fehler
-  AnimatedPrimitives.tsx     # AnimatedCard, GlassCard, AnimatedButton, AnimatedFeedback, AnimatedStar
+  AnimatedPrimitives.tsx     # AnimatedCard, GlassCard, AnimatedButton, AnimatedFeedback, AnimatedStar, PressableScale, PulseView
   AnimatedSplashScreen.tsx   # Animierter Splash Screen
   Badge.tsx                  # UI-Primitiv: Badge
   Chip.tsx                   # UI-Primitiv: Chip
   Button.tsx                 # UI-Primitiv: Button (primary = LinearGradient cta, secondary = outlined, ghost = transparent, danger = solid)
   SkeletonLoader.tsx         # Skeleton Placeholder
   WebTrustFooter.tsx         # Nur Web: Play-Store-Link + Datenschutz-Link am Ende der Startseite (Issue #279, 3.4)
+  WebInstallBanner.tsx       # Nur Web: Play-Store-CTA im sichtbaren Bereich der Startseite (siehe docs/WEB_DISCOVERABILITY.md)
   Mascot.tsx                 # Begleitfigur "Mali" (SVG-Chamäleon), Mood-Varianten, kosmetische Accessoires (Issue #279, 1.1)
   MascotUnlockToast.tsx      # Toast bei neu freigeschaltetem Mascot-Accessoire (spiegelt BadgeUnlockToast)
   MascotSparkle.tsx          # Lottie-Sparkle-Effekt neben der Mascot bei 5 Sternen/Unlocks (Issue #279, 2.2)
@@ -92,6 +93,7 @@ constants/
   Colors.ts                  # Design-Tokens: Primärfarben, Gradienten, shadow.*, glass.*, Drawing-Farben
   Layout.ts                  # Spacing, FontSize, FontWeight, BorderRadius
   WebAccessibility.ts        # Web-spezifische Accessibility-Konstanten
+  ExternalLinks.ts           # Play-Store-/Site-/Datenschutz-URLs + getPlayStoreUrl(source) mit referrer-Attribution
 
 utils/
   platform.ts                # isWeb/isIOS/isAndroid, safeWebAPI(), Storage-Adapter
@@ -233,6 +235,10 @@ interface DrawingPath {
 
 `components/game/ToolIcons.tsx` exportiert `PenIcon`, `FillIcon`, `EyeIcon` — abstrakte, einfarbige SVG-Piktogramme (via `react-native-svg`) für Pinsel/Füllen/Vorlage-ansehen in `DrawPhase.tsx`, statt bunter Emoji (✏️ 🪣 👁). Farbe wird komplett über den `color`-Prop gesteuert (aktiv = weiß, inaktiv = `colors.text.secondary`). Die Strichstärken-Auswahl (klein/mittel/groß) zeigt bei allen drei Punkten einheitlich `drawing.color`; die aktive Größe wird über einen Ring (`borderColor`) markiert, nicht über unterschiedliche Punktfarben.
 
+### Startbildschirm & Einstellungen: Label-/Icon-Aufräumen (PR #292)
+
+APK-Testing-Feedback: Startbildschirm-Button „Kreativ" → „Freies Malen" umbenannt (nur DE-Locale, `locales/de/translations.json`), Emoji 🎨 vor dem Button-Text in `app/index.tsx` entfernt. In den Einstellungen (`components/SettingsModal.tsx`) verlor der Bereich „Über & Support" (`settings.aboutSupport`) die Icons im Action-Grid (🏆 👨‍👩‍👧 ✉️ ☕ ↗ ℹ) — nur noch Text-Labels, `actionGridIcon`-Style entfernt.
+
 ### Tablet-/Landscape-Layout (PR #287, Issue #279, 2.4)
 
 `useScreenLayout()` liefert zusätzlich `isLandscape` (width > height), `isTablet` (kürzere Kante ≥ 600px) und `toolbarPosition` (`'bottom' | 'side'`). Im ausreichend breiten Querformat (`safeWidth >= 480`) wechselt `toolbarPosition` auf `'side'`:
@@ -330,13 +336,15 @@ Stand `testing`: Phase A, B, C, D und E vollständig abgeschlossen (Lottie-Teil 
 
 **`AnimatedPrimitives.tsx`** exportiert:
 
-| Komponente         | Zweck                                                                                                            |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| `AnimatedCard`     | Fade-in + Slide-up Eingangs-Animation mit Stagger (50 ms/Item)                                                   |
-| `GlassCard`        | Glassmorphism + Eingangs-Animation + optionaler Press-Lift (scale 0.97, Spring) — `prefers-reduced-motion`-aware |
-| `AnimatedButton`   | Scale-Spring bei Press                                                                                           |
-| `AnimatedFeedback` | Scale + Fade beim Erscheinen (z.B. Feedback-Text)                                                                |
-| `AnimatedStar`     | Spring-Bounce-Pop beim Füllen, Stagger 80 ms/Stern, goldener Textglow — `prefers-reduced-motion`-aware           |
+| Komponente         | Zweck                                                                                                                                  |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `AnimatedCard`     | Fade-in + Slide-up Eingangs-Animation mit Stagger (50 ms/Item)                                                                         |
+| `GlassCard`        | Glassmorphism + Eingangs-Animation + optionaler Press-Lift (scale 0.97, Spring) — `prefers-reduced-motion`-aware                       |
+| `AnimatedButton`   | Scale-Spring bei Press — `prefers-reduced-motion`-aware                                                                                |
+| `AnimatedFeedback` | Scale + Fade beim Erscheinen (z.B. Feedback-Text)                                                                                      |
+| `AnimatedStar`     | Spring-Bounce-Pop beim Füllen, Stagger 80 ms/Stern, goldener Textglow — `prefers-reduced-motion`-aware                                 |
+| `PressableScale`   | Generischer Pressable mit Spring-Scale-Down beim Drücken — taktiles Feedback für schmucklose Kacheln, `prefers-reduced-motion`-aware   |
+| `PulseView`        | Sanfter Dauer-Puls (Scale-Oszillation) als Aufmerksamkeits-Hinweis für Primäraktionen; `enabled`-Prop + `prefers-reduced-motion`-aware |
 
 **`GlassCard` verwenden:**
 
@@ -416,6 +424,10 @@ Web-APIs über `utils/platform.ts` absichern (`safeWebAPI`, `isWeb`-Guard). Für
 
 Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerendert werden — sie erzeugen ein ungültiges `transform-origin`-DOM-Attribut (React DOM erwartet `transformOrigin`) → Console-Error bei jedem Render. Stattdessen Standard-SVG `transform={`rotate(angle cx cy)`}` verwenden (Fix: PR #265).
 
+### Web-Meta-Tags / SEO
+
+`app/+html.tsx` wird **nicht** gerendert, solange `app.json` `web.output: "single"` setzt — Expo kopiert in diesem Modus sein eigenes Template. Neue Meta-Tags, JSON-LD oder noscript-Inhalte gehören deshalb in `scripts/post-build.js` (wird von `deploy.yml` und `deploy-ghpages.sh` ausgeführt), sonst landen sie nie im Deployment. Play-Store-Links immer über `getPlayStoreUrl(source)` aus `constants/ExternalLinks.ts` erzeugen — der `referrer`-Parameter ist die einzige Möglichkeit, Installationen aus der Web-Demo in der Play Console zu sehen. Details: [`docs/WEB_DISCOVERABILITY.md`](docs/WEB_DISCOVERABILITY.md).
+
 ### Tests
 
 - Test-Dateien liegen bei `services/__tests__/`, `components/__tests__/`, `utils/__tests__/`, `__tests__/`
@@ -429,15 +441,15 @@ Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerend
 ## Security
 
 - `npm audit --audit-level=high` in CI — Pipeline blockiert bei high/critical
-- Verbleibende Findings (11 moderate, Stand 2026-07-03): alle im jest-expo/expo-SDK-Chain — nur via `npm audit fix --force` (Breaking) behebbar, `npm audit --audit-level=high` schlägt nicht an
-- Alle high/critical Vulnerabilities zuletzt gefixt: 2026-07-03 via `npm audit fix` (19 → 11, PR #265)
+- Verbleibende Findings (12 moderate, Stand 2026-08-04): alle im jest-expo/expo-SDK-Chain (`uuid` via `xcode` → `@expo/config-plugins` → `@expo/cli` → `expo` → `@sentry/react-native`) — nur via `npm audit fix --force` (Breaking, Downgrade auf `expo@46.0.21`) behebbar, `npm audit --audit-level=high` schlägt nicht an
+- Alle high/critical Vulnerabilities zuletzt gefixt: 2026-08-04 via `npm audit fix` (1 high `brace-expansion` DoS + `postcss` moderate → 0 high/critical; nur `package-lock.json`, kein Breaking Change)
 
 ---
 
 ## Wachstums-Roadmap (Issue #219)
 
 Übergeordneter Plan, um aus der App eine dauerhaft wachsende Kids-App im Play Store zu machen.
-Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusätzlich die Themen-Pack-Auswahl-UI (PR #271), die Draw-UX-Fixes (Icons/Strichstärken-Farbe/Fortschrittsbalken, PR #272) und die komplette Issue-#279-PR-Serie (Mascot/Altersstufen #284, Stilguide #285, Lottie/Icon-Refresh #286, Tablet-/Landscape-Layout #287, Natur/Märchen/Essen-Packs #288) — noch nicht in `main` gemerged. Enthält Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten, weitere Sprachen, Sentry-ErrorBoundary (#264) und den transform-origin Web-Fix (#265). **Play Store noch nicht auf v1.7.0** — Release-Aufgabe in Issue #267.
+Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusätzlich die Themen-Pack-Auswahl-UI (PR #271), die Draw-UX-Fixes (Icons/Strichstärken-Farbe/Fortschrittsbalken, PR #272), die komplette Issue-#279-PR-Serie (Mascot/Altersstufen #284, Stilguide #285, Lottie/Icon-Refresh #286, Tablet-/Landscape-Layout #287, Natur/Märchen/Essen-Packs #288) und die Startbildschirm-/Einstellungen-Label-/Icon-Anpassungen aus APK-Testing-Feedback (PR #292) — noch nicht in `main` gemerged. Enthält Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten, weitere Sprachen, Sentry-ErrorBoundary (#264) und den transform-origin Web-Fix (#265). **Play Store noch nicht auf v1.7.0** — Release-Aufgabe in Issue #267.
 
 ### P0 — Foundation für Wachstum
 

@@ -9,7 +9,7 @@
     "continueButton": "Weiterspielen",
     "levelsButton": "Level auswählen",
     "galleryButton": "Meine Galerie",
-    "creativeButton": "Kreativ",
+    "creativeButton": "Freies Malen",
     "settingsButton": "Einstellungen",
     "streakBadge": "🔥 {{count}}",
     "stats": {
@@ -25,6 +25,10 @@
     "tagline": "Offline · ohne Werbung · keine Datensammlung",
     "playStore": "Jetzt im Play Store",
     "privacyPolicy": "Datenschutz"
+  },
+  "webInstall": {
+    "title": "Android-App gratis im Play Store",
+    "subtitle": "Auch ohne Internet spielbar"
   },
   "levels": {
     "title": "Level auswählen",

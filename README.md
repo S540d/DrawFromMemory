@@ -2,9 +2,22 @@
 
 A memory training app for children — look at a picture, memorize it, draw it from memory, then compare.
 
-## Live
+_Gedächtnistraining für Kinder: Bild kurz ansehen, aus dem Gedächtnis nachzeichnen, vergleichen. Ein Merk- und Malspiel ab 3 Jahren — ohne Werbung, ohne In-App-Käufe, komplett offline spielbar._
 
-[https://s540d.github.io/DrawFromMemory/](https://s540d.github.io/DrawFromMemory/)
+[![Get it on Google Play](https://img.shields.io/badge/Google%20Play-Merke%20und%20Male-34A853?logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=com.s540d.merkeundmale&referrer=utm_source%3Dgithub%26utm_medium%3Dreadme%26utm_campaign%3Dweb_demo)
+[![Play in the browser](https://img.shields.io/badge/Web%20Demo-jetzt%20spielen-60D5FA?logo=googlechrome&logoColor=white)](https://s540d.github.io/DrawFromMemory/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+## Get the app
+
+| Platform             | Link                                                                                                                                                                                        |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Android              | [Google Play — `com.s540d.merkeundmale`](https://play.google.com/store/apps/details?id=com.s540d.merkeundmale&referrer=utm_source%3Dgithub%26utm_medium%3Dreadme%26utm_campaign%3Dweb_demo) |
+| Browser (no install) | [s540d.github.io/DrawFromMemory](https://s540d.github.io/DrawFromMemory/)                                                                                                                   |
+| Privacy              | [Datenschutzerklärung](https://s540d.github.io/DrawFromMemory/privacy-policy.html) · [Privacy Policy (EN)](https://s540d.github.io/DrawFromMemory/privacy-policy-en.html)                   |
+
+> The Play Store links carry a `referrer` parameter so installs coming from GitHub and the web demo
+> show up as their own acquisition channel in the Play Console instead of counting as organic.
 
 ## Tech Stack
 
@@ -28,17 +41,27 @@ A memory training app for children — look at a picture, memorize it, draw it f
 
 ## Features
 
-- **51 images** across difficulty levels 1–5 including a vehicles theme pack
+- **81 images** across difficulty levels 1–5, grouped into theme packs (animals, vehicles, nature, fairy tales, food)
+- **Game variants** — outline only, mirrored, plus a free creative mode
 - **Progressive reveal** — SVG elements appear one by one during memorization
 - **Drawing timelapse** — stroke-by-stroke replay of your drawing
-- **Gallery** — save and revisit drawings; share via system share sheet
+- **Gallery** — save and revisit drawings; share as PNG via the system share sheet
+- **Mascot "Mali"** — companion that unlocks cosmetic accessories as you collect stars
+- **Age groups** — 3-5 / 6-8 / 9+ adjust display time and default brush width
+- **Daily challenge + streaks**
 - **Confetti + sounds** — celebration on 4–5 star ratings
-- **Sound effects** — timer tick, phase change chime, star rating
 - **Haptic feedback** — vibration on interactions (Native)
+- **Tablet & landscape layout**
 - **Dark mode** support
-- **Bilingual** — German and English
+- **7 languages** — German, English, Spanish, French, Italian, Dutch, Polish (auto-detected)
 - **Offline-first** — all images bundled, no internet required
-- **No ads, no in-app purchases**
+- **No ads, no in-app purchases, no data collection**
+
+## Documentation
+
+- [Web discoverability & install funnel](docs/WEB_DISCOVERABILITY.md)
+- [Illustration style guide](docs/ILLUSTRATION_STYLEGUIDE.md)
+- [Play Store listing](docs/PLAY_STORE_LISTING.md)
 
 ## License
 

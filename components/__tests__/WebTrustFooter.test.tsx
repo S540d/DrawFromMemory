@@ -41,8 +41,11 @@ describe('WebTrustFooter', () => {
       playStoreLink.props.onPress();
     });
 
+    // Mit Attributions-Parametern, damit Installs aus der Web-Demo in der
+    // Play Console als eigene Quelle sichtbar werden.
     expect(openUrlSpy).toHaveBeenCalledWith(
-      'https://play.google.com/store/apps/details?id=com.s540d.merkeundmale',
+      'https://play.google.com/store/apps/details?id=com.s540d.merkeundmale' +
+        '&referrer=utm_source%3Dgithub-pages%26utm_medium%3Dweb_footer%26utm_campaign%3Dweb_demo',
     );
     openUrlSpy.mockRestore();
   });

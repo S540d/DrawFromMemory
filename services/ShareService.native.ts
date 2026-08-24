@@ -4,7 +4,10 @@
  * via expo-sharing. Metro loads this file on native, ShareService.ts on web.
  */
 import type { DrawingPath } from '@components/DrawingCanvas.shared';
-import * as FileSystem from 'expo-file-system';
+// Expo SDK 54+ verschob die klassische Datei-API (cacheDirectory, writeAsStringAsync,
+// EncodingType) nach `expo-file-system/legacy`. Der Default-Export bietet stattdessen
+// die neue File/Paths-Klassen-API (Issue: TS-Fehler in ShareService.native.ts).
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import { Skia, ImageFormat, PaintStyle, StrokeCap, StrokeJoin } from '@shopify/react-native-skia';
 import { computeNativeFillLayers } from './NativeFillLayerService';

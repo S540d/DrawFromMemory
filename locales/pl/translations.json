@@ -26,6 +26,10 @@
     "playStore": "Dostępne w Google Play",
     "privacyPolicy": "Polityka prywatności"
   },
+  "webInstall": {
+    "title": "Darmowa aplikacja na Androida w Google Play",
+    "subtitle": "Działa też bez internetu"
+  },
   "levels": {
     "title": "Wybierz poziom",
     "level": "Poziom {{number}}",
