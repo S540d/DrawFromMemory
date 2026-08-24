@@ -93,7 +93,10 @@
   },
   "overrides": {
     "react-test-renderer": "19.2.0",
-    "ws": "^8.21.0"
+    "ws": "^8.21.0",
+    "metro": "0.83.8",
+    "metro-config": "0.83.8",
+    "metro-transform-worker": "0.83.8"
   },
   "private": true
 }
