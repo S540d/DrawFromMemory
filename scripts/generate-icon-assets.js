@@ -27,7 +27,13 @@ const TARGETS = [
   // Adaptive-Icon-Vordergrund und Splash-Icon sind eigene, transparente SVGs
   // (Motiv innerhalb der 66%-Sicherheitszone) — NICHT dieselbe Vollbild-app-icon.svg
   // (Issue #304: app-icon.png/adaptive-icon.png/favicon.png waren byte-identisch).
-  { svg: 'adaptive-icon-foreground.svg', out: 'adaptive-icon.png', width: 1024, height: 1024, transparent: true },
+  {
+    svg: 'adaptive-icon-foreground.svg',
+    out: 'adaptive-icon.png',
+    width: 1024,
+    height: 1024,
+    transparent: true,
+  },
   { svg: 'splash-icon.svg', out: 'splash-icon.png', width: 1024, height: 1024, transparent: true },
   { svg: 'app-icon.svg', out: 'favicon.png', width: 1024, height: 1024 },
   { svg: 'app-icon.svg', out: 'app-icon-512.png', width: 512, height: 512 },
