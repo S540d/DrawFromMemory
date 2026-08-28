@@ -24,7 +24,11 @@ const CHROMIUM_PATH =
 
 const TARGETS = [
   { svg: 'app-icon.svg', out: 'app-icon.png', width: 1024, height: 1024 },
-  { svg: 'app-icon.svg', out: 'adaptive-icon.png', width: 1024, height: 1024 },
+  // Adaptive-Icon-Vordergrund und Splash-Icon sind eigene, transparente SVGs
+  // (Motiv innerhalb der 66%-Sicherheitszone) — NICHT dieselbe Vollbild-app-icon.svg
+  // (Issue #304: app-icon.png/adaptive-icon.png/favicon.png waren byte-identisch).
+  { svg: 'adaptive-icon-foreground.svg', out: 'adaptive-icon.png', width: 1024, height: 1024, transparent: true },
+  { svg: 'splash-icon.svg', out: 'splash-icon.png', width: 1024, height: 1024, transparent: true },
   { svg: 'app-icon.svg', out: 'favicon.png', width: 1024, height: 1024 },
   { svg: 'app-icon.svg', out: 'app-icon-512.png', width: 512, height: 512 },
   { svg: 'feature-graphic.svg', out: 'feature-graphic.png', width: 1024, height: 500 },
@@ -53,7 +57,7 @@ async function main() {
         { width: target.width, height: target.height },
       );
       const outPath = path.join(ICONS_DIR, target.out);
-      await page.screenshot({ path: outPath });
+      await page.screenshot({ path: outPath, omitBackground: Boolean(target.transparent) });
       await context.close();
       console.log(`Generated ${target.out} (${target.width}x${target.height}) from ${target.svg}`);
     }
