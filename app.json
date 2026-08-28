@@ -11,17 +11,12 @@
     "primaryColor": "#60D5FA",
     "description": "Gedächtnistraining für Kinder: Merken, Malen, Lernen! Eine pädagogisch wertvolle App für spielerisches Lernen.",
     "privacy": "public",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#60D5FA"
-    },
     "assetBundlePatterns": ["assets/**/*"],
     "ios": {
       "icon": "./assets/icons/app-icon.png",
       "supportsTablet": true,
       "bundleIdentifier": "com.s540d.merkeundmale",
-      "buildNumber": "2",
+      "buildNumber": "3",
       "appStoreUrl": "https://apps.apple.com/app/merke-und-male/id[TBD]",
       "config": {
         "usesNonExemptEncryption": false
@@ -37,7 +32,7 @@
       },
       "package": "com.s540d.merkeundmale",
       "permissions": [],
-      "versionCode": 70,
+      "versionCode": 71,
       "minSdkVersion": 26,
       "newArchEnabled": false,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.s540d.merkeundmale",
@@ -65,6 +60,15 @@
       "expo-router",
       "expo-asset",
       "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/icons/splash-icon.png",
+          "imageWidth": 220,
+          "resizeMode": "contain",
+          "backgroundColor": "#60D5FA"
+        }
+      ],
       [
         "@sentry/react-native",
         {
