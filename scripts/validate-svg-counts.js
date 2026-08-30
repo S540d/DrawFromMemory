@@ -12,6 +12,7 @@ const fs = require('fs');
 const path = require('path');
 
 const TARGET_FILE = path.resolve(__dirname, '../components/LevelImageDisplay.tsx');
+const LEVEL_IMAGES_DIR = path.resolve(__dirname, '../components/levelImages');
 
 // SVG primitive elements counted as individual drawable steps
 const SVG_PRIMITIVES = ['Circle', 'Ellipse', 'Rect', 'Line', 'Path', 'Polygon'];
@@ -64,9 +65,38 @@ function extractCaseCounts(source) {
   return counts;
 }
 
+/**
+ * Counts SVG primitives in the per-image render files under components/levelImages/
+ * (one file per image, e.g. 'level-01-sun.tsx' renders 'level-01-sun.svg').
+ */
+function extractSplitFileCounts(levelImagesDir) {
+  const counts = {};
+  const files = fs.readdirSync(levelImagesDir).filter(f => f.endsWith('.tsx'));
+
+  for (const file of files) {
+    const filename = file.replace(/\.tsx$/, '.svg');
+    const content = fs.readFileSync(path.join(levelImagesDir, file), 'utf8');
+
+    let elementCount = 0;
+    for (const primitive of SVG_PRIMITIVES) {
+      const tagRegex = new RegExp(`<${primitive}[\\s/>]`, 'g');
+      const tagMatches = content.match(tagRegex);
+      if (tagMatches) elementCount += tagMatches.length;
+    }
+
+    counts[filename] = elementCount;
+  }
+
+  return counts;
+}
+
 function validate() {
   if (!fs.existsSync(TARGET_FILE)) {
     console.error(`ERROR: File not found: ${TARGET_FILE}`);
+    process.exit(1);
+  }
+  if (!fs.existsSync(LEVEL_IMAGES_DIR)) {
+    console.error(`ERROR: Directory not found: ${LEVEL_IMAGES_DIR}`);
     process.exit(1);
   }
 
@@ -82,7 +112,7 @@ function validate() {
     process.exit(1);
   }
 
-  actual = extractCaseCounts(source);
+  actual = extractSplitFileCounts(LEVEL_IMAGES_DIR);
 
   const failures = [];
 
@@ -90,7 +120,7 @@ function validate() {
   for (const [filename, declaredCount] of Object.entries(declared)) {
     if (!(filename in actual)) {
       failures.push(
-        `  MISSING case: '${filename}' is in IMAGE_ELEMENT_COUNTS but has no case in renderSvgForImage`,
+        `  MISSING file: '${filename}' is in IMAGE_ELEMENT_COUNTS but has no file in components/levelImages/`,
       );
       continue;
     }
@@ -101,11 +131,11 @@ function validate() {
     }
   }
 
-  // Check every case has a declared entry
+  // Check every render file has a declared entry
   for (const filename of Object.keys(actual)) {
     if (!(filename in declared)) {
       failures.push(
-        `  UNDECLARED case: '${filename}' has a case but is missing from IMAGE_ELEMENT_COUNTS`,
+        `  UNDECLARED file: '${filename}' has a render file but is missing from IMAGE_ELEMENT_COUNTS`,
       );
     }
   }
@@ -126,4 +156,4 @@ if (require.main === module) {
   validate();
 }
 
-module.exports = { extractImageElementCounts, extractCaseCounts };
+module.exports = { extractImageElementCounts, extractCaseCounts, extractSplitFileCounts };
