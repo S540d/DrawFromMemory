@@ -51,7 +51,8 @@ components/
   DrawingCanvas.shared.ts    # Gemeinsame Typen (DrawingPath) und Styles
   DrawingCanvas.native.tsx   # Native Skia-Implementierung (Flood-Fill via Rect-Spans)
   DrawingCanvas.web.tsx      # Web Canvas-Implementierung
-  LevelImageDisplay.tsx      # SVG-Bild mit schrittweisem Aufdecken (revealStep)
+  LevelImageDisplay.tsx      # SVG-Bild mit schrittweisem Aufdecken (revealStep) — Lookup in levelImages/registry.ts, kein Inline-Switch mehr (PR #309)
+  levelImages/                # Eine Render-Datei pro Bild (`<filename>.tsx`, ohne .svg) + registry.ts (filename → render-Funktion)
   ParentalGate.tsx           # Eltern-Sperre für Einstellungen
   SettingsModal.tsx          # Einstellungen-Modal (In-Game)
   ErrorBoundary.tsx          # Fehlerbehandlung für Render-Fehler
@@ -410,7 +411,7 @@ Alle `EXPO_PUBLIC_*`-Flags sind zur Build-Zeit eingefroren (Expo bündelt sie st
 
 ### Pflicht bei neuen SVG-Bildern
 
-`IMAGE_ELEMENT_COUNTS` in `LevelImageDisplay.tsx` muss um den neuen Dateinamen ergänzt werden, sonst schlägt `npm run validate:svg-counts` fehl.
+`IMAGE_ELEMENT_COUNTS` in `LevelImageDisplay.tsx` muss um den neuen Dateinamen ergänzt werden, sonst schlägt `npm run validate:svg-counts` fehl. Das eigentliche SVG-Markup kommt in eine neue Datei `components/levelImages/<basename>.tsx` (ohne `.svg`), die per `default export` eine `render(svgSize, viewBox)`-Funktion bereitstellt und in `components/levelImages/registry.ts` unter dem vollen Dateinamen (`'<basename>.svg'`) eingetragen wird — kein `case` mehr in `LevelImageDisplay.tsx` selbst (PR #309).
 
 ### Imports
 
@@ -489,7 +490,7 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusät
 
 - `LevelImage.pack?: string` — optionaler Tag (z.B. `'tiere-v1'`)
 - Bilder ohne `minLevel` sind ab dem passenden Difficulty-Level verfügbar
-- Neue Packs: einfach neue Cases in `LevelImageDisplay.tsx` + Einträge in `ImagePoolManager.ts` + `IMAGE_ELEMENT_COUNTS`
+- Neue Packs: einfach neue Render-Dateien in `components/levelImages/` + Registry-Einträge in `components/levelImages/registry.ts` + Einträge in `ImagePoolManager.ts` + `IMAGE_ELEMENT_COUNTS` (`LevelImageDisplay.tsx`)
 - Pflicht nach jedem neuen SVG: `npm run validate:svg-counts` (derzeit 81 Einträge)
 - `getAvailablePacks()` (`ImagePoolManager.ts`) liefert alle im Pool vorkommenden Pack-IDs für die Chip-Filter-UI in `app/levels.tsx`
 - Neue Packs erscheinen automatisch als Filteroption — für ein sprechendes Label in der UI zusätzlich einen Eintrag in `PACK_LABEL_KEYS` (`app/levels.tsx`) sowie `levels.pack.<label>` in allen 7 Locale-Dateien ergänzen
