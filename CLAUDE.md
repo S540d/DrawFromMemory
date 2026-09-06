@@ -163,16 +163,16 @@ npm run deploy:ghpages             # Deployment auf GitHub Pages
 
 Läuft auf `push` und `pull_request` gegen `main` und `testing`.
 
-| Job | Name                       | Inhalt                                                                                                                                                                              |
-| --- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Job | Name                       | Inhalt                                                                                                                                                                             |
+| --- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | Code Quality & Linting     | ESLint, kein `console.log` in `app/`/`components/`, Web-API-Guards prüfen, AsyncStorage-Usage, `validate:svg-counts`, TypeScript-Check (`npx tsc --noEmit`, blockiert bei Fehlern) |
-| 2   | Unit Tests & Coverage      | `npm run test:ci` (Coverage-Artefakt wird hochgeladen)                                                                                                                              |
-| 3   | Build Web                  | `expo export --platform web`                                                                                                                                                        |
-| 4   | Platform Checks            | Versionskonsistenz: `package.json` vs. `app.json` müssen identische Version haben                                                                                                   |
-| 5   | Security Audit             | `npm audit --audit-level=high` — blockiert bei high/critical                                                                                                                        |
-| 6   | Docs Privacy Check         | `docs/private/` darf nicht committed sein                                                                                                                                           |
-| 7   | Keystore & Credential Scan | Keine `.keystore`/`.jks` Dateien, keine hardcodierten Passwörter                                                                                                                    |
-| 8   | Release Readiness Report   | Nur bei Push auf `main`; generiert manuelles Checklist-Summary                                                                                                                      |
+| 2   | Unit Tests & Coverage      | `npm run test:ci` (Coverage-Artefakt wird hochgeladen)                                                                                                                             |
+| 3   | Build Web                  | `expo export --platform web`                                                                                                                                                       |
+| 4   | Platform Checks            | Versionskonsistenz: `package.json` vs. `app.json` müssen identische Version haben                                                                                                  |
+| 5   | Security Audit             | `npm audit --audit-level=high` — blockiert bei high/critical                                                                                                                       |
+| 6   | Docs Privacy Check         | `docs/private/` darf nicht committed sein                                                                                                                                          |
+| 7   | Keystore & Credential Scan | Keine `.keystore`/`.jks` Dateien, keine hardcodierten Passwörter                                                                                                                   |
+| 8   | Release Readiness Report   | Nur bei Push auf `main`; generiert manuelles Checklist-Summary                                                                                                                     |
 
 **Coverage-Schwellenwerte (jest.config.js):** branches 49 %, functions 45 %, lines 54 %, statements 52 %.
 
@@ -507,6 +507,7 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusät
 - **iOS App Store**: Bundle ID `com.s540d.merkeundmale`, App Store URL noch TBD
 
 <!-- GLOBAL POLICY:START -->
+
 ## [GLOBAL POLICY]
 
 > Automatisch synchronisiert aus project-templates (Issue #7). Nicht manuell editieren –
@@ -537,4 +538,5 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusät
 ## [CI – CACHE-CLEANUP]
 
 - **Cache-Cleanup-Workflow** (`.github/workflows/cache-cleanup.yml`) in jedem Repo mit GitHub-Actions-Caches: löscht wöchentlich (So 03:00 UTC) bzw. on-demand alle Action-Caches älter als der jeweils letzte Lauf. GitHub-Limit ist 10 GB pro Repo – ohne Cleanup laufen Build-Caches (node_modules, Gradle, Expo) voll und verdrängen frische Einträge. Vorlage: `cache-cleanup.yml` in project-templates.
+
 <!-- GLOBAL POLICY:END -->
