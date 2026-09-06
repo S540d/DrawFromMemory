@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, testing]
   pull_request:
-    branches: [main]
+    branches: [main, testing]
 
 # Security: Explicitly set minimal permissions
 permissions:
@@ -89,7 +89,7 @@ jobs:
         run: npm run validate:svg-counts
 
       - name: TypeScript Type Check
-        run: npx tsc --noEmit || true
+        run: npx tsc --noEmit
 
   # ============================================================================
   # JOB 2: Unit Tests & Coverage

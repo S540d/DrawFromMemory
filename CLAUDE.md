@@ -165,7 +165,7 @@ Läuft auf `push` und `pull_request` gegen `main` und `testing`.
 
 | Job | Name                       | Inhalt                                                                                                                                                                              |
 | --- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Code Quality & Linting     | ESLint, kein `console.log` in `app/`/`components/`, Web-API-Guards prüfen, AsyncStorage-Usage, `validate:svg-counts`, TypeScript-Check (`npx tsc --noEmit \|\| true`, non-blocking) |
+| 1   | Code Quality & Linting     | ESLint, kein `console.log` in `app/`/`components/`, Web-API-Guards prüfen, AsyncStorage-Usage, `validate:svg-counts`, TypeScript-Check (`npx tsc --noEmit`, blockiert bei Fehlern) |
 | 2   | Unit Tests & Coverage      | `npm run test:ci` (Coverage-Artefakt wird hochgeladen)                                                                                                                              |
 | 3   | Build Web                  | `expo export --platform web`                                                                                                                                                        |
 | 4   | Platform Checks            | Versionskonsistenz: `package.json` vs. `app.json` müssen identische Version haben                                                                                                   |
@@ -174,7 +174,7 @@ Läuft auf `push` und `pull_request` gegen `main` und `testing`.
 | 7   | Keystore & Credential Scan | Keine `.keystore`/`.jks` Dateien, keine hardcodierten Passwörter                                                                                                                    |
 | 8   | Release Readiness Report   | Nur bei Push auf `main`; generiert manuelles Checklist-Summary                                                                                                                      |
 
-**Coverage-Schwellenwerte (jest.config.js):** branches 15 %, functions 25 %, lines 25 %, statements 25 %.
+**Coverage-Schwellenwerte (jest.config.js):** branches 49 %, functions 45 %, lines 54 %, statements 52 %.
 
 ---
 
