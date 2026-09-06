@@ -236,7 +236,7 @@ describe('DrawPhase', () => {
     const buttons = UNSAFE_getAllByType(TouchableOpacity);
     const hintBtn = buttons.find((b: any) => b.props.accessibilityLabel === 'game.draw.hintUsed');
     expect(hintBtn).toBeTruthy();
-    expect(hintBtn.props.disabled).toBe(true);
+    expect(hintBtn!.props.disabled).toBe(true);
   });
 
   it('renders undo and clear buttons', () => {
