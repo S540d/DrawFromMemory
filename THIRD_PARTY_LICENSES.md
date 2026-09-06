@@ -48,7 +48,6 @@ This document lists the open-source libraries used in DrawFromMemory (Merke und 
 ### SVG Rendering
 
 - **react-native-svg** — MIT License — https://github.com/software-mansion/react-native-svg
-- **react-native-svg-web** — MIT License — https://github.com/bacons/react-native-svg-web
 
 ---
 
