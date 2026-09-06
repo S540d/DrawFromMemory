@@ -23,8 +23,10 @@ const KEYS = {
 // In-memory fallback for Web when localStorage is unavailable
 const MEMORY_STORE: Record<string, string> = {};
 
-// Safe storage operations with Web fallback
-const safeStorageOps = {
+// Safe storage operations with Web fallback — exported so other managers
+// with their own storage key (DailyChallengeManager, OnboardingManager)
+// don't reimplement the same try/catch + in-memory fallback.
+export const safeStorageOps = {
   async getItem(key: string): Promise<string | null> {
     try {
       const value = await AsyncStorage.getItem(key);
