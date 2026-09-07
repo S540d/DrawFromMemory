@@ -5,7 +5,7 @@
 **Merke und Male** — Gedächtnistraining-App für Kinder (React Native / Expo).
 Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Ergebnis.
 
-- **Aktuell: v1.7.0** (package.json + app.json; versionCode 66)
+- **Aktuell: v1.9.0** (package.json + app.json; versionCode 70)
 - **Mindestanforderung Android: API 26 (Android 8.0 Oreo)** — Nexus 6 (max. API 25) wird nicht mehr unterstützt (Issue #172, geschlossen)
 - **Live Demo:** https://s540d.github.io/DrawFromMemory/
 - **Repo:** https://github.com/S540d/DrawFromMemory
@@ -314,17 +314,17 @@ Bewusst **kein** separates XP-System, keine zusätzliche Währung — nur diese 
 
 ## UI/UX Design System (Issue #176)
 
-Stand `testing`: Phase A, B, C, D und E vollständig abgeschlossen (Lottie-Teil aus Phase D via PR #286).
+Stand `main`: Phase A, B, C, D und E vollständig abgeschlossen (Lottie-Teil aus Phase D via PR #286).
 
 ### Phase-Übersicht
 
-| Phase                                                                       | Status          | Branch/PR                                                                        |
-| --------------------------------------------------------------------------- | --------------- | -------------------------------------------------------------------------------- |
-| **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie         | ✅ in `testing` | PR merged                                                                        |
-| **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in `testing` | PR #178 merged                                                                   |
-| **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh        | ✅ in `testing` | PR #257 merged                                                                   |
-| **D: Delight** — Lottie, Konfetti, Mikro-Sounds                             | ✅ in `testing` | Konfetti/Sound PR #253, TimerArc/Crossfade/Stats PR #257, Lottie-Sparkle PR #286 |
-| **E: Onboarding** — First-Run-Tour                                          | ✅ in `testing` | PR #261 merged (In-Game Coach-Marks)                                             |
+| Phase                                                                       | Status     | Branch/PR                                                                        |
+| --------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------- |
+| **A: Foundation** — Farbpalette, Dark Mode, Nunito-Font, Typografie         | ✅ in main | PR merged                                                                        |
+| **B: Components** — Gradient-Buttons, Glassmorphism-Cards, Sterne-Animation | ✅ in main | PR #178 merged                                                                   |
+| **C: Screens** — Timer-Visualisierung, Phase-Übergänge, Home-Refresh        | ✅ in main | PR #257 merged                                                                   |
+| **D: Delight** — Lottie, Konfetti, Mikro-Sounds                             | ✅ in main | Konfetti/Sound PR #253, TimerArc/Crossfade/Stats PR #257, Lottie-Sparkle PR #286 |
+| **E: Onboarding** — First-Run-Tour                                          | ✅ in main | PR #261 merged (In-Game Coach-Marks)                                             |
 
 ### Lottie (PR #286, Issue #279 2.2)
 
@@ -442,15 +442,15 @@ Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerend
 ## Security
 
 - `npm audit --audit-level=high` in CI — Pipeline blockiert bei high/critical
-- Verbleibende Findings (12 moderate, Stand 2026-08-04): alle im jest-expo/expo-SDK-Chain (`uuid` via `xcode` → `@expo/config-plugins` → `@expo/cli` → `expo` → `@sentry/react-native`) — nur via `npm audit fix --force` (Breaking, Downgrade auf `expo@46.0.21`) behebbar, `npm audit --audit-level=high` schlägt nicht an
-- Alle high/critical Vulnerabilities zuletzt gefixt: 2026-08-04 via `npm audit fix` (1 high `brace-expansion` DoS + `postcss` moderate → 0 high/critical; nur `package-lock.json`, kein Breaking Change)
+- Verbleibende Findings (21 moderate, Stand 2026-09-06): größtenteils in der jest-expo/expo-SDK-Chain (`decode-uri-component`/`uuid` via `xcode` → `@expo/config-plugins` → `@expo/cli` → `expo` → `@sentry/react-native`) — nur via `npm audit fix --force` (Breaking, Downgrade auf ältere Expo-Version) behebbar, `npm audit --audit-level=high` schlägt nicht an
+- Alle high/critical Vulnerabilities zuletzt gefixt: 2026-09-06 via `npm audit fix` (1 high `browserslist` Unbounded-Memory-Growth, GHSA-c83g-rgw3-j3cx, + `@xmldom/xmldom` moderate → 0 high/critical; nur `package-lock.json`, kein Breaking Change; Issue #322, PR #324)
 
 ---
 
 ## Wachstums-Roadmap (Issue #219)
 
 Übergeordneter Plan, um aus der App eine dauerhaft wachsende Kids-App im Play Store zu machen.
-Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusätzlich die Themen-Pack-Auswahl-UI (PR #271), die Draw-UX-Fixes (Icons/Strichstärken-Farbe/Fortschrittsbalken, PR #272), die komplette Issue-#279-PR-Serie (Mascot/Altersstufen #284, Stilguide #285, Lottie/Icon-Refresh #286, Tablet-/Landscape-Layout #287, Natur/Märchen/Essen-Packs #288) und die Startbildschirm-/Einstellungen-Label-/Icon-Anpassungen aus APK-Testing-Feedback (PR #292) — noch nicht in `main` gemerged. Enthält Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten, weitere Sprachen, Sentry-ErrorBoundary (#264) und den transform-origin Web-Fix (#265). **Play Store noch nicht auf v1.7.0** — Release-Aufgabe in Issue #267.
+Stand: `main` @ v1.9.0 / versionCode 70 (Release-PRs #266, #293, #301). Enthält u.a. Themen-Pack-Auswahl-UI (#271), Draw-UX-Fixes (#272), Mascot "Mali" + Altersstufen-Auswahl (Issue #279 1.1+1.3, #284), Illustrations-Stilguide (#285), Lottie/Icon-Refresh (#286), Tablet-/Landscape-Layout (#281/#287), Themen-Packs Natur/Märchen/Essen v1 (#288, Pool 51→81 Bilder), SEO-/Trust-Ausbau der gh-pages-Demo (#280/#291), Startbildschirm-/Einstellungen-Label-Anpassungen aus APK-Testing-Feedback (#292), foojay/Gradle-9-Fix (Issue #276), Fahrzeuge v1, PNG-Export, Mini-Tutorial, Design-System Phase C/D-Polish, Spielvarianten, weitere Sprachen, Sentry-ErrorBoundary (#264) und den transform-origin Web-Fix (#265). `testing` liegt weiterhin leicht voraus: primär Tech-Debt/Infra (ARCHITECTURE.md #307, `levelImages/`-Split #309, Dependabot+CodeQL #310, Coverage-Threshold-Anhebung #313, actionlint-Reuse #316, CI-Fix für PRs gegen testing #319, `react-native-svg-web` entfernt #321, DailyChallengeManager/OnboardingManager-Refactor #320) — kein User-Facing-Feature-Rückstand mehr. **Play Store noch nicht auf v1.9.0** — Release-Aufgabe in Issue #267.
 
 ### P0 — Foundation für Wachstum
 
@@ -468,11 +468,11 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusät
 | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
 | **Themen-Pack Tiere v1** (10 Bilder, #222)                               | ✅ in main (v1.7.0)                                                                                          |
 | **Themen-Pack Fahrzeuge v1** (10 Bilder, PR #254)                        | ✅ in main (v1.7.0)                                                                                          |
-| **Themen-Pack-Auswahl-UI** (Chip-Filter Alle/Tiere/Fahrzeuge, PR #271)   | ✅ in `testing`                                                                                              |
-| **Themen-Pack Natur/Märchen/Essen v1** (je 10 Bilder, Issue #279 1.5)    | 🟡 PR offen                                                                                                  |
+| **Themen-Pack-Auswahl-UI** (Chip-Filter Alle/Tiere/Fahrzeuge, PR #271)   | ✅ in main                                                                                                   |
+| **Themen-Pack Natur/Märchen/Essen v1** (je 10 Bilder, Issue #279 1.5)    | ✅ in main (v1.8.0, PR #288)                                                                                 |
 | Content-Pipeline: Ziel 100+ Bilder (Issue #279 1.5)                      | 🟡 81/100+ — saisonaler Pack-Mechanismus noch offen                                                          |
 | **Spielvarianten** (Nur Umriss merken, Spiegelbild, Kreativ-Modus, #247) | ✅ in main (v1.7.0)                                                                                          |
-| **Avatar & Personalisierung** (Mascot "Mali", Issue #279 1.1)            | ✅ in `testing` — bewusst ohne separates XP-System, siehe Zeile darunter                                     |
+| **Avatar & Personalisierung** (Mascot "Mali", Issue #279 1.1)            | ✅ in main (v1.8.0, PR #284) — bewusst ohne separates XP-System, siehe Zeile darunter                        |
 | ~~XP- & Level-System~~                                                   | ❌ bewusst nicht (Issue #279 Anti-Bloat) — Gesamt-Sterne schalten stattdessen direkt Mascot-Accessoires frei |
 | Wöchentliche Challenge                                                   | ❌ bewusst nicht (Issue #279 Anti-Bloat) — ein Loop (Daily Challenge) statt mehrerer Parallel-Systeme        |
 
@@ -484,7 +484,7 @@ Stand: `main` @ v1.7.0 / versionCode 66. `testing` liegt voraus: enthält zusät
 | **Weitere Sprachen** (ES/FR/IT/NL/PL, #247)                            | ✅ in main (v1.7.0) — automatische Geräte-Spracherkennung |
 | **Sharing-Feature / PNG-Export** (ShareService, PR #255)               | ✅ in main (v1.7.0)                                       |
 | Push-Notifications (opt-in)                                            | 🔲 offen                                                  |
-| **Tablet-/Landscape-Layout** (Issue #279 2.4, deckt #278 UI-seitig ab) | ✅ in `testing` (PR #287)                                 |
+| **Tablet-/Landscape-Layout** (Issue #279 2.4, deckt #278 UI-seitig ab) | ✅ in main (v1.8.0, PR #281/#287)                         |
 
 ### Themen-Pack Architektur (ab PR #221, Auswahl-UI ab PR #271)
 
