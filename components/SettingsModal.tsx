@@ -18,6 +18,7 @@ import SoundManager from '@services/SoundManager';
 import { getAgeGroup, setAgeGroup } from '@services/AgeGroupManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
+import { IMPRESSUM_URL, PRIVACY_POLICY_URL } from '../constants/ExternalLinks';
 import ParentalGate from './ParentalGate';
 import ParentDashboard from './ParentDashboard';
 import BadgesModal from './BadgesModal';
@@ -150,6 +151,24 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             <Text style={[styles.modalValue, { color: colors.text.primary }]}>
               {Constants.expoConfig?.version ?? '–'}
             </Text>
+
+            <Text style={[styles.modalLabel, { color: colors.text.light, marginTop: Spacing.md }]}>
+              {t('settings.impressumLabel')}
+            </Text>
+            <TouchableOpacity onPress={() => openExternalUrl(IMPRESSUM_URL)}>
+              <Text style={[styles.modalLink, { color: colors.primary }]}>
+                {t('settings.openLink')}
+              </Text>
+            </TouchableOpacity>
+
+            <Text style={[styles.modalLabel, { color: colors.text.light, marginTop: Spacing.md }]}>
+              {t('footer.privacyPolicy')}
+            </Text>
+            <TouchableOpacity onPress={() => openExternalUrl(PRIVACY_POLICY_URL)}>
+              <Text style={[styles.modalLink, { color: colors.primary }]}>
+                {t('settings.openLink')}
+              </Text>
+            </TouchableOpacity>
 
             <Text style={[styles.modalLabel, { color: colors.text.light, marginTop: Spacing.md }]}>
               {t('settings.licenseLabel')}
