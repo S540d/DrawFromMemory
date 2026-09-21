@@ -3,7 +3,7 @@
  * Deterministisch aus Datum berechnet, kein Server nötig.
  */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { safeStorageOps } from './StorageManager';
 import { getTotalLevels } from './LevelManager';
 
 const STORAGE_KEY = '@merke_male:daily_challenge';
@@ -12,30 +12,20 @@ interface DailyChallengeState {
   lastCompletedDate: string | null;
 }
 
-const MEMORY: Record<string, string> = {};
-
 async function loadState(): Promise<DailyChallengeState> {
-  try {
-    const raw = await AsyncStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      MEMORY[STORAGE_KEY] = raw;
+  const raw = await safeStorageOps.getItem(STORAGE_KEY);
+  if (raw) {
+    try {
       return JSON.parse(raw);
+    } catch {
+      // fall through to default below
     }
-  } catch {
-    const raw = MEMORY[STORAGE_KEY];
-    if (raw) return JSON.parse(raw);
   }
   return { lastCompletedDate: null };
 }
 
 async function saveState(state: DailyChallengeState): Promise<void> {
-  const raw = JSON.stringify(state);
-  MEMORY[STORAGE_KEY] = raw;
-  try {
-    await AsyncStorage.setItem(STORAGE_KEY, raw);
-  } catch {
-    // in-memory fallback is sufficient for web sessions
-  }
+  await safeStorageOps.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
 /**

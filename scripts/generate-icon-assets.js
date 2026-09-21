@@ -6,12 +6,6 @@
  * Workflow (feature-graphic-export.html) durch einen reproduzierbaren
  * Screenshot-Export via Chromium.
  *
- * Seit Issue #304/#338: app-icon.png/adaptive-icon.png/favicon.png sind
- * kein SVG-Rasterisierungs-Ziel mehr, sondern von Hand aus einem
- * KI-generierten Motiv erstellte Raster-Assets — dieses Script
- * rasterisiert nur noch die Play-Store-Feature-Graphic. `app-icon.svg`
- * ist der alte Motiv-Entwurf und wird nicht mehr referenziert.
- *
  * Nutzt `playwright-core` (nicht als Projekt-Dependency geführt, da nur für
  * diesen einmaligen Asset-Export benötigt):
  *   npm install --no-save playwright-core
@@ -29,6 +23,20 @@ const CHROMIUM_PATH =
   process.env.PLAYWRIGHT_CHROMIUM_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 
 const TARGETS = [
+  { svg: 'app-icon.svg', out: 'app-icon.png', width: 1024, height: 1024 },
+  // Adaptive-Icon-Vordergrund und Splash-Icon sind eigene, transparente SVGs
+  // (Motiv innerhalb der 66%-Sicherheitszone) — NICHT dieselbe Vollbild-app-icon.svg
+  // (Issue #304: app-icon.png/adaptive-icon.png/favicon.png waren byte-identisch).
+  {
+    svg: 'adaptive-icon-foreground.svg',
+    out: 'adaptive-icon.png',
+    width: 1024,
+    height: 1024,
+    transparent: true,
+  },
+  { svg: 'splash-icon.svg', out: 'splash-icon.png', width: 1024, height: 1024, transparent: true },
+  { svg: 'app-icon.svg', out: 'favicon.png', width: 1024, height: 1024 },
+  { svg: 'app-icon.svg', out: 'app-icon-512.png', width: 512, height: 512 },
   { svg: 'feature-graphic.svg', out: 'feature-graphic.png', width: 1024, height: 500 },
 ];
 
@@ -55,7 +63,7 @@ async function main() {
         { width: target.width, height: target.height },
       );
       const outPath = path.join(ICONS_DIR, target.out);
-      await page.screenshot({ path: outPath });
+      await page.screenshot({ path: outPath, omitBackground: Boolean(target.transparent) });
       await context.close();
       console.log(`Generated ${target.out} (${target.width}x${target.height}) from ${target.svg}`);
     }

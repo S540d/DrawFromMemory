@@ -7,13 +7,18 @@
  */
 
 /* eslint-disable */
-const { extractImageElementCounts, extractCaseCounts } = require('../validate-svg-counts');
+const {
+  extractImageElementCounts,
+  extractCaseCounts,
+  extractSplitFileCounts,
+} = require('../validate-svg-counts');
 
 const fs = require('fs');
 const path = require('path');
 /* eslint-enable */
 
 const LEVEL_IMAGE_DISPLAY = path.resolve(__dirname, '../../components/LevelImageDisplay.tsx');
+const LEVEL_IMAGES_DIR = path.resolve(__dirname, '../../components/levelImages');
 
 describe('extractImageElementCounts', () => {
   it('parses IMAGE_ELEMENT_COUNTS map from source', () => {
@@ -97,21 +102,25 @@ describe('extractCaseCounts', () => {
   });
 });
 
-describe('IMAGE_ELEMENT_COUNTS vs. actual renderSvgForImage elements', () => {
+describe('IMAGE_ELEMENT_COUNTS vs. actual per-image render files', () => {
   it('LevelImageDisplay.tsx file exists', () => {
     expect(fs.existsSync(LEVEL_IMAGE_DISPLAY)).toBe(true);
   });
 
-  it('all declared counts match actual SVG element counts in renderSvgForImage', () => {
+  it('components/levelImages directory exists', () => {
+    expect(fs.existsSync(LEVEL_IMAGES_DIR)).toBe(true);
+  });
+
+  it('all declared counts match actual SVG element counts in components/levelImages/*.tsx', () => {
     const source = fs.readFileSync(LEVEL_IMAGE_DISPLAY, 'utf8');
     const declared = extractImageElementCounts(source);
-    const actual = extractCaseCounts(source);
+    const actual = extractSplitFileCounts(LEVEL_IMAGES_DIR);
 
     const mismatches: string[] = [];
 
     for (const [filename, declaredCount] of Object.entries(declared) as [string, number][]) {
       if (!(filename in actual)) {
-        mismatches.push(`MISSING case for '${filename}' (declared count: ${declaredCount})`);
+        mismatches.push(`MISSING render file for '${filename}' (declared count: ${declaredCount})`);
         continue;
       }
       if (actual[filename] !== declaredCount) {
@@ -124,7 +133,7 @@ describe('IMAGE_ELEMENT_COUNTS vs. actual renderSvgForImage elements', () => {
     for (const filename of Object.keys(actual)) {
       if (!(filename in declared)) {
         mismatches.push(
-          `UNDECLARED: '${filename}' has a case but is missing from IMAGE_ELEMENT_COUNTS`,
+          `UNDECLARED: '${filename}' has a render file but is missing from IMAGE_ELEMENT_COUNTS`,
         );
       }
     }
