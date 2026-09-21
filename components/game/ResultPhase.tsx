@@ -39,7 +39,7 @@ export default function ResultPhase({
   onRestartFromLevel1,
 }: ResultPhaseProps) {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const isLastLevel = levelNumber >= getTotalLevels();
   const [showCompletionModal, setShowCompletionModal] = useState(false);
 
@@ -121,7 +121,9 @@ export default function ResultPhase({
               </Text>
             </View>
             <View style={[styles.comparisonImage, { width: imageSize, height: imageSize }]}>
-              {currentImage && <LevelImageDisplay image={currentImage} size={imageSize} />}
+              {currentImage && (
+                <LevelImageDisplay image={currentImage} size={imageSize} theme={theme} />
+              )}
             </View>
           </View>
 

@@ -9,25 +9,57 @@ interface Props {
   revealStep?: number; // If set, only show SVG children 0..revealStep (for progressive reveal)
   mode?: 'normal' | 'outline'; // 'outline' strips colors, showing only the silhouette (game variant "Nur Umriss merken")
   mirror?: boolean; // Horizontally flips the image (game variant "Spiegelbild")
+  theme?: 'light' | 'dark'; // Adjusts pure-black, unfilled strokes so they stay visible on a dark background (Issue #335)
 }
 
-const OUTLINE_COLOR = '#3a3a3a';
+const OUTLINE_COLOR_LIGHT = '#3a3a3a';
+const OUTLINE_COLOR_DARK = '#D8D4E8';
+
+// Some images (e.g. the stick figure) are drawn entirely as unfilled black
+// strokes. On the dark theme's surface colors those are nearly invisible, so
+// they get remapped to a light color instead (Issue #335).
+const UNFILLED_STROKE_DARK_FALLBACK = '#D8D4E8';
 
 /**
  * Recursively strips fill colors from an SVG element tree and forces a uniform
  * outline stroke, so only the silhouette remains visible (no color information).
  */
-function toOutlineElement(node: React.ReactNode): React.ReactNode {
+function toOutlineElement(node: React.ReactNode, outlineColor: string): React.ReactNode {
   if (!React.isValidElement(node)) return node;
   const props: Record<string, unknown> = { ...(node.props as Record<string, unknown>) };
 
   if ('fill' in props) props.fill = 'none';
-  props.stroke = OUTLINE_COLOR;
+  props.stroke = outlineColor;
   if (!props.strokeWidth || Number(props.strokeWidth) < 2) props.strokeWidth = '2';
   delete props.opacity;
 
   if (props.children) {
-    props.children = React.Children.map(props.children as React.ReactNode, toOutlineElement);
+    props.children = React.Children.map(props.children as React.ReactNode, child =>
+      toOutlineElement(child, outlineColor),
+    );
+  }
+
+  return React.cloneElement(node, props);
+}
+
+/**
+ * Recursively remaps unfilled black strokes (fill="none", stroke="#000000")
+ * to a light color, so silhouette-only images stay visible against a dark
+ * background (Issue #335).
+ */
+function fixUnfilledStrokeForDarkTheme(node: React.ReactNode): React.ReactNode {
+  if (!React.isValidElement(node)) return node;
+  const props: Record<string, unknown> = { ...(node.props as Record<string, unknown>) };
+
+  if (props.fill === 'none' && (props.stroke === '#000000' || props.stroke === 'black')) {
+    props.stroke = UNFILLED_STROKE_DARK_FALLBACK;
+  }
+
+  if (props.children) {
+    props.children = React.Children.map(
+      props.children as React.ReactNode,
+      fixUnfilledStrokeForDarkTheme,
+    );
   }
 
   return React.cloneElement(node, props);
@@ -5601,6 +5633,7 @@ export default function LevelImageDisplay({
   revealStep,
   mode = 'normal',
   mirror = false,
+  theme = 'light',
 }: Props) {
   const svgSize = size;
   const viewBox = '0 0 200 200';
@@ -5612,11 +5645,18 @@ export default function LevelImageDisplay({
   }
 
   if (mode === 'outline') {
+    const outlineColor = theme === 'dark' ? OUTLINE_COLOR_DARK : OUTLINE_COLOR_LIGHT;
     const outlinedChildren = React.Children.map(
       (svgElement.props as React.ComponentProps<typeof Svg>).children,
-      toOutlineElement,
+      child => toOutlineElement(child, outlineColor),
     );
     svgElement = React.cloneElement(svgElement, {}, outlinedChildren);
+  } else if (theme === 'dark') {
+    const fixedChildren = React.Children.map(
+      (svgElement.props as React.ComponentProps<typeof Svg>).children,
+      fixUnfilledStrokeForDarkTheme,
+    );
+    svgElement = React.cloneElement(svgElement, {}, fixedChildren);
   }
 
   const containerStyle = [
