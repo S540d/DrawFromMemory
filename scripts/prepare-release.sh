@@ -69,7 +69,7 @@ echo "📱 Checking App Assets..."
 echo "------------------------"
 check_file "assets/icons/app-icon.png" "App Icon (1024x1024)"
 check_file "assets/icons/adaptive-icon.png" "Adaptive Icon (1024x1024)"
-check_file "assets/icons/app-icon.svg" "Icon Source SVG"
+check_file "assets/splash-icon.png" "Splash Screen Icon"
 
 if check_dir "assets/icons/screenshots" "Screenshots Directory"; then
     SCREENSHOT_COUNT=$(find assets/icons/screenshots -name "*.png" -o -name "*.jpg" 2>/dev/null | wc -l | tr -d ' ')

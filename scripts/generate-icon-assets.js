@@ -6,6 +6,12 @@
  * Workflow (feature-graphic-export.html) durch einen reproduzierbaren
  * Screenshot-Export via Chromium.
  *
+ * Seit Issue #304/#338: app-icon.png/adaptive-icon.png/favicon.png sind
+ * kein SVG-Rasterisierungs-Ziel mehr, sondern von Hand aus einem
+ * KI-generierten Motiv erstellte Raster-Assets — dieses Script
+ * rasterisiert nur noch die Play-Store-Feature-Graphic. `app-icon.svg`
+ * ist der alte Motiv-Entwurf und wird nicht mehr referenziert.
+ *
  * Nutzt `playwright-core` (nicht als Projekt-Dependency geführt, da nur für
  * diesen einmaligen Asset-Export benötigt):
  *   npm install --no-save playwright-core
@@ -23,10 +29,6 @@ const CHROMIUM_PATH =
   process.env.PLAYWRIGHT_CHROMIUM_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 
 const TARGETS = [
-  { svg: 'app-icon.svg', out: 'app-icon.png', width: 1024, height: 1024 },
-  { svg: 'app-icon.svg', out: 'adaptive-icon.png', width: 1024, height: 1024 },
-  { svg: 'app-icon.svg', out: 'favicon.png', width: 1024, height: 1024 },
-  { svg: 'app-icon.svg', out: 'app-icon-512.png', width: 512, height: 512 },
   { svg: 'feature-graphic.svg', out: 'feature-graphic.png', width: 1024, height: 500 },
 ];
 

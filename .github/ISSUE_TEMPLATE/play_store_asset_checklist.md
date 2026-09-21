@@ -14,7 +14,6 @@ assignees: ''
   - Format: PNG-24
   - Transparent oder mit Hintergrund
   - Speichern als: `assets/icons/app-icon.png`
-  - Quelle: `assets/icons/app-icon.svg`
 
 - [ ] **Adaptive Icon** (1024x1024px)
   - Format: PNG-24
