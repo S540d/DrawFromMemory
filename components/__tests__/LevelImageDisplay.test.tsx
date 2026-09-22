@@ -35,6 +35,15 @@ const sunImage: LevelImage = {
   colors: ['#FFD700'],
 };
 
+const stickFigureImage: LevelImage = {
+  filename: 'extra-01-stick-figure.svg',
+  difficulty: 1,
+  displayName: 'Strichmännchen',
+  displayNameEn: 'Stick figure',
+  strokeCount: 6,
+  colors: ['#000000'],
+};
+
 describe('LevelImageDisplay', () => {
   it('renders the full-color image by default', () => {
     const { UNSAFE_root } = render(<LevelImageDisplay image={sunImage} />);
@@ -71,5 +80,34 @@ describe('LevelImageDisplay', () => {
   it('renders an empty placeholder for an unknown image without crashing', () => {
     const unknown: LevelImage = { ...sunImage, filename: 'does-not-exist.svg' };
     expect(() => render(<LevelImageDisplay image={unknown} mode="outline" mirror />)).not.toThrow();
+  });
+
+  it('recolors unfilled black strokes in dark theme, including <Line> elements without a fill prop (#335)', () => {
+    const { UNSAFE_root } = render(<LevelImageDisplay image={stickFigureImage} theme="dark" />);
+    const stillBlack = UNSAFE_root.findAll(
+      (node: any) => node.props.stroke === '#000000' || node.props.stroke === 'black',
+    );
+    expect(stillBlack.length).toBe(0);
+    const recolored = UNSAFE_root.findAll((node: any) => node.props.stroke === '#D8D4E8');
+    // Kopf (Circle, fill="none") + 5 Gliedmaßen (Line, ohne fill-Prop)
+    expect(recolored.length).toBeGreaterThanOrEqual(6);
+  });
+
+  it('keeps black strokes unchanged in light theme (default)', () => {
+    const { UNSAFE_root } = render(<LevelImageDisplay image={stickFigureImage} />);
+    const black = UNSAFE_root.findAll(
+      (node: any) => node.props.stroke === '#000000' || node.props.stroke === 'black',
+    );
+    expect(black.length).toBeGreaterThan(0);
+  });
+
+  it('uses a theme-appropriate outline color in outline mode', () => {
+    const { UNSAFE_root: darkRoot } = render(
+      <LevelImageDisplay image={sunImage} mode="outline" theme="dark" />,
+    );
+    expect(darkRoot.findAll((node: any) => node.props.stroke === '#D8D4E8').length).toBeGreaterThan(
+      0,
+    );
+    expect(darkRoot.findAll((node: any) => node.props.stroke === '#3a3a3a').length).toBe(0);
   });
 });

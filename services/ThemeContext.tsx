@@ -73,10 +73,13 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Light theme colors
+// primary ist eine kontraststarke Blau-Variante (WCAG-safe für Text/Buttons
+// auf hellem Grund), primaryLight die eigentliche Icon-/Markenfarbe #60D5FA
+// für dekorative Flächen ohne Text (Issue #306).
 const LIGHT_COLORS: ThemeColors = {
-  primary: '#7C5CFF',
-  primaryLight: '#9E84FF',
-  primaryDark: '#5A3FE0',
+  primary: '#0585AD',
+  primaryLight: '#60D5FA',
+  primaryDark: '#045B77',
   secondary: '#F093FB',
   accent: '#4ECDC4',
   accentWarm: '#FFB547',
@@ -129,11 +132,11 @@ const LIGHT_COLORS: ThemeColors = {
   },
 };
 
-// Dark theme colors — wärmere, leicht lila getönte Töne (Issue #176 §1.2)
+// Dark theme colors — hellere, leicht entsättigte Töne für Kontrast auf dunklem Grund (Issue #176 §1.2 / #306)
 const DARK_COLORS: ThemeColors = {
-  primary: '#9E84FF',
-  primaryLight: '#B8A3FF',
-  primaryDark: '#7C5CFF',
+  primary: '#7DE0FF',
+  primaryLight: '#A8ECFF',
+  primaryDark: '#60D5FA',
   secondary: '#F5B3FC',
   accent: '#4ECDC4',
   accentWarm: '#FFB547',

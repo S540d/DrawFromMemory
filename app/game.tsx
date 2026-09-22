@@ -41,7 +41,7 @@ export default function GameScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const params = useLocalSearchParams();
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const insets = useSafeAreaInsets();
   const layout = useScreenLayout();
   const { screenWidth, isSmall } = layout;
@@ -343,6 +343,7 @@ export default function GameScreen() {
                   size={Math.min(screenWidth - 80, 280)}
                   mode={variant === 'outline' ? 'outline' : 'normal'}
                   mirror={variant === 'mirror'}
+                  theme={theme}
                 />
               </ErrorBoundary>
             )}

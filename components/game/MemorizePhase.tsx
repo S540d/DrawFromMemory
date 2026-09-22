@@ -21,7 +21,7 @@ export default function MemorizePhase({
   variant = 'normal',
 }: MemorizePhaseProps) {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
 
   return (
     <View style={styles.phaseContainer}>
@@ -50,6 +50,7 @@ export default function MemorizePhase({
                 revealStep={revealStep}
                 mode={variant === 'outline' ? 'outline' : 'normal'}
                 mirror={variant === 'mirror'}
+                theme={theme}
               />
             </ErrorBoundary>
             <Text style={[styles.imageName, { color: colors.text.primary }]}>
