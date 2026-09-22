@@ -107,6 +107,12 @@
       "playAgain": "Zacznij od nowa",
       "replay": "▶ Powtórz",
       "replayStop": "⏹ Zatrzymaj"
+    },
+    "pause": {
+      "title": "Chwila przerwy?",
+      "message": "Narysowałeś już {{count}} obrazków! Czas na krótką przerwę?",
+      "mainMenu": "Menu główne",
+      "continue": "Dalej"
     }
   },
   "settings": {

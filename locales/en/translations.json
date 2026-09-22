@@ -107,6 +107,12 @@
       "playAgain": "Restart",
       "replay": "▶ Replay",
       "replayStop": "⏹ Stop"
+    },
+    "pause": {
+      "title": "Time for a break?",
+      "message": "You've drawn {{count}} pictures already! Time for a short break?",
+      "mainMenu": "Main Menu",
+      "continue": "Continue"
     }
   },
   "settings": {
