@@ -261,7 +261,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
 
   const renderContent = () => (
     <View>
-      {/* DARSTELLUNG */}
+      {/* DARSTELLUNG: Design, Sound, Jubelmoment (Issue #336) */}
       <Text style={[styles.sectionHeader, { color: colors.text.light }]}>
         {t('settings.appearance')}
       </Text>
@@ -278,24 +278,6 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
             v => handleThemeChange(v as 'light' | 'dark' | 'system'),
           ),
         )}
-        <View style={[styles.row, styles.languageRow, { borderBottomColor: colors.border }]}>
-          <Text style={[styles.rowLabel, { color: colors.text.primary, marginBottom: Spacing.xs }]}>
-            {t('settings.language')}
-          </Text>
-          {renderSegment(
-            [
-              { label: 'DE', value: 'de' },
-              { label: 'EN', value: 'en' },
-              { label: 'ES', value: 'es' },
-              { label: 'FR', value: 'fr' },
-              { label: 'IT', value: 'it' },
-              { label: 'NL', value: 'nl' },
-              { label: 'PL', value: 'pl' },
-            ],
-            currentLang,
-            v => handleLanguageChange(v as Language),
-          )}
-        </View>
         {renderRow(
           t('settings.sound'),
           renderSegment(
@@ -310,25 +292,6 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
               SoundManager.setSoundEnabled(enabled);
               await storageManager.setSetting('soundEnabled', enabled);
             },
-          ),
-        )}
-      </View>
-
-      {/* PERSONALISIEREN */}
-      <Text style={[styles.sectionHeader, { color: colors.text.light }]}>
-        {t('settings.personalize')}
-      </Text>
-      <View style={[styles.card, { backgroundColor: colors.surface }]}>
-        {renderRow(
-          t('ageGroup.settingsLabel'),
-          renderSegment(
-            [
-              { label: t('ageGroup.group3to5'), value: '3-5' },
-              { label: t('ageGroup.group6to8'), value: '6-8' },
-              { label: t('ageGroup.group9plus'), value: '9plus' },
-            ],
-            ageGroup ?? '',
-            v => handleAgeGroupChange(v as AgeGroup),
           ),
         )}
         {renderRow(
@@ -348,23 +311,60 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
         )}
       </View>
 
-      {/* INFO & SUPPORT + DATEN */}
+      {/* PERSONALISIEREN: Sprache, Altersstufe (Issue #336) */}
       <Text style={[styles.sectionHeader, { color: colors.text.light }]}>
-        {t('settings.aboutSupport')}
+        {t('settings.personalize')}
+      </Text>
+      <View style={[styles.card, { backgroundColor: colors.surface }]}>
+        <View style={[styles.row, styles.languageRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.rowLabel, { color: colors.text.primary, marginBottom: Spacing.xs }]}>
+            {t('settings.language')}
+          </Text>
+          {renderSegment(
+            [
+              { label: 'DE', value: 'de' },
+              { label: 'EN', value: 'en' },
+              { label: 'ES', value: 'es' },
+              { label: 'FR', value: 'fr' },
+              { label: 'IT', value: 'it' },
+              { label: 'NL', value: 'nl' },
+              { label: 'PL', value: 'pl' },
+            ],
+            currentLang,
+            v => handleLanguageChange(v as Language),
+          )}
+        </View>
+        {renderRow(
+          t('ageGroup.settingsLabel'),
+          renderSegment(
+            [
+              { label: t('ageGroup.group3to5'), value: '3-5' },
+              { label: t('ageGroup.group6to8'), value: '6-8' },
+              { label: t('ageGroup.group9plus'), value: '9plus' },
+            ],
+            ageGroup ?? '',
+            v => handleAgeGroupChange(v as AgeGroup),
+          ),
+        )}
+      </View>
+
+      {/* ELTERNBEREICH: Eltern-Bereich, Trophäen, Feedback, Support, Teilen, Über, Zurücksetzen (Issue #336) */}
+      <Text style={[styles.sectionHeader, { color: colors.text.light }]}>
+        {t('settings.parentArea')}
       </Text>
       <View style={[styles.card, { backgroundColor: colors.surface }]}>
         <View style={styles.actionGrid}>
           {(
             [
               {
-                id: 'trophies',
-                label: t('achievements.menuLabel'),
-                onPress: () => setShowBadgesModal(true),
-              },
-              {
                 id: 'parents',
                 label: t('parentDashboard.menuLabel'),
                 onPress: openParentDashboard,
+              },
+              {
+                id: 'trophies',
+                label: t('achievements.menuLabel'),
+                onPress: () => setShowBadgesModal(true),
               },
               {
                 id: 'feedback',
