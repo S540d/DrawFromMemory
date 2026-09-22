@@ -37,6 +37,9 @@ import { useReduceMotion } from '../utils/useReduceMotion';
 import type { GamePhase, GameVariant } from '../types';
 import type { ConfettiIntensity } from '@components/ConfettiBurst';
 
+// Nach jeweils so vielen abgeschlossenen Leveln wird eine Pause vorgeschlagen (Issue #337).
+const LEVELS_PER_PAUSE = 5;
+
 export default function GameScreen() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -50,6 +53,7 @@ export default function GameScreen() {
   const [showHintModal, setShowHintModal] = useState(false);
   const [hasUsedHint, setHasUsedHint] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showPauseModal, setShowPauseModal] = useState(false);
   const [celebrationEnabled, setCelebrationEnabled] = useState(true);
   const [confettiIntensity, setConfettiIntensity] = useState<ConfettiIntensity>('full');
   const [unlockedBadge, setUnlockedBadge] = useState<AchievementDef | null>(null);
@@ -128,8 +132,23 @@ export default function GameScreen() {
   };
 
   const handleStartNextLevel = () => {
+    if (levelNumber % LEVELS_PER_PAUSE === 0 && levelNumber < totalLevels) {
+      setShowPauseModal(true);
+      return;
+    }
     setHasUsedHint(false);
     startNextLevel();
+  };
+
+  const handlePauseContinue = () => {
+    setShowPauseModal(false);
+    setHasUsedHint(false);
+    startNextLevel();
+  };
+
+  const handlePauseGoToMainMenu = () => {
+    setShowPauseModal(false);
+    router.replace('/');
   };
 
   const handleRestartFromLevel1 = () => {
@@ -351,6 +370,43 @@ export default function GameScreen() {
         </TouchableOpacity>
       </Modal>
 
+      {/* Pause-Vorschlag alle LEVELS_PER_PAUSE Level (Issue #337) */}
+      <Modal
+        visible={showPauseModal}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+        onRequestClose={handlePauseContinue}
+      >
+        <View style={[styles.modalOverlay, { backgroundColor: colors.modalOverlay }]}>
+          <View style={[styles.pauseModal, { backgroundColor: colors.background }]}>
+            <Text style={styles.pauseEmoji}>🌤️</Text>
+            <Text style={[styles.pauseTitle, { color: colors.text.primary }]}>
+              {t('game.pause.title')}
+            </Text>
+            <Text style={[styles.pauseMessage, { color: colors.text.secondary }]}>
+              {t('game.pause.message', { count: levelNumber })}
+            </Text>
+            <TouchableOpacity
+              style={[styles.pausePrimaryButton, { backgroundColor: colors.primary }]}
+              onPress={handlePauseGoToMainMenu}
+              accessibilityRole="button"
+            >
+              <Text style={styles.pausePrimaryButtonText}>{t('game.pause.mainMenu')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.pauseSecondaryButton}
+              onPress={handlePauseContinue}
+              accessibilityRole="button"
+            >
+              <Text style={[styles.pauseSecondaryButtonText, { color: colors.text.secondary }]}>
+                {t('game.pause.continue')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       {/* Phase Content — crossfade on transition */}
       <Animated.View style={phaseAnimStyle}>
         {visiblePhase === 'memorize' && (
@@ -542,5 +598,49 @@ const styles = StyleSheet.create({
   },
   closeText: {
     fontSize: 24,
+  },
+  pauseModal: {
+    borderRadius: BorderRadius.xxl,
+    padding: Spacing.lg,
+    width: '90%',
+    maxWidth: 360,
+    alignItems: 'center',
+    ...Colors.shadow.large,
+  },
+  pauseEmoji: {
+    fontSize: 48,
+    marginBottom: Spacing.sm,
+  },
+  pauseTitle: {
+    fontSize: FontSize.lg,
+    fontWeight: FontWeight.bold,
+    textAlign: 'center',
+    marginBottom: Spacing.xs,
+  },
+  pauseMessage: {
+    fontSize: FontSize.sm,
+    textAlign: 'center',
+    marginBottom: Spacing.lg,
+  },
+  pausePrimaryButton: {
+    width: '100%',
+    paddingVertical: Spacing.md,
+    borderRadius: BorderRadius.lg,
+    alignItems: 'center',
+    marginBottom: Spacing.sm,
+  },
+  pausePrimaryButtonText: {
+    color: '#ffffff',
+    fontSize: FontSize.md,
+    fontWeight: FontWeight.bold,
+  },
+  pauseSecondaryButton: {
+    width: '100%',
+    paddingVertical: Spacing.sm,
+    alignItems: 'center',
+  },
+  pauseSecondaryButtonText: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.medium,
   },
 });

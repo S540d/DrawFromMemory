@@ -107,6 +107,12 @@
       "playAgain": "Von vorne",
       "replay": "▶ Abspielen",
       "replayStop": "⏹ Stopp"
+    },
+    "pause": {
+      "title": "Kurze Pause?",
+      "message": "Du hast schon {{count}} Bilder gemalt! Zeit für eine kleine Pause?",
+      "mainMenu": "Hauptmenü",
+      "continue": "Weiter"
     }
   },
   "settings": {

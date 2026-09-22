@@ -107,6 +107,12 @@
       "playAgain": "Opnieuw beginnen",
       "replay": "▶ Herhalen",
       "replayStop": "⏹ Stoppen"
+    },
+    "pause": {
+      "title": "Even pauzeren?",
+      "message": "Je hebt al {{count}} tekeningen gemaakt! Tijd voor een korte pauze?",
+      "mainMenu": "Hoofdmenu",
+      "continue": "Doorgaan"
     }
   },
   "settings": {

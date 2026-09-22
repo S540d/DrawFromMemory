@@ -107,6 +107,12 @@
       "playAgain": "Reiniciar",
       "replay": "▶ Repetir",
       "replayStop": "⏹ Parar"
+    },
+    "pause": {
+      "title": "¿Una pequeña pausa?",
+      "message": "¡Ya has dibujado {{count}} imágenes! ¿Qué tal un pequeño descanso?",
+      "mainMenu": "Menú principal",
+      "continue": "Seguir"
     }
   },
   "settings": {
