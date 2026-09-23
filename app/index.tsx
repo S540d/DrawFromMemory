@@ -183,7 +183,9 @@ export default function HomeScreen() {
               styles.dailyChallengeButton,
               {
                 backgroundColor: colors.surface,
-                borderColor: dailyCompleted ? colors.text.light : Colors.accents.dailyChallengeBorder,
+                borderColor: dailyCompleted
+                  ? colors.text.light
+                  : Colors.accents.dailyChallengeBorder,
               },
               dailyCompleted && styles.dailyChallengeCompleted,
             ]}
@@ -197,7 +199,11 @@ export default function HomeScreen() {
               <Text
                 style={[
                   styles.dailyChallengeTitle,
-                  { color: dailyCompleted ? colors.text.secondary : Colors.accents.dailyChallengeText },
+                  {
+                    color: dailyCompleted
+                      ? colors.text.secondary
+                      : Colors.accents.dailyChallengeText,
+                  },
                 ]}
               >
                 {t('dailyChallenge.title')}
