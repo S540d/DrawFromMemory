@@ -183,7 +183,7 @@ export default function HomeScreen() {
               styles.dailyChallengeButton,
               {
                 backgroundColor: colors.surface,
-                borderColor: dailyCompleted ? colors.text.light : '#F59E0B',
+                borderColor: dailyCompleted ? colors.text.light : Colors.accents.dailyChallengeBorder,
               },
               dailyCompleted && styles.dailyChallengeCompleted,
             ]}
@@ -197,7 +197,7 @@ export default function HomeScreen() {
               <Text
                 style={[
                   styles.dailyChallengeTitle,
-                  { color: dailyCompleted ? colors.text.secondary : '#D97706' },
+                  { color: dailyCompleted ? colors.text.secondary : Colors.accents.dailyChallengeText },
                 ]}
               >
                 {t('dailyChallenge.title')}
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
   },
   streakBadge: {
-    backgroundColor: '#FF6B35',
+    backgroundColor: Colors.accents.streakBadge,
     borderRadius: BorderRadius.round,
     paddingHorizontal: Spacing.sm,
     paddingVertical: 3,

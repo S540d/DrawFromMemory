@@ -5,6 +5,7 @@ import { Easing, useSharedValue, useDerivedValue, withTiming } from 'react-nativ
 import { useReduceMotion } from '../../utils/useReduceMotion';
 import Colors from '../../constants/Colors';
 import { FontSize, FontWeight } from '../../constants/Layout';
+import { getTimerArcColor } from './TimerArc.shared';
 
 const SIZE = 80;
 const STROKE_WIDTH = 6;
@@ -45,7 +46,7 @@ export function TimerArc({ timeRemaining, totalTime }: TimerArcProps) {
   });
 
   const isUrgent = timeRemaining <= 3;
-  const arcColor = timeRemaining <= 1 ? '#FF6B6B' : timeRemaining <= 3 ? '#FFD700' : '#FFFFFF';
+  const arcColor = getTimerArcColor(timeRemaining);
 
   return (
     <View style={styles.container}>
@@ -100,6 +101,6 @@ const styles = StyleSheet.create({
     lineHeight: SIZE,
   },
   timerTextUrgent: {
-    color: '#FFD700',
+    color: Colors.timerArc.warning,
   },
 });

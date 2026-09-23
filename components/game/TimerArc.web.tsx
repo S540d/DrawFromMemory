@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import Colors from '../../constants/Colors';
 import { FontSize, FontWeight } from '../../constants/Layout';
+import { getTimerArcColor } from './TimerArc.shared';
 
 const SIZE = 80;
 const STROKE_WIDTH = 6;
@@ -19,7 +20,7 @@ export function TimerArc({ timeRemaining, totalTime }: TimerArcProps) {
   const progress = totalTime > 0 ? Math.max(0, timeRemaining) / totalTime : 0;
   const strokeDashoffset = CIRCUMFERENCE * (1 - progress);
   const isUrgent = timeRemaining <= 3;
-  const arcColor = timeRemaining <= 1 ? '#FF6B6B' : timeRemaining <= 3 ? '#FFD700' : '#FFFFFF';
+  const arcColor = getTimerArcColor(timeRemaining);
 
   return (
     <View style={styles.container}>
@@ -79,6 +80,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   timerTextUrgent: {
-    color: '#FFD700',
+    color: Colors.timerArc.warning,
   },
 });
