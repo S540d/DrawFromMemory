@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useScreenLayout } from '@utils/useScreenLayout';
@@ -20,9 +20,7 @@ import TutorialOverlay from '@components/TutorialOverlay';
 import { markOnboardingDone } from '@services/OnboardingManager';
 import SoundManager from '@services/SoundManager';
 import { useGamePhase } from '@services/useGamePhase';
-import { checkAndUnlock, type AchievementDef } from '@services/AchievementManager';
-import { getStreakData } from '@services/StreakManager';
-import storageManager from '@services/StorageManager';
+import { useGameFeedback } from '@services/useGameFeedback';
 import { getAgeGroup, getDefaultStrokeWidthForAgeGroup } from '@services/AgeGroupManager';
 import MemorizePhase from '@components/game/MemorizePhase';
 import DrawPhase from '@components/game/DrawPhase';
@@ -35,7 +33,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useReduceMotion } from '../utils/useReduceMotion';
 import type { GamePhase, GameVariant } from '../types';
-import type { ConfettiIntensity } from '@components/ConfettiBurst';
 
 // Nach jeweils so vielen abgeschlossenen Leveln wird eine Pause vorgeschlagen (Issue #337).
 const LEVELS_PER_PAUSE = 5;
@@ -50,15 +47,7 @@ export default function GameScreen() {
   const { screenWidth, isSmall } = layout;
   const reduceMotion = useReduceMotion();
   const [showSettings, setShowSettings] = useState(false);
-  const [showHintModal, setShowHintModal] = useState(false);
-  const [hasUsedHint, setHasUsedHint] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
   const [showPauseModal, setShowPauseModal] = useState(false);
-  const [celebrationEnabled, setCelebrationEnabled] = useState(true);
-  const [confettiIntensity, setConfettiIntensity] = useState<ConfettiIntensity>('full');
-  const [unlockedBadge, setUnlockedBadge] = useState<AchievementDef | null>(null);
-  const lastCheckedRatingRef = useRef<number>(0);
-  const handleBadgeToastHide = useCallback(() => setUnlockedBadge(null), []);
 
   // Phase crossfade
   const [visiblePhase, setVisiblePhase] = useState<GamePhase>('memorize');
@@ -109,6 +98,18 @@ export default function GameScreen() {
     pack,
   });
 
+  const {
+    showHintModal,
+    setShowHintModal,
+    hasUsedHint,
+    resetHint,
+    onUseHint,
+    showConfetti,
+    confettiIntensity,
+    unlockedBadge,
+    handleBadgeToastHide,
+  } = useGameFeedback(userRating);
+
   useEffect(() => {
     if (phase === visiblePhase) return;
 
@@ -127,7 +128,7 @@ export default function GameScreen() {
   }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleRestartCurrentLevel = () => {
-    setHasUsedHint(false);
+    resetHint();
     restartCurrentLevel();
   };
 
@@ -136,13 +137,13 @@ export default function GameScreen() {
       setShowPauseModal(true);
       return;
     }
-    setHasUsedHint(false);
+    resetHint();
     startNextLevel();
   };
 
   const handlePauseContinue = () => {
     setShowPauseModal(false);
-    setHasUsedHint(false);
+    resetHint();
     startNextLevel();
   };
 
@@ -152,17 +153,12 @@ export default function GameScreen() {
   };
 
   const handleRestartFromLevel1 = () => {
-    setHasUsedHint(false);
+    resetHint();
     restartFromLevel1();
   };
 
   useEffect(() => {
-    async function init() {
-      await SoundManager.init();
-      const enabled = await storageManager.getSetting('celebrationEnabled');
-      setCelebrationEnabled(enabled);
-    }
-    init();
+    SoundManager.init();
   }, []);
 
   // Altersgerechte Standard-Strichstärke beim Rundenstart (Issue #279, 1.3)
@@ -185,53 +181,6 @@ export default function GameScreen() {
       setIsTutorial(false);
     }
   }, [isTutorial, userRating]);
-
-  useEffect(() => {
-    if (userRating === 0 || userRating === lastCheckedRatingRef.current) return;
-    lastCheckedRatingRef.current = userRating;
-
-    if (userRating >= 4 && FeatureFlags.ENABLE_CONFETTI && celebrationEnabled) {
-      const intensity: ConfettiIntensity = userRating === 5 ? 'full' : 'light';
-      const clearAfter = userRating === 5 ? 2700 : 1700;
-      setConfettiIntensity(intensity);
-      setShowConfetti(true);
-      SoundManager.playCelebration();
-      const timer = setTimeout(() => setShowConfetti(false), clearAfter);
-      checkAchievements(userRating);
-      return () => clearTimeout(timer);
-    }
-    checkAchievements(userRating);
-  }, [userRating, celebrationEnabled]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const checkAchievements = async (rating: number) => {
-    try {
-      const [gallery, progress, streak] = await Promise.all([
-        storageManager.getGallery(),
-        storageManager.getProgress(),
-        getStreakData(),
-      ]);
-      const dailyChallengesCompleted = gallery.filter(g => g.isDailyChallenge).length;
-      const difficultiesPlayed = Array.from(
-        new Set(
-          Object.keys(progress.levels ?? {})
-            .map(n => parseInt(n, 10))
-            .filter(n => !isNaN(n))
-            .map(n => getDifficultyForLevel(n)),
-        ),
-      );
-      const newly = await checkAndUnlock({
-        stars: rating,
-        galleryCount: gallery.length,
-        currentStreak: streak.currentStreak,
-        levelsCompleted: progress.totalLevelsCompleted ?? 0,
-        dailyChallengesCompleted,
-        difficultiesPlayed,
-      });
-      if (newly.length > 0) setUnlockedBadge(newly[0]);
-    } catch {
-      // best-effort
-    }
-  };
 
   const levelName = currentLang === 'en' ? currentImage?.displayNameEn : currentImage?.displayName;
 
@@ -427,7 +376,7 @@ export default function GameScreen() {
             currentImage={currentImage}
             currentLang={currentLang}
             hasUsedHint={hasUsedHint}
-            onUseHint={() => setHasUsedHint(true)}
+            onUseHint={onUseHint}
             onShowHintModal={() => setShowHintModal(true)}
             drawing={drawing}
             layout={{

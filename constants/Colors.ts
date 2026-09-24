@@ -114,6 +114,23 @@ export const Colors = {
     4: '#E67E22', // Dunkles Orange - Schwierig
     5: '#E74C3C', // Rot - Sehr schwierig
   },
+
+  // Timer-Zustandsfarben (TimerArc.native.tsx / TimerArc.web.tsx) — referenzieren
+  // bewusst dieselben Hex-Werte wie gradient.warm[1] / stars.filled, damit eine
+  // künftige Palettenänderung nur an einer Stelle nachgezogen werden muss (Issue #334).
+  timerArc: {
+    critical: '#FF6B6B',
+    warning: '#FFD700',
+    normal: '#FFFFFF',
+  },
+
+  // UI-Akzentfarben außerhalb des Zeichnungskontexts (Home-Screen), zentralisiert
+  // statt als Hex-Literal an der Verwendungsstelle (Issue #334).
+  accents: {
+    dailyChallengeBorder: '#F59E0B',
+    dailyChallengeText: '#D97706',
+    streakBadge: '#FF6B35',
+  },
 };
 
 /**
