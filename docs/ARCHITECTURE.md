@@ -127,3 +127,20 @@ co-located `__tests__` folders. `npm run test:ci` is the CI entry point.
 `npm run validate:svg-counts` guards the level asset integrity;
 `scripts/validate-release.sh` gates a release. Crash reporting via Sentry
 (`SentryService.ts`).
+
+## DrawingCanvas-UI (ausgelagert aus CLAUDE.md, Issue #160)
+
+> Deutsch belassen, da direkt aus `CLAUDE.md` übernommen (Issue #160,
+> project-templates CLAUDE.md-Wartung).
+
+**Werkzeug-Icons (PR #272):** `components/game/ToolIcons.tsx` exportiert `PenIcon`, `FillIcon`, `EyeIcon` — abstrakte, einfarbige SVG-Piktogramme (via `react-native-svg`) für Pinsel/Füllen/Vorlage-ansehen in `DrawPhase.tsx`, statt bunter Emoji (✏️ 🪣 👁). Farbe wird komplett über den `color`-Prop gesteuert (aktiv = weiß, inaktiv = `colors.text.secondary`). Die Strichstärken-Auswahl (klein/mittel/groß) zeigt bei allen drei Punkten einheitlich `drawing.color`; die aktive Größe wird über einen Ring (`borderColor`) markiert, nicht über unterschiedliche Punktfarben.
+
+**Startbildschirm & Einstellungen: Label-/Icon-Aufräumen (PR #292):** APK-Testing-Feedback: Startbildschirm-Button „Kreativ" → „Freies Malen" umbenannt (nur DE-Locale, `locales/de/translations.json`), Emoji 🎨 vor dem Button-Text in `app/index.tsx` entfernt. In den Einstellungen (`components/SettingsModal.tsx`) verlor der Bereich „Über & Support" (`settings.aboutSupport`) die Icons im Action-Grid (🏆 👨‍👩‍👧 ✉️ ☕ ↗ ℹ) — nur noch Text-Labels, `actionGridIcon`-Style entfernt.
+
+**Tablet-/Landscape-Layout (PR #287, Issue #279, 2.4):** `useScreenLayout()` liefert zusätzlich `isLandscape` (width > height), `isTablet` (kürzere Kante ≥ 600px) und `toolbarPosition` (`'bottom' | 'side'`). Im ausreichend breiten Querformat (`safeWidth >= 480`) wechselt `toolbarPosition` auf `'side'`:
+
+- `DrawPhase.tsx` rendert Zeichenfläche und Werkzeugleiste dann nebeneinander (Farbauswahl/Werkzeuge/Strichstärken vertikal gestapelt in einer schmalen Seitenleiste, Breite `sideToolbarWidth`) statt vertikal gestapelt.
+- Die Zeichenfläche bekommt dadurch mehr Höhe (`canvasUpperLimitBase` 640 statt 320/400, da keine Werkzeugleiste mehr darunter Platz braucht).
+- Die Merke-Phase bekommt ein größeres Vorschaubild (`memorizeImageSize`-Obergrenze an die verfügbare Breite gekoppelt statt fix 280px).
+- Bei zu schmalem Querformat (z.B. Split-Screen) bleibt es beim bisherigen `'bottom'`-Layout.
+- `app.json`s `orientation: "default"` + `android:resizeableActivity="true"` (Android-Manifest-Teil von Issue #278) kamen bereits in PR #281.
