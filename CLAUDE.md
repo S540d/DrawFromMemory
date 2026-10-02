@@ -204,6 +204,7 @@ Alle `EXPO_PUBLIC_*`-Flags sind zur Build-Zeit eingefroren (Expo bündelt sie st
 ## Konventionen für AI-Assistenten
 
 ### Verboten (wird von CI geprüft)
+
 - `console.log` / `console.debug` in `app/` oder `components/`
 - `window.*` ohne `Platform.OS === 'web'`-Guard oder `// platform-safe`-Kommentar
 - `localStorage.*` ohne Platform-Check (AsyncStorage verwenden)

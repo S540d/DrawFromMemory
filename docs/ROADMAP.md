@@ -33,7 +33,7 @@ Stand: `main` @ v1.9.0 / versionCode 70 (Release-PRs #266, #293, #301). Enthält
 ## P2 — Reichweite & Trust
 
 | Task                                                                   | Status                                                    |
-| ----------------------------------------------------------------------- | --------------------------------------------------------- |
+| ---------------------------------------------------------------------- | --------------------------------------------------------- |
 | Designed for Families Programm                                         | 🔲 offen                                                  |
 | **Weitere Sprachen** (ES/FR/IT/NL/PL, #247)                            | ✅ in main (v1.7.0) — automatische Geräte-Spracherkennung |
 | **Sharing-Feature / PNG-Export** (ShareService, PR #255)               | ✅ in main (v1.7.0)                                       |
