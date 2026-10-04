@@ -203,8 +203,9 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Run npm audit
-        run: npm audit --audit-level=high
+      # Gate mit befristeter Allowlist (.audit-allowlist.json) für Findings ohne Upstream-Fix (#348).
+      - name: Run npm audit (Gate)
+        run: node scripts/audit-gate.mjs --level=high
 
       - name: Check for sensitive data
         run: |
