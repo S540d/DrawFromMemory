@@ -1,6 +1,6 @@
 <svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
   <!-- Transparenter Hintergrund: Android setzt android.adaptiveIcon.backgroundColor
-       (app.json, #60D5FA) dahinter. Inhalt bleibt innerhalb der 66%-Sicherheitszone,
+       (app.json, #A9DCEB) dahinter. Inhalt bleibt innerhalb der 66%-Sicherheitszone,
        damit er unter jeder Launcher-Maske (Kreis/Squircle/Quadrat) nicht angeschnitten
        wird (Issue #304 — vorher war app-icon.png/adaptive-icon.png/favicon.png
        byte-identisch dieselbe Vollbild-Datei ohne eigenen Vordergrund). -->

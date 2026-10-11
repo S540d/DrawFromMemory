@@ -11,13 +11,9 @@
     "galleryButton": "Mijn galerij",
     "creativeButton": "Creatief",
     "settingsButton": "Instellingen",
-    "streakBadge": "🔥 {{count}}",
     "stats": {
       "stars": "Sterren",
-      "streak": "Reeks",
       "levels": "Levels",
-      "streakDay": "dag",
-      "streakDays": "dagen",
       "levelOf": "van {{total}}"
     }
   },
@@ -187,7 +183,6 @@
     "subtitle": "Afbeelding van de dag",
     "start": "Uitdaging starten",
     "completed": "Vandaag voltooid ✓",
-    "countdown": "Nieuw over {{hours}}u {{minutes}}m",
     "level": "Level {{number}}"
   },
   "errors": {
@@ -293,7 +288,6 @@
       "streak": "Leuk dat je er weer bent! 🔥 {{count}} dagen op rij!",
       "streakLong": "Wow, {{count}} dagen op rij! Je bent geweldig!"
     },
-    "nextUnlock": "Nog {{count}} sterren tot: {{item}}",
     "accessory": {
       "hat": "Hoed",
       "glasses": "Zonnebril",

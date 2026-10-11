@@ -29,7 +29,7 @@ export default function Root({ children }: PropsWithChildren) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Merke und Male" />
-        <meta name="theme-color" content="#60D5FA" />
+        <meta name="theme-color" content="#A9DCEB" />
 
         {/* Apple Touch Icon – wird als Homescreen-Icon auf iOS verwendet */}
         <link rel="apple-touch-icon" href="/DrawFromMemory/apple-touch-icon.png" />

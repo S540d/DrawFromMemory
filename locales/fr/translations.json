@@ -11,13 +11,9 @@
     "galleryButton": "Ma galerie",
     "creativeButton": "Créatif",
     "settingsButton": "Réglages",
-    "streakBadge": "🔥 {{count}}",
     "stats": {
       "stars": "Étoiles",
-      "streak": "Série",
       "levels": "Niveaux",
-      "streakDay": "jour",
-      "streakDays": "jours",
       "levelOf": "sur {{total}}"
     }
   },
@@ -187,7 +183,6 @@
     "subtitle": "Image du jour",
     "start": "Commencer le défi",
     "completed": "Terminé pour aujourd'hui ✓",
-    "countdown": "Nouveau dans {{hours}}h {{minutes}}m",
     "level": "Niveau {{number}}"
   },
   "errors": {
@@ -293,7 +288,6 @@
       "streak": "Content de te revoir ! 🔥 {{count}} jours de suite !",
       "streakLong": "Waouh, {{count}} jours de suite ! Tu es incroyable !"
     },
-    "nextUnlock": "Encore {{count}} étoiles avant : {{item}}",
     "accessory": {
       "hat": "Chapeau",
       "glasses": "Lunettes de soleil",

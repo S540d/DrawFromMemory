@@ -163,13 +163,9 @@ jest.mock('../../components/ConfettiBurst', () => {
   return { __esModule: true, default: () => <View testID="confetti-burst" /> };
 });
 
-jest.mock('../../components/game/TimerArc', () => {
+jest.mock('../../components/game/TimerBar', () => {
   const { View } = require('react-native');
-  return {
-    __esModule: true,
-    default: () => <View testID="timer-arc" />,
-    TimerArc: () => <View testID="timer-arc" />,
-  };
+  return { __esModule: true, default: () => <View testID="timer-bar" /> };
 });
 
 jest.mock('react-native-reanimated', () => {

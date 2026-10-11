@@ -1,6 +1,6 @@
 <svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
   <!-- Transparenter Hintergrund: die expo-splash-screen-Plugin-Config (app.json)
-       legt android.adaptiveIcon.backgroundColor-Grün #60D5FA dahinter, resizeMode
+       legt android.adaptiveIcon.backgroundColor #A9DCEB dahinter, resizeMode
        "contain". Gleiches Motiv wie app-icon.svg/adaptive-icon-foreground.svg,
        damit Launcher-Icon und nativer Startbildschirm konsistent sind (Issue #304
        — vorher zeigte der native Splash ein komplett anderes, altes Motiv). -->

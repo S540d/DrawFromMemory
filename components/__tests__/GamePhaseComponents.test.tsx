@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { View } from 'react-native';
 
 // ─── Shared mocks ────────────────────────────────────────────────────────────
 
@@ -100,23 +101,6 @@ jest.mock('../../components/AnimatedPrimitives', () => {
   };
 });
 
-jest.mock('../../components/game/TimerArc', () => {
-  const { View, Text } = require('react-native');
-  return {
-    __esModule: true,
-    default: ({ timeRemaining }: any) => (
-      <View testID="timer-arc-container">
-        <Text testID="timer-arc">{String(Math.max(0, Math.ceil(timeRemaining)))}</Text>
-      </View>
-    ),
-    TimerArc: ({ timeRemaining }: any) => (
-      <View testID="timer-arc-container">
-        <Text testID="timer-arc">{String(Math.max(0, Math.ceil(timeRemaining)))}</Text>
-      </View>
-    ),
-  };
-});
-
 // ─── MemorizePhase ────────────────────────────────────────────────────────────
 
 import MemorizePhase from '../../components/game/MemorizePhase';
@@ -151,12 +135,15 @@ describe('MemorizePhase', () => {
     revealStep: 0,
   };
 
-  it('renders timer arc countdown value', () => {
+  it('renders a quiet timer bar instead of a big countdown number', () => {
     const { UNSAFE_getAllByType } = render(
       <MemorizePhase {...baseProps} timeRemaining={3} totalTime={5} />,
     );
+    const bar = UNSAFE_getAllByType(View).find((n: any) => n.props.testID === 'timer-bar');
+    expect(bar).toBeDefined();
+    expect(bar!.props.accessibilityValue).toEqual({ min: 0, max: 5, now: 3 });
     const texts = getAllTexts(UNSAFE_getAllByType);
-    expect(texts).toContain('3');
+    expect(texts).not.toContain('3');
   });
 
   it('renders title translation key', () => {

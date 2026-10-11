@@ -11,13 +11,9 @@
     "galleryButton": "My Gallery",
     "creativeButton": "Creative",
     "settingsButton": "Settings",
-    "streakBadge": "🔥 {{count}}",
     "stats": {
       "stars": "Stars",
-      "streak": "Streak",
       "levels": "Levels",
-      "streakDay": "day",
-      "streakDays": "days",
       "levelOf": "of {{total}}"
     }
   },
@@ -187,7 +183,6 @@
     "subtitle": "Picture of the Day",
     "start": "Start Challenge",
     "completed": "Done for today ✓",
-    "countdown": "New in {{hours}}h {{minutes}}m",
     "level": "Level {{number}}"
   },
   "errors": {
@@ -293,7 +288,6 @@
       "streak": "Great to see you again! 🔥 {{count}} days in a row!",
       "streakLong": "Wow, {{count}} days in a row! You're amazing!"
     },
-    "nextUnlock": "{{count}} more stars until: {{item}}",
     "accessory": {
       "hat": "Hat",
       "glasses": "Sunglasses",

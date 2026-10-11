@@ -1,12 +1,12 @@
 <svg width="1024" height="500" viewBox="0 0 1024 500" xmlns="http://www.w3.org/2000/svg">
   <!-- Background -->
-  <rect width="1024" height="500" fill="#60D5FA"/>
+  <rect width="1024" height="500" fill="#A9DCEB"/>
 
   <!-- Decorative circles in background -->
-  <circle cx="100" cy="400" r="80" fill="#7DE0FF" opacity="0.5"/>
-  <circle cx="924" cy="100" r="100" fill="#7DE0FF" opacity="0.5"/>
-  <circle cx="800" cy="420" r="60" fill="#7DE0FF" opacity="0.4"/>
-  <circle cx="200" cy="80" r="50" fill="#7DE0FF" opacity="0.4"/>
+  <circle cx="100" cy="400" r="80" fill="#C6E8F2" opacity="0.5"/>
+  <circle cx="924" cy="100" r="100" fill="#C6E8F2" opacity="0.5"/>
+  <circle cx="800" cy="420" r="60" fill="#C6E8F2" opacity="0.4"/>
+  <circle cx="200" cy="80" r="50" fill="#C6E8F2" opacity="0.4"/>
 
   <!-- Stars decoration -->
   <polygon points="150,120 158,145 185,145 163,162 172,188 150,172 128,188 137,162 115,145 142,145" fill="#FFD700" stroke="#FFA500" stroke-width="2"/>
@@ -84,7 +84,7 @@
   </g>
 
   <!-- Subtitle -->
-  <text x="820" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#FFFFFF" font-weight="bold">Gedächtnistraining für Kinder</text>
+  <text x="820" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#1B4C63" font-weight="bold">Gedächtnistraining für Kinder</text>
 
   <!-- Bottom icons: Drawing tools -->
   <g transform="translate(620, 320)">

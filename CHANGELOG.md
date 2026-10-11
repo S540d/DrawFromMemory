@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Startseite entschlackt: „Spiel starten" ist die einzige auffällige Aktion (ohne Dauer-Puls); Tägliche Challenge als dezenter Textlink darunter (ohne ⚡, Farbrahmen, Countdown); Level/Galerie/Freies Malen als einfarbige Textlinks im Footer; Statistik als eine Textzeile statt drei Emoji-Karten; Streak-Badge und schwebende Sterne entfernt — die Serie steht nur noch in Malis Begrüßung
+- Merke-Phase: dünner, einfarbiger Restzeit-Balken statt 80px-Countdown-Kreis mit Gelb/Rot-Warnfarben (war bei 3 s Anzeigezeit dauerhaft im Warnmodus)
+- App-Icon/Splash/Store-Grafik: ruhigeres, entsättigtes Hellblau `#A9DCEB` statt `#60D5FA`
+
+### Fixed
+
+- Web/PWA-Icon (`public/apple-touch-icon.png`) und OG-Bild (`public/feature-graphic.png`) zeigten noch alte bzw. abgeschnittene Motive — werden jetzt von `scripts/generate-icon-assets.js` mit erzeugt
+- `apple-touch-icon`-Link in `app/_layout.tsx` ohne `/DrawFromMemory`-Basispfad
+
 ### Added
 
 - Auffindbarkeit außerhalb des Play Stores: Play-Store-Badge + deutsche Kurzbeschreibung im README, Web-only Install-Banner (`WebInstallBanner`) im sichtbaren Bereich der Startseite, deutsche Keywords/Open-Graph-/JSON-LD-Auszeichnung der Landing Page
