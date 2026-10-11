@@ -37,7 +37,22 @@ const TARGETS = [
   { svg: 'splash-icon.svg', out: 'splash-icon.png', width: 1024, height: 1024, transparent: true },
   { svg: 'app-icon.svg', out: 'favicon.png', width: 1024, height: 1024 },
   { svg: 'app-icon.svg', out: 'app-icon-512.png', width: 512, height: 512 },
+  // Web/PWA-Icon (app.json web.icons + apple-touch-icon in post-build.js) —
+  // lag außerhalb von assets/icons/ und zeigte deshalb lange noch das alte Motiv.
+  {
+    svg: 'app-icon.svg',
+    out: path.join('..', '..', 'public', 'apple-touch-icon.png'),
+    width: 512,
+    height: 512,
+  },
   { svg: 'feature-graphic.svg', out: 'feature-graphic.png', width: 1024, height: 500 },
+  // og:image/twitter:image der Web-Demo (post-build.js)
+  {
+    svg: 'feature-graphic.svg',
+    out: path.join('..', '..', 'public', 'feature-graphic.png'),
+    width: 1024,
+    height: 500,
+  },
 ];
 
 async function main() {

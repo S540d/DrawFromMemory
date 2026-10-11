@@ -11,13 +11,9 @@
     "galleryButton": "Meine Galerie",
     "creativeButton": "Freies Malen",
     "settingsButton": "Einstellungen",
-    "streakBadge": "🔥 {{count}}",
     "stats": {
       "stars": "Sterne",
-      "streak": "Serie",
       "levels": "Level",
-      "streakDay": "Tag",
-      "streakDays": "Tage",
       "levelOf": "von {{total}}"
     }
   },
@@ -187,7 +183,6 @@
     "subtitle": "Bild des Tages",
     "start": "Challenge starten",
     "completed": "Heute erledigt ✓",
-    "countdown": "Neu in {{hours}}h {{minutes}}m",
     "level": "Level {{number}}"
   },
   "errors": {
@@ -293,7 +288,6 @@
       "streak": "Schön, dass du wieder da bist! 🔥 {{count}} Tage in Folge!",
       "streakLong": "Wow, {{count}} Tage in Folge! Du bist unglaublich!"
     },
-    "nextUnlock": "Noch {{count}} Sterne bis: {{item}}",
     "accessory": {
       "hat": "Hut",
       "glasses": "Sonnenbrille",

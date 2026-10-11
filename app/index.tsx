@@ -1,22 +1,17 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AnimatedCard, PressableScale, PulseView } from '@components/AnimatedPrimitives';
+import { PressableScale } from '@components/AnimatedPrimitives';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
-import {
-  getDailyChallengeLevel,
-  getSecondsUntilMidnight,
-  isTodayCompleted,
-} from '@services/DailyChallengeManager';
+import { getDailyChallengeLevel, isTodayCompleted } from '@services/DailyChallengeManager';
 import { getStreakData } from '@services/StreakManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../constants/Layout';
 import SettingsModal from '@components/SettingsModal';
 import QuickStatsCards from '@components/QuickStatsCards';
-import { FloatingStars } from '@components/FloatingStars';
 import OnboardingModal from '@components/OnboardingModal';
 import { isOnboardingDone } from '@services/OnboardingManager';
 import WebTrustFooter from '@components/WebTrustFooter';
@@ -24,8 +19,14 @@ import WebInstallBanner from '@components/WebInstallBanner';
 import Mascot from '@components/Mascot';
 import AgeGroupModal from '@components/AgeGroupModal';
 import { isAgeGroupSelected, setAgeGroup } from '@services/AgeGroupManager';
-import { getMascotProgress, getHomeGreetingKey, type MascotUnlock } from '@services/MascotManager';
+import { getHomeGreetingKey } from '@services/MascotManager';
 import type { AgeGroup } from '../types';
+
+const FOOTER_LINKS = [
+  { route: '/levels', labelKey: 'home.levelsButton' },
+  { route: '/gallery', labelKey: 'home.galleryButton' },
+  { route: '/creative', labelKey: 'home.creativeButton' },
+] as const;
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -35,7 +36,6 @@ export default function HomeScreen() {
   const [showSettings, setShowSettings] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showAgeGroup, setShowAgeGroup] = useState(false);
-  const [mascotNextUnlock, setMascotNextUnlock] = useState<MascotUnlock | null>(null);
 
   const maybeShowOnboarding = useCallback(async () => {
     const done = await isOnboardingDone();
@@ -59,26 +59,18 @@ export default function HomeScreen() {
   };
 
   const [dailyCompleted, setDailyCompleted] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(() => getSecondsUntilMidnight());
   const [dailyLevel, setDailyLevel] = useState(() => getDailyChallengeLevel());
   const [currentStreak, setCurrentStreak] = useState(0);
 
-  // On focus: refresh all daily state and start countdown interval.
-  // Interval also re-checks state every minute to handle midnight rollover
-  // without requiring the user to navigate away and back.
+  // On focus: refresh daily state. The interval re-checks every minute to
+  // handle midnight rollover without navigating away and back.
   useFocusEffect(
     useCallback(() => {
       const refresh = async () => {
-        setSecondsLeft(getSecondsUntilMidnight());
         setDailyLevel(getDailyChallengeLevel());
-        const [completed, streakData, mascotProgress] = await Promise.all([
-          isTodayCompleted(),
-          getStreakData(),
-          getMascotProgress(),
-        ]);
+        const [completed, streakData] = await Promise.all([isTodayCompleted(), getStreakData()]);
         setDailyCompleted(completed);
         setCurrentStreak(streakData.currentStreak);
-        setMascotNextUnlock(mascotProgress.nextUnlock);
       };
       refresh();
 
@@ -86,9 +78,6 @@ export default function HomeScreen() {
       return () => clearInterval(id);
     }, []),
   );
-
-  const countdownHours = Math.floor(secondsLeft / 3600);
-  const countdownMinutes = Math.floor((secondsLeft % 3600) / 60);
 
   return (
     <View
@@ -101,8 +90,6 @@ export default function HomeScreen() {
         },
       ]}
     >
-      <FloatingStars />
-
       {/* Top bar */}
       <View style={styles.topBar}>
         <View>
@@ -111,158 +98,90 @@ export default function HomeScreen() {
             {t('home.subtitle')}
           </Text>
         </View>
-        <View style={styles.topBarRight}>
-          {currentStreak >= 2 && (
-            <View style={styles.streakBadge}>
-              <Text style={styles.streakBadgeText}>
-                {t('home.streakBadge', { count: String(currentStreak) })}
-              </Text>
-            </View>
-          )}
-          <Pressable
-            onPress={() => setShowSettings(true)}
-            style={styles.settingsButton}
-            aria-label="Settings"
-          >
-            <Text style={[styles.settingsIcon, { color: colors.text.primary }]}>⋮</Text>
-          </Pressable>
-        </View>
+        <Pressable
+          onPress={() => setShowSettings(true)}
+          style={styles.settingsButton}
+          aria-label="Settings"
+        >
+          <Text style={[styles.settingsIcon, { color: colors.text.primary }]}>⋮</Text>
+        </Pressable>
       </View>
 
-      {/* Mascot-Begrüßung — einheitlicher Fortschritts-Companion (Issue #279, 1.1) */}
+      {/* Mascot-Begrüßung — einziger Ort für die Serie (Streak) auf der Startseite */}
       <View style={styles.mascotRow}>
         <Mascot
-          size={56}
+          size={44}
           mood={currentStreak >= 2 ? 'happy' : 'neutral'}
           message={t(getHomeGreetingKey(currentStreak), { count: String(currentStreak) })}
           testID="home-mascot"
         />
-        {mascotNextUnlock && (
-          <Text style={[styles.mascotUnlockHint, { color: colors.text.secondary }]}>
-            {t('mascot.nextUnlock', {
-              count: String(mascotNextUnlock.starsRequired),
-              item: t(mascotNextUnlock.labelKey),
-            })}
-          </Text>
-        )}
       </View>
 
       {/* Nur Web: Play-Store-Angebot im sichtbaren Bereich, nicht erst im Footer */}
       <WebInstallBanner />
 
-      {/* Hero CTA — "Spiel starten" als dominanter zentraler Button.
-          Sanfter Dauer-Puls führt das Auge zur Primäraktion (prefers-reduced-motion-aware). */}
+      {/* Hero: "Spiel starten" ist die einzige auffällige Aktion. Darunter dezent
+          die Tägliche Challenge als Textlink — ohne Emoji, Farbrahmen und Countdown. */}
       <View style={styles.heroSlot}>
-        <PulseView>
-          <PressableScale
-            onPress={() => router.push('/game')}
-            accessibilityRole="button"
-            accessibilityLabel={t('home.startButton')}
-            style={styles.heroCtaWrapper}
+        <PressableScale
+          onPress={() => router.push('/game')}
+          accessibilityRole="button"
+          accessibilityLabel={t('home.startButton')}
+          style={styles.heroCtaWrapper}
+        >
+          <LinearGradient
+            colors={Colors.gradient.cta as [string, string]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.heroCtaPill}
           >
-            <LinearGradient
-              colors={Colors.gradient.cta as [string, string]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.heroCtaPill}
-            >
-              <Text style={styles.heroCtaIcon}>▶</Text>
-              <Text style={styles.heroCtaText}>{t('home.startButton')}</Text>
-            </LinearGradient>
-          </PressableScale>
-        </PulseView>
+            <Text style={styles.heroCtaIcon}>▶</Text>
+            <Text style={styles.heroCtaText}>{t('home.startButton')}</Text>
+          </LinearGradient>
+        </PressableScale>
+
+        <Pressable
+          onPress={() => !dailyCompleted && router.push(`/game?level=${dailyLevel}&daily=1`)}
+          disabled={dailyCompleted}
+          accessibilityRole="button"
+          accessibilityState={{ disabled: dailyCompleted }}
+          style={styles.dailyLink}
+        >
+          <Text
+            style={[
+              styles.dailyLinkText,
+              { color: dailyCompleted ? colors.text.secondary : colors.primary },
+            ]}
+          >
+            {dailyCompleted
+              ? `${t('dailyChallenge.title')} · ${t('dailyChallenge.completed')}`
+              : `${t('dailyChallenge.title')} · ${t('dailyChallenge.level', { number: String(dailyLevel) })}`}
+          </Text>
+        </Pressable>
       </View>
 
-      {/* Bottom section: sekundär-Aktionen + Stats — versetzt, nicht statisch gestapelt.
-          Gestaffelte Eingangs-Animation (AnimatedCard-Index) + Press-Feedback (PressableScale). */}
-      <View style={styles.bottomSection}>
-        {/* Daily Challenge — breite Karte, abgesetzt von den anderen */}
-        <AnimatedCard index={0}>
-          <PressableScale
-            style={[
-              styles.dailyChallengeButton,
-              {
-                backgroundColor: colors.surface,
-                borderColor: dailyCompleted
-                  ? colors.text.light
-                  : Colors.accents.dailyChallengeBorder,
-              },
-              dailyCompleted && styles.dailyChallengeCompleted,
-            ]}
-            onPress={() => !dailyCompleted && router.push(`/game?level=${dailyLevel}&daily=1`)}
-            accessibilityRole="button"
-            disabled={dailyCompleted}
-            accessibilityState={{ disabled: dailyCompleted }}
-          >
-            <Text style={styles.dailyChallengeEmoji}>⚡</Text>
-            <View style={styles.dailyChallengeInfo}>
-              <Text
-                style={[
-                  styles.dailyChallengeTitle,
-                  {
-                    color: dailyCompleted
-                      ? colors.text.secondary
-                      : Colors.accents.dailyChallengeText,
-                  },
-                ]}
+      {/* Footer: Sekundär-Navigation als schlichte Textlinks in einer Farbe */}
+      <View style={styles.footer}>
+        <View style={styles.footerLinks}>
+          {FOOTER_LINKS.map((link, i) => (
+            <React.Fragment key={link.route}>
+              {i > 0 && (
+                <Text style={[styles.footerSeparator, { color: colors.text.secondary }]}>·</Text>
+              )}
+              <Pressable
+                onPress={() => router.push(link.route)}
+                accessibilityRole="button"
+                accessibilityLabel={t(link.labelKey)}
+                style={styles.footerLink}
               >
-                {t('dailyChallenge.title')}
-              </Text>
-              <Text style={[styles.dailyChallengeMeta, { color: colors.text.secondary }]}>
-                {dailyCompleted
-                  ? t('dailyChallenge.completed')
-                  : `${t('dailyChallenge.level', { number: String(dailyLevel) })} · ${t('dailyChallenge.countdown', { hours: String(countdownHours), minutes: String(countdownMinutes) })}`}
-              </Text>
-            </View>
-          </PressableScale>
-        </AnimatedCard>
+                <Text style={[styles.footerLinkText, { color: colors.text.primary }]}>
+                  {t(link.labelKey)}
+                </Text>
+              </Pressable>
+            </React.Fragment>
+          ))}
+        </View>
 
-        {/* Levels + Galerie + Kreativ — Side-by-Side */}
-        <AnimatedCard index={1} style={styles.secondaryRow}>
-          <PressableScale
-            style={[
-              styles.secondaryTile,
-              { backgroundColor: colors.surface, borderColor: colors.primary },
-            ]}
-            onPress={() => router.push('/levels')}
-            accessibilityRole="button"
-            accessibilityLabel={t('home.levelsButton')}
-          >
-            <Text style={[styles.secondaryTileText, { color: colors.primary }]}>
-              {t('home.levelsButton')}
-            </Text>
-          </PressableScale>
-
-          <PressableScale
-            style={[
-              styles.secondaryTile,
-              { backgroundColor: colors.surface, borderColor: colors.primary },
-            ]}
-            onPress={() => router.push('/gallery')}
-            accessibilityRole="button"
-            accessibilityLabel={t('home.galleryButton')}
-          >
-            <Text style={[styles.secondaryTileText, { color: colors.primary }]}>
-              {t('home.galleryButton')}
-            </Text>
-          </PressableScale>
-
-          <PressableScale
-            style={[
-              styles.secondaryTile,
-              { backgroundColor: colors.surface, borderColor: colors.primary },
-            ]}
-            onPress={() => router.push('/creative')}
-            accessibilityRole="button"
-            accessibilityLabel={t('home.creativeButton')}
-          >
-            <Text style={[styles.secondaryTileText, { color: colors.primary }]}>
-              {t('home.creativeButton')}
-            </Text>
-          </PressableScale>
-        </AnimatedCard>
-
-        {/* Quick Stats — dezent am unteren Rand */}
         <QuickStatsCards />
 
         <WebTrustFooter />
@@ -292,23 +211,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
-  topBarRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xs,
-  },
-  streakBadge: {
-    backgroundColor: Colors.accents.streakBadge,
-    borderRadius: BorderRadius.round,
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: 3,
-  },
-  streakBadgeText: {
-    color: '#fff',
-    fontSize: FontSize.xs,
-    fontWeight: FontWeight.bold,
-    fontFamily: FontFamily.bold,
-  },
   appTitle: {
     fontSize: FontSize.xl,
     fontWeight: FontWeight.bold,
@@ -332,22 +234,18 @@ const styles = StyleSheet.create({
   },
   mascotRow: {
     marginTop: Spacing.sm,
-    gap: 2,
-  },
-  mascotUnlockHint: {
-    fontSize: FontSize.xs,
-    marginLeft: 64,
   },
   heroSlot: {
     flex: 1,
-    minHeight: 140,
+    minHeight: 160,
     justifyContent: 'center',
     alignItems: 'center',
+    gap: Spacing.md,
   },
   heroCtaWrapper: {
     borderRadius: BorderRadius.round,
     overflow: 'hidden',
-    ...Colors.shadow.large,
+    ...Colors.shadow.medium,
   },
   heroCtaPill: {
     flexDirection: 'row',
@@ -370,56 +268,39 @@ const styles = StyleSheet.create({
     color: '#fff',
     letterSpacing: 0.5,
   },
-  bottomSection: {
-    marginTop: 'auto',
-    gap: Spacing.md,
-  },
-  secondaryRow: {
-    flexDirection: 'row',
-    gap: Spacing.sm,
-  },
-  secondaryTile: {
-    flex: 1,
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.md,
-    borderRadius: BorderRadius.lg,
-    borderWidth: 2,
-    alignItems: 'center',
-    minHeight: 52,
+  dailyLink: {
+    minHeight: 44,
     justifyContent: 'center',
-    ...Colors.shadow.small,
+    paddingHorizontal: Spacing.md,
   },
-  secondaryTileText: {
-    fontSize: FontSize.md,
+  dailyLinkText: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
+    fontFamily: FontFamily.semibold,
+    textAlign: 'center',
+  },
+  footer: {
+    marginTop: 'auto',
+    gap: Spacing.xs,
+    alignItems: 'center',
+  },
+  footerLinks: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  footerLink: {
+    minHeight: 44,
+    justifyContent: 'center',
+    paddingHorizontal: Spacing.sm,
+  },
+  footerLinkText: {
+    fontSize: FontSize.sm,
     fontWeight: FontWeight.semibold,
     fontFamily: FontFamily.semibold,
   },
-  dailyChallengeButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.lg,
-    borderRadius: BorderRadius.lg,
-    borderWidth: 2,
-    minHeight: 52,
-    gap: Spacing.sm,
-    ...Colors.shadow.small,
-  },
-  dailyChallengeCompleted: {
-    opacity: 0.6,
-  },
-  dailyChallengeEmoji: {
-    fontSize: 24,
-  },
-  dailyChallengeInfo: {
-    flex: 1,
-  },
-  dailyChallengeTitle: {
+  footerSeparator: {
     fontSize: FontSize.sm,
-    fontWeight: FontWeight.bold,
-  },
-  dailyChallengeMeta: {
-    fontSize: FontSize.xs,
-    marginTop: 1,
   },
 });
