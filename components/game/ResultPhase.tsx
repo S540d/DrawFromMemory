@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import DrawingCanvas from '@components/DrawingCanvas';
 import LevelImageDisplay from '@components/LevelImageDisplay';
@@ -50,13 +50,17 @@ export default function ResultPhase({
     }
   }, [isLastLevel, userRating]);
 
-  const getFeedbackText = (rating: number) => {
-    if (rating >= 1 && rating <= 5) {
-      const feedback = getRatingFeedback(rating as StarRating);
-      return currentLang === 'en' ? feedback.messageEn : feedback.message;
-    }
-    return t('game.result.tapStars');
-  };
+  // Feedback einmal pro Bewertung auswählen: getRatingFeedback() rotiert durch
+  // Nachrichten, ein Aufruf im Render ließ den Text bei jedem Re-Render wechseln.
+  const feedback = useMemo(
+    () => (userRating >= 1 && userRating <= 5 ? getRatingFeedback(userRating as StarRating) : null),
+    [userRating],
+  );
+  const feedbackText = feedback
+    ? currentLang === 'en'
+      ? feedback.messageEn
+      : feedback.message
+    : t('game.result.tapStars');
 
   const imageSize = Math.min(Math.max(screenWidth * 0.44, 140), 220);
 
@@ -230,7 +234,7 @@ export default function ResultPhase({
                 )}
               </View>
               <Text style={[styles.feedbackText, { color: colors.text.secondary }]}>
-                {getFeedbackText(userRating)}
+                {feedbackText}
               </Text>
             </View>
           </AnimatedFeedback>

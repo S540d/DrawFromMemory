@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- „Von Level 1 neu starten" setzt den Galerie-Speicherstatus zurück (vorher blieb „In Galerie speichern" ggf. gesperrt)
+- Ergebnis-Feedback wechselte bei jedem Re-Render, weil die rotierende Nachricht im Render gewählt wurde — jetzt einmal pro Bewertung; DE/EN-Texte für 1–2 Sterne laufen nicht mehr auseinander
+
 ### Changed
 
 - Startseite entschlackt: „Spiel starten" ist die einzige auffällige Aktion (ohne Dauer-Puls); Tägliche Challenge als dezenter Textlink darunter (ohne ⚡, Farbrahmen, Countdown); Level/Galerie/Freies Malen als einfarbige Textlinks im Footer; Statistik als eine Textzeile statt drei Emoji-Karten; Streak-Badge und schwebende Sterne entfernt — die Serie steht nur noch in Malis Begrüßung
