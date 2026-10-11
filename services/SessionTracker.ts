@@ -9,6 +9,7 @@
  */
 
 import { createPersistedJson } from './storage/persistedJson';
+import { getLocalDateKey } from './StreakManager';
 
 export const FOUR_WEEKS_MS = 28 * 24 * 60 * 60 * 1000;
 const MAX_ENTRIES = 1000; // hard cap, defensiv
@@ -81,11 +82,7 @@ export async function clearSessions(): Promise<void> {
 }
 
 function localDateKey(iso: string): string {
-  const d = new Date(iso);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
+  return getLocalDateKey(new Date(iso));
 }
 
 export function computeStats(records: SessionRecord[]): SessionStats {

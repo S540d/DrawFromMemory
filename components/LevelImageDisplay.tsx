@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Svg, { Rect, Line } from 'react-native-svg';
 import { LEVEL_IMAGE_RENDERERS } from './levelImages/registry';
@@ -218,25 +218,32 @@ export default function LevelImageDisplay({
   const svgSize = size;
   const viewBox = '0 0 200 200';
 
-  let svgElement = renderSvgForImage(image, svgSize, viewBox);
+  // SVG-Baum (inkl. Outline-/Dark-Transformation) nur neu bauen, wenn sich Bild,
+  // Größe, Modus oder Theme ändern — nicht bei jedem Timer-Tick der Merke-Phase.
+  const svgElement = useMemo(() => {
+    const element = renderSvgForImage(image, svgSize, viewBox);
+    if (!element) return null;
+    const children = (element.props as React.ComponentProps<typeof Svg>).children;
+    if (mode === 'outline') {
+      const outlineColor = theme === 'dark' ? OUTLINE_COLOR_DARK : OUTLINE_COLOR_LIGHT;
+      return React.cloneElement(
+        element,
+        {},
+        React.Children.map(children, child => toOutlineElement(child, outlineColor)),
+      );
+    }
+    if (theme === 'dark') {
+      return React.cloneElement(
+        element,
+        {},
+        React.Children.map(children, fixUnfilledStrokeForDarkTheme),
+      );
+    }
+    return element;
+  }, [image, svgSize, viewBox, mode, theme]);
 
   if (!svgElement) {
     return <View style={[styles.container, { width: svgSize, height: svgSize }]} />;
-  }
-
-  if (mode === 'outline') {
-    const outlineColor = theme === 'dark' ? OUTLINE_COLOR_DARK : OUTLINE_COLOR_LIGHT;
-    const outlinedChildren = React.Children.map(
-      (svgElement.props as React.ComponentProps<typeof Svg>).children,
-      child => toOutlineElement(child, outlineColor),
-    );
-    svgElement = React.cloneElement(svgElement, {}, outlinedChildren);
-  } else if (theme === 'dark') {
-    const fixedChildren = React.Children.map(
-      (svgElement.props as React.ComponentProps<typeof Svg>).children,
-      fixUnfilledStrokeForDarkTheme,
-    );
-    svgElement = React.cloneElement(svgElement, {}, fixedChildren);
   }
 
   const containerStyle = [

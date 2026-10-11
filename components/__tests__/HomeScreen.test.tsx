@@ -84,11 +84,6 @@ jest.mock('../../components/FloatingStars', () => {
   return { FloatingStars: () => <View testID="floating-stars" /> };
 });
 
-jest.mock('../../components/AnimatedHero', () => {
-  const { View } = require('react-native');
-  return { AnimatedHero: () => <View testID="animated-hero" /> };
-});
-
 jest.mock('../../components/OnboardingModal', () => {
   const { View } = require('react-native');
   return { __esModule: true, default: () => <View testID="onboarding-modal" /> };

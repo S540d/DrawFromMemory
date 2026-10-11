@@ -51,8 +51,10 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   useEffect(() => {
     setCurrentLang(getLanguage());
     setCurrentTheme(themeSetting);
-    storageManager.getSetting('soundEnabled').then(setSoundEnabled);
-    storageManager.getSetting('celebrationEnabled').then(setCelebrationEnabled);
+    storageManager.getSettings().then(settings => {
+      setSoundEnabled(settings.soundEnabled);
+      setCelebrationEnabled(settings.celebrationEnabled);
+    });
     getAgeGroup().then(setCurrentAgeGroup);
   }, [visible, themeSetting]);
 

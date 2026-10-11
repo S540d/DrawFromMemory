@@ -4,6 +4,7 @@
  */
 
 import { RatingFeedback, StarRating } from '../types';
+import Colors from '../constants/Colors';
 
 /**
  * Motivierende Aussagen für 1-2 Sterne (werden rotiert)
@@ -148,13 +149,6 @@ export function calculateStarsFromSimilarity(similarityScore: number): StarRatin
  * Gibt die passende Stern-Farbe für die UI zurück
  */
 export function getStarColor(stars: StarRating): string {
-  // Verwendet Colors.difficulty aus constants/Colors.ts
-  const colorMap: Record<StarRating, string> = {
-    1: '#E74C3C', // Rot
-    2: '#E67E22', // Dunkles Orange
-    3: '#F39C12', // Orange
-    4: '#2ECC71', // Hellgrün
-    5: '#27AE60', // Grün
-  };
-  return colorMap[stars];
+  // Umgekehrte Schwierigkeits-Palette: 1 Stern = Rot (difficulty 5), 5 Sterne = Grün (difficulty 1)
+  return Colors.difficulty[(6 - stars) as keyof typeof Colors.difficulty];
 }

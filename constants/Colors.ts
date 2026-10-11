@@ -115,12 +115,10 @@ export const Colors = {
     5: '#E74C3C', // Rot - Sehr schwierig
   },
 
-  // UI-Akzentfarben außerhalb des Zeichnungskontexts (Home-Screen), zentralisiert
+  // UI-Akzentfarben außerhalb des Zeichnungskontexts, zentralisiert
   // statt als Hex-Literal an der Verwendungsstelle (Issue #334).
   accents: {
-    dailyChallengeBorder: '#F59E0B',
-    dailyChallengeText: '#D97706',
-    streakBadge: '#FF6B35',
+    dailyChallenge: '#F59E0B',
   },
 };
 
