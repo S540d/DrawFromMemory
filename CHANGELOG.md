@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Web-Zeichenfläche: Beim Malen wird nur noch der Live-Strich über einen gecachten Snapshot der fertigen Zeichnung gelegt. Vorher liefen bei jeder Mausbewegung alle Striche und alle Flood-Fills (volle `getImageData`/`putImageData`-Durchläufe) erneut (#358)
+
 ### Fixed
 
 - „Von Level 1 neu starten" setzt den Galerie-Speicherstatus zurück (vorher blieb „In Galerie speichern" ggf. gesperrt)

@@ -8,6 +8,8 @@ import type { DrawingPath } from './DrawingCanvas.shared';
 export type { DrawingPath } from './DrawingCanvas.shared';
 export { useDrawingCanvas } from './DrawingCanvas.hooks';
 
+const EMPTY_PATHS: DrawingPath[] = [];
+
 interface Props {
   width?: number;
   height?: number;
@@ -24,7 +26,7 @@ export default function DrawingCanvas({
   strokeColor = '#000000',
   strokeWidth = 3,
   tool = 'brush',
-  paths = [],
+  paths = EMPTY_PATHS,
   onDrawingChange,
 }: Props) {
   const { width: windowWidth } = useWindowDimensions();
@@ -34,6 +36,7 @@ export default function DrawingCanvas({
   const isDrawingRef = useRef(false);
   const currentPathRef = useRef<{ x: number; y: number }[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const snapshotRef = useRef<HTMLCanvasElement | null>(null);
 
   const floodFill = (startX: number, startY: number, fillColor: string) => {
     if (!canvasRef.current) return;
@@ -52,6 +55,9 @@ export default function DrawingCanvas({
     if (changed) ctx.putImageData(imageData, 0, 0);
   };
 
+  // Fertige Zeichnung (Striche + Fills) nur bei Änderung von paths/Größe neu rendern und als
+  // Offscreen-Bild cachen. Der Flood-Fill (getImageData → Scan → putImageData über die ganze
+  // Fläche) lief vorher bei jedem Touch-Move mit (Issue #358).
   useEffect(() => {
     if (!canvasRef.current) return;
     const canvas = canvasRef.current;
@@ -126,6 +132,29 @@ export default function DrawingCanvas({
         ctx.stroke();
       }
     });
+
+    // Snapshot der fertigen Zeichnung für den Live-Strich-Effekt
+    let snapshot = snapshotRef.current;
+    if (!snapshot) {
+      snapshot = document.createElement('canvas'); // platform-safe
+      snapshotRef.current = snapshot;
+    }
+    snapshot.width = width;
+    snapshot.height = height;
+    snapshot.getContext('2d')?.drawImage(canvas, 0, 0);
+  }, [paths, width, height, onDrawingChange]);
+
+  // Live-Strich: Snapshot zurückkopieren und nur den aktuellen Strich darüberzeichnen.
+  // Läuft nach dem Basis-Effekt (gleiche Render-Runde → Snapshot ist aktuell).
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const snapshot = snapshotRef.current;
+    if (!canvas || !snapshot) return;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, width, height);
+    ctx.drawImage(snapshot, 0, 0);
 
     if (onDrawingChange && currentPath.length > 1 && tool === 'brush') {
       ctx.strokeStyle = strokeColor;
