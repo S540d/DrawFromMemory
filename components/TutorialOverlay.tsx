@@ -21,7 +21,6 @@ interface Props {
   onDismiss: () => void;
 }
 
-const TOTAL_STEPS = 3;
 const PHASE_ORDER: GamePhase[] = ['memorize', 'draw', 'result'];
 
 const PHASE_CONFIG: Record<GamePhase, { emoji: string; textKey: string; badgeKey: string }> = {

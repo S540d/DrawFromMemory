@@ -240,15 +240,17 @@ class StorageManager {
     try {
       const current = await this.getSettings();
       const updated = { ...current, ...settings };
-      await safeStorageOps.setItem(KEYS.THEME, updated.theme);
-      await safeStorageOps.setItem(KEYS.LANGUAGE, updated.language);
-      await safeStorageOps.setItem(KEYS.SOUND_ENABLED, JSON.stringify(updated.soundEnabled));
-      await safeStorageOps.setItem(KEYS.MUSIC_ENABLED, JSON.stringify(updated.musicEnabled));
-      await safeStorageOps.setItem(KEYS.EXTRA_TIME_MODE, JSON.stringify(updated.extraTimeMode));
-      await safeStorageOps.setItem(
-        KEYS.CELEBRATION_ENABLED,
-        JSON.stringify(updated.celebrationEnabled),
-      );
+      await Promise.all([
+        safeStorageOps.setItem(KEYS.THEME, updated.theme),
+        safeStorageOps.setItem(KEYS.LANGUAGE, updated.language),
+        safeStorageOps.setItem(KEYS.SOUND_ENABLED, JSON.stringify(updated.soundEnabled)),
+        safeStorageOps.setItem(KEYS.MUSIC_ENABLED, JSON.stringify(updated.musicEnabled)),
+        safeStorageOps.setItem(KEYS.EXTRA_TIME_MODE, JSON.stringify(updated.extraTimeMode)),
+        safeStorageOps.setItem(
+          KEYS.CELEBRATION_ENABLED,
+          JSON.stringify(updated.celebrationEnabled),
+        ),
+      ]);
     } catch (error) {
       console.error('Error saving settings:', error);
     }

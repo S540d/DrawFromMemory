@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -169,6 +169,25 @@ function SkiaFallback({
   );
 }
 
+function createSkiaPath(
+  points: { x: number; y: number }[],
+  color: string,
+  strokeW: number,
+  scale: number = 1,
+  offsetX: number = 0,
+  offsetY: number = 0,
+) {
+  if (points.length < 2) return null;
+
+  const path = SkiaModule.Path.Make();
+  path.moveTo(points[0].x * scale + offsetX, points[0].y * scale + offsetY);
+  for (let i = 1; i < points.length; i++) {
+    path.lineTo(points[i].x * scale + offsetX, points[i].y * scale + offsetY);
+  }
+
+  return { path, color, width: strokeW * scale };
+}
+
 export default function DrawingCanvas({
   width: propWidth,
   height = 400,
@@ -269,25 +288,6 @@ export default function DrawingCanvas({
     return { scale, offsetX, offsetY };
   };
 
-  const createSkiaPath = (
-    points: { x: number; y: number }[],
-    color: string,
-    strokeW: number,
-    scale: number = 1,
-    offsetX: number = 0,
-    offsetY: number = 0,
-  ) => {
-    if (points.length < 2) return null;
-
-    const path = SkiaModule.Path.Make();
-    path.moveTo(points[0].x * scale + offsetX, points[0].y * scale + offsetY);
-    for (let i = 1; i < points.length; i++) {
-      path.lineTo(points[i].x * scale + offsetX, points[i].y * scale + offsetY);
-    }
-
-    return { path, color, width: strokeW * scale };
-  };
-
   const { scale, offsetX, offsetY } = !onDrawingChange
     ? getScaledPaths()
     : { scale: 1, offsetX: 0, offsetY: 0 };
@@ -312,6 +312,37 @@ export default function DrawingCanvas({
       setFillLayers([]);
     }
   }, [nativePaths, width, height, scale, offsetX, offsetY, hasFillPaths]);
+
+  // Fertige Striche nur neu bauen, wenn sich Pfade oder Skalierung ändern —
+  // nicht bei jedem Touch-Move des gerade gezeichneten Strichs.
+  const strokeElements = useMemo(
+    () =>
+      SkiaModule
+        ? nativePaths.map((pathData, index) => {
+            const skiaPath = createSkiaPath(
+              pathData.points,
+              pathData.color,
+              pathData.strokeWidth,
+              scale,
+              offsetX,
+              offsetY,
+            );
+            if (!skiaPath) return null;
+            return (
+              <SkiaPath
+                key={`stroke-${index}`}
+                path={skiaPath.path}
+                color={skiaPath.color}
+                style="stroke"
+                strokeWidth={skiaPath.width}
+                strokeCap="round"
+                strokeJoin="round"
+              />
+            );
+          })
+        : null,
+    [nativePaths, scale, offsetX, offsetY],
+  );
 
   if (!SkiaCanvas || !SkiaModule) {
     return (
@@ -348,53 +379,11 @@ export default function DrawingCanvas({
                   />
                 )),
               )}
-            {nativePaths.map((pathData, index) => {
-              const skiaPath = createSkiaPath(
-                pathData.points,
-                pathData.color,
-                pathData.strokeWidth,
-                scale,
-                offsetX,
-                offsetY,
-              );
-              if (!skiaPath) return null;
-              return (
-                <SkiaPath
-                  key={`stroke-${index}`}
-                  path={skiaPath.path}
-                  color={skiaPath.color}
-                  style="stroke"
-                  strokeWidth={skiaPath.width}
-                  strokeCap="round"
-                  strokeJoin="round"
-                />
-              );
-            })}
+            {strokeElements}
           </>
         ) : (
           // No fills – render stroke paths directly as Skia paths (faster, no CPU round-trip)
-          nativePaths.map((pathData, index) => {
-            const skiaPath = createSkiaPath(
-              pathData.points,
-              pathData.color,
-              pathData.strokeWidth,
-              scale,
-              offsetX,
-              offsetY,
-            );
-            if (!skiaPath) return null;
-            return (
-              <SkiaPath
-                key={`stroke-${index}`}
-                path={skiaPath.path}
-                color={skiaPath.color}
-                style="stroke"
-                strokeWidth={skiaPath.width}
-                strokeCap="round"
-                strokeJoin="round"
-              />
-            );
-          })
+          strokeElements
         )}
 
         {onDrawingChange &&

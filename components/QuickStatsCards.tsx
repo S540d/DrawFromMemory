@@ -5,6 +5,7 @@ import { useTheme } from '@services/ThemeContext';
 import { useTranslation } from '@services/i18n';
 import storageManager from '@services/StorageManager';
 import { getTotalLevels } from '@services/LevelManager';
+import { getTotalStars } from '@services/MascotManager';
 import { FontSize, FontFamily } from '../constants/Layout';
 
 interface Stats {
@@ -28,8 +29,10 @@ export default function QuickStatsCards() {
       let mounted = true;
       storageManager.getProgress().then(progress => {
         if (!mounted) return;
-        const totalStars = Object.values(progress.levels).reduce((sum, l) => sum + l.bestRating, 0);
-        setStats({ totalStars, levelsCompleted: progress.totalLevelsCompleted });
+        setStats({
+          totalStars: getTotalStars(progress),
+          levelsCompleted: progress.totalLevelsCompleted,
+        });
       });
       return () => {
         mounted = false;

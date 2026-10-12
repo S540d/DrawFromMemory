@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
   },
   dailyBadge: {
     alignSelf: 'flex-start',
-    backgroundColor: '#F59E0B',
+    backgroundColor: Colors.accents.dailyChallenge,
     borderRadius: BorderRadius.sm,
     paddingHorizontal: 6,
     paddingVertical: 2,

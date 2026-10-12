@@ -16,6 +16,7 @@ import {
   Nunito_700Bold,
   Nunito_800ExtraBold,
 } from '@expo-google-fonts/nunito';
+import { SITE_URL, PLAY_STORE_URL } from '../constants/ExternalLinks';
 
 // Initialize Sentry as early as possible (no-op on web or without DSN)
 initSentry();
@@ -23,7 +24,6 @@ initSentry();
 // Privacy-freundliches, minimales Analytics (no-op ohne EXPO_PUBLIC_PLAUSIBLE_DOMAIN)
 initAnalytics();
 
-const SITE_URL = 'https://s540d.github.io/DrawFromMemory/';
 const OG_IMAGE_URL = `${SITE_URL}feature-graphic.png`;
 const SEO_TITLE = 'Merke und Male – Gedächtnistraining für Kinder';
 const SEO_DESCRIPTION =
@@ -99,7 +99,7 @@ function RootLayoutContent() {
               price: '0',
               priceCurrency: 'EUR',
             },
-            installUrl: 'https://play.google.com/store/apps/details?id=com.s540d.merkeundmale',
+            installUrl: PLAY_STORE_URL,
           })}
         </script>
       </Head>

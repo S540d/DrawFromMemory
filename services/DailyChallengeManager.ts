@@ -5,6 +5,7 @@
 
 import { safeStorageOps } from './StorageManager';
 import { getTotalLevels } from './LevelManager';
+import { getLocalDateKey } from './StreakManager';
 
 const STORAGE_KEY = '@merke_male:daily_challenge';
 
@@ -32,10 +33,7 @@ async function saveState(state: DailyChallengeState): Promise<void> {
  * Gibt den Datums-Key im Format "YYYY-MM-DD" zurück.
  */
 export function getDailyChallengeKey(date: Date = new Date()): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
+  return getLocalDateKey(date);
 }
 
 /**

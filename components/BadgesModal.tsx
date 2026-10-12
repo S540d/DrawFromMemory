@@ -55,7 +55,7 @@ export default function BadgesModal({ visible, onClose }: Props) {
                   style={[
                     styles.row,
                     {
-                      backgroundColor: colors.surface ?? Colors.surface,
+                      backgroundColor: colors.surface,
                       opacity: isUnlocked ? 1 : 0.45,
                       borderColor: isUnlocked ? Colors.primary : 'transparent',
                     },
