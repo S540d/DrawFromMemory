@@ -316,6 +316,16 @@ describe('ResultPhase', () => {
     expect(texts).toContain('feedback-en-5');
   });
 
+  it('selects feedback once per rating, not on every re-render', () => {
+    const { getRatingFeedback } = require('../../services/RatingManager');
+    getRatingFeedback.mockClear();
+    const { rerender } = render(<ResultPhase {...resultProps} userRating={4} />);
+    rerender(
+      <ResultPhase {...resultProps} userRating={4} screenWidth={resultProps.screenWidth + 1} />,
+    );
+    expect(getRatingFeedback).toHaveBeenCalledTimes(1);
+  });
+
   it('shows saved label when savedToGallery is true', () => {
     const { UNSAFE_getAllByType } = render(<ResultPhase {...resultProps} savedToGallery={true} />);
     const texts = getAllTexts(UNSAFE_getAllByType);

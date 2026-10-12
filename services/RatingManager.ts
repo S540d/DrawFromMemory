@@ -26,11 +26,12 @@ const lowRatingMessages = {
 
 let lowRatingMessageIndex = 0;
 
-function getRotatingLowRatingMessage(language: 'de' | 'en' = 'de'): string {
-  const messages = lowRatingMessages[language];
-  const message = messages[lowRatingMessageIndex % messages.length];
+// DE und EN als Paar mit demselben Index (vorher zwei getrennte Aufrufe,
+// die den Zähler doppelt weiterschoben und die Sprachen auseinanderlaufen ließen).
+function getRotatingLowRatingMessages(): { de: string; en: string } {
+  const idx = lowRatingMessageIndex % lowRatingMessages.de.length;
   lowRatingMessageIndex++;
-  return message;
+  return { de: lowRatingMessages.de[idx], en: lowRatingMessages.en[idx] };
 }
 
 /**
@@ -92,14 +93,16 @@ function getRotatingHighRatingMessages(stars: 4 | 5): { de: string; en: string }
 export function getRatingFeedback(stars: StarRating, language: 'de' | 'en' = 'de'): RatingFeedback {
   switch (stars) {
     case 1:
-    case 2:
+    case 2: {
+      const low = getRotatingLowRatingMessages();
       return {
         stars,
-        message: getRotatingLowRatingMessage('de'),
-        messageEn: getRotatingLowRatingMessage('en'),
+        message: low.de,
+        messageEn: low.en,
         animation: 'none',
         sound: 'huchhu.mp3',
       };
+    }
 
     case 3:
       return {
