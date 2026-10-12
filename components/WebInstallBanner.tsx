@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import { isWeb } from '../utils/platform';
 import { getPlayStoreUrl } from '../constants/ExternalLinks';
-import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../constants/Layout';
+import { Spacing, FontSize, FontWeight, FontFamily } from '../constants/Layout';
 
 /**
  * Nur auf Web sichtbarer Install-Hinweis oberhalb des Spiel-CTAs.
@@ -15,6 +15,9 @@ import { Spacing, FontSize, FontWeight, FontFamily, BorderRadius } from '../cons
  * Installationen konvertiert. Dieser Banner macht die Android-App direkt im
  * sichtbaren Bereich zum Angebot — mit Attributions-Link, damit die Installs
  * in der Play Console als Web-Traffic erkennbar sind.
+ *
+ * Bewusst nur eine dezente Textzeile (kein Rahmen, kein Emoji), damit
+ * "Spiel starten" die einzige auffällige Aktion der Startseite bleibt.
  */
 export default function WebInstallBanner() {
   const { t } = useTranslation();
@@ -31,52 +34,25 @@ export default function WebInstallBanner() {
       onPress={open}
       accessibilityRole="link"
       accessibilityLabel={t('webInstall.title')}
-      style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.primary }]}
+      style={styles.container}
     >
-      <Text style={styles.icon}>📲</Text>
-      <View style={styles.textBlock}>
-        <Text style={[styles.title, { color: colors.primary }]} numberOfLines={1}>
-          {t('webInstall.title')}
-        </Text>
-        <Text style={[styles.subtitle, { color: colors.text.secondary }]} numberOfLines={1}>
-          {t('webInstall.subtitle')}
-        </Text>
-      </View>
-      <Text style={[styles.chevron, { color: colors.primary }]}>›</Text>
+      <Text style={[styles.title, { color: colors.primary }]} numberOfLines={1}>
+        {t('webInstall.title')} ›
+      </Text>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.sm,
-    marginTop: Spacing.sm,
-    paddingVertical: Spacing.sm,
+    alignSelf: 'center',
+    minHeight: 44,
+    justifyContent: 'center',
     paddingHorizontal: Spacing.md,
-    borderRadius: BorderRadius.lg,
-    borderWidth: 1.5,
-  },
-  icon: {
-    fontSize: 20,
-  },
-  textBlock: {
-    flex: 1,
   },
   title: {
     fontSize: FontSize.sm,
-    fontWeight: FontWeight.bold,
-    fontFamily: FontFamily.bold,
-  },
-  subtitle: {
-    fontSize: FontSize.xs,
-    fontWeight: FontWeight.regular,
-    fontFamily: FontFamily.regular,
-    marginTop: 1,
-  },
-  chevron: {
-    fontSize: 22,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.semibold,
+    fontFamily: FontFamily.semibold,
   },
 });
