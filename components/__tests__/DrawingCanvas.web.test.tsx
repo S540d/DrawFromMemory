@@ -221,4 +221,24 @@ describe('DrawingCanvas.web — Live-Strich nutzt Snapshot statt Komplett-Redraw
       expect(ctxCalls.stroke).toBeLessThanOrEqual(1 + 2 * 3);
     });
   });
+
+  describe('gebrochene Canvas-Maße', () => {
+    it('verwendet ganzzahlige Maße für Canvas und Pixelzugriff (Fills verschwanden sonst)', () => {
+      const fill: DrawingPath = {
+        points: [{ x: 5, y: 5 }],
+        color: '#FF0000',
+        strokeWidth: 0,
+        type: 'fill',
+      };
+      const { container } = render(<DrawingCanvas width={184.8} height={100.6} paths={[fill]} />);
+      const canvas = container.querySelector('canvas') as HTMLCanvasElement;
+
+      expect(canvas.width).toBe(184);
+      expect(canvas.height).toBe(100);
+      expect(fakeCtx.getImageData).toHaveBeenCalledWith(0, 0, 184, 100);
+      // Der Puffer passt zur übergebenen Breite → Flood-Fill kann korrekt adressieren
+      const [, , w, h] = fakeCtx.getImageData.mock.calls[0];
+      expect(Number.isInteger(w) && Number.isInteger(h)).toBe(true);
+    });
+  });
 });
