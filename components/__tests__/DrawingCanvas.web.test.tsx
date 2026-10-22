@@ -4,11 +4,14 @@ import type { DrawingPath } from '../DrawingCanvas.shared';
 
 // Fake-2D-Kontext, der Aufrufe zählt (jsdom implementiert Canvas nicht).
 const ctxCalls = { getImageData: 0, putImageData: 0, drawImage: 0, stroke: 0 };
+const moveToCalls: number[][] = [];
 const fakeCtx = {
   clearRect: jest.fn(),
   fillRect: jest.fn(),
   beginPath: jest.fn(),
-  moveTo: jest.fn(),
+  moveTo: jest.fn((x: number, y: number) => {
+    moveToCalls.push([x, y]);
+  }),
   lineTo: jest.fn(),
   stroke: jest.fn(() => {
     ctxCalls.stroke++;
@@ -36,6 +39,7 @@ describe('DrawingCanvas.web — Live-Strich nutzt Snapshot statt Komplett-Redraw
   let getContextSpy: jest.SpyInstance;
 
   beforeEach(() => {
+    moveToCalls.length = 0;
     Object.keys(ctxCalls).forEach(k => ((ctxCalls as Record<string, number>)[k] = 0));
     getContextSpy = jest
       .spyOn(HTMLCanvasElement.prototype, 'getContext')
@@ -116,5 +120,105 @@ describe('DrawingCanvas.web — Live-Strich nutzt Snapshot statt Komplett-Redraw
     const [newPaths] = onDrawingChange.mock.calls[0];
     expect(newPaths).toHaveLength(1);
     expect(newPaths[0].points.length).toBeGreaterThan(1);
+  });
+
+  describe('Replay (#366)', () => {
+    const fills = (n: number): DrawingPath[] =>
+      Array.from({ length: n }, (_, i) => ({
+        points: [{ x: 5 + i, y: 5 }],
+        color: '#FF0000',
+        strokeWidth: 0,
+        type: 'fill' as const,
+      }));
+
+    it('berechnet bei wachsenden Pfaden pro Frame höchstens 2 Flood-Fills statt alle neu', () => {
+      const all = fills(10);
+      const { rerender } = render(
+        <DrawingCanvas
+          width={100}
+          height={100}
+          paths={all.slice(0, 1)}
+          scaleReferencePaths={all}
+        />,
+      );
+      for (let k = 2; k <= all.length; k++) {
+        rerender(
+          <DrawingCanvas
+            width={100}
+            height={100}
+            paths={all.slice(0, k)}
+            scaleReferencePaths={all}
+          />,
+        );
+      }
+      // Ohne Cache: 1+2+…+10 = 55 Flood-Fills. Mit Cache: 1 + 2·9 = 19.
+      expect(ctxCalls.getImageData).toBeLessThanOrEqual(19);
+    });
+
+    it('hält die Skalierung über alle Frames stabil (scaleReferencePaths)', () => {
+      const a: DrawingPath = {
+        points: [
+          { x: 0, y: 0 },
+          { x: 50, y: 50 },
+        ],
+        color: '#000',
+        strokeWidth: 3,
+        type: 'stroke',
+      };
+      const b: DrawingPath = {
+        points: [
+          { x: 0, y: 0 },
+          { x: 400, y: 400 },
+        ],
+        color: '#000',
+        strokeWidth: 3,
+        type: 'stroke',
+      };
+
+      // Frame 1: nur a sichtbar, Skalierung aus der Gesamtzeichnung [a, b]
+      render(<DrawingCanvas width={100} height={100} paths={[a]} scaleReferencePaths={[a, b]} />);
+      const firstFrameStart = moveToCalls[0];
+
+      moveToCalls.length = 0;
+      // Endzustand: beide sichtbar, derselbe Pfad a muss an derselben Stelle starten
+      render(<DrawingCanvas width={100} height={100} paths={[a, b]} />);
+      expect(moveToCalls[0]).toEqual(firstFrameStart);
+    });
+
+    it('zeichnet bereits gerenderte Striche im Replay nicht jedes Mal erneut', () => {
+      const stroke = (x: number): DrawingPath => ({
+        points: [
+          { x, y: 0 },
+          { x, y: 90 },
+        ],
+        color: '#000',
+        strokeWidth: 3,
+        type: 'stroke',
+      });
+      const all: DrawingPath[] = [stroke(10), stroke(30), stroke(50), stroke(70)];
+
+      // Inkrementell
+      const { rerender } = render(
+        <DrawingCanvas
+          width={100}
+          height={100}
+          paths={all.slice(0, 1)}
+          scaleReferencePaths={all}
+        />,
+      );
+      for (let k = 2; k <= all.length; k++) {
+        rerender(
+          <DrawingCanvas
+            width={100}
+            height={100}
+            paths={all.slice(0, k)}
+            scaleReferencePaths={all}
+          />,
+        );
+      }
+      // Pro Frame wird höchstens der neue Pfad (committed) + der letzte neu gezeichnet:
+      // insgesamt sehr viel weniger als bei vollständigem Neuzeichnen (1+2+3+4 = 10 Striche).
+      expect(ctxCalls.stroke).toBeLessThanOrEqual(1 + 2 * 3);
+    });
   });
 });
