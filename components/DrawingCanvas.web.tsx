@@ -22,7 +22,7 @@ interface Props {
 
 export default function DrawingCanvas({
   width: propWidth,
-  height = 400,
+  height: heightProp = 400,
   strokeColor = '#000000',
   strokeWidth = 3,
   tool = 'brush',
@@ -30,7 +30,14 @@ export default function DrawingCanvas({
   onDrawingChange,
 }: Props) {
   const { width: windowWidth } = useWindowDimensions();
-  const width = propWidth ?? (windowWidth > 0 ? windowWidth - 48 : DEFAULT_CANVAS_WIDTH);
+  // Canvas-Pixelmaße müssen ganzzahlig sein: Das canvas-Attribut schneidet Nachkommastellen ab,
+  // getImageData/floodFillPixels rechnen aber mit der übergebenen Breite — bei gebrochenen Maßen
+  // (z. B. screenWidth * 0.44 = 184,8) stimmt die Zeilenadressierung nicht mehr und Fills
+  // verschwinden still.
+  const width = Math.floor(
+    propWidth ?? (windowWidth > 0 ? windowWidth - 48 : DEFAULT_CANVAS_WIDTH),
+  );
+  const height = Math.floor(heightProp);
 
   const [currentPath, setCurrentPath] = useState<{ x: number; y: number }[]>([]);
   const isDrawingRef = useRef(false);

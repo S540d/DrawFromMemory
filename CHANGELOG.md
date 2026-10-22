@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Web: Füllungen verschwanden (u. a. auf dem Ergebnis-Screen), wenn die Canvas-Breite nicht ganzzahlig war (z. B. `screenWidth * 0.44` = 184,8 px). Die Pixelmaße der Web-Zeichenfläche werden jetzt abgerundet, damit Canvas-Attribut, `getImageData` und Flood-Fill dieselbe Zeilenbreite verwenden
 - „Von Level 1 neu starten" setzt den Galerie-Speicherstatus zurück (vorher blieb „In Galerie speichern" ggf. gesperrt)
 - Ergebnis-Feedback wechselte bei jedem Re-Render, weil die rotierende Nachricht im Render gewählt wurde — jetzt einmal pro Bewertung; DE/EN-Texte für 1–2 Sterne laufen nicht mehr auseinander
 
