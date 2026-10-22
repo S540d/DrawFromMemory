@@ -1,18 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Alert,
-  Platform,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import storageManager, { GalleryEntry } from '@services/StorageManager';
 import { shareDrawing } from '@services/ShareService';
+import { confirmDestructive } from '@utils/platform';
 import DrawingCanvas from '@components/DrawingCanvas';
 import { GallerySkeleton } from '@components/SkeletonLoader';
 import { GlassCard } from '@components/AnimatedPrimitives';
@@ -53,17 +46,13 @@ export default function GalleryScreen() {
       setEntries(prev => prev.filter(e => e.id !== entry.id));
     };
 
-    if (Platform.OS === 'web') {
-      if (window.confirm(t('gallery.deleteConfirm'))) {
-        // platform-safe
-        doDelete();
-      }
-    } else {
-      Alert.alert(t('gallery.deleteTitle'), t('gallery.deleteConfirm'), [
-        { text: t('common.cancel'), style: 'cancel' },
-        { text: t('common.yes'), style: 'destructive', onPress: doDelete },
-      ]);
-    }
+    confirmDestructive({
+      title: t('gallery.deleteTitle'),
+      message: t('gallery.deleteConfirm'),
+      confirmLabel: t('common.yes'),
+      cancelLabel: t('common.cancel'),
+      onConfirm: doDelete,
+    });
   };
 
   const formatDate = (isoString: string) => {
