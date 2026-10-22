@@ -11,7 +11,11 @@ import { t } from '@services/i18n';
 import { styles, DEFAULT_CANVAS_WIDTH } from './DrawingCanvas.shared';
 import type { DrawingPath } from './DrawingCanvas.shared';
 import { captureException } from '@services/SentryService';
-import { computeNativeFillLayers, type NativeFillLayer } from '@services/NativeFillLayerService';
+import {
+  computeNativeFillLayersIncremental,
+  type NativeFillCache,
+  type NativeFillLayer,
+} from '@services/NativeFillLayerService';
 
 // Re-export shared API so '@components/DrawingCanvas' provides a complete module on native
 export type { DrawingPath } from './DrawingCanvas.shared';
@@ -66,7 +70,15 @@ function tryLoadSkia(): boolean {
 // Attempt initial load at module level
 tryLoadSkia();
 
+const EMPTY_PATHS: DrawingPath[] = [];
+
 interface Props {
+  /**
+   * Pfade, aus denen die Anpassung der Zeichnung an die Fläche (Skalierung/Offset) berechnet wird.
+   * Standard: `paths`. Im Replay die vollständige Zeichnung übergeben, damit die Skalierung über
+   * alle Frames stabil bleibt und bereits berechnete Fills wiederverwendet werden können (#366).
+   */
+  scaleReferencePaths?: DrawingPath[];
   width?: number;
   height?: number;
   strokeColor?: string;
@@ -194,7 +206,8 @@ export default function DrawingCanvas({
   strokeColor = '#000000',
   strokeWidth = 3,
   tool = 'brush',
-  paths = [],
+  paths = EMPTY_PATHS,
+  scaleReferencePaths,
   onDrawingChange,
 }: Props) {
   const { width: windowWidth } = useWindowDimensions();
@@ -203,6 +216,7 @@ export default function DrawingCanvas({
   const [nativePaths, setNativePaths] = useState(paths);
   const [currentNativePath, setCurrentNativePath] = useState<{ x: number; y: number }[]>([]);
   const [fillLayers, setFillLayers] = useState<NativeFillLayer[]>([]);
+  const fillCacheRef = useRef<NativeFillCache | null>(null);
 
   useEffect(() => {
     setNativePaths(paths);
@@ -253,7 +267,7 @@ export default function DrawingCanvas({
 
   const getScaledPaths = () => {
     // Exclude fill paths from bounding box – they only have a single click point
-    const strokePaths = nativePaths.filter(p => p.type !== 'fill');
+    const strokePaths = (scaleReferencePaths ?? nativePaths).filter(p => p.type !== 'fill');
     if (strokePaths.length === 0) return { scale: 1, offsetX: 0, offsetY: 0 };
 
     let minX = Infinity,
@@ -297,13 +311,24 @@ export default function DrawingCanvas({
   // Recompute native fill layers whenever fill paths change.
   useEffect(() => {
     if (!hasFillPaths) {
+      fillCacheRef.current = null;
       setFillLayers([]);
       return;
     }
     try {
-      const layers = computeNativeFillLayers(nativePaths, width, height, scale, offsetX, offsetY);
+      const { layers, cache } = computeNativeFillLayersIncremental(
+        nativePaths,
+        width,
+        height,
+        scale,
+        offsetX,
+        offsetY,
+        fillCacheRef.current,
+      );
+      fillCacheRef.current = cache;
       setFillLayers(layers);
     } catch (e) {
+      fillCacheRef.current = null;
       captureException(e instanceof Error ? e : new Error(String(e)), {
         component: 'DrawingCanvas',
         operation: 'computeNativeFillLayers',

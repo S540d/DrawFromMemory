@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Replay: Die Skalierung der Zeichnung wird aus der **gesamten** Zeichnung berechnet, nicht aus den gerade sichtbaren Pfaden — die Zeichnung erscheint von Anfang an in Endgröße und wandert nicht mehr mit. Dadurch können fertige Pfade und Fills in Web und Android zwischen den Frames wiederverwendet werden (pro Frame höchstens 2 statt N Flood-Fills) (#366)
 - Web-Zeichenfläche: Beim Malen wird nur noch der Live-Strich über einen gecachten Snapshot der fertigen Zeichnung gelegt. Vorher liefen bei jeder Mausbewegung alle Striche und alle Flood-Fills (volle `getImageData`/`putImageData`-Durchläufe) erneut (#358)
 
 ### Fixed

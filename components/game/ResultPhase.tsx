@@ -149,6 +149,7 @@ export default function ResultPhase({
                   width={imageSize}
                   height={imageSize}
                   paths={isReplaying ? replayPaths : drawingPaths}
+                  scaleReferencePaths={drawingPaths}
                   strokeColor={Colors.drawing.black}
                   strokeWidth={2}
                 />

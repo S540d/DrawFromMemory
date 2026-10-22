@@ -11,6 +11,12 @@ export { useDrawingCanvas } from './DrawingCanvas.hooks';
 const EMPTY_PATHS: DrawingPath[] = [];
 
 interface Props {
+  /**
+   * Pfade, aus denen die Anpassung der Zeichnung an die Fläche (Skalierung/Offset) berechnet wird.
+   * Standard: `paths`. Im Replay die vollständige Zeichnung übergeben, damit die Skalierung über
+   * alle Frames stabil bleibt und bereits gerenderte Pfade wiederverwendet werden können (#366).
+   */
+  scaleReferencePaths?: DrawingPath[];
   width?: number;
   height?: number;
   strokeColor?: string;
@@ -20,6 +26,45 @@ interface Props {
   onDrawingChange?: (paths: DrawingPath[]) => void;
 }
 
+function drawPath(
+  ctx: CanvasRenderingContext2D,
+  path: DrawingPath,
+  width: number,
+  height: number,
+  scale: number,
+  offsetX: number,
+  offsetY: number,
+) {
+  if (path.type === 'fill' && path.points.length > 0) {
+    const point = {
+      x: path.points[0].x * scale + offsetX,
+      y: path.points[0].y * scale + offsetY,
+    };
+    const imageData = ctx.getImageData(0, 0, width, height);
+    const changed = floodFillPixels(
+      imageData.data,
+      width,
+      height,
+      point.x,
+      point.y,
+      hexToRgb(path.color),
+    );
+    if (changed) ctx.putImageData(imageData, 0, 0);
+  } else if (path.points.length >= 2) {
+    ctx.strokeStyle = path.color;
+    ctx.lineWidth = path.strokeWidth * scale;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    ctx.beginPath();
+    ctx.moveTo(path.points[0].x * scale + offsetX, path.points[0].y * scale + offsetY);
+    for (let i = 1; i < path.points.length; i++) {
+      ctx.lineTo(path.points[i].x * scale + offsetX, path.points[i].y * scale + offsetY);
+    }
+    ctx.stroke();
+  }
+}
+
 export default function DrawingCanvas({
   width: propWidth,
   height: heightProp = 400,
@@ -27,6 +72,7 @@ export default function DrawingCanvas({
   strokeWidth = 3,
   tool = 'brush',
   paths = EMPTY_PATHS,
+  scaleReferencePaths,
   onDrawingChange,
 }: Props) {
   const { width: windowWidth } = useWindowDimensions();
@@ -44,6 +90,13 @@ export default function DrawingCanvas({
   const currentPathRef = useRef<{ x: number; y: number }[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const snapshotRef = useRef<HTMLCanvasElement | null>(null);
+  // Gerenderter Stand aller Pfade außer dem letzten ("committed"). Wächst `paths` nur am Ende
+  // (Malen, Replay), wird dieser Stand wiederverwendet statt alle Fills neu zu berechnen (#366).
+  const committedRef = useRef<{
+    canvas: HTMLCanvasElement;
+    paths: DrawingPath[];
+    key: string;
+  } | null>(null);
 
   const floodFill = (startX: number, startY: number, fillColor: string) => {
     if (!canvasRef.current) return;
@@ -71,19 +124,16 @@ export default function DrawingCanvas({
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
 
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, width, height);
-
+    const referencePaths = scaleReferencePaths ?? paths;
     let scale = 1,
       offsetX = 0,
       offsetY = 0;
-    if (!onDrawingChange && paths.length > 0) {
+    if (!onDrawingChange && referencePaths.length > 0) {
       let minX = Infinity,
         minY = Infinity,
         maxX = -Infinity,
         maxY = -Infinity;
-      paths.forEach(path => {
+      referencePaths.forEach(path => {
         if (path.type === 'fill') return;
         path.points.forEach(point => {
           minX = Math.min(minX, point.x);
@@ -109,36 +159,51 @@ export default function DrawingCanvas({
       }
     }
 
-    paths.forEach(path => {
-      if (path.type === 'fill' && path.points.length > 0) {
-        const point = {
-          x: path.points[0].x * scale + offsetX,
-          y: path.points[0].y * scale + offsetY,
-        };
-        const imageData = ctx.getImageData(0, 0, width, height);
-        const changed = floodFillPixels(
-          imageData.data,
-          width,
-          height,
-          point.x,
-          point.y,
-          hexToRgb(path.color),
-        );
-        if (changed) ctx.putImageData(imageData, 0, 0);
-      } else if (path.points.length >= 2) {
-        ctx.strokeStyle = path.color;
-        ctx.lineWidth = path.strokeWidth * scale;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
+    // Der letzte Pfad gilt als "flüchtig" (im Replay ist er der gerade wachsende Strich) und wird
+    // nicht gecacht; alle davor werden einmal gerendert und wiederverwendet, solange sie
+    // referenzgleich bleiben und sich Größe/Skalierung nicht ändern.
+    const key = `${width}x${height}|${scale}|${offsetX}|${offsetY}`;
+    const committed = paths.slice(0, -1);
+    const last = paths.length > 0 ? paths[paths.length - 1] : null;
 
-        ctx.beginPath();
-        ctx.moveTo(path.points[0].x * scale + offsetX, path.points[0].y * scale + offsetY);
-        for (let i = 1; i < path.points.length; i++) {
-          ctx.lineTo(path.points[i].x * scale + offsetX, path.points[i].y * scale + offsetY);
-        }
-        ctx.stroke();
+    const cache = committedRef.current;
+    let start = 0;
+    let reused = false;
+    ctx.clearRect(0, 0, width, height);
+    if (
+      cache &&
+      cache.key === key &&
+      cache.paths.length <= committed.length &&
+      cache.paths.every((p, i) => p === committed[i])
+    ) {
+      ctx.drawImage(cache.canvas, 0, 0);
+      start = cache.paths.length;
+      reused = true;
+    } else {
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, width, height);
+    }
+
+    for (let i = start; i < committed.length; i++) {
+      drawPath(ctx, committed[i], width, height, scale, offsetX, offsetY);
+    }
+
+    if (committed.length === 0) {
+      committedRef.current = null;
+    } else if (!reused || start !== committed.length) {
+      // Neuer committed-Stand: Kopie der Zeichenfläche (ohne den flüchtigen letzten Pfad) merken
+      const store = cache?.canvas ?? document.createElement('canvas'); // platform-safe
+      if (store.width !== width || store.height !== height) {
+        store.width = width;
+        store.height = height;
       }
-    });
+      const storeCtx = store.getContext('2d');
+      storeCtx?.clearRect(0, 0, width, height);
+      storeCtx?.drawImage(canvas, 0, 0);
+      committedRef.current = { canvas: store, paths: committed, key };
+    }
+
+    if (last) drawPath(ctx, last, width, height, scale, offsetX, offsetY);
 
     // Snapshot der fertigen Zeichnung für den Live-Strich-Effekt
     let snapshot = snapshotRef.current;
@@ -149,7 +214,7 @@ export default function DrawingCanvas({
     snapshot.width = width;
     snapshot.height = height;
     snapshot.getContext('2d')?.drawImage(canvas, 0, 0);
-  }, [paths, width, height, onDrawingChange]);
+  }, [paths, scaleReferencePaths, width, height, onDrawingChange]);
 
   // Live-Strich: Snapshot zurückkopieren und nur den aktuellen Strich darüberzeichnen.
   // Läuft nach dem Basis-Effekt (gleiche Render-Runde → Snapshot ist aktuell).
