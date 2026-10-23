@@ -58,7 +58,13 @@ export function useGameFeedback(userRating: number) {
   }, []);
 
   useEffect(() => {
-    if (userRating === 0 || userRating === lastCheckedRatingRef.current) return;
+    // Neue Runde (Rating zurück auf 0): Merker zurücksetzen, sonst würde dieselbe
+    // Sternzahl in der nächsten Runde als "schon geprüft" übersprungen
+    if (userRating === 0) {
+      lastCheckedRatingRef.current = 0;
+      return;
+    }
+    if (userRating === lastCheckedRatingRef.current) return;
     lastCheckedRatingRef.current = userRating;
 
     if (userRating >= 4 && FeatureFlags.ENABLE_CONFETTI && celebrationEnabled) {
