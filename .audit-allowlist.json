@@ -6,12 +6,6 @@
       "package": "node-forge",
       "reason": "RSA PKCS#1 v1.5: kein gepatchter Release; nur via expo -> @expo/cli (Build-Tooling)",
       "expires": "2026-12-31"
-    },
-    {
-      "id": "GHSA-vfj7-8cjw-p6xm",
-      "package": "braces",
-      "reason": "Stack-Exhaustion DoS: kein gepatchter Release; nur via micromatch/patch-package (Dev-Tooling)",
-      "expires": "2026-12-31"
     }
   ]
 }
