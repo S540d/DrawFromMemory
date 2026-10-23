@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Bestätigungsdialog vor destruktiven Aktionen als Helper `confirmDestructive()` in `utils/platform.ts` (Web: `window.confirm`, nativ: `Alert.alert` mit destruktivem Button); die drei kopierten Web/Native-Verzweigungen in `creative.tsx`, `gallery.tsx` und `DrawPhase.tsx` entfallen. `SoundManager` und `SentryService` nutzen `isWeb` statt direkter `Platform.OS`-Checks (#360)
+- Die Logik „Zeichnung in eine Fläche einpassen" (Bounding Box → Skalierung/Offset) liegt jetzt einmal in `utils/drawingTransform.ts` (`computeFitTransform`) statt viermal kopiert in Web-/Native-Zeichenfläche und ShareService web/native; Verhalten unverändert (#359)
 
 ### Changed
 
