@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, useWindowDimensions } from 'react-native';
 import { floodFillPixels, hexToRgb } from '@services/FloodFillService';
+import { computeFitTransform, IDENTITY_TRANSFORM } from '@utils/drawingTransform';
 import { styles, DEFAULT_CANVAS_WIDTH } from './DrawingCanvas.shared';
 import type { DrawingPath } from './DrawingCanvas.shared';
 
@@ -125,39 +126,10 @@ export default function DrawingCanvas({
     if (!ctx) return;
 
     const referencePaths = scaleReferencePaths ?? paths;
-    let scale = 1,
-      offsetX = 0,
-      offsetY = 0;
-    if (!onDrawingChange && referencePaths.length > 0) {
-      let minX = Infinity,
-        minY = Infinity,
-        maxX = -Infinity,
-        maxY = -Infinity;
-      referencePaths.forEach(path => {
-        if (path.type === 'fill') return;
-        path.points.forEach(point => {
-          minX = Math.min(minX, point.x);
-          minY = Math.min(minY, point.y);
-          maxX = Math.max(maxX, point.x);
-          maxY = Math.max(maxY, point.y);
-        });
-      });
-
-      const drawingWidth = maxX - minX;
-      const drawingHeight = maxY - minY;
-      const padding = 10;
-
-      if (drawingWidth > 0 && drawingHeight > 0) {
-        const scaleX = (width - 2 * padding) / drawingWidth;
-        const scaleY = (height - 2 * padding) / drawingHeight;
-        scale = Math.min(scaleX, scaleY, 1);
-
-        const scaledWidth = drawingWidth * scale;
-        const scaledHeight = drawingHeight * scale;
-        offsetX = (width - scaledWidth) / 2 - minX * scale;
-        offsetY = (height - scaledHeight) / 2 - minY * scale;
-      }
-    }
+    const { scale, offsetX, offsetY } =
+      !onDrawingChange && referencePaths.length > 0
+        ? computeFitTransform(referencePaths, width, height, 10)
+        : IDENTITY_TRANSFORM;
 
     // Der letzte Pfad gilt als "flüchtig" (im Replay ist er der gerade wachsende Strich) und wird
     // nicht gecacht; alle davor werden einmal gerendert und wiederverwendet, solange sie

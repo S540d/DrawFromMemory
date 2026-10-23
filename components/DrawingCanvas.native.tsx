@@ -8,6 +8,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { t } from '@services/i18n';
+import { computeFitTransform, IDENTITY_TRANSFORM } from '@utils/drawingTransform';
 import { styles, DEFAULT_CANVAS_WIDTH } from './DrawingCanvas.shared';
 import type { DrawingPath } from './DrawingCanvas.shared';
 import { captureException } from '@services/SentryService';
@@ -265,46 +266,9 @@ export default function DrawingCanvas({
     setCurrentNativePath([]);
   };
 
-  const getScaledPaths = () => {
-    // Exclude fill paths from bounding box – they only have a single click point
-    const strokePaths = (scaleReferencePaths ?? nativePaths).filter(p => p.type !== 'fill');
-    if (strokePaths.length === 0) return { scale: 1, offsetX: 0, offsetY: 0 };
-
-    let minX = Infinity,
-      minY = Infinity,
-      maxX = -Infinity,
-      maxY = -Infinity;
-    strokePaths.forEach(path => {
-      path.points.forEach(point => {
-        minX = Math.min(minX, point.x);
-        minY = Math.min(minY, point.y);
-        maxX = Math.max(maxX, point.x);
-        maxY = Math.max(maxY, point.y);
-      });
-    });
-
-    const drawingWidth = maxX - minX;
-    const drawingHeight = maxY - minY;
-
-    if (drawingWidth <= 0 || drawingHeight <= 0) return { scale: 1, offsetX: 0, offsetY: 0 };
-
-    const padding = 10;
-    const scale = Math.min(
-      (width - 2 * padding) / drawingWidth,
-      (height - 2 * padding) / drawingHeight,
-      1,
-    );
-    const scaledWidth = drawingWidth * scale;
-    const scaledHeight = drawingHeight * scale;
-    const offsetX = (width - scaledWidth) / 2 - minX * scale;
-    const offsetY = (height - scaledHeight) / 2 - minY * scale;
-
-    return { scale, offsetX, offsetY };
-  };
-
   const { scale, offsetX, offsetY } = !onDrawingChange
-    ? getScaledPaths()
-    : { scale: 1, offsetX: 0, offsetY: 0 };
+    ? computeFitTransform(scaleReferencePaths ?? nativePaths, width, height, 10)
+    : IDENTITY_TRANSFORM;
 
   const hasFillPaths = nativePaths.some(p => p.type === 'fill');
 
