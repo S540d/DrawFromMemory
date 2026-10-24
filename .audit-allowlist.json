@@ -6,6 +6,12 @@
       "package": "node-forge",
       "reason": "RSA PKCS#1 v1.5: kein gepatchter Release; nur via expo -> @expo/cli (Build-Tooling)",
       "expires": "2026-12-31"
+    },
+    {
+      "id": "GHSA-mrhx-c7xc-m3w5",
+      "package": "zod",
+      "reason": "Speicher-DoS bei übergroßen Collections: nur noch zod@3 via expo -> @expo/cli (Build-Tooling, validiert lokale Konfiguration); kein gepatchter 3.x-Release, @expo/cli verlangt ^3.25.76. Root-zod (eslint-plugin-react-hooks) auf 4.6.7 gehoben.",
+      "expires": "2026-12-31"
     }
   ]
 }
