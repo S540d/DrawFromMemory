@@ -32,7 +32,6 @@
     "test:ci": "jest --ci --coverage --maxWorkers=2",
     "validate:svg-counts": "node scripts/validate-svg-counts.js",
     "validate": "./scripts/validate-release.sh",
-    "prepare-release": "./scripts/prepare-release.sh",
     "deploy:ghpages": "./scripts/deploy-ghpages.sh",
     "prepare": "husky install",
     "postinstall": "patch-package"

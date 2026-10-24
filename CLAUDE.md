@@ -62,8 +62,7 @@ npm run build:doctor               # Preflight-Checks vor lokalem Build (Disk/JD
 npm run build:android              # EAS Build (Android, Production)
 npm run build:android:preview      # EAS Build (Android, Preview APK)
 npm run build:android:local        # Lokaler EAS-Build (preview; :local:production für production)
-npm run prepare-release            # Vorbereitungs-Script für Release
-npm run validate                   # Vollständige Release-Validierung
+npm run validate                   # Release-Validierung (Versionen, CHANGELOG, Lint, tsc, Tests, Audit, Web+Android-Bundle)
 npm run deploy:ghpages             # Deployment auf GitHub Pages
 ```
 
