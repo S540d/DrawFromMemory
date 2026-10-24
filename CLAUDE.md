@@ -5,7 +5,7 @@
 **Merke und Male** — Gedächtnistraining-App für Kinder (React Native / Expo).
 Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Ergebnis.
 
-- **Aktuell: v1.9.0** (package.json + app.json; versionCode 70)
+- **Aktuell: v1.9.0** (package.json + app.json; versionCode 71) — **Play Store: v1.8.0 / versionCode 69**; v1.9.0 ist Release-Kandidat auf `testing` (versionCode 70 wurde nie im Store veröffentlicht)
 - **Mindestanforderung Android: API 26 (Android 8.0 Oreo)** — Nexus 6 (max. API 25) wird nicht mehr unterstützt (Issue #172, geschlossen)
 - **Live Demo:** https://s540d.github.io/DrawFromMemory/
 - **Repo:** https://github.com/S540d/DrawFromMemory
@@ -62,8 +62,7 @@ npm run build:doctor               # Preflight-Checks vor lokalem Build (Disk/JD
 npm run build:android              # EAS Build (Android, Production)
 npm run build:android:preview      # EAS Build (Android, Preview APK)
 npm run build:android:local        # Lokaler EAS-Build (preview; :local:production für production)
-npm run prepare-release            # Vorbereitungs-Script für Release
-npm run validate                   # Vollständige Release-Validierung
+npm run validate                   # Release-Validierung (Versionen, CHANGELOG, Lint, tsc, Tests, Audit, Web+Android-Bundle)
 npm run deploy:ghpages             # Deployment auf GitHub Pages
 ```
 
@@ -245,7 +244,7 @@ Niemals `rotation`/`origin`-Props an SVG-Elemente geben, die auch auf Web gerend
 
 ## Wachstums-Roadmap (Issue #219)
 
-Übergeordneter Plan für nachhaltiges Wachstum im Play Store. Stand `main` @ v1.9.0 / versionCode 70. **Play Store noch nicht auf v1.9.0** (Release-Aufgabe Issue #267). `testing` liegt primär mit Tech-Debt/Infra voraus (kein User-Facing-Feature-Rückstand). Themen-Packs sind über `LevelImage.pack?: string` getaggt; neue Packs brauchen Render-Dateien in `components/levelImages/` + Registry-/Pool-Einträge, visueller Stil verbindlich laut [`docs/ILLUSTRATION_STYLEGUIDE.md`](docs/ILLUSTRATION_STYLEGUIDE.md).
+Übergeordneter Plan für nachhaltiges Wachstum im Play Store. Stand: Play Store @ v1.8.0 / versionCode 69, `main` @ v1.9.0 / versionCode 70 (nie veröffentlicht), `testing` @ v1.9.0 / versionCode 71 = Release-Kandidat (Release-Aufgabe Issue #267). `testing` enthält gegenüber `main` auch User-Facing-Änderungen (neues Icon/Farben, Pause-Dialog, Einstellungs-Gruppierung, Impressum, Startseiten-Redesign) — Details im `CHANGELOG.md` unter [1.9.0]. Themen-Packs sind über `LevelImage.pack?: string` getaggt; neue Packs brauchen Render-Dateien in `components/levelImages/` + Registry-/Pool-Einträge, visueller Stil verbindlich laut [`docs/ILLUSTRATION_STYLEGUIDE.md`](docs/ILLUSTRATION_STYLEGUIDE.md).
 
 Vollständige P0/P1/P2-Statustabellen und Themen-Pack-Architektur-Details: [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
