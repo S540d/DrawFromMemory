@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.9.0] - TBD (versionCode 71)
+## [1.9.0] - 2026-11-03 (versionCode 71)
 
 Änderungen seit der Play-Store-Version 1.8.0 (versionCode 69).
 
