@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.1] - 2026-11-03 (versionCode 72)
+
+Ersetzt 1.9.0 (versionCode 71), deren Play-Store-Veröffentlichung wegen des folgenden Absturzes abgebrochen wurde. Enthält alle Änderungen aus 1.9.0.
+
+### Fixed
+
+- Absturz beim App-Start auf einzelnen Android-Geräten (`connectAnimatedNodes: Animated node with tag (parent) does not exist`, gemeldet für v1.8.0 auf Android 12): Der Splash-Screen erzeugte bei jedem Re-Render neue native Animations-Knoten (#381, #382)
+
 ## [1.9.0] - 2026-11-03 (versionCode 71)
 
 Änderungen seit der Play-Store-Version 1.8.0 (versionCode 69).
