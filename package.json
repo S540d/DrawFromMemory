@@ -32,7 +32,6 @@
     "test:ci": "jest --ci --coverage --maxWorkers=2",
     "validate:svg-counts": "node scripts/validate-svg-counts.js",
     "validate": "./scripts/validate-release.sh",
-    "prepare-release": "./scripts/prepare-release.sh",
     "deploy:ghpages": "./scripts/deploy-ghpages.sh",
     "prepare": "husky install",
     "postinstall": "patch-package"
@@ -54,6 +53,7 @@
     "expo-localization": "~55.0.8",
     "expo-router": "~55.0.5",
     "expo-sharing": "~55.0.21",
+    "expo-splash-screen": "~55.0.25",
     "expo-status-bar": "~55.0.4",
     "expo-store-review": "~55.0.1",
     "lottie-react-native": "~7.3.4",
@@ -64,7 +64,6 @@
     "react-native-safe-area-context": "~5.6.2",
     "react-native-screens": "~4.23.0",
     "react-native-svg": "15.15.3",
-    "react-native-svg-web": "^1.0.9",
     "react-native-web": "^0.21.0",
     "react-native-worklets": "^0.7.0"
   },

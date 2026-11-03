@@ -3,7 +3,6 @@ import { render, act } from '@testing-library/react-native';
 import { Text } from 'react-native';
 
 jest.mock('expo-router', () => ({
-  useRouter: () => ({ push: jest.fn() }),
   useFocusEffect: (cb: () => (() => void) | void) => {
     const { useEffect } = require('react');
     useEffect(() => {
@@ -27,11 +26,6 @@ jest.mock('../../services/StorageManager', () => ({
         averageRating: 3.5,
       }),
   },
-}));
-
-jest.mock('../../services/StreakManager', () => ({
-  getStreakData: () =>
-    Promise.resolve({ currentStreak: 5, longestStreak: 7, lastPlayedDate: '2026-05-23' }),
 }));
 
 jest.mock('../../services/LevelManager', () => ({
@@ -58,31 +52,6 @@ jest.mock('../../services/i18n', () => ({
   }),
 }));
 
-jest.mock('react-native-reanimated', () => {
-  const { View, Text: RNText } = require('react-native');
-  return {
-    __esModule: true,
-    default: {
-      View,
-      Text: RNText,
-      createAnimatedComponent: (c: any) => c,
-      call: () => {},
-    },
-    useSharedValue: (v: any) => ({ value: v }),
-    useAnimatedStyle: (_fn: any) => ({}),
-    withSpring: (v: any) => v,
-    withTiming: (v: any) => v,
-    withDelay: (_d: any, v: any) => v,
-    withSequence: (...args: any[]) => args[args.length - 1],
-    Easing: { out: () => () => {}, ease: {} },
-    runOnJS: (fn: any) => fn,
-  };
-});
-
-jest.mock('../../utils/useReduceMotion', () => ({
-  useReduceMotion: () => false,
-}));
-
 const getAllTexts = (getAllByType: (type: any) => any[]) =>
   getAllByType(Text)
     .map((n: any) => n.props.children)
@@ -91,54 +60,19 @@ const getAllTexts = (getAllByType: (type: any) => any[]) =>
 import QuickStatsCards from '../QuickStatsCards';
 
 describe('QuickStatsCards', () => {
-  beforeEach(() => jest.useFakeTimers());
-  afterEach(() => jest.useRealTimers());
-
-  it('renders stat labels for stars, streak, and levels', async () => {
+  it('renders a single compact text line with stars and level progress', async () => {
     const { UNSAFE_getAllByType } = render(<QuickStatsCards />);
     await act(async () => {});
-    act(() => {
-      jest.advanceTimersByTime(700);
-    });
     const texts = getAllTexts(UNSAFE_getAllByType);
-    expect(texts).toContain('home.stats.stars');
-    expect(texts).toContain('home.stats.streak');
-    expect(texts).toContain('home.stats.levels');
+    expect(texts).toHaveLength(1);
+    // Total stars: 4 + 3 = 7; levels completed = 2 of 10
+    expect(texts[0]).toBe('7 home.stats.stars · 2 home.stats.levelOf home.stats.levels');
   });
 
-  it('displays correct values after data load', async () => {
+  it('no longer shows the streak (lives in the mascot greeting only)', async () => {
     const { UNSAFE_getAllByType } = render(<QuickStatsCards />);
     await act(async () => {});
-    act(() => {
-      jest.advanceTimersByTime(700);
-    });
-    const texts = getAllTexts(UNSAFE_getAllByType);
-    // Total stars: 4 + 3 = 7
-    expect(texts).toContain('7');
-    // Current streak = 5
-    expect(texts).toContain('5');
-    // Levels completed = 2
-    expect(texts).toContain('2');
-  });
-
-  it('shows streak days label when streak > 0', async () => {
-    const { UNSAFE_getAllByType } = render(<QuickStatsCards />);
-    await act(async () => {});
-    act(() => {
-      jest.advanceTimersByTime(700);
-    });
-    const texts = getAllTexts(UNSAFE_getAllByType);
-    expect(texts).toContain('home.stats.streakDays');
-  });
-
-  it('shows level-of sub label for the levels card', async () => {
-    const { UNSAFE_getAllByType } = render(<QuickStatsCards />);
-    await act(async () => {});
-    act(() => {
-      jest.advanceTimersByTime(700);
-    });
-    const texts = getAllTexts(UNSAFE_getAllByType);
-    // t('home.stats.levelOf', { total: '10' }) → key unchanged since key has no {{total}} placeholder
-    expect(texts).toContain('home.stats.levelOf');
+    const texts = getAllTexts(UNSAFE_getAllByType).join(' ');
+    expect(texts).not.toContain('streak');
   });
 });

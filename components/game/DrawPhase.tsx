@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Platform, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import DrawingCanvas from '@components/DrawingCanvas';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { PressableScale } from '@components/AnimatedPrimitives';
@@ -10,6 +10,7 @@ import { Spacing, FontSize, FontWeight, BorderRadius } from '../../constants/Lay
 import type { DrawPhaseProps } from './game.shared';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
+import { confirmDestructive } from '@utils/platform';
 
 export default function DrawPhase({
   currentImage,
@@ -177,22 +178,14 @@ export default function DrawPhase({
         accessibilityLabel={t('game.draw.clear')}
         accessibilityRole="button"
         onPress={() => {
-          if (Platform.OS === 'web') {
-            if (drawing.paths.length === 0) return;
-            if (window.confirm(t('game.draw.clearConfirm'))) drawing.setPaths([]); // platform-safe
-          } else {
-            if (drawing.paths.length === 0) return;
-            Alert.alert(t('game.draw.clear'), t('game.draw.clearConfirm'), [
-              { text: t('common.cancel'), style: 'cancel' },
-              {
-                text: t('common.yes'),
-                style: 'destructive',
-                onPress: () => {
-                  drawing.setPaths([]);
-                },
-              },
-            ]);
-          }
+          if (drawing.paths.length === 0) return;
+          confirmDestructive({
+            title: t('game.draw.clear'),
+            message: t('game.draw.clearConfirm'),
+            confirmLabel: t('common.yes'),
+            cancelLabel: t('common.cancel'),
+            onConfirm: () => drawing.setPaths([]),
+          });
         }}
         disabled={drawing.paths.length === 0}
       >

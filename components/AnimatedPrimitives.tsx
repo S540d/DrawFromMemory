@@ -131,59 +131,6 @@ export function GlassCard({
 }
 
 /**
- * Button with scale-spring on press.
- */
-export function AnimatedButton({
-  onPress,
-  style,
-  disabled,
-  children,
-  accessibilityLabel,
-  accessibilityRole,
-  ...rest
-}: {
-  onPress?: () => void;
-  style?: ViewStyle | ViewStyle[];
-  disabled?: boolean;
-  children: React.ReactNode;
-  accessibilityLabel?: string;
-  accessibilityRole?: 'button' | 'link';
-  [key: string]: any;
-}) {
-  const reduceMotion = useReduceMotion();
-  const scale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  const handlePressIn = () => {
-    if (reduceMotion) return;
-    scale.value = withSpring(0.95, { damping: 15, stiffness: 300 });
-  };
-
-  const handlePressOut = () => {
-    if (reduceMotion) return;
-    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
-  };
-
-  return (
-    <AnimatedPressable
-      onPress={onPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      disabled={disabled}
-      style={[animatedStyle, style]}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole={accessibilityRole || 'button'}
-      {...rest}
-    >
-      {children}
-    </AnimatedPressable>
-  );
-}
-
-/**
  * Element that scales + fades in when it appears (e.g. feedback text, tooltips).
  */
 export function AnimatedFeedback({

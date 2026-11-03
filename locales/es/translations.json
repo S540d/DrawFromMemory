@@ -11,13 +11,9 @@
     "galleryButton": "Mi galería",
     "creativeButton": "Creativo",
     "settingsButton": "Ajustes",
-    "streakBadge": "🔥 {{count}}",
     "stats": {
       "stars": "Estrellas",
-      "streak": "Racha",
       "levels": "Niveles",
-      "streakDay": "día",
-      "streakDays": "días",
       "levelOf": "de {{total}}"
     }
   },
@@ -27,8 +23,7 @@
     "privacyPolicy": "Política de privacidad"
   },
   "webInstall": {
-    "title": "App de Android gratis en Google Play",
-    "subtitle": "También funciona sin conexión"
+    "title": "App de Android gratis en Google Play"
   },
   "levels": {
     "title": "Elegir nivel",
@@ -107,6 +102,12 @@
       "playAgain": "Reiniciar",
       "replay": "▶ Repetir",
       "replayStop": "⏹ Parar"
+    },
+    "pause": {
+      "title": "¿Una pequeña pausa?",
+      "message": "¡Ya has dibujado {{count}} imágenes! ¿Qué tal un pequeño descanso?",
+      "mainMenu": "Menú principal",
+      "continue": "Seguir"
     }
   },
   "settings": {
@@ -136,12 +137,15 @@
     "browserErrorGeneric": "No se pudo abrir el navegador.",
     "shareMessage": "Prueba esta genial app de entrenamiento de memoria: ¡Recuerda y Dibuja! https://github.com/S540d/DrawFromMemory",
     "aboutSupport": "Acerca de y soporte",
+    "parentArea": "Área de padres",
     "feedback": "Comentarios",
     "support": "Soporte",
     "share": "Compartir",
     "aboutButton": "Acerca de",
     "aboutTitle": "Acerca de Recuerda y Dibuja",
     "versionLabel": "Versión",
+    "impressumLabel": "Aviso legal",
+    "openLink": "Abrir ↗",
     "licenseLabel": "Licencia",
     "error": "Error",
     "about": "Acerca de la app",
@@ -178,7 +182,6 @@
     "subtitle": "Imagen del día",
     "start": "Empezar reto",
     "completed": "Completado hoy ✓",
-    "countdown": "Nuevo en {{hours}}h {{minutes}}m",
     "level": "Nivel {{number}}"
   },
   "errors": {
@@ -284,7 +287,6 @@
       "streak": "¡Qué bien que vuelvas! 🔥 ¡{{count}} días seguidos!",
       "streakLong": "¡Vaya, {{count}} días seguidos! ¡Eres increíble!"
     },
-    "nextUnlock": "Faltan {{count}} estrellas para: {{item}}",
     "accessory": {
       "hat": "Sombrero",
       "glasses": "Gafas de sol",

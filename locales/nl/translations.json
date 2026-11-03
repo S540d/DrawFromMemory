@@ -11,13 +11,9 @@
     "galleryButton": "Mijn galerij",
     "creativeButton": "Creatief",
     "settingsButton": "Instellingen",
-    "streakBadge": "🔥 {{count}}",
     "stats": {
       "stars": "Sterren",
-      "streak": "Reeks",
       "levels": "Levels",
-      "streakDay": "dag",
-      "streakDays": "dagen",
       "levelOf": "van {{total}}"
     }
   },
@@ -27,8 +23,7 @@
     "privacyPolicy": "Privacybeleid"
   },
   "webInstall": {
-    "title": "Gratis Android-app in Google Play",
-    "subtitle": "Speelt ook zonder internet"
+    "title": "Gratis Android-app in Google Play"
   },
   "levels": {
     "title": "Level kiezen",
@@ -107,6 +102,12 @@
       "playAgain": "Opnieuw beginnen",
       "replay": "▶ Herhalen",
       "replayStop": "⏹ Stoppen"
+    },
+    "pause": {
+      "title": "Even pauzeren?",
+      "message": "Je hebt al {{count}} tekeningen gemaakt! Tijd voor een korte pauze?",
+      "mainMenu": "Hoofdmenu",
+      "continue": "Doorgaan"
     }
   },
   "settings": {
@@ -136,12 +137,15 @@
     "browserErrorGeneric": "Kon browser niet openen.",
     "shareMessage": "Bekijk deze leuke geheugentraining-app: Onthoud en Teken! https://github.com/S540d/DrawFromMemory",
     "aboutSupport": "Over & ondersteuning",
+    "parentArea": "Ouderomgeving",
     "feedback": "Feedback",
     "support": "Ondersteuning",
     "share": "Delen",
     "aboutButton": "Over",
     "aboutTitle": "Over Onthoud en Teken",
     "versionLabel": "Versie",
+    "impressumLabel": "Colofon",
+    "openLink": "Openen ↗",
     "licenseLabel": "Licentie",
     "error": "Fout",
     "about": "Over de app",
@@ -178,7 +182,6 @@
     "subtitle": "Afbeelding van de dag",
     "start": "Uitdaging starten",
     "completed": "Vandaag voltooid ✓",
-    "countdown": "Nieuw over {{hours}}u {{minutes}}m",
     "level": "Level {{number}}"
   },
   "errors": {
@@ -284,7 +287,6 @@
       "streak": "Leuk dat je er weer bent! 🔥 {{count}} dagen op rij!",
       "streakLong": "Wow, {{count}} dagen op rij! Je bent geweldig!"
     },
-    "nextUnlock": "Nog {{count}} sterren tot: {{item}}",
     "accessory": {
       "hat": "Hoed",
       "glasses": "Zonnebril",

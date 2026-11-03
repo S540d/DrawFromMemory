@@ -7,7 +7,7 @@ import Colors from '../../constants/Colors';
 import type { MemorizePhaseProps } from './game.shared';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
-import TimerArc from './TimerArc';
+import TimerBar from './TimerBar';
 
 export default function MemorizePhase({
   timeRemaining,
@@ -21,7 +21,7 @@ export default function MemorizePhase({
   variant = 'normal',
 }: MemorizePhaseProps) {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
 
   return (
     <View style={styles.phaseContainer}>
@@ -29,7 +29,7 @@ export default function MemorizePhase({
         {t('game.memorize.title')}
       </Text>
 
-      <TimerArc timeRemaining={timeRemaining} totalTime={totalTime} />
+      <TimerBar timeRemaining={timeRemaining} totalTime={totalTime} />
 
       <View style={styles.imageContainer}>
         {currentImage && (
@@ -50,6 +50,7 @@ export default function MemorizePhase({
                 revealStep={revealStep}
                 mode={variant === 'outline' ? 'outline' : 'normal'}
                 mirror={variant === 'mirror'}
+                theme={theme}
               />
             </ErrorBoundary>
             <Text style={[styles.imageName, { color: colors.text.primary }]}>

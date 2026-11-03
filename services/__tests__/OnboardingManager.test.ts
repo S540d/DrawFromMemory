@@ -39,8 +39,8 @@ describe('OnboardingManager', () => {
   it('falls back to in-memory when AsyncStorage throws', async () => {
     mockStorage.setItem.mockRejectedValueOnce(new Error('storage offline'));
     await markOnboardingDone();
-    // getItem will return null but in-memory cache should still report done
-    mockStorage.getItem.mockResolvedValue(null);
+    // AsyncStorage itself keeps failing, so the read falls back to memory
+    mockStorage.getItem.mockRejectedValueOnce(new Error('storage offline'));
     expect(await isOnboardingDone()).toBe(true);
   });
 });

@@ -17,12 +17,15 @@ module.exports = {
     '!**/__tests__/**',
     '!**/__mocks__/**',
   ],
+  // Auf dem gemessenen Stand minus kleinem Puffer. Die vorherigen Werte (25 /
+  // branches 15) stammten aus einer fruehen Projektphase und lagen ~32 Punkte
+  // unter der tatsaechlichen Abdeckung - ein Einbruch waere unbemerkt geblieben.
   coverageThreshold: {
     global: {
-      branches: 15,
-      functions: 25,
-      lines: 25,
-      statements: 25,
+      branches: 49,
+      functions: 45,
+      lines: 54,
+      statements: 52,
     },
   },
   coverageReporters: ['text', 'text-summary', 'lcov', 'html'],

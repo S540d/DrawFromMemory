@@ -4,13 +4,20 @@ on:
   push:
     branches: [main, testing]
   pull_request:
-    branches: [main]
+    branches: [main, testing]
 
 # Security: Explicitly set minimal permissions
 permissions:
   contents: read
 
 jobs:
+  # ============================================================================
+  # JOB 0: Workflow-Linting (Issue #445)
+  # ============================================================================
+  actionlint:
+    name: ⚙️ Workflow Linting
+    uses: S540d/project-templates/.github/workflows/reusable-actionlint.yml@v2
+
   # ============================================================================
   # JOB 1: Code Quality & Linting
   # ============================================================================
@@ -82,7 +89,7 @@ jobs:
         run: npm run validate:svg-counts
 
       - name: TypeScript Type Check
-        run: npx tsc --noEmit || true
+        run: npx tsc --noEmit
 
   # ============================================================================
   # JOB 2: Unit Tests & Coverage
@@ -196,8 +203,9 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Run npm audit
-        run: npm audit --audit-level=high
+      # Gate mit befristeter Allowlist (.audit-allowlist.json) für Findings ohne Upstream-Fix (#348).
+      - name: Run npm audit (Gate)
+        run: node scripts/audit-gate.mjs --level=high
 
       - name: Check for sensitive data
         run: |

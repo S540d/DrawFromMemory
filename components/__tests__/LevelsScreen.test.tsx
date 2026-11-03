@@ -57,9 +57,16 @@ jest.mock('../../services/LevelManager', () => ({
 jest.mock('../../services/StorageManager', () => ({
   __esModule: true,
   default: {
-    getLevelRating: jest.fn(),
+    getProgress: jest.fn(),
   },
 }));
+
+const progressWith = (rating: number | null) => ({
+  levels:
+    rating === null
+      ? {}
+      : Object.fromEntries([1, 2, 3].map(n => [n, { levelNumber: n, bestRating: rating }])),
+});
 
 jest.mock('../../components/AnimatedPrimitives', () => {
   const { View } = require('react-native');
@@ -94,11 +101,11 @@ describe('LevelsScreen', () => {
 
   beforeEach(() => {
     storageManager = require('../../services/StorageManager').default;
-    storageManager.getLevelRating.mockReset();
+    storageManager.getProgress.mockReset();
   });
 
   it('shows only empty stars for levels not yet played', async () => {
-    storageManager.getLevelRating.mockResolvedValue(null);
+    storageManager.getProgress.mockResolvedValue(progressWith(null));
     const { UNSAFE_getAllByProps } = render(<LevelsScreen />);
     await act(async () => {});
     const emptyStars = getStarNodes(UNSAFE_getAllByProps, 'star-empty');
@@ -107,9 +114,9 @@ describe('LevelsScreen', () => {
     expect(filledStars.length).toBe(0);
   });
 
-  it('shows filled stars based on getLevelRating result', async () => {
+  it('shows filled stars based on stored bestRating', async () => {
     // rating 5 → Math.ceil(5/2) = 3 filled stars per level
-    storageManager.getLevelRating.mockResolvedValue(5);
+    storageManager.getProgress.mockResolvedValue(progressWith(5));
     const { UNSAFE_getAllByProps } = render(<LevelsScreen />);
     await act(async () => {});
     const filledStars = getStarNodes(UNSAFE_getAllByProps, 'star-filled');
@@ -118,17 +125,15 @@ describe('LevelsScreen', () => {
     expect(emptyStars.length).toBe(0);
   });
 
-  it('calls getLevelRating for each level', async () => {
-    storageManager.getLevelRating.mockResolvedValue(null);
+  it('reads progress only once for all levels', async () => {
+    storageManager.getProgress.mockResolvedValue(progressWith(null));
     render(<LevelsScreen />);
     await act(async () => {});
-    expect(storageManager.getLevelRating).toHaveBeenCalledWith(1);
-    expect(storageManager.getLevelRating).toHaveBeenCalledWith(2);
-    expect(storageManager.getLevelRating).toHaveBeenCalledWith(3);
+    expect(storageManager.getProgress).toHaveBeenCalledTimes(1);
   });
 
   it('renders a star container for each level', async () => {
-    storageManager.getLevelRating.mockResolvedValue(null);
+    storageManager.getProgress.mockResolvedValue(progressWith(null));
     const { UNSAFE_getAllByProps } = render(<LevelsScreen />);
     await act(async () => {});
     const containers = [1, 2, 3].map(n => getStarNodes(UNSAFE_getAllByProps, `stars-level-${n}`));
@@ -137,7 +142,7 @@ describe('LevelsScreen', () => {
 
   it('maps rating correctly: 3 → 2 filled stars per level', async () => {
     // rating 3 → Math.ceil(3/2) = 2 filled stars per level
-    storageManager.getLevelRating.mockResolvedValue(3);
+    storageManager.getProgress.mockResolvedValue(progressWith(3));
     const { UNSAFE_getAllByProps } = render(<LevelsScreen />);
     await act(async () => {});
     const filledStars = getStarNodes(UNSAFE_getAllByProps, 'star-filled');

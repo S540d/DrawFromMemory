@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Dimensions } from 'react-native';
+import { View, StyleSheet, Animated, Dimensions } from 'react-native';
+import Svg, { Path, Rect } from 'react-native-svg';
 import Colors from '../constants/Colors';
 import { FontWeight } from '../constants/Layout';
 import { useTranslation } from '@services/i18n';
@@ -20,6 +21,8 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
   const subtitleTranslateY = useRef(new Animated.Value(20)).current;
   const iconScale = useRef(new Animated.Value(0)).current;
   const iconRotation = useRef(new Animated.Value(0)).current;
+  const pencilOpacity = useRef(new Animated.Value(0)).current;
+  const pencilTranslate = useRef(new Animated.ValueXY({ x: 22, y: 22 })).current;
   const containerOpacity = useRef(new Animated.Value(1)).current;
   const animationRef = useRef<Animated.CompositeAnimation | null>(null);
   const onFinishRef = useRef(onFinish);
@@ -43,6 +46,21 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
         Animated.timing(iconRotation, {
           toValue: 1,
           duration: 600,
+          useNativeDriver: true,
+        }),
+      ]),
+
+      // 1b. Buntstift schiebt sich von unten rechts ins Bild (zieht die Linie nach)
+      Animated.parallel([
+        Animated.timing(pencilOpacity, {
+          toValue: 1,
+          duration: 220,
+          useNativeDriver: true,
+        }),
+        Animated.spring(pencilTranslate, {
+          toValue: { x: 0, y: 0 },
+          friction: 5,
+          tension: 70,
           useNativeDriver: true,
         }),
       ]),
@@ -110,6 +128,8 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
     subtitleTranslateY,
     iconScale,
     iconRotation,
+    pencilOpacity,
+    pencilTranslate,
     containerOpacity,
     animationRef,
     onFinishRef,
@@ -127,7 +147,7 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
       <View style={styles.bgCircle2} />
       <View style={styles.bgCircle3} />
 
-      {/* Icon / Symbol */}
+      {/* Icon / Symbol — dasselbe Haus-Motiv wie das App-Icon (Issue #304) */}
       <Animated.View
         style={[
           styles.iconContainer,
@@ -136,7 +156,40 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
           },
         ]}
       >
-        <Text style={styles.iconText}>🎨</Text>
+        <Svg width={56} height={56} viewBox="0 0 64 64" fill="none">
+          <Path
+            d="M12 30 L32 12 L52 30"
+            stroke="#FFFFFF"
+            strokeWidth={5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <Path
+            d="M18 30 L18 52 L46 52 L46 30"
+            stroke="#FFFFFF"
+            strokeWidth={5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <Rect x="27" y="36" width="10" height="16" rx="2" stroke="#FFFFFF" strokeWidth={4} />
+        </Svg>
+        {/* Buntstift, zieht als kleine Geste in die Ecke des Hauses */}
+        <Animated.View
+          style={[
+            styles.pencil,
+            {
+              opacity: pencilOpacity,
+              transform: [...pencilTranslate.getTranslateTransform(), { rotate: '32deg' }],
+            },
+          ]}
+        >
+          <Svg width={18} height={50} viewBox="0 0 17 48" fill="none">
+            <Rect x="0" y="0" width="17" height="34" rx="2" fill="#EC4E3D" />
+            <Rect x="0" y="10" width="17" height="5" fill="#FFFFFF" opacity={0.95} />
+            <Path d="M0 34 L17 34 L8.5 48 Z" fill="#F6C89A" />
+            <Path d="M3.5 41 L13.5 41 L8.5 48 Z" fill="#2A1F4D" />
+          </Svg>
+        </Animated.View>
       </Animated.View>
 
       {/* Titel */}
@@ -217,8 +270,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
   },
-  iconText: {
-    fontSize: 48,
+  pencil: {
+    position: 'absolute',
+    right: 14,
+    bottom: 10,
   },
   title: {
     fontSize: 36,

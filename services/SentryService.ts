@@ -1,10 +1,10 @@
-import { Platform } from 'react-native';
+import { isWeb } from '@utils/platform';
 
 const DSN = process.env.EXPO_PUBLIC_SENTRY_DSN ?? '';
 
 // Dynamic import: web bundle never imports the native-only Sentry SDK
 let Sentry: typeof import('@sentry/react-native') | null = null;
-if (Platform.OS !== 'web') {
+if (!isWeb) {
   try {
     Sentry = require('@sentry/react-native');
   } catch {

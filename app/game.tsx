@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useScreenLayout } from '@utils/useScreenLayout';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { getTotalLevels, getDifficultyForLevel } from '@services/LevelManager';
+import { getTotalLevels } from '@services/LevelManager';
 import { useTranslation, getLanguage } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 import { FeatureFlags } from '../constants/featureFlags';
 import LevelImageDisplay from '@components/LevelImageDisplay';
-import DrawingCanvas, { useDrawingCanvas } from '@components/DrawingCanvas';
+import { useDrawingCanvas } from '@components/DrawingCanvas';
 import SettingsModal from '@components/SettingsModal';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import ConfettiBurst from '@components/ConfettiBurst';
@@ -20,9 +20,7 @@ import TutorialOverlay from '@components/TutorialOverlay';
 import { markOnboardingDone } from '@services/OnboardingManager';
 import SoundManager from '@services/SoundManager';
 import { useGamePhase } from '@services/useGamePhase';
-import { checkAndUnlock, type AchievementDef } from '@services/AchievementManager';
-import { getStreakData } from '@services/StreakManager';
-import storageManager from '@services/StorageManager';
+import { useGameFeedback } from '@services/useGameFeedback';
 import { getAgeGroup, getDefaultStrokeWidthForAgeGroup } from '@services/AgeGroupManager';
 import MemorizePhase from '@components/game/MemorizePhase';
 import DrawPhase from '@components/game/DrawPhase';
@@ -35,26 +33,21 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useReduceMotion } from '../utils/useReduceMotion';
 import type { GamePhase, GameVariant } from '../types';
-import type { ConfettiIntensity } from '@components/ConfettiBurst';
+
+// Nach jeweils so vielen abgeschlossenen Leveln wird eine Pause vorgeschlagen (Issue #337).
+const LEVELS_PER_PAUSE = 5;
 
 export default function GameScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const params = useLocalSearchParams();
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const insets = useSafeAreaInsets();
   const layout = useScreenLayout();
   const { screenWidth, isSmall } = layout;
   const reduceMotion = useReduceMotion();
   const [showSettings, setShowSettings] = useState(false);
-  const [showHintModal, setShowHintModal] = useState(false);
-  const [hasUsedHint, setHasUsedHint] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [celebrationEnabled, setCelebrationEnabled] = useState(true);
-  const [confettiIntensity, setConfettiIntensity] = useState<ConfettiIntensity>('full');
-  const [unlockedBadge, setUnlockedBadge] = useState<AchievementDef | null>(null);
-  const lastCheckedRatingRef = useRef<number>(0);
-  const handleBadgeToastHide = useCallback(() => setUnlockedBadge(null), []);
+  const [showPauseModal, setShowPauseModal] = useState(false);
 
   // Phase crossfade
   const [visiblePhase, setVisiblePhase] = useState<GamePhase>('memorize');
@@ -94,7 +87,6 @@ export default function GameScreen() {
     handleRatingSubmit,
     saveToGallery,
     startReplay,
-    restartCurrentLevel,
     startNextLevel,
     restartFromLevel1,
   } = useGamePhase({
@@ -104,6 +96,18 @@ export default function GameScreen() {
     isDailyChallenge,
     pack,
   });
+
+  const {
+    showHintModal,
+    setShowHintModal,
+    hasUsedHint,
+    resetHint,
+    onUseHint,
+    showConfetti,
+    confettiIntensity,
+    unlockedBadge,
+    handleBadgeToastHide,
+  } = useGameFeedback(userRating);
 
   useEffect(() => {
     if (phase === visiblePhase) return;
@@ -122,28 +126,33 @@ export default function GameScreen() {
     });
   }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleRestartCurrentLevel = () => {
-    setHasUsedHint(false);
-    restartCurrentLevel();
-  };
-
   const handleStartNextLevel = () => {
-    setHasUsedHint(false);
+    if (levelNumber % LEVELS_PER_PAUSE === 0 && levelNumber < totalLevels) {
+      setShowPauseModal(true);
+      return;
+    }
+    resetHint();
     startNextLevel();
   };
 
+  const handlePauseContinue = () => {
+    setShowPauseModal(false);
+    resetHint();
+    startNextLevel();
+  };
+
+  const handlePauseGoToMainMenu = () => {
+    setShowPauseModal(false);
+    router.replace('/');
+  };
+
   const handleRestartFromLevel1 = () => {
-    setHasUsedHint(false);
+    resetHint();
     restartFromLevel1();
   };
 
   useEffect(() => {
-    async function init() {
-      await SoundManager.init();
-      const enabled = await storageManager.getSetting('celebrationEnabled');
-      setCelebrationEnabled(enabled);
-    }
-    init();
+    SoundManager.init();
   }, []);
 
   // Altersgerechte Standard-Strichstärke beim Rundenstart (Issue #279, 1.3)
@@ -166,53 +175,6 @@ export default function GameScreen() {
       setIsTutorial(false);
     }
   }, [isTutorial, userRating]);
-
-  useEffect(() => {
-    if (userRating === 0 || userRating === lastCheckedRatingRef.current) return;
-    lastCheckedRatingRef.current = userRating;
-
-    if (userRating >= 4 && FeatureFlags.ENABLE_CONFETTI && celebrationEnabled) {
-      const intensity: ConfettiIntensity = userRating === 5 ? 'full' : 'light';
-      const clearAfter = userRating === 5 ? 2700 : 1700;
-      setConfettiIntensity(intensity);
-      setShowConfetti(true);
-      SoundManager.playCelebration();
-      const timer = setTimeout(() => setShowConfetti(false), clearAfter);
-      checkAchievements(userRating);
-      return () => clearTimeout(timer);
-    }
-    checkAchievements(userRating);
-  }, [userRating, celebrationEnabled]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const checkAchievements = async (rating: number) => {
-    try {
-      const [gallery, progress, streak] = await Promise.all([
-        storageManager.getGallery(),
-        storageManager.getProgress(),
-        getStreakData(),
-      ]);
-      const dailyChallengesCompleted = gallery.filter(g => g.isDailyChallenge).length;
-      const difficultiesPlayed = Array.from(
-        new Set(
-          Object.keys(progress.levels ?? {})
-            .map(n => parseInt(n, 10))
-            .filter(n => !isNaN(n))
-            .map(n => getDifficultyForLevel(n)),
-        ),
-      );
-      const newly = await checkAndUnlock({
-        stars: rating,
-        galleryCount: gallery.length,
-        currentStreak: streak.currentStreak,
-        levelsCompleted: progress.totalLevelsCompleted ?? 0,
-        dailyChallengesCompleted,
-        difficultiesPlayed,
-      });
-      if (newly.length > 0) setUnlockedBadge(newly[0]);
-    } catch {
-      // best-effort
-    }
-  };
 
   const levelName = currentLang === 'en' ? currentImage?.displayNameEn : currentImage?.displayName;
 
@@ -343,11 +305,49 @@ export default function GameScreen() {
                   size={Math.min(screenWidth - 80, 280)}
                   mode={variant === 'outline' ? 'outline' : 'normal'}
                   mirror={variant === 'mirror'}
+                  theme={theme}
                 />
               </ErrorBoundary>
             )}
           </View>
         </TouchableOpacity>
+      </Modal>
+
+      {/* Pause-Vorschlag alle LEVELS_PER_PAUSE Level (Issue #337) */}
+      <Modal
+        visible={showPauseModal}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+        onRequestClose={handlePauseContinue}
+      >
+        <View style={[styles.modalOverlay, { backgroundColor: colors.modalOverlay }]}>
+          <View style={[styles.pauseModal, { backgroundColor: colors.background }]}>
+            <Text style={styles.pauseEmoji}>🌤️</Text>
+            <Text style={[styles.pauseTitle, { color: colors.text.primary }]}>
+              {t('game.pause.title')}
+            </Text>
+            <Text style={[styles.pauseMessage, { color: colors.text.secondary }]}>
+              {t('game.pause.message', { count: levelNumber })}
+            </Text>
+            <TouchableOpacity
+              style={[styles.pausePrimaryButton, { backgroundColor: colors.primary }]}
+              onPress={handlePauseGoToMainMenu}
+              accessibilityRole="button"
+            >
+              <Text style={styles.pausePrimaryButtonText}>{t('game.pause.mainMenu')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.pauseSecondaryButton}
+              onPress={handlePauseContinue}
+              accessibilityRole="button"
+            >
+              <Text style={[styles.pauseSecondaryButtonText, { color: colors.text.secondary }]}>
+                {t('game.pause.continue')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </Modal>
 
       {/* Phase Content — crossfade on transition */}
@@ -370,7 +370,7 @@ export default function GameScreen() {
             currentImage={currentImage}
             currentLang={currentLang}
             hasUsedHint={hasUsedHint}
-            onUseHint={() => setHasUsedHint(true)}
+            onUseHint={onUseHint}
             onShowHintModal={() => setShowHintModal(true)}
             drawing={drawing}
             layout={{
@@ -541,5 +541,49 @@ const styles = StyleSheet.create({
   },
   closeText: {
     fontSize: 24,
+  },
+  pauseModal: {
+    borderRadius: BorderRadius.xxl,
+    padding: Spacing.lg,
+    width: '90%',
+    maxWidth: 360,
+    alignItems: 'center',
+    ...Colors.shadow.large,
+  },
+  pauseEmoji: {
+    fontSize: 48,
+    marginBottom: Spacing.sm,
+  },
+  pauseTitle: {
+    fontSize: FontSize.lg,
+    fontWeight: FontWeight.bold,
+    textAlign: 'center',
+    marginBottom: Spacing.xs,
+  },
+  pauseMessage: {
+    fontSize: FontSize.sm,
+    textAlign: 'center',
+    marginBottom: Spacing.lg,
+  },
+  pausePrimaryButton: {
+    width: '100%',
+    paddingVertical: Spacing.md,
+    borderRadius: BorderRadius.lg,
+    alignItems: 'center',
+    marginBottom: Spacing.sm,
+  },
+  pausePrimaryButtonText: {
+    color: '#ffffff',
+    fontSize: FontSize.md,
+    fontWeight: FontWeight.bold,
+  },
+  pauseSecondaryButton: {
+    width: '100%',
+    paddingVertical: Spacing.sm,
+    alignItems: 'center',
+  },
+  pauseSecondaryButtonText: {
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.medium,
   },
 });

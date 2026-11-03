@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Platform, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import DrawingCanvas, { useDrawingCanvas } from '@components/DrawingCanvas';
@@ -12,6 +12,7 @@ import { useTheme } from '@services/ThemeContext';
 import storageManager from '@services/StorageManager';
 import { shareDrawing } from '@services/ShareService';
 import SoundManager from '@services/SoundManager';
+import { confirmDestructive } from '@utils/platform';
 
 export default function CreativeScreen() {
   const { t } = useTranslation();
@@ -46,25 +47,16 @@ export default function CreativeScreen() {
 
   const handleClear = () => {
     if (drawing.paths.length === 0) return;
-    if (Platform.OS === 'web') {
-      if (window.confirm(t('game.draw.clearConfirm'))) {
-        // platform-safe
+    confirmDestructive({
+      title: t('game.draw.clear'),
+      message: t('game.draw.clearConfirm'),
+      confirmLabel: t('common.yes'),
+      cancelLabel: t('common.cancel'),
+      onConfirm: () => {
         drawing.setPaths([]);
         setSavedToGallery(false);
-      }
-    } else {
-      Alert.alert(t('game.draw.clear'), t('game.draw.clearConfirm'), [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('common.yes'),
-          style: 'destructive',
-          onPress: () => {
-            drawing.setPaths([]);
-            setSavedToGallery(false);
-          },
-        },
-      ]);
-    }
+      },
+    });
   };
 
   return (

@@ -4,6 +4,7 @@
  */
 
 import { RatingFeedback, StarRating } from '../types';
+import Colors from '../constants/Colors';
 
 /**
  * Motivierende Aussagen für 1-2 Sterne (werden rotiert)
@@ -25,11 +26,12 @@ const lowRatingMessages = {
 
 let lowRatingMessageIndex = 0;
 
-function getRotatingLowRatingMessage(language: 'de' | 'en' = 'de'): string {
-  const messages = lowRatingMessages[language];
-  const message = messages[lowRatingMessageIndex % messages.length];
+// DE und EN als Paar mit demselben Index (vorher zwei getrennte Aufrufe,
+// die den Zähler doppelt weiterschoben und die Sprachen auseinanderlaufen ließen).
+function getRotatingLowRatingMessages(): { de: string; en: string } {
+  const idx = lowRatingMessageIndex % lowRatingMessages.de.length;
   lowRatingMessageIndex++;
-  return message;
+  return { de: lowRatingMessages.de[idx], en: lowRatingMessages.en[idx] };
 }
 
 /**
@@ -91,14 +93,16 @@ function getRotatingHighRatingMessages(stars: 4 | 5): { de: string; en: string }
 export function getRatingFeedback(stars: StarRating, language: 'de' | 'en' = 'de'): RatingFeedback {
   switch (stars) {
     case 1:
-    case 2:
+    case 2: {
+      const low = getRotatingLowRatingMessages();
       return {
         stars,
-        message: getRotatingLowRatingMessage('de'),
-        messageEn: getRotatingLowRatingMessage('en'),
+        message: low.de,
+        messageEn: low.en,
         animation: 'none',
         sound: 'huchhu.mp3',
       };
+    }
 
     case 3:
       return {
@@ -148,13 +152,6 @@ export function calculateStarsFromSimilarity(similarityScore: number): StarRatin
  * Gibt die passende Stern-Farbe für die UI zurück
  */
 export function getStarColor(stars: StarRating): string {
-  // Verwendet Colors.difficulty aus constants/Colors.ts
-  const colorMap: Record<StarRating, string> = {
-    1: '#E74C3C', // Rot
-    2: '#E67E22', // Dunkles Orange
-    3: '#F39C12', // Orange
-    4: '#2ECC71', // Hellgrün
-    5: '#27AE60', // Grün
-  };
-  return colorMap[stars];
+  // Umgekehrte Schwierigkeits-Palette: 1 Stern = Rot (difficulty 5), 5 Sterne = Grün (difficulty 1)
+  return Colors.difficulty[(6 - stars) as keyof typeof Colors.difficulty];
 }

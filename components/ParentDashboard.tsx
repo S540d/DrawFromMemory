@@ -55,7 +55,7 @@ export default function ParentDashboard({ visible, onClose }: Props) {
     };
   }, [visible]);
 
-  const cardBg = colors.surface ?? Colors.surface;
+  const cardBg = colors.surface;
 
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>

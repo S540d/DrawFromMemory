@@ -11,13 +11,9 @@
     "galleryButton": "My Gallery",
     "creativeButton": "Creative",
     "settingsButton": "Settings",
-    "streakBadge": "🔥 {{count}}",
     "stats": {
       "stars": "Stars",
-      "streak": "Streak",
       "levels": "Levels",
-      "streakDay": "day",
-      "streakDays": "days",
       "levelOf": "of {{total}}"
     }
   },
@@ -27,8 +23,7 @@
     "privacyPolicy": "Privacy Policy"
   },
   "webInstall": {
-    "title": "Free Android app on Google Play",
-    "subtitle": "Plays without an internet connection"
+    "title": "Free Android app on Google Play"
   },
   "levels": {
     "title": "Select Level",
@@ -107,6 +102,12 @@
       "playAgain": "Restart",
       "replay": "▶ Replay",
       "replayStop": "⏹ Stop"
+    },
+    "pause": {
+      "title": "Time for a break?",
+      "message": "You've drawn {{count}} pictures already! Time for a short break?",
+      "mainMenu": "Main Menu",
+      "continue": "Continue"
     }
   },
   "settings": {
@@ -136,12 +137,15 @@
     "browserErrorGeneric": "Could not open browser.",
     "shareMessage": "Check out this cool memory training app: Remember & Draw! https://github.com/S540d/DrawFromMemory",
     "aboutSupport": "About & Support",
+    "parentArea": "Parent Area",
     "feedback": "Feedback",
     "support": "Support",
     "share": "Share",
     "aboutButton": "About",
     "aboutTitle": "About Remember & Draw",
     "versionLabel": "Version",
+    "impressumLabel": "Imprint",
+    "openLink": "Open ↗",
     "licenseLabel": "License",
     "error": "Error",
     "about": "About",
@@ -178,7 +182,6 @@
     "subtitle": "Picture of the Day",
     "start": "Start Challenge",
     "completed": "Done for today ✓",
-    "countdown": "New in {{hours}}h {{minutes}}m",
     "level": "Level {{number}}"
   },
   "errors": {
@@ -284,7 +287,6 @@
       "streak": "Great to see you again! 🔥 {{count}} days in a row!",
       "streakLong": "Wow, {{count}} days in a row! You're amazing!"
     },
-    "nextUnlock": "{{count}} more stars until: {{item}}",
     "accessory": {
       "hat": "Hat",
       "glasses": "Sunglasses",

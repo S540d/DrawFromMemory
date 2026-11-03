@@ -6,19 +6,25 @@
 
 export const Colors = {
   // Primärfarben - Gradient-ready
-  primary: '#7C5CFF', // Vivid Purple - kräftiger, kinderfreundlicher (Issue #176)
-  primaryLight: '#9E84FF', // Hellere Variante
-  primaryDark: '#5A3FE0', // Dunklere Variante
+  // Blau-Familie passend zur App-Icon-/Store-Markenfarbe #A9DCEB (Issue #306; entsättigt, weniger aufdringlich).
+  // #A9DCEB selbst ist zu hell für Text/Buttons (Kontrast <2:1 gegen Weiß) —
+  // primary/primaryDark sind daher dieselbe Farbfamilie in einem Ton, der
+  // WCAG-Kontrast für weißen Button-Text einhält (~4:1, analog zum bisherigen
+  // Violett-Wert); primaryLight bleibt die reine Icon-Farbe für dekorative
+  // Flächen ohne Text (Kreise, Icon-Referenz, Splash-Hintergrund).
+  primary: '#0585AD',
+  primaryLight: '#A9DCEB',
+  primaryDark: '#045B77',
   secondary: '#F093FB', // Rosa - Spielerisch & Warm
   accent: '#4ECDC4', // Mint-Teal - frischer Akzent
   accentWarm: '#FFB547', // Apricot - spielerisch warm
 
   // Gradient-Kombinationen (für LinearGradient)
   gradient: {
-    primary: ['#7C5CFF', '#F093FB'] as const,
+    primary: ['#0585AD', '#045B77'] as const,
     secondary: ['#F093FB', '#f5576c'] as const,
     warm: ['#FFB547', '#FF6B6B'] as const,
-    cta: ['#7C5CFF', '#F093FB'] as const,
+    cta: ['#0585AD', '#045B77'] as const,
     teal: ['#4ECDC4', '#44CF6C'] as const,
   },
 
@@ -50,7 +56,7 @@ export const Colors = {
       elevation: 8,
     },
     buttonPrimary: {
-      boxShadow: '0 4px 20px rgba(124, 92, 255, 0.40)',
+      boxShadow: '0 4px 20px rgba(5, 133, 173, 0.40)',
       elevation: 6,
     },
   },
@@ -62,7 +68,7 @@ export const Colors = {
     lightBorder: 'rgba(255, 255, 255, 0.70)',
     darkBorder: 'rgba(255, 255, 255, 0.10)',
     lightShadow: {
-      boxShadow: '0 6px 24px rgba(124, 92, 255, 0.14)',
+      boxShadow: '0 6px 24px rgba(96, 213, 250, 0.20)',
       elevation: 5,
     },
     darkShadow: {
@@ -107,6 +113,12 @@ export const Colors = {
     3: '#F39C12', // Orange - Mittel
     4: '#E67E22', // Dunkles Orange - Schwierig
     5: '#E74C3C', // Rot - Sehr schwierig
+  },
+
+  // UI-Akzentfarben außerhalb des Zeichnungskontexts, zentralisiert
+  // statt als Hex-Literal an der Verwendungsstelle (Issue #334).
+  accents: {
+    dailyChallenge: '#F59E0B',
   },
 };
 

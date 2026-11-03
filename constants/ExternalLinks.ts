@@ -24,6 +24,13 @@ export const SITE_URL = 'https://s540d.github.io/DrawFromMemory/';
 
 export const PRIVACY_POLICY_URL = `${SITE_URL}PRIVACY_POLICY.html`;
 
+/**
+ * Zentrales Impressum für alle Projekte unter s540d.github.io (nicht
+ * projektlokal) — siehe project-templates/dev-standards/about-section.md,
+ * Issue #150.
+ */
+export const IMPRESSUM_URL = 'https://s540d.github.io/impressum.html';
+
 /** Wo auf der Web-Demo der Klick passiert ist — wird zu `utm_medium`. */
 export type PlayStoreLinkSource = 'web_banner' | 'web_footer' | 'web_result' | 'readme';
 

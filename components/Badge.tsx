@@ -17,14 +17,6 @@ const VARIANT_COLORS: Record<BadgeVariant, string> = {
   difficulty: Colors.primary,
 };
 
-const DIFFICULTY_COLORS: Record<number, string> = {
-  1: Colors.difficulty[1],
-  2: Colors.difficulty[2],
-  3: Colors.difficulty[3],
-  4: Colors.difficulty[4],
-  5: Colors.difficulty[5],
-};
-
 /**
  * Badge – kleines Label für Status, Schwierigkeit oder Kategorien.
  *
@@ -48,7 +40,7 @@ export function Badge({
 }) {
   const backgroundColor =
     variant === 'difficulty' && difficulty !== undefined
-      ? (DIFFICULTY_COLORS[difficulty] ?? Colors.primary)
+      ? ((Colors.difficulty as Record<number, string>)[difficulty] ?? Colors.primary)
       : VARIANT_COLORS[variant];
 
   const containerStyle: ViewStyle[] = [

@@ -11,13 +11,9 @@
     "galleryButton": "Moja galeria",
     "creativeButton": "Kreatywny",
     "settingsButton": "Ustawienia",
-    "streakBadge": "🔥 {{count}}",
     "stats": {
       "stars": "Gwiazdki",
-      "streak": "Seria",
       "levels": "Poziomy",
-      "streakDay": "dzień",
-      "streakDays": "dni",
       "levelOf": "z {{total}}"
     }
   },
@@ -27,8 +23,7 @@
     "privacyPolicy": "Polityka prywatności"
   },
   "webInstall": {
-    "title": "Darmowa aplikacja na Androida w Google Play",
-    "subtitle": "Działa też bez internetu"
+    "title": "Darmowa aplikacja na Androida w Google Play"
   },
   "levels": {
     "title": "Wybierz poziom",
@@ -107,6 +102,12 @@
       "playAgain": "Zacznij od nowa",
       "replay": "▶ Powtórz",
       "replayStop": "⏹ Zatrzymaj"
+    },
+    "pause": {
+      "title": "Chwila przerwy?",
+      "message": "Narysowałeś już {{count}} obrazków! Czas na krótką przerwę?",
+      "mainMenu": "Menu główne",
+      "continue": "Dalej"
     }
   },
   "settings": {
@@ -136,12 +137,15 @@
     "browserErrorGeneric": "Nie można otworzyć przeglądarki.",
     "shareMessage": "Sprawdź tę świetną aplikację do trenowania pamięci: Zapamiętaj i Rysuj! https://github.com/S540d/DrawFromMemory",
     "aboutSupport": "O aplikacji i wsparcie",
+    "parentArea": "Strefa rodzica",
     "feedback": "Opinia",
     "support": "Wsparcie",
     "share": "Udostępnij",
     "aboutButton": "O aplikacji",
     "aboutTitle": "O aplikacji Zapamiętaj i Rysuj",
     "versionLabel": "Wersja",
+    "impressumLabel": "Nota prawna",
+    "openLink": "Otwórz ↗",
     "licenseLabel": "Licencja",
     "error": "Błąd",
     "about": "O aplikacji",
@@ -178,7 +182,6 @@
     "subtitle": "Obrazek dnia",
     "start": "Rozpocznij wyzwanie",
     "completed": "Ukończono na dziś ✓",
-    "countdown": "Nowe za {{hours}}h {{minutes}}m",
     "level": "Poziom {{number}}"
   },
   "errors": {
@@ -284,7 +287,6 @@
       "streak": "Miło Cię znów widzieć! 🔥 {{count}} dni z rzędu!",
       "streakLong": "Wow, {{count}} dni z rzędu! Jesteś niesamowity!"
     },
-    "nextUnlock": "Jeszcze {{count}} gwiazdek do: {{item}}",
     "accessory": {
       "hat": "Kapelusz",
       "glasses": "Okulary przeciwsłoneczne",

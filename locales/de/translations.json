@@ -11,13 +11,9 @@
     "galleryButton": "Meine Galerie",
     "creativeButton": "Freies Malen",
     "settingsButton": "Einstellungen",
-    "streakBadge": "🔥 {{count}}",
     "stats": {
       "stars": "Sterne",
-      "streak": "Serie",
       "levels": "Level",
-      "streakDay": "Tag",
-      "streakDays": "Tage",
       "levelOf": "von {{total}}"
     }
   },
@@ -27,8 +23,7 @@
     "privacyPolicy": "Datenschutz"
   },
   "webInstall": {
-    "title": "Android-App gratis im Play Store",
-    "subtitle": "Auch ohne Internet spielbar"
+    "title": "Android-App gratis im Play Store"
   },
   "levels": {
     "title": "Level auswählen",
@@ -107,6 +102,12 @@
       "playAgain": "Von vorne",
       "replay": "▶ Abspielen",
       "replayStop": "⏹ Stopp"
+    },
+    "pause": {
+      "title": "Kurze Pause?",
+      "message": "Du hast schon {{count}} Bilder gemalt! Zeit für eine kleine Pause?",
+      "mainMenu": "Hauptmenü",
+      "continue": "Weiter"
     }
   },
   "settings": {
@@ -136,12 +137,15 @@
     "browserErrorGeneric": "Browser konnte nicht geöffnet werden.",
     "shareMessage": "Schau dir diese coole Gedächtnistraining-App an: Merke und Male! https://github.com/S540d/DrawFromMemory",
     "aboutSupport": "Über & Support",
+    "parentArea": "Elternbereich",
     "feedback": "Feedback",
     "support": "Support",
     "share": "Teilen",
     "aboutButton": "Über",
     "aboutTitle": "Über Merke und Male",
     "versionLabel": "Version",
+    "impressumLabel": "Impressum",
+    "openLink": "Öffnen ↗",
     "licenseLabel": "Lizenz",
     "error": "Fehler",
     "about": "Über die App",
@@ -178,7 +182,6 @@
     "subtitle": "Bild des Tages",
     "start": "Challenge starten",
     "completed": "Heute erledigt ✓",
-    "countdown": "Neu in {{hours}}h {{minutes}}m",
     "level": "Level {{number}}"
   },
   "errors": {
@@ -284,7 +287,6 @@
       "streak": "Schön, dass du wieder da bist! 🔥 {{count}} Tage in Folge!",
       "streakLong": "Wow, {{count}} Tage in Folge! Du bist unglaublich!"
     },
-    "nextUnlock": "Noch {{count}} Sterne bis: {{item}}",
     "accessory": {
       "hat": "Hut",
       "glasses": "Sonnenbrille",

@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { View } from 'react-native';
 
 // ─── Shared mocks ────────────────────────────────────────────────────────────
 
@@ -100,23 +101,6 @@ jest.mock('../../components/AnimatedPrimitives', () => {
   };
 });
 
-jest.mock('../../components/game/TimerArc', () => {
-  const { View, Text } = require('react-native');
-  return {
-    __esModule: true,
-    default: ({ timeRemaining }: any) => (
-      <View testID="timer-arc-container">
-        <Text testID="timer-arc">{String(Math.max(0, Math.ceil(timeRemaining)))}</Text>
-      </View>
-    ),
-    TimerArc: ({ timeRemaining }: any) => (
-      <View testID="timer-arc-container">
-        <Text testID="timer-arc">{String(Math.max(0, Math.ceil(timeRemaining)))}</Text>
-      </View>
-    ),
-  };
-});
-
 // ─── MemorizePhase ────────────────────────────────────────────────────────────
 
 import MemorizePhase from '../../components/game/MemorizePhase';
@@ -151,12 +135,15 @@ describe('MemorizePhase', () => {
     revealStep: 0,
   };
 
-  it('renders timer arc countdown value', () => {
+  it('renders a quiet timer bar instead of a big countdown number', () => {
     const { UNSAFE_getAllByType } = render(
       <MemorizePhase {...baseProps} timeRemaining={3} totalTime={5} />,
     );
+    const bar = UNSAFE_getAllByType(View).find((n: any) => n.props.testID === 'timer-bar');
+    expect(bar).toBeDefined();
+    expect(bar!.props.accessibilityValue).toEqual({ min: 0, max: 5, now: 3 });
     const texts = getAllTexts(UNSAFE_getAllByType);
-    expect(texts).toContain('3');
+    expect(texts).not.toContain('3');
   });
 
   it('renders title translation key', () => {
@@ -236,7 +223,7 @@ describe('DrawPhase', () => {
     const buttons = UNSAFE_getAllByType(TouchableOpacity);
     const hintBtn = buttons.find((b: any) => b.props.accessibilityLabel === 'game.draw.hintUsed');
     expect(hintBtn).toBeTruthy();
-    expect(hintBtn.props.disabled).toBe(true);
+    expect(hintBtn!.props.disabled).toBe(true);
   });
 
   it('renders undo and clear buttons', () => {
@@ -327,6 +314,16 @@ describe('ResultPhase', () => {
     const texts = getAllTexts(UNSAFE_getAllByType);
     // RatingManager returns language-specific message; currentLang='en' in resultProps
     expect(texts).toContain('feedback-en-5');
+  });
+
+  it('selects feedback once per rating, not on every re-render', () => {
+    const { getRatingFeedback } = require('../../services/RatingManager');
+    getRatingFeedback.mockClear();
+    const { rerender } = render(<ResultPhase {...resultProps} userRating={4} />);
+    rerender(
+      <ResultPhase {...resultProps} userRating={4} screenWidth={resultProps.screenWidth + 1} />,
+    );
+    expect(getRatingFeedback).toHaveBeenCalledTimes(1);
   });
 
   it('shows saved label when savedToGallery is true', () => {
