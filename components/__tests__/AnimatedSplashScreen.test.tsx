@@ -84,4 +84,20 @@ describe('AnimatedSplashScreen', () => {
       });
     }).not.toThrow();
   });
+
+  it('should not create new animated interpolation nodes on rerender', () => {
+    // Regression: neue Animated-Nodes pro Render crashten den nativen Treiber
+    // (connectAnimatedNodes: parent does not exist, Play-Store-Report v1.8.0).
+    const { Animated } = require('react-native');
+    const interpolateSpy = jest.spyOn(Animated.Value.prototype, 'interpolate');
+    const { rerender } = render(<AnimatedSplashScreen onFinish={jest.fn()} />);
+    const callsAfterMount = interpolateSpy.mock.calls.length;
+
+    rerender(<AnimatedSplashScreen onFinish={jest.fn()} />);
+    rerender(<AnimatedSplashScreen onFinish={jest.fn()} />);
+
+    expect(callsAfterMount).toBe(1);
+    expect(interpolateSpy).toHaveBeenCalledTimes(callsAfterMount);
+    interpolateSpy.mockRestore();
+  });
 });
