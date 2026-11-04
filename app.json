@@ -2,13 +2,13 @@
   "expo": {
     "name": "Merke und Male",
     "slug": "merke-und-male",
-    "version": "1.9.0",
+    "version": "1.9.1",
     "platforms": ["ios", "android", "web"],
     "orientation": "default",
     "icon": "./assets/icons/app-icon.png",
     "userInterfaceStyle": "light",
     "scheme": "merkeundmale",
-    "primaryColor": "#60D5FA",
+    "primaryColor": "#A9DCEB",
     "description": "Gedächtnistraining für Kinder: Merken, Malen, Lernen! Eine pädagogisch wertvolle App für spielerisches Lernen.",
     "privacy": "public",
     "assetBundlePatterns": ["assets/**/*"],
@@ -28,11 +28,11 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/adaptive-icon.png",
-        "backgroundColor": "#60D5FA"
+        "backgroundColor": "#A9DCEB"
       },
       "package": "com.s540d.merkeundmale",
       "permissions": [],
-      "versionCode": 71,
+      "versionCode": 72,
       "minSdkVersion": 26,
       "newArchEnabled": false,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.s540d.merkeundmale",
@@ -45,8 +45,8 @@
       "name": "Merke und Male",
       "shortName": "Merke & Male",
       "description": "Gedächtnistraining für Kinder: Merken, Malen, Lernen!",
-      "themeColor": "#60D5FA",
-      "backgroundColor": "#60D5FA",
+      "themeColor": "#A9DCEB",
+      "backgroundColor": "#A9DCEB",
       "lang": "de",
       "icons": [
         {
@@ -66,7 +66,7 @@
           "image": "./assets/icons/splash-icon.png",
           "imageWidth": 220,
           "resizeMode": "contain",
-          "backgroundColor": "#60D5FA"
+          "backgroundColor": "#A9DCEB"
         }
       ],
       [

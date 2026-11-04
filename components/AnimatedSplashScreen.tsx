@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { View, StyleSheet, Animated, Dimensions } from 'react-native';
 import Svg, { Path, Rect } from 'react-native-svg';
 import Colors from '../constants/Colors';
@@ -13,7 +13,7 @@ interface Props {
  * Animierter Splash Screen mit Fade-In und Scale-Animationen.
  * Zeigt App-Titel und Untertitel, dann Übergang zum Home Screen.
  */
-export default function AnimatedSplashScreen({ onFinish }: Props) {
+function AnimatedSplashScreen({ onFinish }: Props) {
   const { t } = useTranslation();
   const titleOpacity = useRef(new Animated.Value(0)).current;
   const titleScale = useRef(new Animated.Value(0.7)).current;
@@ -135,10 +135,26 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
     onFinishRef,
   ]);
 
-  const spin = iconRotation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
+  // Interpolation und Transform-Arrays nur einmal erzeugen: ein neuer Animated-Node pro
+  // Render (z. B. ausgelöst durch Sprach-/Font-Init im Root-Layout) wird beim nativen
+  // Treiber verworfen, während connectAnimatedNodes noch in der Queue steht → Crash
+  // "Animated node with tag (parent) does not exist" (Fabric, v1.8.0 Play-Store-Report).
+  const iconTransform = useMemo(
+    () => [
+      { scale: iconScale },
+      {
+        rotate: iconRotation.interpolate({
+          inputRange: [0, 1],
+          outputRange: ['0deg', '360deg'],
+        }),
+      },
+    ],
+    [iconScale, iconRotation],
+  );
+  const pencilTransform = useMemo(
+    () => [...pencilTranslate.getTranslateTransform(), { rotate: '32deg' }],
+    [pencilTranslate],
+  );
 
   return (
     <Animated.View style={[styles.container, { opacity: containerOpacity }]}>
@@ -152,7 +168,7 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
         style={[
           styles.iconContainer,
           {
-            transform: [{ scale: iconScale }, { rotate: spin }],
+            transform: iconTransform,
           },
         ]}
       >
@@ -179,7 +195,7 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
             styles.pencil,
             {
               opacity: pencilOpacity,
-              transform: [...pencilTranslate.getTranslateTransform(), { rotate: '32deg' }],
+              transform: pencilTransform,
             },
           ]}
         >
@@ -220,6 +236,9 @@ export default function AnimatedSplashScreen({ onFinish }: Props) {
     </Animated.View>
   );
 }
+
+// memo: Re-Renders des Root-Layouts während des Splash erreichen die Animated-Nodes nicht.
+export default memo(AnimatedSplashScreen);
 
 const { width, height } = Dimensions.get('window');
 

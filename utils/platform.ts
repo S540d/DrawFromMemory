@@ -5,7 +5,7 @@
  * Verhindert direkte Verwendung von Web APIs ohne Platform-Check.
  */
 
-import { Platform } from 'react-native';
+import { Alert, Platform } from 'react-native';
 
 // Platform Detection
 export const isWeb = Platform.OS === 'web';
@@ -100,6 +100,37 @@ export const Storage = {
     }
   },
 };
+
+export interface ConfirmDestructiveOptions {
+  /** Titel des nativen Dialogs (Web zeigt nur die Nachricht) */
+  title: string;
+  message: string;
+  confirmLabel: string;
+  cancelLabel: string;
+  onConfirm: () => void;
+}
+
+/**
+ * Bestätigungsdialog vor einer destruktiven Aktion (löschen, zurücksetzen):
+ * `window.confirm` im Web, `Alert.alert` mit destruktivem Button auf Android/iOS.
+ * Zentral, damit die Screens keine eigenen Web/Native-Verzweigungen mehr brauchen.
+ */
+export function confirmDestructive({
+  title,
+  message,
+  confirmLabel,
+  cancelLabel,
+  onConfirm,
+}: ConfirmDestructiveOptions): void {
+  if (isWeb) {
+    if (window.confirm(message)) onConfirm(); // platform-safe
+    return;
+  }
+  Alert.alert(title, message, [
+    { text: cancelLabel, style: 'cancel' },
+    { text: confirmLabel, style: 'destructive', onPress: onConfirm },
+  ]);
+}
 
 /**
  * Prüft ob eine Web API sicher verwendet werden kann

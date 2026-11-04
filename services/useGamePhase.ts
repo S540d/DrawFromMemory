@@ -291,6 +291,7 @@ export function useGamePhase({
   const restartFromLevel1 = () => {
     setPhase('memorize');
     setUserRating(0);
+    setSavedToGallery(false);
     clearCanvas();
     setLevelNumber(1); // triggers level-init useEffect
   };

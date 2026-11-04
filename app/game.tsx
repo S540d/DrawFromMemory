@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useScreenLayout } from '@utils/useScreenLayout';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { getTotalLevels, getDifficultyForLevel } from '@services/LevelManager';
+import { getTotalLevels } from '@services/LevelManager';
 import { useTranslation, getLanguage } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
 import { FeatureFlags } from '../constants/featureFlags';
 import LevelImageDisplay from '@components/LevelImageDisplay';
-import DrawingCanvas, { useDrawingCanvas } from '@components/DrawingCanvas';
+import { useDrawingCanvas } from '@components/DrawingCanvas';
 import SettingsModal from '@components/SettingsModal';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import ConfettiBurst from '@components/ConfettiBurst';
@@ -87,7 +87,6 @@ export default function GameScreen() {
     handleRatingSubmit,
     saveToGallery,
     startReplay,
-    restartCurrentLevel,
     startNextLevel,
     restartFromLevel1,
   } = useGamePhase({
@@ -126,11 +125,6 @@ export default function GameScreen() {
       }
     });
   }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleRestartCurrentLevel = () => {
-    resetHint();
-    restartCurrentLevel();
-  };
 
   const handleStartNextLevel = () => {
     if (levelNumber % LEVELS_PER_PAUSE === 0 && levelNumber < totalLevels) {

@@ -7,19 +7,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.1] - 2026-11-03 (versionCode 72)
+
+Ersetzt 1.9.0 (versionCode 71), deren Play-Store-Veröffentlichung wegen des folgenden Absturzes abgebrochen wurde. Enthält alle Änderungen aus 1.9.0.
+
+### Fixed
+
+- Absturz beim App-Start auf einzelnen Android-Geräten (`connectAnimatedNodes: Animated node with tag (parent) does not exist`, gemeldet für v1.8.0 auf Android 12): Der Splash-Screen erzeugte bei jedem Re-Render neue native Animations-Knoten (#381, #382)
+
+## [1.9.0] - 2026-11-03 (versionCode 71)
+
+Änderungen seit der Play-Store-Version 1.8.0 (versionCode 69).
+
 ### Added
 
-- Auffindbarkeit außerhalb des Play Stores: Play-Store-Badge + deutsche Kurzbeschreibung im README, Web-only Install-Banner (`WebInstallBanner`) im sichtbaren Bereich der Startseite, deutsche Keywords/Open-Graph-/JSON-LD-Auszeichnung der Landing Page
+- Pause-Vorschlag nach jedem 5. abgeschlossenen Level (5, 10, 15) mit „Hauptmenü" und „Weiter" (#337)
+- Impressum und Datenschutz im Über-Dialog der Einstellungen, in allen 7 Sprachen (#330)
+- Micro-Animationen auf den Kern-Screens: Press-Feedback auf Kacheln und Buttons, `prefers-reduced-motion`-aware (`PressableScale`, `PulseView`)
+- Auffindbarkeit außerhalb des Play Stores: Play-Store-Badge + deutsche Kurzbeschreibung im README, Web-only Install-Hinweis auf der Startseite, deutsche Keywords/Open-Graph-/JSON-LD-Auszeichnung der Landing Page
 - Attributions-Parameter (`referrer` mit UTM-Tags) an allen Play-Store-Links — Installationen aus der Web-Demo werden in der Play Console als eigene Quelle sichtbar (`constants/ExternalLinks.ts`)
 - Crawlbarer `<noscript>`-Inhalt der Landing Page inkl. echtem Play-Store-Link statt Expos „You need to enable JavaScript"-Platzhalter
 - `docs/WEB_DISCOVERABILITY.md` — Trichter, Attribution und Rendering-Besonderheiten des Web-Builds
 
+### Changed
+
+- Neues App-Icon, Adaptive-Icon und Splash-Screen (Haus-Motiv statt Frosch) in ruhigerem, entsättigtem Hellblau `#A9DCEB` statt `#60D5FA`; nativer Splash über das `expo-splash-screen`-Plugin (#304, #338)
+- Design-System einheitlich auf Blau statt Violett (Primärfarbe kontraststark `#0585AD`, WCAG-tauglich für Text/Buttons) (#306)
+- Einstellungen thematisch gruppiert: Erscheinungsbild, Personalisieren, Elternbereich (#336)
+- Startseite entschlackt: „Spiel starten" ist die einzige auffällige Aktion (ohne Dauer-Puls); Tägliche Challenge als dezenter Textlink darunter; Level/Galerie/Freies Malen als einfarbige Textlinks im Footer; Statistik als eine Textzeile statt drei Emoji-Karten; Streak-Badge und schwebende Sterne entfernt — die Serie steht nur noch in Malis Begrüßung
+- Merke-Phase: dünner, einfarbiger Restzeit-Balken statt 80px-Countdown-Kreis mit Gelb/Rot-Warnfarben (war bei 3 s Anzeigezeit dauerhaft im Warnmodus)
+- Replay: Die Skalierung der Zeichnung wird aus der **gesamten** Zeichnung berechnet — die Zeichnung erscheint von Anfang an in Endgröße und wandert nicht mehr mit. Fertige Pfade und Fills werden in Web und Android zwischen den Frames wiederverwendet (pro Frame höchstens 2 statt N Flood-Fills) (#366)
+- Web-Zeichenfläche: Beim Malen wird nur noch der Live-Strich über einen gecachten Snapshot der fertigen Zeichnung gelegt statt bei jeder Mausbewegung alle Striche und Flood-Fills neu zu zeichnen (#358)
+- Web-Install-Hinweis auf der Startseite als dezente Textzeile statt umrahmter Karte; Store-/OG-Grafik zeigt eine Denkblase mit dem Haus-Motiv des App-Icons
+- Intern: `LevelImageDisplay.tsx` in einzelne Render-Dateien unter `components/levelImages/` aufgeteilt (#309); `computeFitTransform()` (#359) und `confirmDestructive()` (#360) ersetzen mehrfach kopierte Logik; Daily-Challenge-/Onboarding-Speicherung nutzt den gemeinsamen `StorageManager`-Fallback (#320); ungenutzte Dependency `react-native-svg-web` entfernt (#321)
+
 ### Fixed
 
-- PWA-/Homescreen-Tags (u. a. Apple-Touch-Icon) fehlten im Deployment: `app/+html.tsx` wird bei `web.output: "single"` nicht gerendert — die Tags werden jetzt im Post-Build injiziert
-- `scripts/post-build.js` präfixierte bereits mit `/DrawFromMemory` beginnende Pfade ein zweites Mal
-- `scripts/deploy-ghpages.sh` führte weder `post-build.js` noch `update-cache-version.js` aus — manuelle Deployments gingen ohne SEO-Tags und ohne Subpfad-Korrektur live
+- Konfetti, Jubel-Sound und Abzeichen-Prüfung blieben aus, wenn zwei Runden hintereinander dieselbe Sternzahl bekamen (#371)
+- Darkmode: Strichmännchen und „Nur Umriss merken"-Modus waren auf dunklem Hintergrund unsichtbar (#335)
+- „Von Level 1 neu starten" setzt den Galerie-Speicherstatus zurück (vorher blieb „In Galerie speichern" ggf. gesperrt)
+- Ergebnis-Feedback wechselte bei jedem Re-Render — jetzt einmal pro Bewertung; DE/EN-Texte für 1–2 Sterne laufen nicht mehr auseinander
+- Web: Füllungen verschwanden (u. a. auf dem Ergebnis-Screen), wenn die Canvas-Breite nicht ganzzahlig war; die Pixelmaße der Web-Zeichenfläche werden jetzt abgerundet
+- Web/PWA-Icon (`public/apple-touch-icon.png`) und OG-Bild (`public/feature-graphic.png`) zeigten alte bzw. abgeschnittene Motive; `apple-touch-icon`-Link ohne `/DrawFromMemory`-Basispfad
+- PWA-/Homescreen-Tags fehlten im Deployment (`app/+html.tsx` wird bei `web.output: "single"` nicht gerendert — Tags werden jetzt im Post-Build injiziert); `scripts/post-build.js` präfixierte `/DrawFromMemory`-Pfade doppelt; `scripts/deploy-ghpages.sh` lief ohne `post-build.js`/`update-cache-version.js`
 - Sitemap listet die beiden echten Datenschutzseiten statt nur der Startseite
+
+### Security
+
+- Abhängigkeiten per `npm audit fix` aktualisiert (u. a. `brace-expansion`, `js-yaml`, `browserslist`, `metro`/`image-size`, `compression`, `handlebars`, `shell-quote`, `source-map-js`); CI-Audit-Gate mit befristeter Allowlist für Findings ohne Upstream-Fix (#348)
 
 ## [1.3.4] - 2026-04-21
 

@@ -19,14 +19,12 @@ jest.mock('../../services/ThemeContext', () => ({
 import WebInstallBanner from '../WebInstallBanner';
 
 describe('WebInstallBanner', () => {
-  it('zeigt Titel und Untertitel', () => {
+  it('zeigt nur eine dezente Titelzeile', () => {
     const { UNSAFE_getAllByType } = render(<WebInstallBanner />);
-    const texts = UNSAFE_getAllByType(Text)
-      .map((n: any) => n.props.children)
-      .flat();
+    const texts = UNSAFE_getAllByType(Text);
 
-    expect(texts).toContain('webInstall.title');
-    expect(texts).toContain('webInstall.subtitle');
+    expect(texts).toHaveLength(1);
+    expect(texts[0].props.children).toContain('webInstall.title');
   });
 
   it('öffnet den Play Store mit Banner-Attribution', async () => {

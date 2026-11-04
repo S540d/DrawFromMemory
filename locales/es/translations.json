@@ -11,13 +11,9 @@
     "galleryButton": "Mi galería",
     "creativeButton": "Creativo",
     "settingsButton": "Ajustes",
-    "streakBadge": "🔥 {{count}}",
     "stats": {
       "stars": "Estrellas",
-      "streak": "Racha",
       "levels": "Niveles",
-      "streakDay": "día",
-      "streakDays": "días",
       "levelOf": "de {{total}}"
     }
   },
@@ -27,8 +23,7 @@
     "privacyPolicy": "Política de privacidad"
   },
   "webInstall": {
-    "title": "App de Android gratis en Google Play",
-    "subtitle": "También funciona sin conexión"
+    "title": "App de Android gratis en Google Play"
   },
   "levels": {
     "title": "Elegir nivel",
@@ -187,7 +182,6 @@
     "subtitle": "Imagen del día",
     "start": "Empezar reto",
     "completed": "Completado hoy ✓",
-    "countdown": "Nuevo en {{hours}}h {{minutes}}m",
     "level": "Nivel {{number}}"
   },
   "errors": {
@@ -293,7 +287,6 @@
       "streak": "¡Qué bien que vuelvas! 🔥 ¡{{count}} días seguidos!",
       "streakLong": "¡Vaya, {{count}} días seguidos! ¡Eres increíble!"
     },
-    "nextUnlock": "Faltan {{count}} estrellas para: {{item}}",
     "accessory": {
       "hat": "Sombrero",
       "glasses": "Gafas de sol",

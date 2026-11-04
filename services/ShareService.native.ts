@@ -10,44 +10,10 @@ import type { DrawingPath } from '@components/DrawingCanvas.shared';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import { Skia, ImageFormat, PaintStyle, StrokeCap, StrokeJoin } from '@shopify/react-native-skia';
+import { computeFitTransform } from '@utils/drawingTransform';
 import { computeNativeFillLayers } from './NativeFillLayerService';
 
 const EXPORT_SIZE = 600;
-
-function computeScaleOffset(
-  paths: DrawingPath[],
-  size: number,
-): { scale: number; offsetX: number; offsetY: number } {
-  const strokePaths = paths.filter(p => p.type !== 'fill');
-  if (strokePaths.length === 0) return { scale: 1, offsetX: 0, offsetY: 0 };
-
-  let minX = Infinity,
-    minY = Infinity,
-    maxX = -Infinity,
-    maxY = -Infinity;
-  for (const path of strokePaths) {
-    for (const pt of path.points) {
-      if (pt.x < minX) minX = pt.x;
-      if (pt.y < minY) minY = pt.y;
-      if (pt.x > maxX) maxX = pt.x;
-      if (pt.y > maxY) maxY = pt.y;
-    }
-  }
-
-  const dw = maxX - minX;
-  const dh = maxY - minY;
-  if (dw <= 0 || dh <= 0) return { scale: 1, offsetX: 0, offsetY: 0 };
-
-  const padding = 40;
-  const scale = Math.min((size - 2 * padding) / dw, (size - 2 * padding) / dh, 1);
-  const sw = dw * scale;
-  const sh = dh * scale;
-  return {
-    scale,
-    offsetX: (size - sw) / 2 - minX * scale,
-    offsetY: (size - sh) / 2 - minY * scale,
-  };
-}
 
 export async function shareDrawing(paths: DrawingPath[], title?: string): Promise<void> {
   const size = EXPORT_SIZE;
@@ -61,7 +27,7 @@ export async function shareDrawing(paths: DrawingPath[], title?: string): Promis
   bgPaint.setColor(Skia.Color('#FFFFFF'));
   canvas.drawRect(Skia.XYWHRect(0, 0, size, size), bgPaint);
 
-  const { scale, offsetX, offsetY } = computeScaleOffset(paths, size);
+  const { scale, offsetX, offsetY } = computeFitTransform(paths, size, size, 40);
 
   // Fill regions via NativeFillLayerService (same pipeline as DrawingCanvas.native.tsx)
   const fillLayers = computeNativeFillLayers(paths, size, size, scale, offsetX, offsetY);

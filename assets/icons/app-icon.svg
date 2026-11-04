@@ -1,7 +1,7 @@
 <svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
   <!-- Vollflächiger Markenfarbton (Colors-Token primaryColor, app.json), KEIN
        eingebetteter Kreis/Rundung — die Plattform maskiert selbst (Issue #304). -->
-  <rect width="1024" height="1024" fill="#60D5FA"/>
+  <rect width="1024" height="1024" fill="#A9DCEB"/>
 
   <!-- Karte 1: das Motiv in Farbe (Vorlage) — Level-4-Haus, level-04-house.svg -->
   <g transform="rotate(-9 360 350)">

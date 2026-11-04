@@ -4,6 +4,7 @@
  * This file is loaded on web; ShareService.native.ts is loaded on native via Metro.
  */
 import type { DrawingPath } from '@components/DrawingCanvas.shared';
+import { computeFitTransform } from '@utils/drawingTransform';
 import { floodFillPixels, hexToRgb } from './FloodFillService';
 
 const EXPORT_SIZE = 600;
@@ -20,36 +21,8 @@ function buildOffscreenCanvas(paths: DrawingPath[]): HTMLCanvasElement {
 
   if (paths.length === 0) return canvas;
 
-  // Scale/offset: fit drawing into the export canvas (same logic as DrawingCanvas.web.tsx preview mode)
-  const strokePaths = paths.filter(p => p.type !== 'fill');
-  let scale = 1,
-    offsetX = 0,
-    offsetY = 0;
-
-  if (strokePaths.length > 0) {
-    let minX = Infinity,
-      minY = Infinity,
-      maxX = -Infinity,
-      maxY = -Infinity;
-    for (const path of strokePaths) {
-      for (const pt of path.points) {
-        if (pt.x < minX) minX = pt.x;
-        if (pt.y < minY) minY = pt.y;
-        if (pt.x > maxX) maxX = pt.x;
-        if (pt.y > maxY) maxY = pt.y;
-      }
-    }
-    const dw = maxX - minX;
-    const dh = maxY - minY;
-    if (dw > 0 && dh > 0) {
-      const padding = 40;
-      scale = Math.min((EXPORT_SIZE - 2 * padding) / dw, (EXPORT_SIZE - 2 * padding) / dh, 1);
-      const sw = dw * scale;
-      const sh = dh * scale;
-      offsetX = (EXPORT_SIZE - sw) / 2 - minX * scale;
-      offsetY = (EXPORT_SIZE - sh) / 2 - minY * scale;
-    }
-  }
+  // Scale/offset: Zeichnung in die Export-Fläche einpassen (gemeinsame Logik mit der Vorschau)
+  const { scale, offsetX, offsetY } = computeFitTransform(paths, EXPORT_SIZE, EXPORT_SIZE, 40);
 
   for (const path of paths) {
     if (path.type === 'fill' && path.points.length > 0) {

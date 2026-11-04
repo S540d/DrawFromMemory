@@ -64,14 +64,14 @@ export default function LevelsScreen() {
 
   useEffect(() => {
     let mounted = true;
-    Promise.all(
-      levels.map(level =>
-        storageManager
-          .getLevelRating(level.number)
-          .then(r => [level.number, r] as [number, number | null]),
-      ),
-    ).then(entries => {
-      if (mounted) setRatings(Object.fromEntries(entries));
+    // Ein einziger Progress-Read statt einem getLevelRating()-Read pro Level
+    storageManager.getProgress().then(progress => {
+      if (!mounted) return;
+      setRatings(
+        Object.fromEntries(
+          levels.map(level => [level.number, progress.levels[level.number]?.bestRating ?? null]),
+        ),
+      );
     });
     return () => {
       mounted = false;

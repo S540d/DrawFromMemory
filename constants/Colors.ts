@@ -6,14 +6,14 @@
 
 export const Colors = {
   // Primärfarben - Gradient-ready
-  // Blau-Familie passend zur App-Icon-/Store-Markenfarbe #60D5FA (Issue #306).
-  // #60D5FA selbst ist zu hell für Text/Buttons (Kontrast <2:1 gegen Weiß) —
+  // Blau-Familie passend zur App-Icon-/Store-Markenfarbe #A9DCEB (Issue #306; entsättigt, weniger aufdringlich).
+  // #A9DCEB selbst ist zu hell für Text/Buttons (Kontrast <2:1 gegen Weiß) —
   // primary/primaryDark sind daher dieselbe Farbfamilie in einem Ton, der
   // WCAG-Kontrast für weißen Button-Text einhält (~4:1, analog zum bisherigen
   // Violett-Wert); primaryLight bleibt die reine Icon-Farbe für dekorative
   // Flächen ohne Text (Kreise, Icon-Referenz, Splash-Hintergrund).
   primary: '#0585AD',
-  primaryLight: '#60D5FA',
+  primaryLight: '#A9DCEB',
   primaryDark: '#045B77',
   secondary: '#F093FB', // Rosa - Spielerisch & Warm
   accent: '#4ECDC4', // Mint-Teal - frischer Akzent
@@ -115,21 +115,10 @@ export const Colors = {
     5: '#E74C3C', // Rot - Sehr schwierig
   },
 
-  // Timer-Zustandsfarben (TimerArc.native.tsx / TimerArc.web.tsx) — referenzieren
-  // bewusst dieselben Hex-Werte wie gradient.warm[1] / stars.filled, damit eine
-  // künftige Palettenänderung nur an einer Stelle nachgezogen werden muss (Issue #334).
-  timerArc: {
-    critical: '#FF6B6B',
-    warning: '#FFD700',
-    normal: '#FFFFFF',
-  },
-
-  // UI-Akzentfarben außerhalb des Zeichnungskontexts (Home-Screen), zentralisiert
+  // UI-Akzentfarben außerhalb des Zeichnungskontexts, zentralisiert
   // statt als Hex-Literal an der Verwendungsstelle (Issue #334).
   accents: {
-    dailyChallengeBorder: '#F59E0B',
-    dailyChallengeText: '#D97706',
-    streakBadge: '#FF6B35',
+    dailyChallenge: '#F59E0B',
   },
 };
 

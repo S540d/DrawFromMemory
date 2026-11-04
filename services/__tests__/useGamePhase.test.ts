@@ -290,6 +290,24 @@ describe('useGamePhase', () => {
     expect(clearCanvas).toHaveBeenCalled();
   });
 
+  it('resets savedToGallery when restarting from level 1', async () => {
+    const { result } = renderGamePhase({
+      initialLevel: 5,
+      drawingPaths: [{ points: [{ x: 0, y: 0 }], color: '#000', strokeWidth: 3 }],
+    });
+
+    await act(async () => {
+      await result.current.saveToGallery();
+    });
+    expect(result.current.savedToGallery).toBe(true);
+
+    act(() => {
+      result.current.restartFromLevel1();
+    });
+
+    expect(result.current.savedToGallery).toBe(false);
+  });
+
   // --- Replay ---
 
   it('starts replay', () => {

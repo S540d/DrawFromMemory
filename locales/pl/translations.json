@@ -11,13 +11,9 @@
     "galleryButton": "Moja galeria",
     "creativeButton": "Kreatywny",
     "settingsButton": "Ustawienia",
-    "streakBadge": "🔥 {{count}}",
     "stats": {
       "stars": "Gwiazdki",
-      "streak": "Seria",
       "levels": "Poziomy",
-      "streakDay": "dzień",
-      "streakDays": "dni",
       "levelOf": "z {{total}}"
     }
   },
@@ -27,8 +23,7 @@
     "privacyPolicy": "Polityka prywatności"
   },
   "webInstall": {
-    "title": "Darmowa aplikacja na Androida w Google Play",
-    "subtitle": "Działa też bez internetu"
+    "title": "Darmowa aplikacja na Androida w Google Play"
   },
   "levels": {
     "title": "Wybierz poziom",
@@ -187,7 +182,6 @@
     "subtitle": "Obrazek dnia",
     "start": "Rozpocznij wyzwanie",
     "completed": "Ukończono na dziś ✓",
-    "countdown": "Nowe za {{hours}}h {{minutes}}m",
     "level": "Poziom {{number}}"
   },
   "errors": {
@@ -293,7 +287,6 @@
       "streak": "Miło Cię znów widzieć! 🔥 {{count}} dni z rzędu!",
       "streakLong": "Wow, {{count}} dni z rzędu! Jesteś niesamowity!"
     },
-    "nextUnlock": "Jeszcze {{count}} gwiazdek do: {{item}}",
     "accessory": {
       "hat": "Kapelusz",
       "glasses": "Okulary przeciwsłoneczne",

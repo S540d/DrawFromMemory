@@ -4,12 +4,12 @@
  * Native: expo-haptics für Vibration
  */
 
-import { Platform } from 'react-native';
+import { isWeb } from '@utils/platform';
 import storageManager from './StorageManager';
 
 // Dynamic import for haptics (native only)
 let Haptics: typeof import('expo-haptics') | null = null;
-if (Platform.OS !== 'web') {
+if (!isWeb) {
   try {
     Haptics = require('expo-haptics');
   } catch {
@@ -23,7 +23,7 @@ class SoundManager {
   private initialized: boolean = false;
 
   private getAudioContext(): AudioContext | null {
-    if (Platform.OS !== 'web') return null;
+    if (!isWeb) return null;
     if (!this.audioContext) {
       try {
         this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)(); // platform-safe
@@ -126,7 +126,8 @@ class SoundManager {
 
   // Haptic feedback (native only)
   private async hapticLight() {
-    if (Platform.OS === 'web' || !Haptics) return;
+    // Haptics wird nur auf Native geladen (siehe oben) — `!Haptics` deckt Web mit ab
+    if (!Haptics) return;
     try {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     } catch {
@@ -135,7 +136,8 @@ class SoundManager {
   }
 
   private async hapticSuccess() {
-    if (Platform.OS === 'web' || !Haptics) return;
+    // Haptics wird nur auf Native geladen (siehe oben) — `!Haptics` deckt Web mit ab
+    if (!Haptics) return;
     try {
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } catch {

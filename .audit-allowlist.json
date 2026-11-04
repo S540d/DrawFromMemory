@@ -1,0 +1,17 @@
+{
+  "_comment": "Befristete Ausnahmen für scripts/audit-gate.mjs. Grundsätzlich nur Findings ohne Upstream-Fix im Build-Tooling (nicht im App-Bundle); Ausnahmen davon sind im reason begründet. Nach Ablauf schlägt das Gate fehl -> neu bewerten (DrawFromMemory#348).",
+  "advisories": [
+    {
+      "id": "GHSA-mrhx-c7xc-m3w5",
+      "package": "zod",
+      "reason": "Speicher-DoS bei übergroßen Collections: nur noch zod@3 via expo -> @expo/cli (Build-Tooling, validiert lokale Konfiguration); kein gepatchter 3.x-Release, @expo/cli verlangt ^3.25.76. Root-zod (eslint-plugin-react-hooks) auf 4.6.7 gehoben.",
+      "expires": "2026-12-31"
+    },
+    {
+      "id": "GHSA-qr28-fpjm-wq7f",
+      "package": "decode-uri-component",
+      "reason": "Quadratische Laufzeit bei langen %-kodierten Sequenzen. AUSNAHME: im App-Bundle (expo-router -> query-string@7 -> decode-uri-component@0.2.2). Fix erst in 0.5.1 (ESM-only, inkompatibel mit query-string@7); npm audit schlägt nur expo-router 58 (SDK-Major) vor. Risiko gering: betrifft nur das Parsen von App-URLs/Deep-Links auf dem Gerät des Nutzers selbst (kein Server). Mit dem nächsten SDK-Upgrade auflösen.",
+      "expires": "2026-12-31"
+    }
+  ]
+}

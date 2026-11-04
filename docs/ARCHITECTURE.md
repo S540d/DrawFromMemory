@@ -33,7 +33,7 @@ Imports use the path aliases `@services/*`, `@components/*`, `@utils/*`
 │   ├── levels.tsx, gallery.tsx, creative.tsx, settings.tsx
 │   └── +html.tsx            #   web-only document head (SEO, meta)
 ├── components/
-│   ├── game/                #   MemorizePhase, DrawPhase, ResultPhase, TimerArc
+│   ├── game/                #   MemorizePhase, DrawPhase, ResultPhase, TimerBar
 │   ├── DrawingCanvas.*.tsx  #   Skia canvas, split by platform
 │   └── …                    #   Badge, Toast, Modal, Mascot components
 ├── services/                # Stateful managers, one domain each
@@ -67,7 +67,7 @@ so timing stays in one place.
 ### Skia for drawing, split per platform
 
 `@shopify/react-native-skia` renders the canvas. `DrawingCanvas` and
-`ConfettiBurst`/`TimerArc` exist as `.native.tsx` / `.web.tsx` pairs with a
+`ConfettiBurst` exist as `.native.tsx` / `.web.tsx` pairs with a
 shared `.shared.ts` module, because the web and native Skia backends differ
 enough that runtime branching would be messier than separate files.
 
