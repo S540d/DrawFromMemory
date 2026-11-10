@@ -26,6 +26,17 @@ module.exports = {
   StrokeCap: { Butt: 0, Round: 1, Square: 2 },
   StrokeJoin: { Miter: 0, Round: 1, Bevel: 2 },
   Skia: {
+    PathBuilder: {
+      Make: jest.fn(() => {
+        const builder = {
+          moveTo: jest.fn(() => builder),
+          lineTo: jest.fn(() => builder),
+          close: jest.fn(() => builder),
+          build: jest.fn(() => ({})),
+        };
+        return builder;
+      }),
+    },
     Path: {
       Make: jest.fn(() => ({
         moveTo: jest.fn(),

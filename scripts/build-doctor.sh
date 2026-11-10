@@ -63,9 +63,9 @@ else
   elif [ "$FOOJAY_VER" = "0.5.0" ]; then
     fail "foojay $FOOJAY_VER ist inkompatibel mit Gradle 9 (IBM_SEMERU-Crash)."
     echo -e "     Patch nicht angewendet. Fix: ${BOLD}npm install${RESET} (postinstall→patch-package)"
-    echo -e "     oder prüfen, ob patches/@react-native+gradle-plugin+*.patch existiert."
+    echo -e "     bzw. RN-Version prüfen (ab 0.88 bringt das Plugin foojay 1.0.0 selbst mit)."
   else
-    ok "foojay $FOOJAY_VER (Gradle-9-kompatibel, Patch aktiv)."
+    ok "foojay $FOOJAY_VER (Gradle-9-kompatibel; ab RN 0.88 ohne eigenen Patch)."
   fi
 fi
 

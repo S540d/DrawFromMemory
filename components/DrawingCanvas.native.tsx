@@ -43,7 +43,7 @@ function tryLoadSkia(): boolean {
     SkiaModule = skia.Skia;
 
     // Verify that the native module is actually ready (not just exported)
-    if (!SkiaModule?.Path?.Make) {
+    if (!SkiaModule?.PathBuilder?.Make) {
       throw new Error('Skia native module not fully initialized');
     }
 
@@ -192,13 +192,14 @@ function createSkiaPath(
 ) {
   if (points.length < 2) return null;
 
-  const path = SkiaModule.Path.Make();
-  path.moveTo(points[0].x * scale + offsetX, points[0].y * scale + offsetY);
+  // Skia ≥ 2.14: SkPath ist unveränderlich, Pfade entstehen über PathBuilder.
+  const builder = SkiaModule.PathBuilder.Make();
+  builder.moveTo(points[0].x * scale + offsetX, points[0].y * scale + offsetY);
   for (let i = 1; i < points.length; i++) {
-    path.lineTo(points[i].x * scale + offsetX, points[i].y * scale + offsetY);
+    builder.lineTo(points[i].x * scale + offsetX, points[i].y * scale + offsetY);
   }
 
-  return { path, color, width: strokeW * scale };
+  return { path: builder.build(), color, width: strokeW * scale };
 }
 
 export default function DrawingCanvas({

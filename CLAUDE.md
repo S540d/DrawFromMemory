@@ -17,17 +17,17 @@ Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Er
 
 | Bereich         | Technologie / Version                                                                                        |
 | --------------- | ------------------------------------------------------------------------------------------------------------ |
-| Framework       | React Native 0.83.2 + Expo SDK 55                                                                            |
-| React           | 19.2.0                                                                                                       |
-| Navigation      | Expo Router ~55.0.5 (file-based)                                                                             |
-| Native Drawing  | `@shopify/react-native-skia` 2.4.18                                                                          |
+| Framework       | React Native 0.88.1 + Expo SDK 58 (Node ≥ 22.13)                                                             |
+| React           | 19.3.0                                                                                                       |
+| Navigation      | Expo Router ~58.0.30 (file-based)                                                                            |
+| Native Drawing  | `@shopify/react-native-skia` 2.14.0 (Pfade nur über `Skia.PathBuilder`, `SkPath` ist unveränderlich)         |
 | Web Drawing     | Canvas API (`DrawingCanvas.web.tsx`)                                                                         |
-| Animationen     | `react-native-reanimated` ~4.2.2                                                                             |
+| Animationen     | `react-native-reanimated` 4.7.1                                                                              |
 | State           | React Hooks + AsyncStorage                                                                                   |
 | Theming         | ThemeContext (light / dark / system)                                                                         |
 | Sound           | Web Audio API (web) + `expo-haptics` (native)                                                                |
 | i18n            | Custom `services/i18n.ts` (de/en/es/fr/it/nl/pl), Locales in `locales/`, automatische Geräte-Spracherkennung |
-| Tests           | Jest 29 + jest-expo ~55 (389+ Tests, jsdom-Environment)                                                      |
+| Tests           | Jest 29 + jest-expo ~58 (480+ Tests, jsdom-Environment), RNTL 13 (v14-Migration offen)                       |
 | CI              | GitHub Actions (`.github/workflows/ci-cd.yml`)                                                               |
 | Build (Native)  | EAS Build (`eas.json`)                                                                                       |
 | Crash Reporting | Sentry via `EXPO_PUBLIC_SENTRY_DSN` (optional, no-op on Web)                                                 |
@@ -253,7 +253,7 @@ Vollständige P0/P1/P2-Statustabellen und Themen-Pack-Architektur-Details: [`doc
 ## Offene Issues / Bekannte Einschränkungen
 
 - **jest-expo → @tootallnate/once** (low severity): Breaking-Major-Upgrade nötig — noch nicht gemacht. Details: [`docs/private/INCIDENTS.md`](docs/private/INCIDENTS.md).
-- **foojay-resolver-Patch** (`patches/@react-native+gradle-plugin+0.83.6.patch`, via `postinstall`): hebt foojay-resolver 0.5.0 → 1.0.0, sonst bricht der Android-Build unter Gradle 9 / JDK 21 ab (Issue #276). **Bei RN-Upgrade prüfen:** `grep foojay node_modules/@react-native/gradle-plugin/settings.gradle.kts`; `npm run build:doctor` warnt automatisch bei Regression. Diagnose-Historie: [`docs/private/INCIDENTS.md`](docs/private/INCIDENTS.md).
+- **foojay-resolver** muss ≥ 1.0.0 sein, sonst bricht der Android-Build unter Gradle 9 / JDK 21 ab (Issue #276). Bis RN 0.83 per Patch gelöst, ab RN 0.88 bringt `@react-native/gradle-plugin` 1.0.0 selbst mit, der Patch ist entfernt. **Bei RN-Upgrade prüfen:** `grep foojay node_modules/@react-native/gradle-plugin/settings.gradle.kts`; `npm run build:doctor` warnt automatisch bei Regression. Diagnose-Historie: [`docs/private/INCIDENTS.md`](docs/private/INCIDENTS.md).
 - **Nexus 6**: EOL — `minSdkVersion` = 26; Nexus 6 endet bei API 25 (geschlossen via Issue #172)
 - **iOS**: Nicht primär getestet (Fokus auf Web + Android)
 - **iOS App Store**: Bundle ID `com.s540d.merkeundmale`, App Store URL noch TBD
