@@ -6,7 +6,7 @@
 Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Ergebnis.
 
 - **Aktuell: v1.9.1** (package.json + app.json; versionCode 72) — **Play Store: v1.8.0 / versionCode 69**; v1.9.1 ist Release-Kandidat (versionCodes 70 und 71/v1.9.0 wurden nie im Store veröffentlicht)
-- **Mindestanforderung Android: API 26 (Android 8.0 Oreo)** — Nexus 6 (max. API 25) wird nicht mehr unterstützt (Issue #172, geschlossen)
+- **Mindestanforderung Android: API 24 (Android 7.0)** — RN-Default, gilt unter SDK 55 und 58. Bewusst nicht auf 26 angehoben, damit das Nexus 6 (API 25) als Testgerät nutzbar bleibt (Entscheidung 2026-11-14, #302). Falls doch angehoben werden soll: nur über das Plugin `expo-build-properties`, `android.minSdkVersion` in `app.json` wird von Expo ignoriert.
 - **Live Demo:** https://s540d.github.io/DrawFromMemory/
 - **Repo:** https://github.com/S540d/DrawFromMemory
 - **Play Store:** `com.s540d.merkeundmale`
@@ -254,7 +254,7 @@ Vollständige P0/P1/P2-Statustabellen und Themen-Pack-Architektur-Details: [`doc
 
 - **jest-expo → @tootallnate/once** (low severity): Breaking-Major-Upgrade nötig — noch nicht gemacht. Details: [`docs/private/INCIDENTS.md`](docs/private/INCIDENTS.md).
 - **foojay-resolver-Patch** (`patches/@react-native+gradle-plugin+0.83.6.patch`, via `postinstall`): hebt foojay-resolver 0.5.0 → 1.0.0, sonst bricht der Android-Build unter Gradle 9 / JDK 21 ab (Issue #276). **Bei RN-Upgrade prüfen:** `grep foojay node_modules/@react-native/gradle-plugin/settings.gradle.kts`; `npm run build:doctor` warnt automatisch bei Regression. Diagnose-Historie: [`docs/private/INCIDENTS.md`](docs/private/INCIDENTS.md).
-- **Nexus 6**: EOL — `minSdkVersion` = 26; Nexus 6 endet bei API 25 (geschlossen via Issue #172)
+- **Nexus 6** (API 25): weiter unterstützt, minSdk bleibt 24 (#302). Die in #172 beschlossene Anhebung auf 26 war nie im Build wirksam.
 - **iOS**: Nicht primär getestet (Fokus auf Web + Android)
 - **iOS App Store**: Bundle ID `com.s540d.merkeundmale`, App Store URL noch TBD
 
