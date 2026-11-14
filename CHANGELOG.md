@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Expo SDK 55 → 58: React Native 0.83 → 0.88, React 19.3, Skia 2.14, Reanimated 4.7, Sentry 8, expo-router 58 (#391)
+- Zeichen- und Teilen-Pfade auf Skias `PathBuilder` umgestellt (in Skia 2.14 ist `SkPath` unveränderlich)
+- CI und Builds laufen auf Node 22 (Mindestanforderung von Expo 58 / RN 0.88)
+
+### Security
+
+- `npm audit` ohne High-Findings: decode-uri-component (im App-Bundle) und zod entfallen mit SDK 58, die Audit-Allowlist ist leer
+- Veraltete `metro`-Overrides (0.83.8) entfernt; SDK 58 bringt metro 0.87 ohne das image-size-Finding
+
 ## [1.9.1] - 2026-11-03 (versionCode 72)
 
 Ersetzt 1.9.0 (versionCode 71), deren Play-Store-Veröffentlichung wegen des folgenden Absturzes abgebrochen wurde. Enthält alle Änderungen aus 1.9.0.

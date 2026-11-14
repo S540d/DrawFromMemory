@@ -151,7 +151,7 @@ export function Button({
             colors={Colors.gradient.cta}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-            style={StyleSheet.absoluteFillObject}
+            style={StyleSheet.absoluteFill}
           />
         )}
         {loading ? (
