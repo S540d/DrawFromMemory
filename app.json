@@ -17,7 +17,6 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.s540d.merkeundmale",
       "buildNumber": "3",
-      "appStoreUrl": "https://apps.apple.com/app/merke-und-male/id[TBD]",
       "config": {
         "usesNonExemptEncryption": false
       },
