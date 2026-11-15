@@ -18,7 +18,7 @@ import SoundManager from '@services/SoundManager';
 import { getAgeGroup, setAgeGroup } from '@services/AgeGroupManager';
 import Colors from '../constants/Colors';
 import { Spacing, FontSize, FontWeight, BorderRadius } from '../constants/Layout';
-import { IMPRESSUM_URL, PRIVACY_POLICY_URL } from '../constants/ExternalLinks';
+import { IMPRESSUM_URL, KOFI_URL, PRIVACY_POLICY_URL } from '../constants/ExternalLinks';
 import ParentalGate from './ParentalGate';
 import ParentDashboard from './ParentDashboard';
 import BadgesModal from './BadgesModal';
@@ -94,9 +94,8 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   const openExternalUrl = (url: string) => {
     parentalGate.openWithUrl(url, {
       errorTitle: t('settings.error'),
-      errorMessage: url.includes('ko-fi.com')
-        ? t('settings.browserError')
-        : t('settings.browserErrorGeneric'),
+      errorMessage:
+        url === KOFI_URL ? t('settings.browserError') : t('settings.browserErrorGeneric'),
     });
   };
 
@@ -122,7 +121,7 @@ export default function SettingsModal({ visible, onClose, embedded = false }: Se
   };
 
   const handleSupport = () => {
-    openExternalUrl('https://ko-fi.com/s540d');
+    openExternalUrl(KOFI_URL);
   };
 
   const handleShareApp = async () => {
