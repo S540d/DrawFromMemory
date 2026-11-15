@@ -29,4 +29,4 @@ Keine Werbung, keine In-App-Käufe, keine Datenerhebung — [Datenschutzerkläru
 
 ## Lizenz
 
-MIT — siehe [LICENSE](LICENSE).
+PolyForm Noncommercial 1.0.0 (nicht-kommerzielle Nutzung) — siehe [LICENSE](LICENSE).
