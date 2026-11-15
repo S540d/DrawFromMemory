@@ -19,9 +19,6 @@ export const PLAY_STORE_PACKAGE = 'com.s540d.merkeundmale';
 /** Play-Store-Link ohne Tracking — z. B. für Store-Listing-Metadaten. */
 export const PLAY_STORE_URL = `https://play.google.com/store/apps/details?id=${PLAY_STORE_PACKAGE}`;
 
-/** Spendenseite (Ko-fi). */
-export const KOFI_URL = 'https://ko-fi.com/s540d';
-
 /** Öffentliche Web-Demo (GitHub Pages). */
 export const SITE_URL = 'https://s540d.github.io/DrawFromMemory/';
 
