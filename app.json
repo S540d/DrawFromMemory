@@ -10,7 +10,6 @@
     "scheme": "merkeundmale",
     "primaryColor": "#A9DCEB",
     "description": "Gedächtnistraining für Kinder: Merken, Malen, Lernen! Eine pädagogisch wertvolle App für spielerisches Lernen.",
-    "privacy": "public",
     "assetBundlePatterns": ["assets/**/*"],
     "ios": {
       "icon": "./assets/icons/app-icon.png",
@@ -32,9 +31,7 @@
       "package": "com.s540d.merkeundmale",
       "permissions": [],
       "versionCode": 72,
-      "newArchEnabled": false,
-      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.s540d.merkeundmale",
-      "privacyPolicy": "https://s540d.github.io/DrawFromMemory/PRIVACY_POLICY.html"
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.s540d.merkeundmale"
     },
     "web": {
       "favicon": "./assets/icons/favicon.png",

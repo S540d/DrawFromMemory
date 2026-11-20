@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Expo SDK 55 → 58: React Native 0.83 → 0.88, React 19.3, Skia 2.14, Reanimated 4.7, Sentry 8, expo-router 58 (#391)
 - Zeichen- und Teilen-Pfade auf Skias `PathBuilder` umgestellt (in Skia 2.14 ist `SkPath` unveränderlich)
 - CI und Builds laufen auf Node 22 (Mindestanforderung von Expo 58 / RN 0.88)
+- `app.json`: von SDK 58 abgelehnte Felder entfernt (`android.newArchEnabled`, seit RN 0.82 wirkungslos; `android.privacyPolicy` und `privacy`, nirgends gelesen), `expo-doctor`-Schema-Check grün
 
 ### Security
 
