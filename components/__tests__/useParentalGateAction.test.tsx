@@ -30,7 +30,7 @@ describe('useParentalGateAction', () => {
 
   it('openWithUrl calls Linking.openURL on success', async () => {
     const canOpen = jest.spyOn(Linking, 'canOpenURL').mockResolvedValue(true);
-    const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+    const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
     const { result } = renderHook(() => useParentalGateAction());
 
     act(() => {

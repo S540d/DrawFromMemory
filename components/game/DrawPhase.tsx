@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
     transform: [{ scale: 1.15 }],
   },
   inlineColorSwatchInner: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   inlineColorCheckmark: {
     fontSize: 16,

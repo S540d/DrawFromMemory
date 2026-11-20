@@ -244,7 +244,7 @@ const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center',

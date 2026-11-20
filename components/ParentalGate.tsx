@@ -8,6 +8,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  type TextInputInstance,
 } from 'react-native';
 import { useTranslation } from '@services/i18n';
 import { useTheme } from '@services/ThemeContext';
@@ -36,7 +37,7 @@ export default function ParentalGate({ visible, onSuccess, onCancel }: ParentalG
   const [challenge, setChallenge] = useState(generateChallenge);
   const [input, setInput] = useState('');
   const [showError, setShowError] = useState(false);
-  const inputRef = useRef<TextInput>(null);
+  const inputRef = useRef<TextInputInstance>(null);
 
   const reset = useCallback(() => {
     setChallenge(generateChallenge());

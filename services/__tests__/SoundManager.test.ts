@@ -69,12 +69,10 @@ describe('SoundManager', () => {
 
     MockAudioContextClass = jest.fn(() => mockAudioContext);
 
-    // Setup window with AudioContext before module loads
-    Object.defineProperty(global, 'window', {
-      value: { AudioContext: MockAudioContextClass },
-      writable: true,
-      configurable: true,
-    });
+    // Setup window with AudioContext before module loads.
+    // jest-expo 58 legt `window` als nicht konfigurierbare Eigenschaft an,
+    // daher nur AudioContext auf dem bestehenden window ersetzen.
+    (window as unknown as { AudioContext: unknown }).AudioContext = MockAudioContextClass;
 
     // Re-apply mocks after resetModules
     jest.mock('react-native', () => ({ Platform: { OS: 'web' } }));

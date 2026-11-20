@@ -50,12 +50,16 @@ export async function shareDrawing(paths: DrawingPath[], title?: string): Promis
     paint.setStrokeJoin(StrokeJoin.Round);
     paint.setAntiAlias(true);
 
-    const skPath = Skia.Path.Make();
-    skPath.moveTo(pathData.points[0].x * scale + offsetX, pathData.points[0].y * scale + offsetY);
+    // Skia ≥ 2.14: SkPath ist unveränderlich, Pfade entstehen über PathBuilder.
+    const builder = Skia.PathBuilder.Make();
+    builder.moveTo(pathData.points[0].x * scale + offsetX, pathData.points[0].y * scale + offsetY);
     for (let i = 1; i < pathData.points.length; i++) {
-      skPath.lineTo(pathData.points[i].x * scale + offsetX, pathData.points[i].y * scale + offsetY);
+      builder.lineTo(
+        pathData.points[i].x * scale + offsetX,
+        pathData.points[i].y * scale + offsetY,
+      );
     }
-    canvas.drawPath(skPath, paint);
+    canvas.drawPath(builder.build(), paint);
   }
 
   const image = surface.makeImageSnapshot();

@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     transform: [{ scale: 1.15 }],
   },
   colorSwatchInner: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   colorCheckmark: {
     fontSize: 16,
