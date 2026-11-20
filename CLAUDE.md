@@ -6,7 +6,7 @@
 Spieler sehen ein Bild kurz, zeichnen es aus dem Gedächtnis, vergleichen das Ergebnis.
 
 - **Aktuell: v1.9.1** (package.json + app.json; versionCode 72) — **Play Store: v1.8.0 / versionCode 69**; v1.9.1 ist Release-Kandidat (versionCodes 70 und 71/v1.9.0 wurden nie im Store veröffentlicht)
-- **Mindestanforderung Android: API 26 (Android 8.0 Oreo)** — Nexus 6 (max. API 25) wird nicht mehr unterstützt (Issue #172, geschlossen)
+- **Mindestanforderung Android: API 24 (Android 7.0)** — RN-Default, gilt unter SDK 55 und 58. Bewusst nicht auf 26 angehoben, damit das Nexus 6 (API 25) als Testgerät nutzbar bleibt (Entscheidung 2026-11-14, #302). Falls doch angehoben werden soll: nur über das Plugin `expo-build-properties`, `android.minSdkVersion` in `app.json` wird von Expo ignoriert.
 - **Live Demo:** https://s540d.github.io/DrawFromMemory/
 - **Repo:** https://github.com/S540d/DrawFromMemory
 - **Play Store:** `com.s540d.merkeundmale`
@@ -254,7 +254,7 @@ Vollständige P0/P1/P2-Statustabellen und Themen-Pack-Architektur-Details: [`doc
 
 - **jest-expo → @tootallnate/once** (low severity): Breaking-Major-Upgrade nötig — noch nicht gemacht. Details: [`docs/private/INCIDENTS.md`](docs/private/INCIDENTS.md).
 - **foojay-resolver** muss ≥ 1.0.0 sein, sonst bricht der Android-Build unter Gradle 9 / JDK 21 ab (Issue #276). Bis RN 0.83 per Patch gelöst, ab RN 0.88 bringt `@react-native/gradle-plugin` 1.0.0 selbst mit, der Patch ist entfernt. **Bei RN-Upgrade prüfen:** `grep foojay node_modules/@react-native/gradle-plugin/settings.gradle.kts`; `npm run build:doctor` warnt automatisch bei Regression. Diagnose-Historie: [`docs/private/INCIDENTS.md`](docs/private/INCIDENTS.md).
-- **Nexus 6**: EOL — `minSdkVersion` = 26; Nexus 6 endet bei API 25 (geschlossen via Issue #172)
+- **Nexus 6** (API 25): weiter unterstützt, minSdk bleibt 24 (#302). Die in #172 beschlossene Anhebung auf 26 war nie im Build wirksam.
 - **iOS**: Nicht primär getestet (Fokus auf Web + Android)
 - **iOS App Store**: Bundle ID `com.s540d.merkeundmale`, App Store URL noch TBD
 
@@ -279,6 +279,7 @@ Ziel: max. 300 Zeilen. Vorfalls-Abschnitte (Datum, PR-Nummer, Diagnose-Verlauf) 
 - **Vor jedem Push: lokale Tests ausführen** (`npm test` bzw. projektspezifischer Test-Befehl) – kein Push ohne grüne lokale Tests
 - **Kein Merge bei CI-Fail** – Branch Protection erzwingt das technisch; nie mit `--admin` umgehen außer auf explizite Bitte
 - **Zugehöriges Issue beim Merge schließen** (Issue #111): `Closes #X` im PR-Body greift nur beim Merge in den Default-Branch (`main`) — bei PRs nach `testing` also **nie**. Das Issue nach dem Merge manuell schließen (`gh issue close <N> -c "Umgesetzt in #<PR>, gemergt nach \`testing\`."`), sonst bleiben erledigte Issues offen liegen. Ausnahme: Sammel-/Meta-Issues, die ein Teil-PR nur anteilig abarbeitet — die bleiben offen. `Closes #X` trotzdem im PR-Body lassen: es erzeugt die sichtbare Verknüpfung.
+- **Vor dem Start an einem offenen Issue** (Issue #152): prüfen, ob ein Branch/PR `feature/issue-<N>-*` existiert und bereits in `testing` gemergt ist (`gh pr list --state all --search "issue-<N>"`). Offene Checkboxen ≠ offene Arbeit — sonst wird Erledigtes doppelt umgesetzt.
 
 ## [ANDROID BUILD – PFLICHTREGELN]
 
@@ -310,5 +311,11 @@ Ziel: max. 300 Zeilen. Vorfalls-Abschnitte (Datum, PR-Nummer, Diagnose-Verlauf) 
 ## [CI – CACHE-CLEANUP]
 
 - **Cache-Cleanup-Workflow** (`.github/workflows/cache-cleanup.yml`) in jedem Repo mit GitHub-Actions-Caches: löscht wöchentlich (So 03:00 UTC) bzw. on-demand alle Action-Caches älter als der jeweils letzte Lauf. GitHub-Limit ist 10 GB pro Repo – ohne Cleanup laufen Build-Caches (node_modules, Gradle, Expo) voll und verdrängen frische Einträge. Vorlage: `cache-cleanup.yml` in project-templates.
+
+## [COMMUNITY-STANDARDS]
+
+- **Einheitliche Community-Dateien** (Issue #196): `CODE_OF_CONDUCT.md` und `CONTRIBUTING.md` liegen **zentral** in `S540d/.github` und gelten für alle Repos ohne eigene Datei — keine projekteigenen Kopien anlegen. `SECURITY.md` (Vorlage `automation-templates/SECURITY.md`) und `LICENSE` liegen je Repo. Lizenz-Standard ist **PolyForm Noncommercial 1.0.0** (`package.json`: `PolyForm-Noncommercial-1.0.0`); Drittinhalte mit eigener Lizenz separat ausweisen.
+- **Keine Issue-/PR-Templates** (`.github/ISSUE_TEMPLATE/`, `PULL_REQUEST_TEMPLATE*`): werden nicht genutzt und nicht angelegt. Checklisten gehören nach `docs/`, nicht nach `.github/ISSUE_TEMPLATE/`.
+- **Repo-Description** (GitHub-Einstellung) ist gesetzt und enthält **nur funktionale Hinweise für Anwender** (eine Zeile, kein Tech-Stack, keine Setup-/Clone-Hinweise).
 
 <!-- GLOBAL POLICY:END -->
